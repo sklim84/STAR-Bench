@@ -1,0 +1,910 @@
+[
+  {
+    "id": "an_001",
+    "question": "계좌 1234567890의 거래 네트워크를 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1234567890
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_002",
+    "question": "계좌 9876543210과 직접 거래한 계좌들을 파악해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 9876543210
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_003",
+    "question": "계좌 1234567890을 3홉까지 심층 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1234567890,
+          "hops_min": 3
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "hops >= 3이어야 함"
+  },
+  {
+    "id": "an_004",
+    "question": "계좌 5555555555의 이상거래 연루 여부를 네트워크 분석으로 확인해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 5555555555
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_005",
+    "question": "계좌 3333333333의 거래 네트워크를 2단계까지 탐색해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 3333333333,
+          "hops_min": 2
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "an_006",
+    "question": "계좌 4444444444의 입출금 네트워크 구조를 보여줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 4444444444
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_007",
+    "question": "계좌 1234567890과 5홉 이내 연결된 모든 계좌를 심층 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1234567890,
+          "hops_min": 4
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "5홉 또는 그에 준하는 hops >= 4 이상이어야 함"
+  },
+  {
+    "id": "an_008",
+    "question": "계좌 9876543210에서 출금된 자금이 어디로 흘러가는지 네트워크로 추적해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 9876543210
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "an_009",
+    "question": "계좌 5555555555의 연결 계좌 수가 몇 개야?",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 5555555555
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_010",
+    "question": "계좌 3333333333이 이상거래에 얼마나 관여되어 있는지 네트워크로 확인해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 3333333333
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_011",
+    "question": "계좌 4444444444와 직접 연결된 1홉 거래처를 알려줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 4444444444,
+          "hops_max": 1
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "hops=1이어야 함"
+  },
+  {
+    "id": "an_012",
+    "question": "계좌 1234567890에 대한 거래 네트워크 분석 결과로 이상거래 의심 여부를 판단해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1234567890
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "an_013",
+    "question": "계좌 7777777777의 거래 네트워크를 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 7777777777
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_014",
+    "question": "계좌 2222222222의 입출금 연결 구조를 파악해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 2222222222
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_015",
+    "question": "계좌 6666666666을 네트워크로 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 6666666666
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_016",
+    "question": "계좌 8888888888의 거래 연결망을 보여줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 8888888888
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_017",
+    "question": "계좌 1111111111을 2홉까지 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1111111111,
+          "hops_min": 2
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "an_018",
+    "question": "계좌 9988776655의 3홉 이내 연결 계좌를 파악해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 9988776655,
+          "hops_min": 3
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "an_019",
+    "question": "계좌 5566778899와 직접 연결된 1홉 계좌만 조회해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 5566778899,
+          "hops_max": 1
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "hops=1이어야 함"
+  },
+  {
+    "id": "an_020",
+    "question": "계좌 1122334455의 네트워크에서 이상거래에 연루된 계좌를 확인해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1122334455
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "an_021",
+    "question": "계좌 4321098765를 4홉 이상 심층 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 4321098765,
+          "hops_min": 4
+        }
+      }
+    },
+    "difficulty": "hard"
+  },
+  {
+    "id": "an_022",
+    "question": "계좌 9876501234의 자금 흐름을 네트워크로 추적해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 9876501234
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "an_023",
+    "question": "계좌 1234509876의 자금 흐름을 5홉까지 추적하고 이상거래 의심 계좌를 탐지해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1234509876,
+          "hops_min": 5
+        }
+      }
+    },
+    "difficulty": "hard"
+  },
+  {
+    "id": "an_024",
+    "question": "계좌 1111223344의 거래 네트워크를 종합 분석하고 자금세탁 위험 연결 계좌를 찾아줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1111223344
+        }
+      }
+    },
+    "difficulty": "hard"
+  },
+  {
+    "id": "an_025",
+    "question": "계좌 2468013579의 전체 네트워크 구조를 3홉까지 분석해서 이상거래 연루 여부를 판단해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 2468013579,
+          "hops_min": 3
+        }
+      }
+    },
+    "difficulty": "hard"
+  },
+  {
+    "id": "an_026",
+    "question": "계좌 6677889900의 거래 상대방 네트워크를 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 6677889900
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_irr_001",
+    "question": "금융 네트워크 분석에서 사용하는 중심성 지표(연결 중심성, 매개 중심성)의 개념을 설명해줘",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 네트워크 분석 도메인이지만 지표 개념 설명이라 도구 호출 불필요"
+  },
+  {
+    "id": "an_irr_002",
+    "question": "계좌번호 체계에서 앞 3자리가 금융기관 코드를 의미하는지 알려줘",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 계좌 관련 질문이지만 일반 금융 지식으로 답변 가능 — 도구 불필요"
+  },
+  {
+    "id": "an_irr_003",
+    "question": "네트워크 분석에서 사용하는 BFS와 DFS 알고리즘의 차이를 설명해줘",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 알고리즘 개념 설명 — 특정 계좌 네트워크 분석 도구 호출과 무관"
+  },
+  {
+    "id": "an_irr_004",
+    "question": "그래프 데이터베이스에서 노드와 엣지를 저장하는 방식을 설명해줘",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 그래프 DB 내부 구조 설명 — 계좌 네트워크 분석 도구 실행과 무관"
+  },
+  {
+    "id": "an_027",
+    "question": "계좌 1357924680의 거래 상대방을 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1357924680
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_028",
+    "question": "계좌 2468135790의 네트워크를 확인해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 2468135790
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_029",
+    "question": "계좌 3691215180의 이상거래 연결망을 파악해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 3691215180
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_030",
+    "question": "계좌 4812369147의 연결 계좌를 보여줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 4812369147
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_031",
+    "question": "계좌 5938271046의 거래 네트워크 분석 결과를 알려줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 5938271046
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_032",
+    "question": "계좌 6174829305를 2홉 범위로 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 6174829305,
+          "hops_min": 2
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "an_033",
+    "question": "계좌 7250381964의 출금 자금 경로를 3홉 이내로 추적해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 7250381964,
+          "hops_min": 3
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "an_034",
+    "question": "계좌 8316472059와 직접 연결된 계좌만 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 8316472059,
+          "hops_max": 1
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "hops=1이어야 함"
+  },
+  {
+    "id": "an_035",
+    "question": "계좌 9402583716의 거래 네트워크에서 이상거래 연루 계좌 수를 확인해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 9402583716
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "an_036",
+    "question": "계좌 1593748260의 2홉 네트워크를 분석하고 이상거래 비율을 파악해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1593748260,
+          "hops_min": 2
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "an_037",
+    "question": "계좌 2684859371을 4홉까지 추적해서 자금세탁 위험 계좌를 탐지해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 2684859371,
+          "hops_min": 4
+        }
+      }
+    },
+    "difficulty": "hard"
+  },
+  {
+    "id": "an_038",
+    "question": "계좌 3775960482의 5홉 심층 네트워크를 분석하고 보이스피싱 관련 계좌를 찾아줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 3775960482,
+          "hops_min": 5
+        }
+      }
+    },
+    "difficulty": "hard"
+  },
+  {
+    "id": "an_039",
+    "question": "계좌 4861071593의 자금 흐름을 전방위로 추적하고 이상거래 연관 패턴을 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 4861071593
+        }
+      }
+    },
+    "difficulty": "hard"
+  },
+  {
+    "id": "an_040",
+    "question": "계좌 5947182604의 거래 흐름을 추적해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 5947182604
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_041",
+    "question": "계좌 6033293715와 연결된 계좌들 중 이상거래가 있는 계좌를 확인해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 6033293715
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "an_042",
+    "question": "계좌 7119404826의 에고 네트워크를 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 7119404826
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_043",
+    "question": "계좌 8205515937의 3홉 이내 자금 이동 경로를 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 8205515937,
+          "hops_min": 3
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "an_irr_005",
+    "question": "불법 도박 사이트를 탐지하는 방법을 설명해줘",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "irrelevance",
+    "note": "irrelevance: 불법도박 탐지 방법론 설명 — 특정 계좌 네트워크 분석 도구와 무관"
+  },
+  {
+    "id": "an_irr_006",
+    "question": "이상거래 유형별 통계를 요약해줘",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "irrelevance",
+    "note": "irrelevance: 전체 통계 요약은 get_statistics가 적합 — analyze_network 호출 불필요"
+  },
+  {
+    "id": "an_irr_007",
+    "question": "보이스피싱 유형(이상거래유형 4)의 최근 거래를 조회해줘",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "irrelevance",
+    "note": "irrelevance: SQL 기반 거래 조회 요청 — query_transactions가 적합, analyze_network 불필요"
+  },
+  {
+    "id": "an_ex01",
+    "question": "계좌 1234567890의 거래 네트워크를 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1234567890
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_ex02",
+    "question": "계좌 1234567890의 거래 네트워크를 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1234567890
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_ex03",
+    "question": "계좌 1234567890의 거래 네트워크를 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1234567890
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_ex04",
+    "question": "계좌 1234567890의 거래 네트워크를 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1234567890
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_ex05",
+    "question": "계좌 1234567890의 거래 네트워크를 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1234567890
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_ex06",
+    "question": "계좌 1234567890의 거래 네트워크를 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1234567890
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_ex07",
+    "question": "계좌 1234567890의 거래 네트워크를 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1234567890
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "an_ex08",
+    "question": "계좌 1234567890의 거래 네트워크를 분석해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1234567890
+        }
+      }
+    },
+    "difficulty": "easy"
+  }
+]

@@ -1,0 +1,938 @@
+[
+  {
+    "id": "rrt_001",
+    "question": "Please find the 20 most suspicious transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 20
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "가장 위험한 거래 20건을 찾아줘"
+  },
+  {
+    "id": "rrt_002",
+    "question": "Please rank the top transactions with the highest likelihood of being suspicious.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {}
+    },
+    "difficulty": "easy",
+    "question_ko": "이상거래 확률이 높은 상위 거래를 랭킹해줘"
+  },
+  {
+    "id": "rrt_003",
+    "question": "Please use the AI model to detect high-risk transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {}
+    },
+    "difficulty": "easy",
+    "question_ko": "AI 모델로 위험도 상위 거래를 탐지해줘"
+  },
+  {
+    "id": "rrt_004",
+    "question": "Please extract the list of the most suspicious transactions using batch prediction.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {}
+    },
+    "difficulty": "easy",
+    "question_ko": "배치 예측으로 가장 의심스러운 거래 목록을 추출해줘"
+  },
+  {
+    "id": "rrt_005",
+    "question": "Please select the top 20 transactions with the highest risk from a sample of 2000 transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 2000,
+          "top_k": 20
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "거래 샘플 2000건 중 위험도 상위 20건을 선별해줘"
+  },
+  {
+    "id": "rrt_006",
+    "question": "Please rank the top 50 suspicious transactions by probability from a sample of 1000 cases.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 1000,
+          "top_k": 50
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "1000건 샘플에서 이상거래 확률 TOP 50건을 랭킹해줘"
+  },
+  {
+    "id": "rrt_007",
+    "question": "Please provide the 10 most high-risk transactions out of the 3000 transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 3000,
+          "top_k": 10
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "3000건 거래 중 가장 위험한 10건만 알려줘"
+  },
+  {
+    "id": "rrt_008",
+    "question": "Please predict the batch of 5,000 samples using the XGBoost model and show me the ranking of the top 30 high-risk transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 5000,
+          "top_k": 30
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "XGBoost 모델로 5000건 샘플 배치 예측하고 위험 거래 상위 30건 랭킹 보여줘"
+  },
+  {
+    "id": "rrt_009",
+    "question": "Please detect and prioritize the 100 most high-risk transactions to investigate today.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 100
+        }
+      }
+    },
+    "difficulty": "hard",
+    "question_ko": "오늘 조사해야 할 가장 위험한 거래 100건을 모델로 탐지해서 우선순위를 매겨줘"
+  },
+  {
+    "id": "rrt_010",
+    "question": "Please filter out the transactions with the highest likelihood of being suspicious through batch analysis, and report the top 20 cases, including the account numbers and transaction amounts.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 20
+        }
+      }
+    },
+    "difficulty": "hard",
+    "question_ko": "배치 분석으로 가장 이상거래 확률이 높은 거래들을 추려내고, 상위 20건에 대해 계좌번호와 거래금액도 포함해서 보고해줘"
+  },
+  {
+    "id": "rrt_011",
+    "question": "Please extract a sample of 5,000 records from the entire dataset, use the AI model to predict the likelihood of suspicious transactions, and display the 50 records with the highest probabilities along with their account information.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 5000,
+          "top_k": 50
+        }
+      }
+    },
+    "difficulty": "hard",
+    "question_ko": "전체 데이터에서 샘플 5000건을 뽑아 AI 모델로 이상거래 확률을 예측하고, 확률이 가장 높은 50건을 추출해서 계좌 정보와 함께 보여줘"
+  },
+  {
+    "id": "rrt_012",
+    "question": "Please run a model-based batch detection to create a preliminary list of transactions for investigation. Select the top 20 from a sample of 2000 transactions and include the account and amount information as well.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 2000,
+          "top_k": 20
+        }
+      }
+    },
+    "difficulty": "hard",
+    "question_ko": "모델 기반 배치 탐지를 실행해서 우선 조사 대상 거래 목록을 만들어줘. 샘플 2000건에서 상위 20건을 선별하고 거래 계좌와 금액 정보도 포함해줘"
+  },
+  {
+    "id": "rrt_013",
+    "question": "Please identify 5 transactions with a high risk level.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 5
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "위험도가 높은 거래 5건을 탐지해줘"
+  },
+  {
+    "id": "rrt_014",
+    "question": "Please identify the most suspicious transactions using the suspicious transaction detection model.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {}
+    },
+    "difficulty": "easy",
+    "question_ko": "이상거래 탐지 모델로 가장 의심스러운 거래를 찾아줘"
+  },
+  {
+    "id": "rrt_015",
+    "question": "Please identify 15 transactions from the current data that need to be prioritized for investigation.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 15
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "현재 데이터에서 우선 조사해야 할 거래 15건을 선별해줘"
+  },
+  {
+    "id": "rrt_016",
+    "question": "Please extract the top 10 transactions with the highest probability of being suspicious from a sample of 500 cases.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 500,
+          "top_k": 10
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "표본 500건에서 이상거래 확률이 가장 높은 10건을 추출해줘"
+  },
+  {
+    "id": "rrt_017",
+    "question": "Please rank the top 25 high-risk transactions using AI after sampling 4,000 cases.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 4000,
+          "top_k": 25
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "4000건 샘플링 후 AI로 위험 거래 상위 25건을 랭킹해줘"
+  },
+  {
+    "id": "rrt_018",
+    "question": "Please generate a list of the 50 most high-risk transactions based on batch predictions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 50
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "배치 예측으로 가장 위험한 거래 50건 목록을 만들어줘"
+  },
+  {
+    "id": "rrt_019",
+    "question": "Please extract the top 30 suspicious transaction probabilities from a sample of 1500 cases.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 1500,
+          "top_k": 30
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "샘플 1500건에서 이상거래 확률 Top 30을 추출해줘"
+  },
+  {
+    "id": "rrt_020",
+    "question": "Show me the top 5 ranked suspicious transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 5
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "위험 거래 랭킹 TOP 5를 보여줘"
+  },
+  {
+    "id": "rrt_021",
+    "question": "Please analyze the 2,500 transactions and identify the top 15 with the highest risk levels.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 2500,
+          "top_k": 15
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "2500건 거래를 분석해서 위험도 상위 15건을 선별해줘"
+  },
+  {
+    "id": "rrt_022",
+    "question": "Please sample the entire dataset of 10,000 transactions and extract the top 100 high-risk transactions using the AI model. Include the account numbers and transaction amounts in the priority report.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 10000,
+          "top_k": 100
+        }
+      }
+    },
+    "difficulty": "hard",
+    "question_ko": "전체 데이터 10000건을 샘플링하고 AI 모델로 위험 거래 상위 100건을 추출해줘. 계좌번호와 금액 정보도 포함해서 우선순위 보고서를 만들어줘"
+  },
+  {
+    "id": "rrt_023",
+    "question": "Please extract the top 50 suspicious transactions with the highest probability from a sample of 5000 transactions each morning, and sort them by risk level for analysis.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 5000,
+          "top_k": 50
+        }
+      }
+    },
+    "difficulty": "hard",
+    "question_ko": "매일 아침 조사 대상 거래를 선별하기 위해 5000건 샘플에서 이상거래 확률 상위 50건을 추출하고 위험도 순으로 정렬해줘"
+  },
+  {
+    "id": "rrt_024",
+    "question": "Please extract 20 high-risk transactions from the batch of 3000, and include the withdrawal account information for each transaction.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 3000,
+          "top_k": 20
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "배치 탐지로 3000건 중 위험 거래 20건을 뽑고, 각 거래의 출금 계좌 정보도 포함해줘"
+  },
+  {
+    "id": "rrt_025",
+    "question": "Please run a daily batch analysis for AML monitoring. From a sample of 8,000 transactions, identify the top 40 with the highest risk and report them along with the account and amount information.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 8000,
+          "top_k": 40
+        }
+      }
+    },
+    "difficulty": "hard",
+    "question_ko": "AML 모니터링을 위해 일일 배치 분석을 실행해줘. 8000건 샘플에서 위험도 상위 40건을 선별해서 계좌·금액 정보와 함께 보고해줘"
+  },
+  {
+    "id": "rrt_026",
+    "question": "Please extract the top 5 suspicious transactions by risk level from the sample of 500 cases.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 500,
+          "top_k": 5
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "500건 샘플에서 이상거래 위험도 상위 5건을 추출해줘"
+  },
+  {
+    "id": "rrt_irr_001",
+    "question": "Please adjust the hyperparameters of the XGBoost model and retrain it.",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 모델 학습·수정은 rank_risky_transactions 도구 범위 밖 — 도구 호출 불필요",
+    "question_ko": "XGBoost 모델의 하이퍼파라미터를 수정하고 재학습해줘"
+  },
+  {
+    "id": "rrt_irr_002",
+    "question": "What are the precision and recall of the currently deployed suspicious transaction detection model?",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 모델 성능 지표 조회는 지원되지 않는 기능 — 도구 호출 불필요",
+    "question_ko": "현재 탑재된 이상거래 탐지 모델의 정밀도와 재현율이 얼마야?"
+  },
+  {
+    "id": "rrt_irr_003",
+    "question": "Please explain the SMOTE technique for addressing class imbalance issues.",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: ML 기법 설명 — 배치 탐지 도구 실행과 무관",
+    "question_ko": "클래스 불균형 문제를 해결하는 SMOTE 기법을 설명해줘"
+  },
+  {
+    "id": "rrt_irr_004",
+    "question": "Where is the training data for the suspicious transaction detection model used in this system stored?",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 학습 데이터 경로 안내 — rank_risky_transactions 도구 실행과 무관",
+    "question_ko": "이 시스템에서 사용하는 이상거래 탐지 모델의 학습 데이터는 어디에 저장되어 있어?"
+  },
+  {
+    "id": "rrt_027",
+    "question": "Please provide the top 30 high-risk transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 30
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "위험 거래 상위 30건을 뽑아줘"
+  },
+  {
+    "id": "rrt_028",
+    "question": "Please sort the transactions by the level of risk for suspicious activity.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {}
+    },
+    "difficulty": "easy",
+    "question_ko": "이상거래 위험도 순으로 거래를 정렬해줘"
+  },
+  {
+    "id": "rrt_029",
+    "question": "Show me the top 10 highest risk cases from the batch detection results.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 10
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "배치 탐지 결과에서 위험도 상위 10건을 보여줘"
+  },
+  {
+    "id": "rrt_030",
+    "question": "Please extract the top 25 transactions with the highest AI model scores.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 25
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "AI 모델 점수가 높은 거래 상위 25건을 추출해줘"
+  },
+  {
+    "id": "rrt_031",
+    "question": "Please generate a list of transactions with a high probability of being suspicious.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {}
+    },
+    "difficulty": "easy",
+    "question_ko": "이상거래 예측 확률이 높은 거래 목록을 만들어줘"
+  },
+  {
+    "id": "rrt_032",
+    "question": "Please filter out the top 40 high-risk transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 40
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "위험도 상위 거래 40건을 선별해줘"
+  },
+  {
+    "id": "rrt_033",
+    "question": "Please detect the most suspicious transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {}
+    },
+    "difficulty": "easy",
+    "question_ko": "가장 수상한 거래를 탐지해줘"
+  },
+  {
+    "id": "rrt_034",
+    "question": "Please rank the high-risk transactions based on the XGBoost prediction scores.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {}
+    },
+    "difficulty": "easy",
+    "question_ko": "XGBoost 예측 점수 기준으로 위험 거래를 랭킹해줘"
+  },
+  {
+    "id": "rrt_035",
+    "question": "Please extract the top 20 suspicious transactions based on their probability from a sample of 6000 cases.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 6000,
+          "top_k": 20
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "6000건 샘플에서 이상거래 확률 TOP 20건을 뽑아줘"
+  },
+  {
+    "id": "rrt_036",
+    "question": "Please extract the top 15 transactions with the highest AI risk scores from the sample of 700 cases.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 700,
+          "top_k": 15
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "표본 700건에서 AI 위험도 상위 15건을 추출해줘"
+  },
+  {
+    "id": "rrt_037",
+    "question": "Please extract the 35 transactions with the highest likelihood of being suspicious from the sample of 3,500 records.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 3500,
+          "top_k": 35
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "샘플 3500건에서 이상거래 확률이 가장 높은 35건을 추출해줘"
+  },
+  {
+    "id": "rrt_038",
+    "question": "Please select and report the top 10 highest risk cases from the 2000 batch predictions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 2000,
+          "top_k": 10
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "배치 예측 2000건 중 위험도 상위 10건을 선별해서 보고해줘"
+  },
+  {
+    "id": "rrt_039",
+    "question": "Please extract 25 high-risk transactions using the AI model from a sample of 4,500 cases.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 4500,
+          "top_k": 25
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "4500건 표본에서 AI 모델로 위험 거래 25건을 추출해줘"
+  },
+  {
+    "id": "rrt_040",
+    "question": "Please extract the top 8 suspicious transactions based on the probability criteria from a sample of 1200 cases.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 1200,
+          "top_k": 8
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "1200건 샘플에서 이상거래 확률 기준 TOP 8건을 추출해줘"
+  },
+  {
+    "id": "rrt_041",
+    "question": "Please extract the 60 most high-risk transactions from the batch of 7,000 for risk-based prioritization, and include detailed information by account.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 7000,
+          "top_k": 60
+        }
+      }
+    },
+    "difficulty": "hard",
+    "question_ko": "리스크 기반 우선순위 배정을 위해 7000건 배치에서 가장 위험한 60건을 추출하고 계좌별 상세 정보도 포함해줘"
+  },
+  {
+    "id": "rrt_042",
+    "question": "Due to limited investigative resources, we can only process 15 cases per day. Please select the top 15 cases to investigate today based on the model scores from a sample of 1000 cases.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 1000,
+          "top_k": 15
+        }
+      }
+    },
+    "difficulty": "hard",
+    "question_ko": "조사 자원이 제한되어 있어서 하루 처리 가능한 건수는 15건이야. 1000건 샘플에서 오늘 가장 먼저 조사해야 할 15건을 모델 점수 기반으로 뽑아줘"
+  },
+  {
+    "id": "rrt_043",
+    "question": "I need to prepare materials for this week's AML investigation meeting. Please run a batch analysis on 12,000 transactions to identify the top 80 high-risk transactions and create a report that includes the withdrawal and deposit account information along with the transaction amounts.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 12000,
+          "top_k": 80
+        }
+      }
+    },
+    "difficulty": "hard",
+    "question_ko": "이번 주 AML 조사 회의 자료를 준비해야 하는데, 12000건 배치 분석을 돌려서 위험 거래 상위 80건을 뽑고 출금·입금 계좌 정보와 금액을 포함한 보고용 목록을 만들어줘"
+  },
+  {
+    "id": "rrt_irr_005",
+    "question": "Please provide the feature engineering methods used for detecting suspicious transactions.",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 피처 엔지니어링 설명은 rank_risky_transactions 도구 실행과 무관",
+    "question_ko": "이상거래 탐지에 사용하는 피처 엔지니어링 방법을 알려줘"
+  },
+  {
+    "id": "rrt_irr_006",
+    "question": "Which model is more suitable for detecting suspicious transactions, Random Forest or XGBoost?",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 모델 비교 자문은 rank_risky_transactions 도구 실행과 무관",
+    "question_ko": "Random Forest와 XGBoost 중 어떤 모델이 이상거래 탐지에 더 적합해?"
+  },
+  {
+    "id": "rrt_irr_007",
+    "question": "Please design a database schema to store the model prediction results.",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: DB 스키마 설계는 rank_risky_transactions 도구 실행과 무관",
+    "question_ko": "모델 예측 결과를 저장할 데이터베이스 스키마를 설계해줘"
+  },
+  {
+    "id": "rrt_ex01",
+    "question": "Please find the 20 most suspicious transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 20
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "가장 위험한 거래 20건을 찾아줘"
+  },
+  {
+    "id": "rrt_ex02",
+    "question": "Please find the 20 most suspicious transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 20
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "가장 위험한 거래 20건을 찾아줘"
+  },
+  {
+    "id": "rrt_ex03",
+    "question": "Please find the 20 most suspicious transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 20
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "가장 위험한 거래 20건을 찾아줘"
+  },
+  {
+    "id": "rrt_ex04",
+    "question": "Please find the 20 most suspicious transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 20
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "가장 위험한 거래 20건을 찾아줘"
+  },
+  {
+    "id": "rrt_ex05",
+    "question": "Please find the 20 most suspicious transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 20
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "가장 위험한 거래 20건을 찾아줘"
+  },
+  {
+    "id": "rrt_ex06",
+    "question": "Please find the 20 most suspicious transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 20
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "가장 위험한 거래 20건을 찾아줘"
+  },
+  {
+    "id": "rrt_ex07",
+    "question": "Please find the 20 most suspicious transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 20
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "가장 위험한 거래 20건을 찾아줘"
+  },
+  {
+    "id": "rrt_ex08",
+    "question": "Please find the 20 most suspicious transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 20
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "가장 위험한 거래 20건을 찾아줘"
+  }
+]

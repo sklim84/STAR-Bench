@@ -1,0 +1,2174 @@
+[
+  {
+    "id": "mt_001",
+    "question": "출금금융회사 134의 이상거래를 조회하고, 가장 많이 등장한 출금계좌의 네트워크도 분석해줘",
+    "expected": {
+      "primary_tool": "query_transactions",
+      "tools_must_include": [
+        "query_transactions",
+        "analyze_network"
+      ],
+      "tool_order": [
+        "query_transactions",
+        "analyze_network"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "134"
+          ],
+          "sql_valid": true
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "조회 후 네트워크 분석 체인"
+  },
+  {
+    "id": "mt_002",
+    "question": "전체 통계를 먼저 보여주고, 이상거래 건수가 가장 많은 금융회사의 거래를 상세 조회해줘",
+    "expected": {
+      "primary_tool": "get_statistics",
+      "tools_must_include": [
+        "get_statistics",
+        "query_transactions"
+      ],
+      "tool_order": [
+        "get_statistics",
+        "query_transactions"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "이상거래여부"
+          ],
+          "sql_valid": true
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "통계 → 조회 체인. query_transactions SQL에 이상거래여부 조건 포함 여부만 검증 (기관 ID는 통계 결과에 의존)"
+  },
+  {
+    "id": "mt_003",
+    "question": "계좌 1234567890의 네트워크를 분석하고 순환거래 패턴도 함께 탐지해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network",
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1234567890
+        },
+        "detect_aml_patterns": {
+          "pattern_type": "ring"
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_004",
+    "question": "거래시간대 3, 출금사 134, 입금사 201, 이체, ATM, 1000만원 거래의 이상거래 확률을 예측하고, 해당 출금계좌 1234567890의 네트워크도 분석해줘",
+    "expected": {
+      "primary_tool": "predict_fraud",
+      "tools_must_include": [
+        "predict_fraud",
+        "analyze_network"
+      ],
+      "param_checks": {
+        "predict_fraud": {
+          "거래시간대": 3,
+          "출금금융회사일련번호": 134,
+          "입금금융회사일련번호": 201,
+          "거래금액": 10000000
+        },
+        "analyze_network": {
+          "account_id": 1234567890
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_005",
+    "question": "전체 통계를 먼저 파악한 다음 순환거래 패턴을 탐지해줘",
+    "expected": {
+      "primary_tool": "get_statistics",
+      "tools_must_include": [
+        "get_statistics",
+        "detect_aml_patterns"
+      ],
+      "tool_order": [
+        "get_statistics",
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "detect_aml_patterns": {
+          "pattern_type": "ring"
+        }
+      }
+    },
+    "difficulty": "easy"
+  },
+  {
+    "id": "mt_006",
+    "question": "출금금융회사 134의 이상거래 데이터를 조회하고 이상거래 확률도 하나 예측해줘. 거래시간대 9, 입금사 201, 이체, 인터넷뱅킹, 500만원 조건으로.",
+    "expected": {
+      "primary_tool": "query_transactions",
+      "tools_must_include": [
+        "query_transactions",
+        "predict_fraud"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "134"
+          ],
+          "sql_valid": true
+        },
+        "predict_fraud": {
+          "거래시간대": 9,
+          "자금구분": 4,
+          "매체구분": 4,
+          "거래금액": 5000000
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_007",
+    "question": "계좌 9876543210의 거래를 SQL로 조회하고, 해당 계좌의 위험도 점수도 그래프 DB로 산출해줘",
+    "expected": {
+      "primary_tool": "query_transactions",
+      "tools_must_include": [
+        "query_transactions",
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "9876543210"
+          ],
+          "sql_valid": true
+        },
+        "detect_aml_patterns": {
+          "pattern_type": "risk_score",
+          "account_id": 9876543210
+        }
+      }
+    },
+    "difficulty": "hard"
+  },
+  {
+    "id": "mt_008",
+    "question": "전체 이상거래 현황을 파악하고, 출금금융회사 201 거래를 조회한 뒤, 가장 의심스러운 거래를 AI로 예측해줘. 거래시간대 0, 출금사 201, 입금사 305, 출금, 창구, 800만원.",
+    "expected": {
+      "primary_tool": "get_statistics",
+      "tools_must_include": [
+        "get_statistics",
+        "query_transactions",
+        "predict_fraud"
+      ],
+      "tool_order": [
+        "get_statistics",
+        "query_transactions",
+        "predict_fraud"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "201"
+          ],
+          "sql_valid": true
+        },
+        "predict_fraud": {
+          "거래시간대": 0,
+          "출금금융회사일련번호": 201,
+          "입금금융회사일련번호": 305
+        }
+      }
+    },
+    "difficulty": "hard"
+  },
+  {
+    "id": "mt_009",
+    "question": "레이어링 패턴을 탐지하고, 탐지된 계좌 중 5555555555의 네트워크를 분석해줘",
+    "expected": {
+      "primary_tool": "detect_aml_patterns",
+      "tools_must_include": [
+        "detect_aml_patterns",
+        "analyze_network"
+      ],
+      "tool_order": [
+        "detect_aml_patterns",
+        "analyze_network"
+      ],
+      "param_checks": {
+        "detect_aml_patterns": {
+          "pattern_type": "layering"
+        },
+        "analyze_network": {
+          "account_id": 5555555555
+        }
+      }
+    },
+    "difficulty": "hard"
+  },
+  {
+    "id": "mt_010",
+    "question": "출금금융회사 134의 이상거래를 조회하고, 계좌 1234567890의 네트워크를 분석하고, 순환거래 패턴도 탐지해줘",
+    "expected": {
+      "primary_tool": "query_transactions",
+      "tools_must_include": [
+        "query_transactions",
+        "analyze_network",
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "134"
+          ],
+          "sql_valid": true
+        },
+        "analyze_network": {
+          "account_id": 1234567890
+        },
+        "detect_aml_patterns": {
+          "pattern_type": "ring"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "3개 도구 체인"
+  },
+  {
+    "id": "mt_011",
+    "question": "보이스피싱(유형4) 이상거래 요약을 확인하고, 관련 거래를 SQL로 조회해줘",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary",
+        "query_transactions"
+      ],
+      "tool_order": [
+        "get_fraud_type_summary",
+        "query_transactions"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 4
+        },
+        "query_transactions": {
+          "sql_contains": [
+            "이상거래유형"
+          ],
+          "sql_valid": true
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "유형 요약 → SQL 조회 체인"
+  },
+  {
+    "id": "mt_012",
+    "question": "계좌 3333333333의 프로파일을 조회하고, 해당 계좌의 네트워크도 분석해줘",
+    "expected": {
+      "primary_tool": "get_account_profile",
+      "tools_must_include": [
+        "get_account_profile",
+        "analyze_network"
+      ],
+      "tool_order": [
+        "get_account_profile",
+        "analyze_network"
+      ],
+      "param_checks": {
+        "get_account_profile": {
+          "account_id": 3333333333
+        },
+        "analyze_network": {
+          "account_id": 3333333333
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_013",
+    "question": "금융회사 156의 현황 리포트를 확인하고, 대포통장 패턴도 탐지해줘",
+    "expected": {
+      "primary_tool": "get_institution_report",
+      "tools_must_include": [
+        "get_institution_report",
+        "detect_aml_patterns"
+      ],
+      "tool_order": [
+        "get_institution_report",
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "get_institution_report": {
+          "bank_id": 156
+        },
+        "detect_aml_patterns": {
+          "pattern_type": "funnel"
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_014",
+    "question": "전체 통계를 파악한 후 가장 위험한 거래 10건을 AI로 선별해줘",
+    "expected": {
+      "primary_tool": "get_statistics",
+      "tools_must_include": [
+        "get_statistics",
+        "rank_risky_transactions"
+      ],
+      "tool_order": [
+        "get_statistics",
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 10
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_015",
+    "question": "2024년 1분기와 2분기 이상거래를 비교하고, 이상거래 건수가 많은 유형(유형4)의 거래를 SQL로 조회해줘",
+    "expected": {
+      "primary_tool": "compare_periods",
+      "tools_must_include": [
+        "compare_periods",
+        "query_transactions"
+      ],
+      "tool_order": [
+        "compare_periods",
+        "query_transactions"
+      ],
+      "param_checks": {
+        "compare_periods": {
+          "period_a_start": 20240101,
+          "period_a_end": 20240331,
+          "period_b_start": 20240401,
+          "period_b_end": 20240630
+        },
+        "query_transactions": {
+          "sql_contains": [
+            "이상거래유형"
+          ],
+          "sql_valid": true
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_016",
+    "question": "계좌 5555555555의 프로파일을 조회하고, 해당 계좌의 네트워크를 분석하고, 순환거래 패턴도 탐지해줘",
+    "expected": {
+      "primary_tool": "get_account_profile",
+      "tools_must_include": [
+        "get_account_profile",
+        "analyze_network",
+        "detect_aml_patterns"
+      ],
+      "tool_order": [
+        "get_account_profile",
+        "analyze_network",
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "get_account_profile": {
+          "account_id": 5555555555
+        },
+        "analyze_network": {
+          "account_id": 5555555555
+        },
+        "detect_aml_patterns": {
+          "pattern_type": "ring"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "3개 도구 체인: 프로파일 → 네트워크 → 패턴 탐지"
+  },
+  {
+    "id": "mt_017",
+    "question": "금융회사 73의 이상거래 현황 리포트를 확인하고, 해당 기관 거래를 SQL로 조회해줘",
+    "expected": {
+      "primary_tool": "get_institution_report",
+      "tools_must_include": [
+        "get_institution_report",
+        "query_transactions"
+      ],
+      "tool_order": [
+        "get_institution_report",
+        "query_transactions"
+      ],
+      "param_checks": {
+        "get_institution_report": {
+          "bank_id": 73
+        },
+        "query_transactions": {
+          "sql_contains": [
+            "73"
+          ],
+          "sql_valid": true
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_018",
+    "question": "자금세탁(유형1) 이상거래 요약을 확인하고, 거래시간대 3, 출금사 305, 입금사 201, 이체, 창구, 1200만원 거래의 이상거래 확률도 예측해줘",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary",
+        "predict_fraud"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 1
+        },
+        "predict_fraud": {
+          "거래시간대": 3,
+          "출금금융회사일련번호": 305,
+          "입금금융회사일련번호": 201,
+          "자금구분": 4,
+          "매체구분": 1,
+          "거래금액": 12000000
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_019",
+    "question": "대포통장 패턴을 탐지하고, 계좌 9876543210의 프로파일을 조회하고, 해당 계좌의 네트워크도 분석해줘",
+    "expected": {
+      "primary_tool": "detect_aml_patterns",
+      "tools_must_include": [
+        "detect_aml_patterns",
+        "get_account_profile",
+        "analyze_network"
+      ],
+      "tool_order": [
+        "detect_aml_patterns",
+        "get_account_profile",
+        "analyze_network"
+      ],
+      "param_checks": {
+        "detect_aml_patterns": {
+          "pattern_type": "funnel"
+        },
+        "get_account_profile": {
+          "account_id": 9876543210
+        },
+        "analyze_network": {
+          "account_id": 9876543210
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "3개 도구 체인: 패턴 탐지 → 프로파일 → 네트워크"
+  },
+  {
+    "id": "mt_020",
+    "question": "위험도 상위 20건을 랭킹하고, 그 중 계좌 1234567890의 네트워크를 분석해줘",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions",
+        "analyze_network"
+      ],
+      "tool_order": [
+        "rank_risky_transactions",
+        "analyze_network"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 20
+        },
+        "analyze_network": {
+          "account_id": 1234567890
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_021",
+    "question": "2023년 3분기와 4분기를 비교하고, 전체 이상거래 통계도 확인하고, 보이스피싱 이상거래 현황도 요약해줘",
+    "expected": {
+      "primary_tool": "compare_periods",
+      "tools_must_include": [
+        "compare_periods",
+        "get_statistics",
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "compare_periods": {
+          "period_a_start": 20230701,
+          "period_a_end": 20230930,
+          "period_b_start": 20231001,
+          "period_b_end": 20231231
+        },
+        "get_fraud_type_summary": {
+          "fraud_type": 4
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "3개 도구 체인"
+  },
+  {
+    "id": "mt_022",
+    "question": "불법도박 이상거래(유형5) 요약을 확인하고, 출금금융회사 201의 종합 리포트도 생성해줘",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary",
+        "get_institution_report"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 5
+        },
+        "get_institution_report": {
+          "bank_id": 201
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_023",
+    "question": "계좌 4444444444와 5555555555 사이의 최단 거래 경로를 탐지하고, 계좌 4444444444의 프로파일도 조회해줘",
+    "expected": {
+      "primary_tool": "detect_aml_patterns",
+      "tools_must_include": [
+        "detect_aml_patterns",
+        "get_account_profile"
+      ],
+      "tool_order": [
+        "detect_aml_patterns",
+        "get_account_profile"
+      ],
+      "param_checks": {
+        "detect_aml_patterns": {
+          "pattern_type": "shortest_path",
+          "account_a": 4444444444,
+          "account_b": 5555555555
+        },
+        "get_account_profile": {
+          "account_id": 4444444444
+        }
+      }
+    },
+    "difficulty": "hard"
+  },
+  {
+    "id": "mt_024",
+    "question": "전체 이상거래 통계, 금융회사 305 리포트, 대포통장 이상거래 현황을 순서대로 분석해줘",
+    "expected": {
+      "primary_tool": "get_statistics",
+      "tools_must_include": [
+        "get_statistics",
+        "get_institution_report",
+        "get_fraud_type_summary"
+      ],
+      "tool_order": [
+        "get_statistics",
+        "get_institution_report",
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "get_institution_report": {
+          "bank_id": 305
+        },
+        "get_fraud_type_summary": {
+          "fraud_type": 3
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "3개 도구 체인"
+  },
+  {
+    "id": "mt_025",
+    "question": "계좌 3333333333의 네트워크를 분석하고 위험 거래 상위 20건도 모델로 선별해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network",
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 3333333333
+        },
+        "rank_risky_transactions": {
+          "top_k": 20
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_026",
+    "question": "금융회사 89 리포트를 확인하고, 해당 기관 이상거래를 SQL로 조회하고, 거래시간대 0, 출금사 89, 입금사 134, 이체, 창구, 2000만원 거래의 사기 확률도 예측해줘",
+    "expected": {
+      "primary_tool": "get_institution_report",
+      "tools_must_include": [
+        "get_institution_report",
+        "query_transactions",
+        "predict_fraud"
+      ],
+      "tool_order": [
+        "get_institution_report",
+        "query_transactions",
+        "predict_fraud"
+      ],
+      "param_checks": {
+        "get_institution_report": {
+          "bank_id": 89
+        },
+        "query_transactions": {
+          "sql_contains": [
+            "89"
+          ],
+          "sql_valid": true
+        },
+        "predict_fraud": {
+          "거래시간대": 0,
+          "출금금융회사일련번호": 89,
+          "입금금융회사일련번호": 134,
+          "자금구분": 4,
+          "매체구분": 1,
+          "거래금액": 20000000
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "3개 도구 체인: 기관 리포트 → SQL 조회 → 사기 예측"
+  },
+  {
+    "id": "mt_irr_001",
+    "question": "이 에이전트는 어떤 LLM 모델 기반으로 동작하는 거야?",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 시스템 구성 질문 — AML 분석 도구 호출 불필요"
+  },
+  {
+    "id": "mt_irr_002",
+    "question": "지금까지 분석한 결과를 외부 데이터베이스에 저장해줘",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 외부 DB 저장은 지원되지 않는 기능 — 도구 호출 불필요"
+  },
+  {
+    "id": "mt_irr_003",
+    "question": "이 에이전트를 다른 은행 시스템에 연동하려면 어떻게 해야 해?",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 시스템 연동 방법 문의 — AML 분석 도구 실행과 무관"
+  },
+  {
+    "id": "mt_irr_004",
+    "question": "AML 담당자를 위한 교육 프로그램이나 자격증을 추천해줘",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 교육·자격증 안내 — AML 분석 도구 호출과 무관"
+  },
+  {
+    "id": "mt_027",
+    "question": "고액거래를 조회하고 계좌 1234567890의 위험도도 평가해줘",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates",
+        "score_account_risk"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        },
+        "score_account_risk": {
+          "account_id": 1234567890
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "CTR + 위험평가 체인"
+  },
+  {
+    "id": "mt_028",
+    "question": "전체 모니터링 규칙을 실행하고 계좌 9876543210의 네트워크도 분석해줘",
+    "expected": {
+      "primary_tool": "detect_monitoring_alerts",
+      "tools_must_include": [
+        "detect_monitoring_alerts",
+        "analyze_network"
+      ],
+      "param_checks": {
+        "detect_monitoring_alerts": {
+          "rule_id": "all"
+        },
+        "analyze_network": {
+          "account_id": 9876543210
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "모니터링 + 네트워크 체인"
+  },
+  {
+    "id": "mt_029",
+    "question": "분할거래 의심 건을 탐지하고 심야대량거래 알림도 확인해줘",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates",
+        "detect_monitoring_alerts"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        },
+        "detect_monitoring_alerts": {
+          "rule_id": "R001"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "CTR + 모니터링 체인"
+  },
+  {
+    "id": "mt_030",
+    "question": "계좌 5555555555의 위험도를 평가하고 프로파일도 조회해줘",
+    "expected": {
+      "primary_tool": "score_account_risk",
+      "tools_must_include": [
+        "score_account_risk",
+        "get_account_profile"
+      ],
+      "param_checks": {
+        "score_account_risk": {
+          "account_id": 5555555555
+        },
+        "get_account_profile": {
+          "account_id": 5555555555
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "위험평가 + 프로파일 체인"
+  },
+  {
+    "id": "mt_031",
+    "question": "고액거래를 조회하고, 전체 모니터링 규칙도 실행하고, 계좌 3333333333의 위험도를 평가해줘",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates",
+        "detect_monitoring_alerts",
+        "score_account_risk"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        },
+        "detect_monitoring_alerts": {
+          "rule_id": "all"
+        },
+        "score_account_risk": {
+          "account_id": 3333333333
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "3개 신규 도구 체인"
+  },
+  {
+    "id": "mt_032",
+    "question": "계좌 4444444444의 위험도를 평가하고 해당 계좌의 네트워크를 분석하고 순환거래 패턴도 탐지해줘",
+    "expected": {
+      "primary_tool": "score_account_risk",
+      "tools_must_include": [
+        "score_account_risk",
+        "analyze_network",
+        "detect_aml_patterns"
+      ],
+      "tool_order": [
+        "score_account_risk",
+        "analyze_network",
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "score_account_risk": {
+          "account_id": 4444444444
+        },
+        "analyze_network": {
+          "account_id": 4444444444
+        },
+        "detect_aml_patterns": {
+          "pattern_type": "ring"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "위험평가 + 네트워크 + AML 패턴 체인"
+  },
+  {
+    "id": "mt_033",
+    "question": "휴면계좌를 탐지하고 그 중 계좌 2222222222의 네트워크도 분석해줘",
+    "expected": {
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation",
+        "analyze_network"
+      ],
+      "tool_order": [
+        "detect_dormant_reactivation",
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 2222222222
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "휴면계좌 탐지 → 네트워크 분석 체인"
+  },
+  {
+    "id": "mt_034",
+    "question": "스머핑(분산입금) 네트워크를 탐지하고 전체 통계도 확인해줘",
+    "expected": {
+      "primary_tool": "detect_smurfing_network",
+      "tools_must_include": [
+        "detect_smurfing_network",
+        "get_statistics"
+      ],
+      "param_checks": {}
+    },
+    "difficulty": "easy",
+    "note": "스머핑 탐지 + 통계 체인"
+  },
+  {
+    "id": "mt_035",
+    "question": "월별 이상거래 추세를 분석하고, 자금세탁(유형1) 이상거래 현황도 요약해줘",
+    "expected": {
+      "primary_tool": "get_trend_analysis",
+      "tools_must_include": [
+        "get_trend_analysis",
+        "get_fraud_type_summary"
+      ],
+      "tool_order": [
+        "get_trend_analysis",
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "get_trend_analysis": {
+          "unit": "monthly"
+        },
+        "get_fraud_type_summary": {
+          "fraud_type": 1
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "추세분석 → 이상거래유형 요약 체인"
+  },
+  {
+    "id": "mt_036",
+    "question": "기관간 자금 흐름을 분석하고, 출금금융회사 134의 현황 리포트도 확인해줘",
+    "expected": {
+      "primary_tool": "analyze_cross_institution_flow",
+      "tools_must_include": [
+        "analyze_cross_institution_flow",
+        "get_institution_report"
+      ],
+      "tool_order": [
+        "analyze_cross_institution_flow",
+        "get_institution_report"
+      ],
+      "param_checks": {
+        "get_institution_report": {
+          "bank_id": 134
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "기관간 흐름 분석 → 기관 리포트 체인"
+  },
+  {
+    "id": "mt_037",
+    "question": "채널별 위험도를 분석하고 계좌 7777777777의 위험도도 평가해줘",
+    "expected": {
+      "primary_tool": "analyze_channel_risk",
+      "tools_must_include": [
+        "analyze_channel_risk",
+        "score_account_risk"
+      ],
+      "param_checks": {
+        "score_account_risk": {
+          "account_id": 7777777777
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "채널위험 분석 + 계좌 위험도 평가 체인"
+  },
+  {
+    "id": "mt_038",
+    "question": "CTR 대상 분할거래를 탐지하고, 입금계좌 8888888888의 프로파일을 조회해줘",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates",
+        "get_receiving_account_profile"
+      ],
+      "tool_order": [
+        "detect_ctr_candidates",
+        "get_receiving_account_profile"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        },
+        "get_receiving_account_profile": {
+          "account_id": 8888888888
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "CTR 분할거래 탐지 → 입금계좌 프로파일 체인"
+  },
+  {
+    "id": "mt_039",
+    "question": "스머핑 네트워크를 탐지하고, 대포통장 패턴도 함께 탐지해줘",
+    "expected": {
+      "primary_tool": "detect_smurfing_network",
+      "tools_must_include": [
+        "detect_smurfing_network",
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "detect_aml_patterns": {
+          "pattern_type": "funnel"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "스머핑 탐지 + AML 대포통장 패턴 체인"
+  },
+  {
+    "id": "mt_040",
+    "question": "분기별 이상거래 추세를 분석하고, 기관간 자금 흐름도 확인해줘",
+    "expected": {
+      "primary_tool": "get_trend_analysis",
+      "tools_must_include": [
+        "get_trend_analysis",
+        "analyze_cross_institution_flow"
+      ],
+      "param_checks": {
+        "get_trend_analysis": {
+          "unit": "quarterly"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "추세분석 → 기관간 흐름 체인"
+  },
+  {
+    "id": "mt_041",
+    "question": "휴면계좌를 탐지하고, 계좌 6666666666의 위험도도 평가하고, 해당 계좌 거래를 SQL로 조회해줘",
+    "expected": {
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation",
+        "score_account_risk",
+        "query_transactions"
+      ],
+      "tool_order": [
+        "detect_dormant_reactivation",
+        "score_account_risk",
+        "query_transactions"
+      ],
+      "param_checks": {
+        "score_account_risk": {
+          "account_id": 6666666666
+        },
+        "query_transactions": {
+          "sql_contains": [
+            "6666666666"
+          ],
+          "sql_valid": true
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "휴면계좌 탐지 → 위험도 평가 → SQL 조회 3개 체인"
+  },
+  {
+    "id": "mt_042",
+    "question": "채널별 위험도를 분석하고, 인터넷뱅킹 고액거래를 CTR 대상으로 탐지하고, 스머핑 네트워크도 탐지해줘",
+    "expected": {
+      "primary_tool": "analyze_channel_risk",
+      "tools_must_include": [
+        "analyze_channel_risk",
+        "detect_ctr_candidates",
+        "detect_smurfing_network"
+      ],
+      "tool_order": [
+        "analyze_channel_risk",
+        "detect_ctr_candidates",
+        "detect_smurfing_network"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "채널위험 + CTR + 스머핑 3개 신규 도구 체인"
+  },
+  {
+    "id": "mt_043",
+    "question": "입금계좌 1111111111의 프로파일을 조회하고, 해당 계좌의 위험도를 평가하고, 레이어링 패턴도 탐지해줘",
+    "expected": {
+      "primary_tool": "get_receiving_account_profile",
+      "tools_must_include": [
+        "get_receiving_account_profile",
+        "score_account_risk",
+        "detect_aml_patterns"
+      ],
+      "tool_order": [
+        "get_receiving_account_profile",
+        "score_account_risk",
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "get_receiving_account_profile": {
+          "account_id": 1111111111
+        },
+        "score_account_risk": {
+          "account_id": 1111111111
+        },
+        "detect_aml_patterns": {
+          "pattern_type": "layering"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "입금계좌 프로파일 → 위험도 평가 → AML 레이어링 패턴 3개 체인"
+  },
+  {
+    "id": "mt_044",
+    "question": "기관간 자금 흐름을 분석하고, 월별 이상거래 추세도 확인하고, 금융회사 201과 134 사이의 고액거래 CTR도 탐지해줘",
+    "expected": {
+      "primary_tool": "analyze_cross_institution_flow",
+      "tools_must_include": [
+        "analyze_cross_institution_flow",
+        "get_trend_analysis",
+        "detect_ctr_candidates"
+      ],
+      "tool_order": [
+        "analyze_cross_institution_flow",
+        "get_trend_analysis",
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "get_trend_analysis": {
+          "unit": "monthly"
+        },
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "기관간 흐름 + 추세분석 + CTR 탐지 3개 신규 도구 체인"
+  },
+  {
+    "id": "mt_irr_005",
+    "question": "지금 분석한 이상거래 데이터를 엑셀 파일로 내보내줘",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 파일 내보내기(엑셀 export)는 지원되지 않는 기능 — 도구 호출 불필요"
+  },
+  {
+    "id": "mt_irr_006",
+    "question": "FATF 40개 권고 사항 전문을 요약해줘",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 외부 규제 문서 요약 요청 — AML 분석 데이터 도구 호출과 무관"
+  },
+  {
+    "id": "mt_045",
+    "question": "휴면계좌 재활성화를 탐지하고, 스머핑 네트워크도 함께 탐지해줘",
+    "expected": {
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation",
+        "detect_smurfing_network"
+      ],
+      "tool_order": [
+        "detect_dormant_reactivation",
+        "detect_smurfing_network"
+      ],
+      "param_checks": {}
+    },
+    "difficulty": "easy",
+    "note": "휴면계좌 탐지 → 스머핑 탐지 체인"
+  },
+  {
+    "id": "mt_046",
+    "question": "채널별 위험도를 분석하고, 분기별 이상거래 추세도 확인해줘",
+    "expected": {
+      "primary_tool": "analyze_channel_risk",
+      "tools_must_include": [
+        "analyze_channel_risk",
+        "get_trend_analysis"
+      ],
+      "param_checks": {
+        "get_trend_analysis": {
+          "unit": "quarterly"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "채널위험 분석 → 분기별 추세 체인"
+  },
+  {
+    "id": "mt_047",
+    "question": "입금계좌 3333333333의 프로파일을 조회하고, 해당 계좌의 프로파일도 출금 관점(출금계좌)으로 함께 확인해줘",
+    "expected": {
+      "primary_tool": "get_receiving_account_profile",
+      "tools_must_include": [
+        "get_receiving_account_profile",
+        "get_account_profile"
+      ],
+      "tool_order": [
+        "get_receiving_account_profile",
+        "get_account_profile"
+      ],
+      "param_checks": {
+        "get_receiving_account_profile": {
+          "account_id": 3333333333
+        },
+        "get_account_profile": {
+          "account_id": 3333333333
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "입금계좌 프로파일 → 출금계좌 프로파일 비교 체인"
+  },
+  {
+    "id": "mt_048",
+    "question": "기관간 자금 흐름을 분석하고, 가장 위험한 거래 15건을 선별해줘",
+    "expected": {
+      "primary_tool": "analyze_cross_institution_flow",
+      "tools_must_include": [
+        "analyze_cross_institution_flow",
+        "rank_risky_transactions"
+      ],
+      "tool_order": [
+        "analyze_cross_institution_flow",
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 15
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "기관간 흐름 → 위험 거래 랭킹 체인"
+  },
+  {
+    "id": "mt_049",
+    "question": "계좌 2222222222에 대해 위험도를 평가하고, 네트워크를 분석하고, 입금계좌 관점의 프로파일도 조회해줘",
+    "expected": {
+      "primary_tool": "score_account_risk",
+      "tools_must_include": [
+        "score_account_risk",
+        "analyze_network",
+        "get_receiving_account_profile"
+      ],
+      "tool_order": [
+        "score_account_risk",
+        "analyze_network",
+        "get_receiving_account_profile"
+      ],
+      "param_checks": {
+        "score_account_risk": {
+          "account_id": 2222222222
+        },
+        "analyze_network": {
+          "account_id": 2222222222
+        },
+        "get_receiving_account_profile": {
+          "account_id": 2222222222
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "위험도 → 네트워크 → 입금계좌 프로파일 3개 체인"
+  },
+  {
+    "id": "mt_050",
+    "question": "고액거래 CTR 대상을 탐지하고, 전체 이상거래 통계도 확인해줘",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates",
+        "get_statistics"
+      ],
+      "tool_order": [
+        "detect_ctr_candidates",
+        "get_statistics"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "CTR 탐지 → 전체 통계 체인"
+  },
+  {
+    "id": "mt_051",
+    "question": "월별 이상거래 추세를 분석하고, 금융회사 305의 현황 리포트를 확인하고, 입금계좌 7777777777의 프로파일도 조회해줘",
+    "expected": {
+      "primary_tool": "get_trend_analysis",
+      "tools_must_include": [
+        "get_trend_analysis",
+        "get_institution_report",
+        "get_receiving_account_profile"
+      ],
+      "tool_order": [
+        "get_trend_analysis",
+        "get_institution_report",
+        "get_receiving_account_profile"
+      ],
+      "param_checks": {
+        "get_trend_analysis": {
+          "unit": "monthly"
+        },
+        "get_institution_report": {
+          "bank_id": 305
+        },
+        "get_receiving_account_profile": {
+          "account_id": 7777777777
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "추세분석 → 기관 리포트 → 입금계좌 프로파일 3개 체인"
+  },
+  {
+    "id": "mt_052",
+    "question": "스머핑 네트워크를 탐지하고, 탐지된 결과를 바탕으로 계좌 9999999999의 위험도도 평가해줘",
+    "expected": {
+      "primary_tool": "detect_smurfing_network",
+      "tools_must_include": [
+        "detect_smurfing_network",
+        "score_account_risk"
+      ],
+      "tool_order": [
+        "detect_smurfing_network",
+        "score_account_risk"
+      ],
+      "param_checks": {
+        "score_account_risk": {
+          "account_id": 9999999999
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "스머핑 탐지 → 계좌 위험도 평가 체인"
+  },
+  {
+    "id": "mt_053",
+    "question": "모니터링 규칙을 전체 실행하고, 알림이 발생한 계좌 1234567890의 프로파일과 입금계좌 관점도 함께 조회해줘",
+    "expected": {
+      "primary_tool": "detect_monitoring_alerts",
+      "tools_must_include": [
+        "detect_monitoring_alerts",
+        "get_account_profile",
+        "get_receiving_account_profile"
+      ],
+      "tool_order": [
+        "detect_monitoring_alerts",
+        "get_account_profile",
+        "get_receiving_account_profile"
+      ],
+      "param_checks": {
+        "detect_monitoring_alerts": {
+          "rule_id": "all"
+        },
+        "get_account_profile": {
+          "account_id": 1234567890
+        },
+        "get_receiving_account_profile": {
+          "account_id": 1234567890
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "모니터링 → 출금계좌 프로파일 → 입금계좌 프로파일 3개 체인"
+  },
+  {
+    "id": "mt_054",
+    "question": "채널별 위험도를 분석하고, 기관간 자금 흐름도 확인해줘",
+    "expected": {
+      "primary_tool": "analyze_channel_risk",
+      "tools_must_include": [
+        "analyze_channel_risk",
+        "analyze_cross_institution_flow"
+      ],
+      "param_checks": {}
+    },
+    "difficulty": "medium",
+    "note": "채널위험 + 기관간 흐름 분석 체인"
+  },
+  {
+    "id": "mt_055",
+    "question": "CTR 분할거래를 탐지하고, 2023년 4분기와 2024년 1분기 이상거래를 비교해줘",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates",
+        "compare_periods"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        },
+        "compare_periods": {
+          "period_a_start": 20231001,
+          "period_a_end": 20231231,
+          "period_b_start": 20240101,
+          "period_b_end": 20240331
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "CTR 분할거래 탐지 → 기간 비교 체인"
+  },
+  {
+    "id": "mt_056",
+    "question": "입금계좌 4444444444의 프로파일을 조회하고, 해당 계좌의 거래를 SQL로 조회해줘",
+    "expected": {
+      "primary_tool": "get_receiving_account_profile",
+      "tools_must_include": [
+        "get_receiving_account_profile",
+        "query_transactions"
+      ],
+      "tool_order": [
+        "get_receiving_account_profile",
+        "query_transactions"
+      ],
+      "param_checks": {
+        "get_receiving_account_profile": {
+          "account_id": 4444444444
+        },
+        "query_transactions": {
+          "sql_contains": [
+            "4444444444"
+          ],
+          "sql_valid": true
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "입금계좌 프로파일 → SQL 거래 조회 체인"
+  },
+  {
+    "id": "mt_057",
+    "question": "휴면계좌 재활성화를 탐지하고, 계좌 5555555555의 위험도를 평가하고, 모니터링 알림도 전체 실행해줘",
+    "expected": {
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation",
+        "score_account_risk",
+        "detect_monitoring_alerts"
+      ],
+      "tool_order": [
+        "detect_dormant_reactivation",
+        "score_account_risk",
+        "detect_monitoring_alerts"
+      ],
+      "param_checks": {
+        "score_account_risk": {
+          "account_id": 5555555555
+        },
+        "detect_monitoring_alerts": {
+          "rule_id": "all"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "휴면계좌 탐지 → 계좌 위험도 → 모니터링 알림 3개 체인"
+  },
+  {
+    "id": "mt_irr_007",
+    "question": "이 시스템에서 탐지된 이상거래 데이터를 금융정보분석원에 직접 보고해줘",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 외부 기관 직접 보고는 지원 기능이 아님 — AML 분석 도구 호출과 무관"
+  },
+  {
+    "id": "mt_irr_008",
+    "question": "우리 은행 내부 직원이 연루된 내부자 거래를 탐지해줘",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 내부자 거래 탐지는 지원하지 않는 도메인 — 정의된 AML 도구 범위 외"
+  },
+  {
+    "id": "mt_058",
+    "question": "분기별 트렌드를 분석하고, 이상거래 유형별 요약도 확인해줘",
+    "expected": {
+      "primary_tool": "get_trend_analysis",
+      "tools_must_include": [
+        "get_trend_analysis",
+        "get_fraud_type_summary"
+      ],
+      "tool_order": [
+        "get_trend_analysis",
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "get_trend_analysis": {
+          "unit": "quarterly"
+        },
+        "get_fraud_type_summary": {}
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_059",
+    "question": "계좌 1111111111의 네트워크를 2-hop으로 분석하고, 대포통장 패턴도 탐지해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network",
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1111111111,
+          "hops_min": 2
+        },
+        "detect_aml_patterns": {
+          "pattern_type": "funnel"
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_060",
+    "question": "R001 심야대량 규칙 알림을 확인하고, 알림된 계좌 3333333333의 위험도를 평가해줘",
+    "expected": {
+      "primary_tool": "detect_monitoring_alerts",
+      "tools_must_include": [
+        "detect_monitoring_alerts",
+        "score_account_risk"
+      ],
+      "param_checks": {
+        "detect_monitoring_alerts": {
+          "rule_id": "R001"
+        },
+        "score_account_risk": {
+          "account_id": 3333333333
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_061",
+    "question": "자금 수집(inbound) 스머핑을 탐지하고, 분산(outbound) 패턴도 함께 분석해줘",
+    "expected": {
+      "primary_tool": "detect_smurfing_network",
+      "tools_must_include": [
+        "detect_smurfing_network"
+      ],
+      "param_checks": {
+        "detect_smurfing_network": {
+          "direction": "inbound"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "2회 호출 기대 (inbound + outbound) — tools_must_include에 2회 포함 시 recall 처리"
+  },
+  {
+    "id": "mt_062",
+    "question": "출금금융회사 150의 이상거래를 조회하고, 해당 기관 리포트도 확인해줘",
+    "expected": {
+      "primary_tool": "query_transactions",
+      "tools_must_include": [
+        "query_transactions",
+        "get_institution_report"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "150"
+          ],
+          "sql_valid": true
+        },
+        "get_institution_report": {
+          "bank_id": 150
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_063",
+    "question": "보이스피싱(유형 4) 이상거래를 조회하고, 상위 10건의 위험도를 랭킹해줘",
+    "expected": {
+      "primary_tool": "query_transactions",
+      "tools_must_include": [
+        "query_transactions",
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "4"
+          ],
+          "sql_valid": true
+        },
+        "rank_risky_transactions": {
+          "top_k": 10
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_064",
+    "question": "2024년 1분기와 2분기 이상거래를 비교하고, 월별 추세도 보여줘",
+    "expected": {
+      "primary_tool": "compare_periods",
+      "tools_must_include": [
+        "compare_periods",
+        "get_trend_analysis"
+      ],
+      "param_checks": {
+        "compare_periods": {
+          "period_a_start": 20240101,
+          "period_a_end": 20240331,
+          "period_b_start": 20240401,
+          "period_b_end": 20240630
+        },
+        "get_trend_analysis": {
+          "unit": "monthly"
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_065",
+    "question": "고액거래 CTR 대상을 탐지하고, 분할거래 의심 건도 함께 확인해줘",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "2회 호출 기대 (high_value + structuring)"
+  },
+  {
+    "id": "mt_066",
+    "question": "계좌 6666666666의 출금 프로파일과 입금 프로파일을 모두 조회해줘",
+    "expected": {
+      "primary_tool": "get_account_profile",
+      "tools_must_include": [
+        "get_account_profile",
+        "get_receiving_account_profile"
+      ],
+      "param_checks": {
+        "get_account_profile": {
+          "account_id": 6666666666
+        },
+        "get_receiving_account_profile": {
+          "account_id": 6666666666
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_067",
+    "question": "전체 통계를 먼저 보고, 채널별 위험도와 기관간 흐름을 분석해줘",
+    "expected": {
+      "primary_tool": "get_statistics",
+      "tools_must_include": [
+        "get_statistics",
+        "analyze_channel_risk",
+        "analyze_cross_institution_flow"
+      ],
+      "tool_order": [
+        "get_statistics",
+        "analyze_channel_risk",
+        "analyze_cross_institution_flow"
+      ],
+      "param_checks": {}
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_068",
+    "question": "계좌 8888888888과 7777777777 간 최단경로를 찾고, 두 계좌의 위험도도 평가해줘",
+    "expected": {
+      "primary_tool": "detect_aml_patterns",
+      "tools_must_include": [
+        "detect_aml_patterns",
+        "score_account_risk"
+      ],
+      "param_checks": {
+        "detect_aml_patterns": {
+          "pattern_type": "shortest_path",
+          "account_a": 8888888888,
+          "account_b": 7777777777
+        }
+      }
+    },
+    "difficulty": "hard"
+  },
+  {
+    "id": "mt_069",
+    "question": "대포통장 유형(3) 이상거래를 조회하고, 계좌 1212121212의 네트워크를 분석해줘",
+    "expected": {
+      "primary_tool": "query_transactions",
+      "tools_must_include": [
+        "query_transactions",
+        "analyze_network"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "3"
+          ],
+          "sql_valid": true
+        },
+        "analyze_network": {
+          "account_id": 1212121212
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_070",
+    "question": "금융회사 102의 기관 리포트를 확인하고, 해당 기관 이상거래를 SQL로 조회해줘",
+    "expected": {
+      "primary_tool": "get_institution_report",
+      "tools_must_include": [
+        "get_institution_report",
+        "query_transactions"
+      ],
+      "param_checks": {
+        "get_institution_report": {
+          "bank_id": 102
+        },
+        "query_transactions": {
+          "sql_contains": [
+            "102"
+          ],
+          "sql_valid": true
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_071",
+    "question": "휴면계좌 재활성화를 90일 기준으로 탐지하고, 탐지된 계좌의 스머핑 패턴도 확인해줘",
+    "expected": {
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation",
+        "detect_smurfing_network"
+      ],
+      "param_checks": {
+        "detect_dormant_reactivation": {
+          "dormant_days": 90
+        },
+        "detect_smurfing_network": {
+          "direction": "inbound"
+        }
+      }
+    },
+    "difficulty": "hard"
+  },
+  {
+    "id": "mt_072",
+    "question": "거래시간대 21, 출금사 134, 입금사 201, 이체, ATM, 300만원 조건으로 이상거래 확률을 예측하고, 전체 통계도 보여줘",
+    "expected": {
+      "primary_tool": "predict_fraud",
+      "tools_must_include": [
+        "predict_fraud",
+        "get_statistics"
+      ],
+      "param_checks": {
+        "predict_fraud": {
+          "거래시간대": 21,
+          "출금금융회사일련번호": 134,
+          "입금금융회사일련번호": 201,
+          "자금구분": 4,
+          "매체구분": 2,
+          "거래금액": 3000000
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_073",
+    "question": "월별 이상거래 추이를 분석하고, 이상거래 유형 1번(자금세탁) 요약도 확인해줘",
+    "expected": {
+      "primary_tool": "get_trend_analysis",
+      "tools_must_include": [
+        "get_trend_analysis",
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "get_trend_analysis": {
+          "unit": "monthly"
+        },
+        "get_fraud_type_summary": {
+          "fraud_type": 1
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_074",
+    "question": "분할거래 의심 건을 탐지하고, 고액거래도 함께 조회해줘",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_075",
+    "question": "R003 정액패턴 규칙 알림을 확인하고, R004 기관집중 알림도 실행해줘",
+    "expected": {
+      "primary_tool": "detect_monitoring_alerts",
+      "tools_must_include": [
+        "detect_monitoring_alerts"
+      ],
+      "param_checks": {
+        "detect_monitoring_alerts": {
+          "rule_id": "R003"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "2회 호출 기대 (R003 + R004) — tools_must_include 확장 가능"
+  },
+  {
+    "id": "mt_076",
+    "question": "계좌 1313131313의 프로파일을 조회하고, 해당 계좌의 위험도 점수도 그래프 DB로 산출해줘",
+    "expected": {
+      "primary_tool": "get_account_profile",
+      "tools_must_include": [
+        "get_account_profile",
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "get_account_profile": {
+          "account_id": 1313131313
+        },
+        "detect_aml_patterns": {
+          "pattern_type": "risk_score",
+          "account_id": 1313131313
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_077",
+    "question": "자금 분산(outbound) 스머핑을 탐지하고, 상위 5건 고위험 거래를 랭킹해줘",
+    "expected": {
+      "primary_tool": "detect_smurfing_network",
+      "tools_must_include": [
+        "detect_smurfing_network",
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "detect_smurfing_network": {
+          "direction": "outbound"
+        },
+        "rank_risky_transactions": {
+          "top_k": 5
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_078",
+    "question": "2023년 상반기와 하반기 이상거래를 비교하고, 분기별 트렌드도 분석해줘",
+    "expected": {
+      "primary_tool": "compare_periods",
+      "tools_must_include": [
+        "compare_periods",
+        "get_trend_analysis"
+      ],
+      "param_checks": {
+        "compare_periods": {
+          "period_a_start": 20230101,
+          "period_a_end": 20230630,
+          "period_b_start": 20230701,
+          "period_b_end": 20231231
+        },
+        "get_trend_analysis": {
+          "unit": "quarterly"
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_079",
+    "question": "입금계좌 1414141414의 프로파일을 조회하고, 해당 계좌 관련 순환거래 패턴도 탐지해줘",
+    "expected": {
+      "primary_tool": "get_receiving_account_profile",
+      "tools_must_include": [
+        "get_receiving_account_profile",
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "get_receiving_account_profile": {
+          "account_id": 1414141414
+        },
+        "detect_aml_patterns": {
+          "pattern_type": "ring"
+        }
+      }
+    },
+    "difficulty": "hard"
+  },
+  {
+    "id": "mt_080",
+    "question": "채널별 위험도를 분석하고, 금융회사 120 기관 리포트도 확인해줘",
+    "expected": {
+      "primary_tool": "analyze_channel_risk",
+      "tools_must_include": [
+        "analyze_channel_risk",
+        "get_institution_report"
+      ],
+      "param_checks": {
+        "get_institution_report": {
+          "bank_id": 120
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_081",
+    "question": "기관간 자금 흐름을 분석하고, 출금금융회사 134의 이상거래를 조회해줘",
+    "expected": {
+      "primary_tool": "analyze_cross_institution_flow",
+      "tools_must_include": [
+        "analyze_cross_institution_flow",
+        "query_transactions"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "134"
+          ],
+          "sql_valid": true
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_082",
+    "question": "불법도박(유형 5) 이상거래 요약을 확인하고, 해당 유형 거래를 20건 조회해줘",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary",
+        "query_transactions"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 5
+        },
+        "query_transactions": {
+          "sql_contains": [
+            "5"
+          ],
+          "sql_valid": true
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_083",
+    "question": "계좌 1515151515의 1-hop 네트워크를 분석하고, 레이어링 패턴도 탐지해줘",
+    "expected": {
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network",
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 1515151515,
+          "hops_max": 1
+        },
+        "detect_aml_patterns": {
+          "pattern_type": "layering"
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_084",
+    "question": "고위험 거래 20건을 랭킹하고, 1위 계좌의 네트워크를 분석해줘",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions",
+        "analyze_network"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 20
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "analyze_network account_id는 rank 결과에 의존"
+  },
+  {
+    "id": "mt_085",
+    "question": "전체 모니터링 규칙을 실행하고, 전체 통계와 이상거래 유형별 요약도 확인해줘",
+    "expected": {
+      "primary_tool": "detect_monitoring_alerts",
+      "tools_must_include": [
+        "detect_monitoring_alerts",
+        "get_statistics",
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "detect_monitoring_alerts": {
+          "rule_id": "all"
+        }
+      }
+    },
+    "difficulty": "hard"
+  },
+  {
+    "id": "mt_086",
+    "question": "출금금융회사 140의 이상거래를 조회하고, 예측 확률도 구해줘. 거래시간대 12, 입금사 305, 이체, 모바일, 200만원.",
+    "expected": {
+      "primary_tool": "query_transactions",
+      "tools_must_include": [
+        "query_transactions",
+        "predict_fraud"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "140"
+          ],
+          "sql_valid": true
+        },
+        "predict_fraud": {
+          "거래시간대": 12,
+          "출금금융회사일련번호": 140,
+          "입금금융회사일련번호": 305,
+          "자금구분": 0,
+          "매체구분": 7,
+          "거래금액": 2000000
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_087",
+    "question": "계좌 1616161616, 1717171717, 1818181818의 위험도를 각각 평가해줘",
+    "expected": {
+      "primary_tool": "score_account_risk",
+      "tools_must_include": [
+        "score_account_risk"
+      ],
+      "param_checks": {
+        "score_account_risk": {
+          "account_id": 1616161616
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "3회 호출 기대 — 최소 1회 정확하면 부분 점수"
+  },
+  {
+    "id": "mt_088",
+    "question": "유사수신(유형 6) 이상거래를 조회하고, 트렌드 분석도 월별로 해줘",
+    "expected": {
+      "primary_tool": "query_transactions",
+      "tools_must_include": [
+        "query_transactions",
+        "get_trend_analysis"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "6"
+          ],
+          "sql_valid": true
+        },
+        "get_trend_analysis": {
+          "unit": "monthly"
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_089",
+    "question": "순환거래와 레이어링 패턴을 모두 탐지해줘",
+    "expected": {
+      "primary_tool": "detect_aml_patterns",
+      "tools_must_include": [
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "detect_aml_patterns": {
+          "pattern_type": "ring"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "2회 호출 기대 (ring + layering)"
+  },
+  {
+    "id": "mt_090",
+    "question": "CTR 고액거래를 탐지하고, 기관간 자금 흐름도 분석해줘",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates",
+        "analyze_cross_institution_flow"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_091",
+    "question": "휴면계좌 재활성화를 탐지하고, 채널별 위험도도 분석해줘",
+    "expected": {
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation",
+        "analyze_channel_risk"
+      ],
+      "param_checks": {}
+    },
+    "difficulty": "medium"
+  },
+  {
+    "id": "mt_092",
+    "question": "데이터 현황을 파악하고, 월별 추세도 보여주고, 이상거래 유형별 분포도 확인해줘",
+    "expected": {
+      "primary_tool": "get_statistics",
+      "tools_must_include": [
+        "get_statistics",
+        "get_trend_analysis",
+        "get_fraud_type_summary"
+      ],
+      "tool_order": [
+        "get_statistics",
+        "get_trend_analysis",
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "get_trend_analysis": {
+          "unit": "monthly"
+        }
+      }
+    },
+    "difficulty": "medium"
+  }
+]

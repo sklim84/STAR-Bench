@@ -1,0 +1,965 @@
+[
+  {
+    "id": "ctr_001",
+    "question": "Please query the high-value transactions.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "고액거래를 조회해줘"
+  },
+  {
+    "id": "ctr_002",
+    "question": "Please check the transactions subject to CTR.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "CTR 대상 거래를 확인해줘"
+  },
+  {
+    "id": "ctr_003",
+    "question": "Show me the transaction history for amounts over 10,000,000 won.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "1000만원 이상 거래 내역을 보여줘"
+  },
+  {
+    "id": "ctr_004",
+    "question": "Please detect suspicious split transactions.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "분할거래 의심 건을 탐지해줘"
+  },
+  {
+    "id": "ctr_005",
+    "question": "Please detect structuring patterns.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "structuring 패턴을 탐지해줘"
+  },
+  {
+    "id": "ctr_006",
+    "question": "Please query the high-value cash transaction reporting subjects.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "고액현금거래보고 대상을 조회해줘"
+  },
+  {
+    "id": "ctr_007",
+    "question": "Please retrieve the high-value transactions for the first quarter of 2024.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value",
+          "date_from": 20240101,
+          "date_to": 20240331
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "2024년 1분기 고액거래를 조회해줘"
+  },
+  {
+    "id": "ctr_008",
+    "question": "Please find transactions with amounts exceeding the reporting threshold.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "보고 기준 이상의 큰 금액 거래를 찾아줘"
+  },
+  {
+    "id": "ctr_009",
+    "question": "Please detect suspicious split transactions for the first half of 2024.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring",
+          "date_from": 20240101,
+          "date_to": 20240630
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "2024년 상반기 분할거래 의심 건을 탐지해줘"
+  },
+  {
+    "id": "ctr_010",
+    "question": "Show me all transactions that are subject to CTR reporting requirements.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "CTR 보고 의무 대상인 거래를 모두 보여줘"
+  },
+  {
+    "id": "ctr_011",
+    "question": "I would like to review transactions with large amounts.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "거래금액이 큰 건들을 확인하고 싶어"
+  },
+  {
+    "id": "ctr_012",
+    "question": "Please find instances where the same account has conducted multiple transactions on the same day.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "동일계좌가 같은 날 여러 건으로 나눠서 거래한 경우를 찾아줘"
+  },
+  {
+    "id": "ctr_013",
+    "question": "Please query for high-value transactions over 50 million won.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "5000만원 이상 고액거래를 조회해줘"
+  },
+  {
+    "id": "ctr_014",
+    "question": "Please search for cash transaction reportable transactions.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "현금거래보고 대상 거래를 검색해줘"
+  },
+  {
+    "id": "ctr_015",
+    "question": "Please check if there are any accounts attempting to split transactions to avoid detection.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "거래를 쪼개서 보고를 피하려는 계좌가 있는지 확인해줘"
+  },
+  {
+    "id": "ctr_016",
+    "question": "Please find the suspicious transactions that occurred multiple times just below the reporting criteria.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "보고 기준 바로 아래로 여러 번 거래한 의심 건을 찾아줘"
+  },
+  {
+    "id": "ctr_017",
+    "question": "Please analyze whether there are any patterns of transaction splitting aimed at evading CTR.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "CTR 회피 목적의 거래 분할 패턴이 있는지 분석해줘"
+  },
+  {
+    "id": "ctr_018",
+    "question": "How many high-value cash transactions are there that are subject to reporting under the Specific Financial Information Act?",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "특정금융정보법상 보고 대상인 고액 현금거래가 얼마나 있어?"
+  },
+  {
+    "id": "ctr_019",
+    "question": "Please find transactions that total over 10 million won but are individually less than 10 million won.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "합산하면 천만원이 넘는데 건별로는 천만원 미만인 거래를 찾아줘"
+  },
+  {
+    "id": "ctr_020",
+    "question": "Please identify the periods in 2024 when large cash transactions were concentrated.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value",
+          "date_from": 20240101,
+          "date_to": 20241231
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "2024년에 대규모 현금 거래가 집중된 기간을 찾아줘"
+  },
+  {
+    "id": "ctr_021",
+    "question": "Please detect suspicious split transactions based on a threshold of 50 million won.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring",
+          "threshold": 50000000
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "5000만원 기준으로 분할거래 의심 건을 탐지해줘"
+  },
+  {
+    "id": "ctr_022",
+    "question": "Please identify suspicious cases where transactions have been intentionally dispersed to fall below reporting thresholds.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "의도적으로 보고 기준 미만으로 거래를 분산시킨 의심 사례를 찾아줘"
+  },
+  {
+    "id": "ctr_023",
+    "question": "Please provide the list of high-value cash transactions for the fourth quarter of 2023.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value",
+          "date_from": 20231001,
+          "date_to": 20231231
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "2023년 4분기 고액 현금 거래 목록을 조회해줘"
+  },
+  {
+    "id": "ctr_024",
+    "question": "Please analyze the pattern of transactions where small amounts are split and then combined to form a large amount.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "소액으로 나눠서 거래한 뒤 합치면 큰 금액이 되는 패턴을 분석해줘"
+  },
+  {
+    "id": "ctr_025",
+    "question": "Please identify patterns that pose a risk of missing CTR reporting.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "question_ko": "CTR 보고 누락 위험이 있는 패턴을 찾아줘"
+  },
+  {
+    "id": "ctr_026",
+    "question": "I need help verifying all large transactions that must be reported to the regulatory authorities.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "question_ko": "규제 당국에 보고해야 하는 대규모 거래를 빠짐없이 확인해야 하는데 도와줘"
+  },
+  {
+    "id": "ctr_irr_001",
+    "question": "Please explain the legal reporting requirements for the CTR form.",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 법적 양식 설명은 분석 도구 호출 불필요",
+    "question_ko": "CTR 보고 양식의 법적 기재 항목을 설명해줘"
+  },
+  {
+    "id": "ctr_irr_002",
+    "question": "What is the deadline for submitting the CTR report?",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 보고 기한 안내는 분석 도구 호출 불필요",
+    "question_ko": "CTR 보고 기한은 언제까지야?"
+  },
+  {
+    "id": "ctr_irr_003",
+    "question": "Please provide the history of the large cash transaction reporting system.",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 제도 역사는 분석 도구 호출 불필요",
+    "question_ko": "고액현금거래보고 제도의 역사를 알려줘"
+  },
+  {
+    "id": "ctr_irr_004",
+    "question": "What is the reporting threshold amount for CTR in foreign countries?",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 해외 기준 안내는 분석 도구 호출 불필요",
+    "question_ko": "해외 국가의 CTR 보고 기준 금액은 얼마야?"
+  },
+  {
+    "id": "ctr_027",
+    "question": "Please provide a list of high-value transactions.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "고액 거래 목록을 뽑아줘"
+  },
+  {
+    "id": "ctr_028",
+    "question": "Please find the transactions that are subject to CTR reporting.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "CTR 신고 대상 거래를 찾아줘"
+  },
+  {
+    "id": "ctr_029",
+    "question": "Please detect transaction splitting patterns.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "거래 분할 패턴을 탐지해줘"
+  },
+  {
+    "id": "ctr_030",
+    "question": "Please query the cash transactions that exceed the reporting threshold.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "보고 기준 이상의 현금 거래를 조회해줘"
+  },
+  {
+    "id": "ctr_031",
+    "question": "Please detect suspicious transactions related to smurfing.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "스머핑 의심 거래를 탐지해줘"
+  },
+  {
+    "id": "ctr_032",
+    "question": "Please retrieve the high-value cash transactions for the second quarter of 2024.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value",
+          "date_from": 20240401,
+          "date_to": 20240630
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "2024년 2분기 고액현금거래를 조회해줘"
+  },
+  {
+    "id": "ctr_033",
+    "question": "Please find transactions where the payment is made in multiple installments.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "대금을 여러 번에 나눠서 입금하는 거래를 찾아줘"
+  },
+  {
+    "id": "ctr_034",
+    "question": "Please check the transactions subject to CTR for the first half of 2023.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value",
+          "date_from": 20230101,
+          "date_to": 20230630
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "2023년 상반기 CTR 대상 거래를 확인해줘"
+  },
+  {
+    "id": "ctr_035",
+    "question": "Please detect high-value transactions based on a threshold of 20 million won.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value",
+          "threshold": 20000000
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "2000만원 기준으로 고액거래를 탐지해줘"
+  },
+  {
+    "id": "ctr_036",
+    "question": "Please find suspicious transactions that involve split transactions based on a threshold of 30 million won.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring",
+          "threshold": 30000000
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "3000만원 기준 분할거래 의심 건을 찾아줘"
+  },
+  {
+    "id": "ctr_037",
+    "question": "Detect instances where multiple small transactions from the same account within a short period sum up to a large amount.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "동일 계좌에서 짧은 시간 안에 반복된 소액 거래가 합산하면 대규모인 경우를 탐지해줘"
+  },
+  {
+    "id": "ctr_038",
+    "question": "Please check if there are any structured transaction patterns in the third quarter of 2024.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring",
+          "date_from": 20240701,
+          "date_to": 20240930
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "2024년 3분기에 구조화 거래 패턴이 있는지 확인해줘"
+  },
+  {
+    "id": "ctr_039",
+    "question": "Please find accounts that have made repeated transactions at the amount just prior to the reporting threshold.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "보고 기준 직전 금액으로 반복 거래한 계좌를 찾아줘"
+  },
+  {
+    "id": "ctr_040",
+    "question": "Please query the high-value cash transactions subject to reporting under Article 4 of the Specific Financial Transaction Information Act for the fourth quarter of 2023.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value",
+          "date_from": 20231001,
+          "date_to": 20231231
+        }
+      }
+    },
+    "difficulty": "medium",
+    "question_ko": "특금법 제4조에 따른 고액현금거래보고 대상 거래를 2023년 4분기 기준으로 조회해줘"
+  },
+  {
+    "id": "ctr_041",
+    "question": "We need to filter out transactions that pose a risk of not being reported to the regulatory authority in advance. Please check for both high-value transactions and split transactions.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {}
+    },
+    "difficulty": "hard",
+    "question_ko": "감독 기관에 미보고될 위험이 있는 거래를 사전에 걸러내야 해. 고액거래와 분할거래 두 가지 유형 모두 포함해서 확인해줘"
+  },
+  {
+    "id": "ctr_042",
+    "question": "Please detect and create a list of high-value transactions and structured suspicious transactions for the entire year of 2024 to minimize the risk of missing CTR reports.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "date_from": 20240101,
+          "date_to": 20241231
+        }
+      }
+    },
+    "difficulty": "hard",
+    "question_ko": "CTR 보고 누락 리스크를 최소화하기 위해 2024년 전체 기간의 고액거래와 구조화 의심 거래를 각각 탐지해서 리스트로 만들어줘"
+  },
+  {
+    "id": "ctr_043",
+    "question": "Please identify high-value transactions based on a threshold of 100 million won, focusing only on the first half of 2024, and provide me with the list of transactions and the total count.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value",
+          "threshold": 100000000,
+          "date_from": 20240101,
+          "date_to": 20240630
+        }
+      }
+    },
+    "difficulty": "hard",
+    "question_ko": "1억원 기준으로 고액거래를 탐지하되, 2024년 상반기만 대상으로 해서 보고 대상 거래 목록과 건수를 알려줘"
+  },
+  {
+    "id": "ctr_irr_005",
+    "question": "Please explain the standard code system used when preparing CTR reports.",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 코드 체계 설명은 분석 도구 호출 불필요",
+    "question_ko": "CTR 보고서 작성 시 사용하는 표준 코드 체계를 설명해줘"
+  },
+  {
+    "id": "ctr_irr_006",
+    "question": "Please explain the organizational structure of the Financial Intelligence Unit (KoFIU).",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 기관 조직 설명은 분석 도구 호출 불필요",
+    "question_ko": "금융정보분석원(KoFIU)의 조직 구조를 설명해줘"
+  },
+  {
+    "id": "ctr_irr_007",
+    "question": "Please let me know what penalties are imposed for failing to report a CTR.",
+    "expected": {
+      "primary_tool": "",
+      "tools_must_include": []
+    },
+    "difficulty": "easy",
+    "note": "irrelevance: 제재 규정 안내는 분석 도구 호출 불필요",
+    "question_ko": "CTR 미보고 시 어떤 제재를 받게 되는지 알려줘"
+  },
+  {
+    "id": "ctr_ex01",
+    "question": "Please query the high-value transactions.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "고액거래를 조회해줘"
+  },
+  {
+    "id": "ctr_ex02",
+    "question": "Please query the high-value transactions.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "고액거래를 조회해줘"
+  },
+  {
+    "id": "ctr_ex03",
+    "question": "Please retrieve the high-value transactions.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "고액거래를 조회해줘"
+  },
+  {
+    "id": "ctr_ex04",
+    "question": "Please query the high-value transactions.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "고액거래를 조회해줘"
+  },
+  {
+    "id": "ctr_ex05",
+    "question": "Please query the high-value transactions.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "고액거래를 조회해줘"
+  },
+  {
+    "id": "ctr_ex06",
+    "question": "Please retrieve the high-value transactions.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "고액거래를 조회해줘"
+  },
+  {
+    "id": "ctr_ex07",
+    "question": "Please query the high-value transactions.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "고액거래를 조회해줘"
+  },
+  {
+    "id": "ctr_ex08",
+    "question": "Please retrieve the high-value transactions.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "고액거래를 조회해줘"
+  }
+]
