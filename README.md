@@ -6,18 +6,21 @@ AML-Bench is a domain-specific function calling benchmark for evaluating LLMs as
 
 ## Key Features
 
-- **1,258 expert-curated test cases** across 24 evaluation categories and 3 difficulty levels
-- **44 models** from 14 families evaluated on vLLM (largest model comparison in domain-specific tool-calling benchmarks)
-- **Korean–English prompt ablation**: controlled single-variable experiment isolating query language effect
+- **1,258 expert-curated test cases** across 24 evaluation categories and 3 difficulty levels (Easy + irrelevance: 673 / Medium: 412 / Hard: 173)
+- **44 models** from 10 families evaluated on vLLM (largest model comparison in domain-specific tool-calling benchmarks)
+- **2×2 language ablation**: query language (KR/EN) × tool schema language (KR/EN) — controlled decomposition of language effects
 - **Multi-turn STR benchmark**: 50 scenarios evaluating end-to-end suspicious transaction report generation
-- **3-round reproducibility**: mean ± standard deviation reported for all metrics
+- **3-round reproducibility** (KR + EN): mean ± standard deviation reported for all metrics
+- **BFCL correlation analysis**: direct measurement of general-benchmark vs domain-benchmark alignment (RQ6)
 
 ## Main Findings
 
-1. Tool-calling accuracy does not scale with model size — 4B models outperform 70B counterparts
-2. Korean prompts yield higher accuracy than English for 89% of models (mean delta +0.042)
-3. Thinking mode degrades Korean tool-calling while improving English, revealing a language–reasoning interaction
-4. Multi-turn performance diverges sharply from single-turn — Mistral series ranks top-tier in single-turn but collapses to near-zero in multi-turn
+1. Tool-calling accuracy does not scale with model size — 4B Qwen3.5 (think) outperforms Llama-3.3-70B and A.X-4.0 (72B)
+2. Korean prompts yield higher accuracy than English for **84% of models (37/44)**; mean delta **+0.030**
+3. Thinking mode effect is size-dependent: small Qwen3.5 models show significant degradation (−9.06pp at 0.8B, McNemar p<10⁻¹⁰), while larger models (≥4B) show neutral-to-positive effects
+4. 2×2 ablation reveals query-language and tool-schema-language effects are similar in magnitude (−0.029 vs −0.039) with weak interaction
+5. Multi-turn performance diverges sharply from single-turn — Mistral series ranks top-tier in single-turn but collapses to near-zero in multi-turn; Pearson r between single-turn and multi-turn composite scores is only 0.29 (p=0.16)
+6. AML-specific tools (STR field validation, AML glossary lookup) show 0.608–0.622 accuracy even for top-tier general models — gap that general benchmarks (BFCL v3/v4) cannot detect
 
 ## Benchmark Structure
 
@@ -117,12 +120,27 @@ Results sorted by composite score. Mean ± std from 3-round reproducibility expe
 
 | Metric | Value |
 |--------|-------|
-| KR > EN (한국어가 더 높은 모델) | **39/44 (89%)** |
-| Mean score delta (KR − EN) | **+0.042** |
-| Max KR advantage | +0.184 (A.X-4.0-Light) |
-| Max EN advantage | −0.114 (Mistral-Nemo) |
+| KR > EN (한국어가 더 높은 모델) | **37/44 (84%)** |
+| Mean score delta (KR − EN) | **+0.030** |
+| Max KR advantage | +0.178 (A.X-4.0-Light) |
+| Max EN advantage | −0.113 (Mistral-Nemo) |
 
-**주요 발견**: 대부분의 모델이 한국어 프롬프트에서 더 높은 정확도를 보임. 이는 벤치마크의 도구 스키마(파라미터명)가 한국어로 정의되어 있어, 한국어 질문 시 파라미터 매칭이 더 정확하기 때문으로 분석됨. 영어가 우세한 5개 모델은 대부분 영어 중심 학습 모델(xLAM-1b, Mistral-Nemo 등)이거나 비영어 도구 스키마 처리에 취약한 모델임.
+**주요 발견**: 대부분의 모델이 한국어 프롬프트에서 더 높은 정확도를 보임. 이는 벤치마크의 도구 스키마(파라미터명)가 한국어로 정의되어 있어, 한국어 질문 시 파라미터 매칭이 더 정확하기 때문으로 분석됨. 영어가 우세한 7개 모델은 대부분 영어 중심 학습 모델(Kanana-2-Instruct, Mistral-Nemo 등)이거나 비영어 도구 스키마 처리에 취약한 모델임.
+
+### 2b. 2×2 Ablation: Query Language × Tool Schema Language (43 models, newly collected)
+
+질의 언어 효과와 도구 스키마 언어 효과를 독립적으로 분해하는 2×2 통제 ablation.
+
+| Configuration | Mean Composite Score | 효과 |
+|---|---|---|
+| KR–KR (baseline) | **0.838** | — |
+| EN–KR (질의만 EN) | 0.809 | 질의 언어 효과 −0.029 |
+| KR–EN (도구만 EN) | 0.798 | 도구 스키마 효과 −0.039 |
+| EN–EN (모두 EN) | 0.793 | 관측 총효과 −0.045 |
+
+- 두 개별 효과의 합 (−0.068) vs 관측 총효과 (−0.045) → **상호작용 약함**
+- 극단 민감 모델: **Qwen3-Coder-30B** (KR-EN 0.574, EN-EN 0.195) — 도구 스키마 언어 변화에 치명적
+- 99.99% 커버리지 (221,389/221,408) — Llama-3.3-70B 10건은 context-window-filling 특성으로 제외
 
 ### 3. Multi-turn STR Benchmark (50 scenarios × 44 models)
 
@@ -192,12 +210,30 @@ AML 에이전트가 다중 턴 대화를 통해 의심거래보고서(STR)를 �
 | 실험 | Round 1 | Round 2 | Round 3 | 상태 |
 |------|---------|---------|---------|------|
 | Singleturn KR (44 models) | ✅ | ✅ | ✅ | 완료 |
-| Singleturn EN (44 models) | ✅ | ⏳ 진행 중 | ⬜ | Round 2 진행 중 |
-| Multiturn (44 models) | ✅ | ✅ | ✅ | 완료 |
+| Singleturn EN (44 models) | ✅ | ✅ | ✅ | 완료 |
+| Multiturn STR (44 models) | ✅ | ✅ | ✅ | 완료 |
+| 2×2 Ablation (C1 KR-EN, C3 EN-EN, 43 models) | ✅ (1회) | — | — | 완료 (단일 라운드) |
 
 **싱글턴 KR**: 3회 반복 완료. `repro_mean_std.json`에 44개 모델 mean±std 수록. 4개 모델은 3회 모두 동일 점수 (완전 결정론적).
 
 **멀티턴**: 3회 반복 결과 매우 안정적 (mean score 0.617±0.001, complete rate 16.8%±0.1%). 변동 모델: Qwen3.5-2B think (±0.019), gpt-oss-20b nothink (±0.018), GLM-4.7-Flash (±0.012).
+
+**Bootstrap ranking stability**: 케이스 수준 10,000회 재표집 결과, 원본 대비 Kendall τ 평균 0.929 (95% CI [0.888, 0.960]); 100% 반복에서 τ>0.8.
+
+### 5b. BFCL v4 Correlation (RQ6, ongoing)
+
+범용 function calling 벤치마크 BFCL v4 (10,417 케이스)를 44 모델 중 중복 모델에 대해 직접 실행하여 AML-Bench와의 상관관계를 측정 중.
+
+| Phase | Models Covered | Status |
+|---|---|---|
+| Phase A (BFCL 레지스트리 기등록) | xLAM-2 family (5), Qwen3-8B, Qwen3-30B-A3B-Instruct, Qwen3-4B-Instruct-2507 | ✅ 완료 (8 모델) |
+| Phase B (커스텀 등록) | Qwen3.5-9B, Qwen3.5-4B | ✅ 완료 |
+| Phase B Part 2 | Qwen3.5-27B (AML Top 1-2) | 🔄 진행 중 (TP=2) |
+| Phase C (선택) | Thinking variants | ⏳ 평가 후 결정 |
+
+현 단계 (n=10) BFCL Top scores: xLAM-2-32b (48.97%), xLAM-2-70b (48.06%), xLAM-2-8b (45.77%), Qwen3-8B (37.96%), Qwen3.5-9B (35.97%), Qwen3-4B-Instruct-2507 (33.54%), Qwen3-30B-Instruct-2507 (33.30%), Qwen3.5-4B (30.71%), xLAM-2-1b (29.81%), xLAM-2-3b (40.88%).
+
+**예비 관찰**: BFCL 상위 xLAM 계열이 AML-Bench에서는 중위권 (xLAM-2-32b: AML 3위 / BFCL 1위; xLAM-2-70b: AML 33위 / BFCL 2위) — 상관관계가 낮아 AML-Bench의 domain-specificity 뒷받침.
 
 ### 6. Excluded Models (vLLM incompatible / OOM)
 
@@ -248,10 +284,12 @@ AML 에이전트가 다중 턴 대화를 통해 의심거래보고서(STR)를 �
 @inproceedings{lim2026amlbench,
   title={AML-Bench: A Function Calling Benchmark for Anti-Money Laundering Agents},
   author={Lim, Seonkyu and Hong, Gwangui and Lim, KyungTae},
-  booktitle={Proceedings of the Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS), Datasets and Benchmarks Track},
   year={2026}
 }
 ```
+
+> 제출 예정: NeurIPS 2026 Evaluations & Datasets (E&D) Track (Abstract 2026-05-05, Full 2026-05-06, double-blind).
 
 ## License
 
