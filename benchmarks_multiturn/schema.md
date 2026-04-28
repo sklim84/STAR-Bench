@@ -21,7 +21,7 @@ STR(의심거래보고서) 작성 워크플로우 기반 멀티턴 벤치마크.
   "scenario": "string — 시나리오 한 줄 설명",
   "sub_category": "base | missing_parameter | long_context",
   "fraud_type": "integer — 이상거래유형 코드 (1~7)",
-  "fraud_type_name": "string — 자금세탁 | 대포통장 | 보이스피싱 | ...",
+  "fraud_type_name": "string — 갑작스러운 거래패턴의 변화 | 분할 거래 | 다중거래의 동시 요청 | ...",
   "turns": [
     {
       "turn": "integer — 1부터 시작",

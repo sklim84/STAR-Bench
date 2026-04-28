@@ -22,7 +22,7 @@
   },
   {
     "id": "qt_002",
-    "question": "Please retrieve only 10 transactions of type voice phishing (suspicious transaction type 4).",
+    "question": "Please retrieve only 10 transactions of type concurrent multi-transaction request (suspicious transaction type 4).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -38,11 +38,11 @@
       }
     },
     "difficulty": "easy",
-    "question_ko": "보이스피싱 유형(이상거래유형 4)의 거래를 10건만 조회해줘"
+    "question_ko": "다중거래의 동시 요청 유형(이상거래유형 4)의 거래를 10건만 조회해줘"
   },
   {
     "id": "qt_003",
-    "question": "Please query the suspicious transactions that occurred through ATM (Media Type 2).",
+    "question": "Please query the suspicious transactions that occurred through internet banking (Media Type 2).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -59,7 +59,7 @@
       }
     },
     "difficulty": "easy",
-    "question_ko": "ATM(매체구분 2)으로 발생한 이상거래를 조회해줘"
+    "question_ko": "internet banking(매체구분 2)으로 발생한 이상거래를 조회해줘"
   },
   {
     "id": "qt_004",
@@ -144,7 +144,7 @@
       }
     },
     "difficulty": "easy",
-    "question_ko": "출금계좌 1234567890의 거래 내역을 조회해줘"
+    "question_ko": "출금계좌 9000000000019132의 거래 내역을 조회해줘"
   },
   {
     "id": "qt_008",
@@ -191,7 +191,7 @@
   },
   {
     "id": "qt_010",
-    "question": "Please query the suspicious transactions of type \"mule account\" (suspicious transaction type 3) and sort them in descending order by transaction amount.",
+    "question": "Please query the suspicious transactions of type \"split transactions\" (suspicious transaction type 3) and sort them in descending order by transaction amount.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -209,7 +209,7 @@
       }
     },
     "difficulty": "medium",
-    "question_ko": "대포통장 유형(이상거래유형 3) 이상거래를 거래금액 내림차순으로 조회해줘"
+    "question_ko": "분할 거래 유형(이상거래유형 3) 이상거래를 거래금액 내림차순으로 조회해줘"
   },
   {
     "id": "qt_011",
@@ -255,7 +255,7 @@
   },
   {
     "id": "qt_013",
-    "question": "Please query for suspicious transactions related to money laundering (Type 1) and voice phishing (Type 4) together.",
+    "question": "Please query for suspicious transactions related to abrupt transaction pattern changes(Type 1) and concurrent multi-transaction request(Type 4) together.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -272,7 +272,7 @@
     },
     "difficulty": "medium",
     "note": "IN (1,4) 또는 OR 조건으로 처리 가능",
-    "question_ko": "자금세탁(유형 1)과 보이스피싱(유형 4) 이상거래를 함께 조회해줘"
+    "question_ko": "갑작스러운 거래패턴의 변화(유형 1)과 다중거래의 동시 요청(유형 4) 이상거래를 함께 조회해줘"
   },
   {
     "id": "qt_014",
@@ -293,7 +293,7 @@
       }
     },
     "difficulty": "easy",
-    "question_ko": "입금금융회사 201로 들어온 이상거래 중 최근 20건을 보여줘"
+    "question_ko": "입금금융회사 146로 들어온 이상거래 중 최근 20건을 보여줘"
   },
   {
     "id": "qt_015",
@@ -318,7 +318,7 @@
   },
   {
     "id": "qt_016",
-    "question": "Please retrieve the most recent 30 transactions classified as money laundering (suspicious transaction type 1).",
+    "question": "Please retrieve the most recent 30 transactions classified as abrupt transaction pattern changes (suspicious transaction type 1).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -335,7 +335,7 @@
       }
     },
     "difficulty": "easy",
-    "question_ko": "자금세탁(이상거래유형 1) 거래를 최근 30건 조회해줘"
+    "question_ko": "갑작스러운 거래패턴의 변화(이상거래유형 1) 거래를 최근 30건 조회해줘"
   },
   {
     "id": "qt_017",
@@ -356,7 +356,7 @@
       }
     },
     "difficulty": "medium",
-    "question_ko": "특정 계좌(입금계좌 9876543210)로 들어온 이상거래를 전부 조회해줘"
+    "question_ko": "특정 계좌(입금계좌 9000000000119151)로 들어온 이상거래를 전부 조회해줘"
   },
   {
     "id": "qt_018",
@@ -402,7 +402,7 @@
   },
   {
     "id": "qt_020",
-    "question": "Please find the account with the highest total transaction amount for mule accounts (suspicious transaction type 3) at withdrawal site 305.",
+    "question": "Please find the account with the highest total transaction amount for split transactionss (suspicious transaction type 3) at withdrawal site 305.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -420,7 +420,7 @@
       }
     },
     "difficulty": "hard",
-    "question_ko": "출금사 305에서 대포통장(이상거래유형 3) 거래 중 거래금액 합계가 가장 큰 계좌를 찾아줘"
+    "question_ko": "출금사 109에서 분할 거래(이상거래유형 3) 거래 중 거래금액 합계가 가장 큰 계좌를 찾아줘"
   },
   {
     "id": "qt_021",
@@ -503,11 +503,11 @@
       }
     },
     "difficulty": "medium",
-    "question_ko": "야간(거래시간대 22 이상)에 발생한 이상거래 건수를 조회해줘"
+    "question_ko": "야간(거래시간대 21 이상)에 발생한 이상거래 건수를 조회해줘"
   },
   {
     "id": "qt_025",
-    "question": "Please query for transactions related to illegal gambling (suspicious transaction type 5) that exceed the average transaction amount for this type.",
+    "question": "Please query for transactions related to large deposit followed by same-day withdrawal (suspicious transaction type 5) that exceed the average transaction amount for this type.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -525,7 +525,7 @@
       }
     },
     "difficulty": "hard",
-    "question_ko": "불법도박(이상거래유형 5) 이상거래 중 해당 유형 평균 거래금액 이상인 거래를 조회해줘"
+    "question_ko": "거액 입금 후 당일 인출(이상거래유형 5) 이상거래 중 해당 유형 평균 거래금액 이상인 거래를 조회해줘"
   },
   {
     "id": "qt_026",
@@ -546,7 +546,7 @@
       }
     },
     "difficulty": "medium",
-    "question_ko": "입금금융회사 305로 이체된 이상거래를 거래금액 내림차순으로 조회해줘"
+    "question_ko": "입금금융회사 142로 이체된 이상거래를 거래금액 내림차순으로 조회해줘"
   },
   {
     "id": "qt_irr_001",
@@ -594,7 +594,7 @@
   },
   {
     "id": "qt_027",
-    "question": "Please retrieve 20 transactions involving mule accounts (suspicious transaction type 3).",
+    "question": "Please retrieve 20 transactions involving split transactionss (suspicious transaction type 3).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -611,7 +611,7 @@
       }
     },
     "difficulty": "easy",
-    "question_ko": "대포통장(이상거래유형 3) 거래를 20건 조회해줘"
+    "question_ko": "분할 거래(이상거래유형 3) 거래를 20건 조회해줘"
   },
   {
     "id": "qt_028",
@@ -632,7 +632,7 @@
       }
     },
     "difficulty": "easy",
-    "question_ko": "출금금융회사 100에서 발생한 거래를 조회해줘"
+    "question_ko": "출금금융회사 102에서 발생한 거래를 조회해줘"
   },
   {
     "id": "qt_029",
@@ -653,11 +653,11 @@
       }
     },
     "difficulty": "easy",
-    "question_ko": "계좌 1234567890으로 입금된 거래를 조회해줘"
+    "question_ko": "계좌 9000000000231943으로 입금된 거래를 조회해줘"
   },
   {
     "id": "qt_030",
-    "question": "Please query for suspicious transactions with a transaction amount of 1,000,000 won or less.",
+    "question": "Please query for suspicious transactions with a transaction amount of 10,000,000 won or less.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -782,7 +782,7 @@
   },
   {
     "id": "qt_036",
-    "question": "Please provide the maximum and minimum transaction amounts for suspicious transactions related to money laundering (Type 1).",
+    "question": "Please provide the maximum and minimum transaction amounts for suspicious transactions related to abrupt transaction pattern changes(Type 1).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -800,7 +800,7 @@
       }
     },
     "difficulty": "medium",
-    "question_ko": "자금세탁(유형 1) 이상거래의 최대 거래금액과 최소 거래금액을 조회해줘"
+    "question_ko": "갑작스러운 거래패턴의 변화(유형 1) 이상거래의 최대 거래금액과 최소 거래금액을 조회해줘"
   },
   {
     "id": "qt_037",
@@ -932,7 +932,7 @@
   },
   {
     "id": "qt_043",
-    "question": "Please query for suspicious transactions with a transaction amount of 50,000 won or less.",
+    "question": "Please query for normal transactions with a transaction amount of 50,000 won or less.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -982,7 +982,7 @@
     },
     "difficulty": "easy",
     "note": "irrelevance: 네트워크 분석 요청 — query_transactions가 아닌 analyze_network 필요",
-    "question_ko": "계좌 9876543210의 거래 네트워크를 분석해줘"
+    "question_ko": "계좌 9000000003736912의 거래 네트워크를 분석해줘"
   },
   {
     "id": "qt_044",
@@ -1003,7 +1003,7 @@
       }
     },
     "difficulty": "easy",
-    "question_ko": "출금금융회사 201에서 발생한 거래를 거래일자 내림차순으로 15건 조회해줘"
+    "question_ko": "출금금융회사 103에서 발생한 거래를 거래일자 내림차순으로 15건 조회해줘"
   },
   {
     "id": "qt_045",
@@ -1030,7 +1030,7 @@
   },
   {
     "id": "qt_046",
-    "question": "Please retrieve 10 transactions categorized as similar receipt (suspicious transaction type 6).",
+    "question": "Please retrieve 10 transactions categorized as late-night/dawn bulk transactions (suspicious transaction type 7).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1047,7 +1047,7 @@
       }
     },
     "difficulty": "easy",
-    "question_ko": "유사수신(이상거래유형 6) 거래를 10건 조회해줘"
+    "question_ko": "심야/새벽 대량 거래(이상거래유형 7) 거래를 10건 조회해줘"
   },
   {
     "id": "qt_047",
@@ -1074,7 +1074,7 @@
   },
   {
     "id": "qt_048",
-    "question": "Please retrieve the suspicious transaction data related to money laundering (Type 1) that occurred in the second quarter of 2023 (from 20230401 to 20230630).",
+    "question": "Please retrieve the suspicious transaction data related to abrupt transaction pattern changes(Type 1) that occurred in the second quarter of 2023 (from 20230401 to 20230630).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1092,11 +1092,11 @@
     },
     "difficulty": "medium",
     "note": "날짜 범위 + 유형 조건 복합 필터",
-    "question_ko": "2023년 2분기(20230401~20230630)에 발생한 자금세탁(유형 1) 이상거래를 조회해줘"
+    "question_ko": "2023년 2분기(20230401~20230630)에 발생한 갑작스러운 거래패턴의 변화(유형 1) 이상거래를 조회해줘"
   },
   {
     "id": "qt_049",
-    "question": "Please aggregate the number of suspicious transactions related to voice phishing (Type 4) by deposit account, and only retrieve accounts with 2 or more transactions.",
+    "question": "Please aggregate the number of suspicious transactions related to concurrent multi-transaction request(Type 4) by deposit account, and only retrieve accounts with 2 or more transactions.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1116,11 +1116,11 @@
     },
     "difficulty": "medium",
     "note": "HAVING 절 사용 필요",
-    "question_ko": "입금계좌별로 보이스피싱(유형 4) 이상거래 건수를 집계하고 건수가 2건 이상인 계좌만 조회해줘"
+    "question_ko": "입금계좌별로 다중거래의 동시 요청(유형 4) 이상거래 건수를 집계하고 건수가 2건 이상인 계좌만 조회해줘"
   },
   {
     "id": "qt_050",
-    "question": "Please categorize the transaction amounts into small (less than 1,000,000 KRW), medium (1,000,000 to 10,000,000 KRW), and large (over 10,000,000 KRW) and provide the count of suspicious transactions for each range.",
+    "question": "Please categorize the transaction amounts into medium (less than 10,000,000 KRW), high (10,000,000 to 100,000,000 KRW), and very high (over 100,000,000 KRW) and provide the count of suspicious transactions for each range.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
