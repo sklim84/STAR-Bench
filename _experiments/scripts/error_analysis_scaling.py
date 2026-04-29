@@ -5,7 +5,7 @@ Analyses:
 1. Within-family scaling curves (log-linear fit)
 2. Cross-family comparison at similar sizes
 3. Parameter efficiency (score / log(params))
-4. Singleton vs multiturn scaling
+4. Single-turn vs multiturn scaling
 5. Diminishing returns detection
 6. Think/nothink delta vs size
 7. Error-type distribution by model size
@@ -127,7 +127,7 @@ def get_mode(model: str) -> str | None:
 # ---------------------------------------------------------------------------
 # Load data
 # ---------------------------------------------------------------------------
-def load_singleton_evals() -> list[dict]:
+def load_single_turn_evals() -> list[dict]:
     records = []
     for fp in sorted(EVAL_DIR.glob("eval_*.json")):
         with open(fp) as f:
@@ -293,20 +293,20 @@ def parameter_efficiency(records: list[dict]) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
-# 4. Singleton vs Multiturn scaling
+# 4. Single-turn vs Multiturn scaling
 # ---------------------------------------------------------------------------
-def singleton_vs_multiturn(singleton: list[dict], multiturn: list[dict]) -> dict:
+def single_turn_vs_multiturn(single_turn: list[dict], multiturn: list[dict]) -> dict:
     # Build lookup by model key
     mt_map = {r["model"]: r for r in multiturn}
     paired = []
-    for sr in singleton:
+    for sr in single_turn:
         mr = mt_map.get(sr["model"])
         if mr:
             paired.append({
                 "model": sr["model"],
                 "family": sr["family"],
                 "size_B": sr["size_B"],
-                "singleton_score": round(sr["avg_score"], 4),
+                "single_turn_score": round(sr["avg_score"], 4),
                 "multiturn_score": round(mr["avg_score"], 4),
                 "scenario_complete_rate": mr.get("scenario_complete_rate"),
                 "delta": round(sr["avg_score"] - mr["avg_score"], 4),
@@ -323,10 +323,10 @@ def singleton_vs_multiturn(singleton: list[dict], multiturn: list[dict]) -> dict
         if len(pts) < 2:
             continue
         xs = [math.log2(p["size_B"]) for p in pts]
-        s_ys = [p["singleton_score"] for p in pts]
+        s_ys = [p["single_turn_score"] for p in pts]
         m_ys = [p["multiturn_score"] for p in pts]
         family_fits[fam] = {
-            "singleton_fit": linreg(xs, s_ys),
+            "single_turn_fit": linreg(xs, s_ys),
             "multiturn_fit": linreg(xs, m_ys),
         }
 
@@ -470,15 +470,15 @@ def main():
     print("AML-Bench Model Size Scaling Analysis")
     print("=" * 70)
 
-    singleton = load_singleton_evals()
+    single_turn = load_single_turn_evals()
     multiturn = load_multiturn_evals()
-    print(f"\nLoaded {len(singleton)} singleton evals, {len(multiturn)} multiturn evals")
+    print(f"\nLoaded {len(single_turn)} single_turn evals, {len(multiturn)} multiturn evals")
 
     # 1. Within-family scaling
     print("\n" + "=" * 70)
     print("1. WITHIN-FAMILY SCALING CURVES")
     print("=" * 70)
-    wf = within_family_scaling(singleton)
+    wf = within_family_scaling(single_turn)
     for fam, data in wf.items():
         fit = data["log_linear_fit"]
         print(f"\n  {fam} ({fit['n']} sizes: {data['sizes']})")
@@ -491,7 +491,7 @@ def main():
     print("\n" + "=" * 70)
     print("2. CROSS-FAMILY COMPARISON AT SIMILAR SIZES")
     print("=" * 70)
-    cf = cross_family_comparison(singleton)
+    cf = cross_family_comparison(single_turn)
     for bucket, entries in cf.items():
         print(f"\n  {bucket} ({len(entries)} models):")
         for e in entries[:5]:
@@ -503,7 +503,7 @@ def main():
     print("\n" + "=" * 70)
     print("3. PARAMETER EFFICIENCY (score / log2(params))")
     print("=" * 70)
-    pe = parameter_efficiency(singleton)
+    pe = parameter_efficiency(single_turn)
     print("\n  Top 10 most parameter-efficient:")
     for i, e in enumerate(pe[:10], 1):
         print(f"    {i:2d}. {e['efficiency']:.4f}  {e['model']} ({e['size_B']}B, score={e['avg_score']:.4f})")
@@ -512,30 +512,30 @@ def main():
     for e in valid_pe[-5:]:
         print(f"      {e['efficiency']:.4f}  {e['model']} ({e['size_B']}B, score={e['avg_score']:.4f})")
 
-    # 4. Singleton vs Multiturn
+    # 4. Single-turn vs Multiturn
     print("\n" + "=" * 70)
-    print("4. SINGLETON VS MULTITURN SCALING")
+    print("4. SINGLE_TURN VS MULTITURN SCALING")
     print("=" * 70)
-    svm = singleton_vs_multiturn(singleton, multiturn)
+    svm = single_turn_vs_multiturn(single_turn, multiturn)
     for p in svm["paired_models"][:10]:
         scr = p.get("scenario_complete_rate")
         scr_str = f", SCR={scr:.2f}" if scr is not None else ""
         print(f"  {p['size_B']:5.1f}B  {p['family']:10s}  "
-              f"single={p['singleton_score']:.4f}  multi={p['multiturn_score']:.4f}  "
+              f"single={p['single_turn_score']:.4f}  multi={p['multiturn_score']:.4f}  "
               f"delta={p['delta']:+.4f}{scr_str}  {p['model']}")
     print("\n  Family-level fit comparison:")
     for fam, fits in svm["family_fits"].items():
-        sf = fits["singleton_fit"]
+        sf = fits["single_turn_fit"]
         mf = fits["multiturn_fit"]
         if sf["slope"] is not None and mf["slope"] is not None:
-            print(f"    {fam}: singleton slope={sf['slope']:.4f} R²={sf['r_squared']:.4f} | "
+            print(f"    {fam}: single_turn slope={sf['slope']:.4f} R²={sf['r_squared']:.4f} | "
                   f"multiturn slope={mf['slope']:.4f} R²={mf['r_squared']:.4f}")
 
     # 5. Diminishing returns
     print("\n" + "=" * 70)
     print("5. DIMINISHING RETURNS ANALYSIS")
     print("=" * 70)
-    dr = diminishing_returns(singleton)
+    dr = diminishing_returns(single_turn)
     for fam, data in dr.items():
         print(f"\n  {fam} ({data['sizes']})")
         for m in data["marginal_gains"]:
@@ -551,7 +551,7 @@ def main():
     print("\n" + "=" * 70)
     print("6. THINK/NOTHINK DELTA VS MODEL SIZE")
     print("=" * 70)
-    tms = think_mode_scaling(singleton)
+    tms = think_mode_scaling(single_turn)
     for p in tms["pairs"]:
         sign = "+" if p["delta"] >= 0 else ""
         print(f"  {p['family']:10s} {p['size_B']:5.1f}B  "
@@ -569,7 +569,7 @@ def main():
     print("\n" + "=" * 70)
     print("7. ERROR TYPE DISTRIBUTION BY SIZE BUCKET")
     print("=" * 70)
-    ets = error_type_scaling(singleton)
+    ets = error_type_scaling(single_turn)
     for bucket, data in ets.items():
         print(f"\n  {bucket} ({data['n_models']} models):")
         for etype, rate in sorted(data["avg_error_rates"].items(),
@@ -584,12 +584,12 @@ def main():
         "within_family_scaling": wf,
         "cross_family_comparison": cf,
         "parameter_efficiency": pe[:20],  # top 20
-        "singleton_vs_multiturn": svm,
+        "single_turn_vs_multiturn": svm,
         "diminishing_returns": dr,
         "think_mode_scaling": tms,
         "error_type_by_size": ets,
         "summary": {
-            "total_singleton_models": len(singleton),
+            "total_single_turn_models": len(single_turn),
             "total_multiturn_models": len(multiturn),
             "families_analyzed": list(wf.keys()),
             "key_findings": [],
@@ -631,8 +631,8 @@ def main():
     if svm["paired_models"]:
         avg_gap = np.mean([p["delta"] for p in svm["paired_models"]])
         findings.append(
-            f"Avg singleton-multiturn gap: {avg_gap:.4f} "
-            f"(singleton {'harder' if avg_gap < 0 else 'easier'})")
+            f"Avg single_turn-multiturn gap: {avg_gap:.4f} "
+            f"(single_turn {'harder' if avg_gap < 0 else 'easier'})")
 
     # Error type shift
     small_errs = ets.get("small (<=3B)", {}).get("avg_error_rates", {})

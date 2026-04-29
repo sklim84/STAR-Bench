@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Comprehensive Error Analysis for AML Tool-Calling Benchmark (Singleton, KR Round1).
+Comprehensive Error Analysis for AML Tool-Calling Benchmark (Single-turn, KR Round1).
 
 Reads checkpoint JSONL files (per-case granular data) and eval JSON files (pre-aggregated),
 then produces:
@@ -12,7 +12,7 @@ then produces:
   6. Parameter-level analysis (hallucinated params, param accuracy)
   7. Difficulty discrimination analysis
 
-Output: _experiments/results/error_analysis_singleton.json + stdout summary
+Output: _experiments/results/error_analysis_single_turn.json + stdout summary
 """
 
 import json
@@ -26,7 +26,7 @@ from statistics import mean, stdev
 BASE = Path(__file__).resolve().parent.parent  # _experiments/
 CKPT_DIR = BASE / "results" / "round1" / "checkpoint"
 EVAL_DIR = BASE / "results" / "round1" / "eval"
-OUTPUT_PATH = BASE / "results" / "error_analysis_singleton.json"
+OUTPUT_PATH = BASE / "results" / "error_analysis_single_turn.json"
 
 EXCLUDE_ERRORS = {"api_error", "parse_fail"}
 
@@ -542,7 +542,7 @@ def main():
 
     # ── Save JSON ──
     output = {
-        "description": "AML Tool-Calling Benchmark Error Analysis (KR Round1, singleton)",
+        "description": "AML Tool-Calling Benchmark Error Analysis (KR Round1, single_turn)",
         "n_models": len(all_ckpt),
         "excluded_error_types": list(EXCLUDE_ERRORS),
         "1_model_summary": summary,

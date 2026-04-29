@@ -1,6 +1,6 @@
 """Bootstrap Kendall's tau ranking stability for AML-Bench.
 
-Resamples the 1,258 singleton cases with replacement and recomputes model
+Resamples the 1,258 single_turn cases with replacement and recomputes model
 rankings for each bootstrap iteration. Reports:
 - Mean Kendall's tau between bootstrap ranking and the original ranking
 - 95% CI (percentile method)

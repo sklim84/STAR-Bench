@@ -2,7 +2,7 @@
 # ============================================================================
 # Round 1 재실험 스크립트 (HOFINET 정정 후)
 #
-# 44개 모델 × 3 차원(KR singleton, EN singleton, multi-turn STR) × 1 round
+# 44개 모델 × 3 차원(KR single_turn, EN single_turn, multi-turn STR) × 1 round
 # 결과 저장: _paper/_experiments/round1{,_en,_multiturn}/eval/
 #
 # 사용법:
@@ -11,7 +11,7 @@
 #   bash _experiments/scripts/run_round1.sh --gpu 0,1 --port 11434 --group TP2 --mode kr
 #
 # group: A (GPU 0 small), B (GPU 1 small), C (medium 20-32B), TP2 (70B+ 양 GPU)
-# mode:  kr (KR singleton), en (EN singleton), mt (multi-turn STR)
+# mode:  kr (KR single_turn), en (EN single_turn), mt (multi-turn STR)
 # ============================================================================
 
 set -uo pipefail
@@ -77,15 +77,16 @@ GROUP_A=(
     "qwen35-4b|Qwen/Qwen3.5-4B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-4B"
     "qwen35-9b|Qwen/Qwen3.5-9B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-9B"
     "qwen3-4b|Qwen/Qwen3-4B-Instruct-2507|qwen3_xml||Qwen/Qwen3-4B-Instruct-2507"
-    "qwen3-4b-think|Qwen/Qwen3-4B-Thinking-2507|qwen3_xml|--reasoning-parser qwen3|Qwen/Qwen3-4B-Thinking-2507"
+    "qwen25-1.5b|Qwen/Qwen2.5-1.5B-Instruct|hermes||Qwen/Qwen2.5-1.5B-Instruct"
     "qwen3-8b|Qwen/Qwen3-8B|qwen3_xml||Qwen/Qwen3-8B"
     "exaone-4.0-1.2b|LGAI-EXAONE/EXAONE-4.0-1.2B|hermes|--trust-remote-code|LGAI-EXAONE/EXAONE-4.0-1.2B"
     "glm-4.7-flash|zai-org/GLM-4.7-Flash|glm47|--trust-remote-code|zai-org/GLM-4.7-Flash"
     "hermes-3-8b|NousResearch/Hermes-3-Llama-3.1-8B|hermes||NousResearch/Hermes-3-Llama-3.1-8B"
     "ax-light|skt/A.X-4.0-Light|hermes||skt/A.X-4.0-Light"
 )
+# qwen3-4b-think를 GROUP_B 끝에 배치 (thinking 모드 9h+ 소요로 GPU 1을 마지막에 점유,
+# GPU 0의 Group A가 먼저 끝나면 idle 발생 — 추후 A_OFFLOAD 패턴으로 보완 가능)
 GROUP_B=(
-    "qwen25-1.5b|Qwen/Qwen2.5-1.5B-Instruct|hermes||Qwen/Qwen2.5-1.5B-Instruct"
     "xlam-1b|Salesforce/xLAM-2-1b-fc-r|xlam||Salesforce/xLAM-2-1b-fc-r"
     "xlam-3b|Salesforce/xLAM-2-3b-fc-r|xlam||Salesforce/xLAM-2-3b-fc-r"
     "xlam-8b|Salesforce/Llama-xLAM-2-8b-fc-r|xlam||Salesforce/Llama-xLAM-2-8b-fc-r"
@@ -96,6 +97,7 @@ GROUP_B=(
     "ministral-8b|mistralai/Ministral-3-8B-Instruct-2512|mistral||mistralai/Ministral-3-8B-Instruct-2512"
     "ministral-14b|mistralai/Ministral-3-14B-Instruct-2512|mistral||mistralai/Ministral-3-14B-Instruct-2512"
     "mistral-nemo|mistralai/Mistral-Nemo-Instruct-2407|mistral||mistralai/Mistral-Nemo-Instruct-2407"
+    "qwen3-4b-think|Qwen/Qwen3-4B-Thinking-2507|qwen3_xml|--reasoning-parser qwen3|Qwen/Qwen3-4B-Thinking-2507"
 )
 GROUP_C=(
     "qwen35-27b|Qwen/Qwen3.5-27B|qwen3_coder|--reasoning-parser qwen3 --enforce-eager|Qwen/Qwen3.5-27B"
@@ -137,6 +139,21 @@ GROUP_SMOKE=(
     "qwen25-1.5b|Qwen/Qwen2.5-1.5B-Instruct|hermes||Qwen/Qwen2.5-1.5B-Instruct"
 )
 
+# RECOVERY: Group B 비정상 종료로 누락된 mistral-nemo 단독 실행
+GROUP_RECOVERY=(
+    "mistral-nemo|mistralai/Mistral-Nemo-Instruct-2407|mistral||mistralai/Mistral-Nemo-Instruct-2407"
+)
+
+# A_OFFLOAD: Group A 후반부 5 entries를 GPU 1 idle 시간에 병렬 처리 (master Group A는 자체 흐름 유지)
+# Master Group A가 [7/11]~[11/11] 도달 시점에 이미 결과 존재 → --resume으로 즉시 skip
+GROUP_A_OFFLOAD=(
+    "exaone-4.0-1.2b|LGAI-EXAONE/EXAONE-4.0-1.2B|hermes|--trust-remote-code|LGAI-EXAONE/EXAONE-4.0-1.2B"
+    "qwen3-8b|Qwen/Qwen3-8B|qwen3_xml||Qwen/Qwen3-8B"
+    "ax-light|skt/A.X-4.0-Light|hermes||skt/A.X-4.0-Light"
+    "hermes-3-8b|NousResearch/Hermes-3-Llama-3.1-8B|hermes||NousResearch/Hermes-3-Llama-3.1-8B"
+    "glm-4.7-flash|zai-org/GLM-4.7-Flash|glm47|--trust-remote-code|zai-org/GLM-4.7-Flash"
+)
+
 case "$GROUP" in
     A)     MODELS=("${GROUP_A[@]}") ;;
     B)     MODELS=("${GROUP_B[@]}") ;;
@@ -145,6 +162,8 @@ case "$GROUP" in
     C2)    MODELS=("${GROUP_C2[@]}") ;;
     TP2)   MODELS=("${GROUP_TP2[@]}") ;;
     SMOKE) MODELS=("${GROUP_SMOKE[@]}") ;;
+    RECOVERY) MODELS=("${GROUP_RECOVERY[@]}") ;;
+    A_OFFLOAD) MODELS=("${GROUP_A_OFFLOAD[@]}") ;;
     *)     echo "Unknown group: $GROUP (A, B, C, C1, C2, TP2, SMOKE)"; exit 1 ;;
 esac
 
@@ -190,12 +209,10 @@ stop_server() {
 
 run_benchmark() {
     local model_names=$1
-    local cmd="PYTHONPATH=$PROJECT_ROOT/_paper:\${PYTHONPATH:-} python -m $BENCH_MODULE --models $model_names --output $OUTPUT_DIR $BENCH_EXTRA"
-    if [ -n "$MAX_TOTAL" ]; then
-        cmd="BENCH_MAX_TOTAL=$MAX_TOTAL $cmd"
-    fi
-    ts "  벤치마크: $cmd"
-    eval "$cmd"
+    local max_env=""
+    [ -n "$MAX_TOTAL" ] && max_env="BENCH_MAX_TOTAL=$MAX_TOTAL"
+    ts "  벤치마크: $max_env PYTHONPATH=$PROJECT_ROOT/_paper python -m $BENCH_MODULE --models $model_names --output $OUTPUT_DIR $BENCH_EXTRA"
+    env $max_env PYTHONPATH="$PROJECT_ROOT/_paper:${PYTHONPATH:-}" python -m "$BENCH_MODULE" --models $model_names --output "$OUTPUT_DIR" $BENCH_EXTRA
 }
 
 # 메인 루프

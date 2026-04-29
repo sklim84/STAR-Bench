@@ -301,7 +301,7 @@ if paired:
 else:
     print("Think/NoThink 쌍이 없습니다.")
 
-# ── 9. Singleton vs Multiturn gap ───────────────────────────────────
+# ── 9. Single-turn vs Multiturn gap ───────────────────────────────────
 print("\n" + "=" * 100)
 print("8. 싱글턴 vs 멀티턴 성능 차이 분석")
 print("=" * 100)
@@ -327,7 +327,7 @@ for se in st_evals:
 gaps = []
 for e in mt_evals:
     mt_score = e["overall"]["avg_score"]
-    # Multiturn model_id has __think/__nothink suffix matching singleton model field
+    # Multiturn model_id has __think/__nothink suffix matching single_turn model field
     st_score = st_map.get(e["model_id"])
     if st_score is None:
         # Fallback: try model field (for non-think models)
@@ -341,7 +341,7 @@ for e in mt_evals:
 
     gaps.append({
         "model": short_name(e["model"]) + think_label,
-        "singleton_score": st_score,
+        "single_turn_score": st_score,
         "multiturn_score": mt_score,
         "gap": (st_score - mt_score) if st_score is not None else None,
     })
@@ -352,7 +352,7 @@ gaps_valid.sort(key=lambda x: x["gap"], reverse=True)
 print(f"\n{'모델':<55} {'싱글턴':>8} {'멀티턴':>8} {'차이(S-M)':>10}")
 print("-" * 85)
 for g in gaps_valid:
-    print(f"{g['model']:<55} {g['singleton_score']:>8.4f} {g['multiturn_score']:>8.4f} {g['gap']:>+10.4f}")
+    print(f"{g['model']:<55} {g['single_turn_score']:>8.4f} {g['multiturn_score']:>8.4f} {g['gap']:>+10.4f}")
 
 no_match = [g for g in gaps if g["gap"] is None]
 if no_match:
@@ -415,7 +415,7 @@ output = {
         }
         for base, pair in sorted(paired.items())
     } if paired else {},
-    "8_singleton_vs_multiturn": {
+    "8_single_turn_vs_multiturn": {
         "gaps": gaps_valid,
         "avg_gap": round(avg_gap, 4) if gaps_valid else None,
     },

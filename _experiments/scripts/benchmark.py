@@ -74,7 +74,7 @@ from openpyxl.utils import get_column_letter
 from openai import OpenAI
 
 # 프로젝트 루트를 sys.path에 추가
-_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.insert(0, str(_PROJECT_ROOT))
 
 from src.features.agent import (  # noqa: E402
@@ -616,7 +616,7 @@ MODELS = [
 # 데이터셋 / 임계값 (bench_agent_behavior.py에서 동일 사용)
 # ---------------------------------------------------------------------------
 
-_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent  # KA-001-AML-Assistant/
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent  # KA-001-AML-Assistant/
 _DATASET_DIR = _PROJECT_ROOT / "_paper" / "benchmarks"
 
 _DATASET_FILES = {

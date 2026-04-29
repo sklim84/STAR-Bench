@@ -32,30 +32,7 @@ SYSTEM_PROMPT_EN = """\
 You are an Anti-Money Laundering (AML) specialist analyst.
 You analyze HOFINET (Electronic Financial Common Network) suspicious transaction detection data to identify and report suspected money laundering activities.
 
-Available tools:
-1. get_statistics: Retrieve overall transaction summary statistics and fraud type distribution (use first when starting analysis)
-2. query_transactions: Execute SQL queries on the HOFINET DB to retrieve detailed transaction statistics, patterns, and specific account histories
-3. get_account_profile: Retrieve transaction statistics profile for a specific account (count/amount/fraud ratio/peak hours/top counterparties)
-4. get_fraud_type_summary: Retrieve fraud type breakdown (count/amount stats, top institutions). Codes: 1=Money Laundering, 2=New Counterparty, 3=Mule Account, 4=Voice Phishing, 5=Illegal Gambling, 6=Ponzi Scheme, 7=Other
-5. compare_periods: Compare transaction/fraud statistics between two periods with change rates (quarterly, monthly)
-6. get_institution_report: Comprehensive report for a specific financial institution (volume, fraud ratio, top counterparties, type distribution)
-7. rank_risky_transactions: Batch XGBoost prediction to rank top-K highest risk transactions
-8. analyze_network: Analyze transaction network of a specific account to identify connected accounts and fraud involvement (N-hop deep exploration supported)
-9. detect_aml_patterns: AML pattern detection using Memgraph graph DB (circular transactions, layering, mule accounts, shortest path, risk scoring)
-10. predict_fraud: Predict fraud probability for a specific transaction using XGBoost model
-11. generate_str: Generate a Suspicious Transaction Report (STR) from analysis results
-12. detect_ctr_candidates: Identify CTR (Currency Transaction Report) eligible high-value transactions or detect structuring. mode=high_value (over 10M KRW), mode=structuring (same account same day split transactions)
-13. score_account_risk: Evaluate account risk on 0-100 scale based on 5 behavioral indicators (late-night ratio, amount anomaly, counterparty diversity, velocity change, fraud history)
-14. detect_monitoring_alerts: Rule-based transaction monitoring alert detection (R001 late-night bulk, R002 multi-transaction, R003 round-amount, R004 institution-concentrated, R005 pattern-change, all=all rules)
-15. detect_dormant_reactivation: Detect accounts reactivated after long dormancy (default 180 days). Identifies mule account/hidden fund withdrawal patterns
-16. detect_smurfing_network: Detect fund collection (inbound: many→1) or dispersion (outbound: 1→many) patterns. Smurfing/mule account networks
-17. get_trend_analysis: Monthly/quarterly time-series trend analysis (transaction count, fraud ratio, amount trends)
-18. analyze_channel_risk: Risk analysis by channel (medium type). Includes channel×time cross-analysis
-19. get_receiving_account_profile: Receiving (deposit) account profiling (fund inflow patterns, source analysis)
-20. analyze_cross_institution_flow: Fund flow analysis between institution pairs (sender→receiver)
-21. lookup_fiu_reference_types: Search FIU suspicious transaction reference types by industry (structuring, late-night, non-face-to-face, virtual assets, etc.)
-22. validate_str_fields: Validate required fields of STR draft (header, reporting institution, transactor, transaction details)
-23. get_aml_glossary: Look up AML terminology definitions (CDD, EDD, STR, CTR, RBA, PEP, MLRO, FATF, FIU, etc.)
+Tool definitions are provided via the API tools field; refer to each tool's name, description, and parameter schema there.
 
 Recommended analysis procedure:
 1. get_statistics for overall status overview
@@ -82,11 +59,11 @@ STR writing guidelines:
 
 Data schema:
 - Table: hofinet (4,732,130 records)
-- Columns: transaction_date (YYYYMMDD), transaction_time_zone (0-21, 3-hour intervals), sender_bank_id, sender_account_id, receiver_bank_id, receiver_account_id, fund_type (0,1,3,4), channel_type (1-7), transaction_amount, is_fraud (0/1), fraud_type_code (1-7), fraud_description
+- Columns: transaction_date (YYYYMMDD), transaction_time_zone (0-21, 3-hour intervals), sender_bank_id, sender_account_id, receiver_bank_id, receiver_account_id, fund_type (0,1,3,4), channel_type (1-7), transaction_amount, is_fraud (0/1), fraud_type_code (1-5,7), fraud_description
 
-Fraud types: 1=Money Laundering, 2=New Counterparty (most frequent, 63.87%), 3=Mule Account, 4=Voice Phishing, 5=Illegal Gambling, 6=Ponzi Scheme, 7=Other
-Channel types: 1=Counter, 2=ATM, 3=PB Center, 4=Internet Banking, 5=Phone/Mobile, 6=Call Center, 7=Other
-Fund types: 0=N/A, 1=Deposit, 3=Withdrawal, 4=Transfer
+Fraud types: 1=Sudden Change in Transaction Pattern, 2=Transaction with New Counterparty (most frequent, 63.87%), 3=Split Transaction, 4=Concurrent Multiple Transactions, 5=Same-Day Withdrawal after Large Deposit, 7=Late-Night/Early-Morning Bulk Transactions (note: code 6 unused)
+Channel types: 1=PC Banking, 2=Internet Banking, 3=Phone, 4=Mobile Phone, 5=Per-transaction Transfer, 6=Other, 7=Bulk Transfer
+Fund types: 0=General, 1=Salary, 3=Other, 4=Inter-bank Auto Transfer
 
 Respond in Korean. Provide specific numbers and evidence in your analysis."""
 
@@ -131,11 +108,11 @@ TOOLS_EN: list[dict] = [
                     },
                     "fund_type": {
                         "type": "integer",
-                        "description": "Fund type code. 0=N/A, 1=Deposit, 3=Withdrawal, 4=Transfer"
+                        "description": "Fund type code. 0=General, 1=Salary, 3=Other, 4=Inter-bank Auto Transfer"
                     },
                     "channel_type": {
                         "type": "integer",
-                        "description": "Channel type code. 1=Counter, 2=ATM, 3=PB Center, 4=Internet Banking, 5=Phone/Mobile, 6=Call Center, 7=Other"
+                        "description": "Channel type code. 1=PC Banking, 2=Internet Banking, 3=Phone, 4=Mobile Phone, 5=Per-transaction Transfer, 6=Other, 7=Bulk Transfer"
                     },
                     "transaction_amount": {
                         "type": "integer",
@@ -160,7 +137,7 @@ TOOLS_EN: list[dict] = [
                     },
                     "fraud_type": {
                         "type": "string",
-                        "description": "Suspected fraud type (e.g., Money Laundering, Mule Account, Voice Phishing)"
+                        "description": "Suspected fraud type (e.g., Sudden Change in Transaction Pattern, Split Transaction, Concurrent Multiple Transactions)"
                     },
                     "transactions": {
                         "type": "array",
@@ -243,7 +220,7 @@ TOOLS_EN: list[dict] = [
                 "properties": {
                     "fraud_type": {
                         "type": "integer",
-                        "description": "Fraud type code (1=Money Laundering, 2=New Counterparty, 3=Mule Account, 4=Voice Phishing, 5=Illegal Gambling, 6=Ponzi Scheme, 7=Other). If omitted, returns all types."
+                        "description": "Fraud type code (1=Sudden Change in Transaction Pattern, 2=Transaction with New Counterparty, 3=Split Transaction, 4=Concurrent Multiple Transactions, 5=Same-Day Withdrawal after Large Deposit, 7=Late-Night/Early-Morning Bulk Transactions). If omitted, returns all types."
                     },
                     "bank_id": {
                         "type": "integer",

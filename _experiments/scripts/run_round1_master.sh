@@ -2,7 +2,7 @@
 # ============================================================================
 # Round 1 마스터 오케스트레이터 (HOFINET 정정 후)
 #
-# 44개 모델 × 3 차원(KR singleton, EN singleton, multi-turn STR) × 1 round
+# 44개 모델 × 3 차원(KR single_turn, EN single_turn, multi-turn STR) × 1 round
 # 양 GPU 병렬 + TP=2 순차 실행
 #
 # 사용법:

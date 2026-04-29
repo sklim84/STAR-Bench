@@ -216,8 +216,8 @@ def analysis_tool_vs_param(ckpt_data):
     return _corr(tool_hits, param_accs, "tool_hit vs param_accuracy"), models, tool_hits, param_accs
 
 
-def analysis_singleton_vs_multiturn(eval_data, mt_data):
-    """2. Singleton vs Multiturn overall score."""
+def analysis_single_turn_vs_multiturn(eval_data, mt_data):
+    """2. Single-turn vs Multiturn overall score."""
     models, s_scores, m_scores = [], [], []
     for model in eval_data:
         if model in mt_data:
@@ -227,7 +227,7 @@ def analysis_singleton_vs_multiturn(eval_data, mt_data):
                 models.append(model)
                 s_scores.append(s)
                 m_scores.append(m)
-    return _corr(s_scores, m_scores, "singleton_score vs multiturn_score"), models, s_scores, m_scores
+    return _corr(s_scores, m_scores, "single_turn_score vs multiturn_score"), models, s_scores, m_scores
 
 
 def analysis_size_vs_performance(eval_data):
@@ -398,12 +398,12 @@ def main():
     print(f"   Spearman ρ = {corr1['spearman_rho']:.4f}  (p={corr1['spearman_p']:.6f})")
     print(f"   Interpretation: {_interpret(corr1['pearson_r'])}")
 
-    # 2. Singleton vs Multiturn
+    # 2. Single-turn vs Multiturn
     print("\n" + "="*70)
-    print("2. Singleton vs Multiturn Performance")
+    print("2. Single-turn vs Multiturn Performance")
     print("="*70)
-    corr2, _, _, _ = analysis_singleton_vs_multiturn(eval_data, mt_data)
-    results["singleton_vs_multiturn"] = corr2
+    corr2, _, _, _ = analysis_single_turn_vs_multiturn(eval_data, mt_data)
+    results["single_turn_vs_multiturn"] = corr2
     print(f"   Pearson r  = {corr2['pearson_r']:.4f}  (p={corr2['pearson_p']:.6f})")
     print(f"   Spearman ρ = {corr2['spearman_rho']:.4f}  (p={corr2['spearman_p']:.6f})")
     print(f"   Interpretation: {_interpret(corr2['pearson_r'])}")
@@ -500,7 +500,7 @@ def main():
     print("="*70)
 
     all_corrs = []
-    for key in ["tool_selection_vs_param_extraction", "singleton_vs_multiturn",
+    for key in ["tool_selection_vs_param_extraction", "single_turn_vs_multiturn",
                  "model_size_vs_performance", "tool_hit_vs_hallucination"]:
         c = results[key]
         if "pearson_r" in c:
