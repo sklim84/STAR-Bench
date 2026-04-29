@@ -610,6 +610,56 @@ MODELS = [
         "api_key_env": None,
         "think": None,
     },
+    # ── NEW 모델 (2026-04-29 추가, 스모크 테스트 대상) ──
+    {
+        "name": "Qwen/Qwen3.6-27B",
+        "provider": "vllm",
+        "base_url": "http://localhost:11434/v1",
+        "api_key_env": None,
+        "think": None,
+    },
+    {
+        "name": "Qwen/Qwen3.6-35B-A3B",
+        "provider": "vllm",
+        "base_url": "http://localhost:11434/v1",
+        "api_key_env": None,
+        "think": None,
+    },
+    {
+        "name": "google/gemma-4-E4B-it",
+        "provider": "vllm",
+        "base_url": "http://localhost:11434/v1",
+        "api_key_env": None,
+        "think": None,
+    },
+    {
+        "name": "google/gemma-4-31B-it",
+        "provider": "vllm",
+        "base_url": "http://localhost:11434/v1",
+        "api_key_env": None,
+        "think": None,
+    },
+    {
+        "name": "microsoft/Phi-4-mini-instruct",
+        "provider": "vllm",
+        "base_url": "http://localhost:11434/v1",
+        "api_key_env": None,
+        "think": None,
+    },
+    {
+        "name": "Salesforce/Llama-Fin-8b",
+        "provider": "vllm",
+        "base_url": "http://localhost:11434/v1",
+        "api_key_env": None,
+        "think": None,
+    },
+    {
+        "name": "TheFinAI/Fino1-8B",
+        "provider": "vllm",
+        "base_url": "http://localhost:11434/v1",
+        "api_key_env": None,
+        "think": None,
+    },
 ]
 
 # ---------------------------------------------------------------------------

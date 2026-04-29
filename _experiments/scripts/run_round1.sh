@@ -133,10 +133,102 @@ GROUP_C2=(
     "${GROUP_C[9]}"  # kanana-2-think (2변형)
 )
 
+# ===========================================================================
+# 서버별 GROUP (MODELS.md 24-model 기준, 2026-04-29)
+# ===========================================================================
+# Server 1 (2× H100 80GB) — 11 모델: small/medium 단일-GPU
+# Server 2 (6× H100 80GB) — 13 모델: large + TP=2 + TP=4
+# ===========================================================================
+
+# Server 1 GPU 0 (6 모델)
+GROUP_S1_A=(
+    "qwen35-4b|Qwen/Qwen3.5-4B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-4B"
+    "gemma-4-e4b|principled-intelligence/gemma-4-E4B-it-text-only|hermes||principled-intelligence/gemma-4-E4B-it-text-only"
+    "phi-4-mini|microsoft/Phi-4-mini-instruct|hermes||microsoft/Phi-4-mini-instruct"
+    "xlam-3b|Salesforce/xLAM-2-3b-fc-r|xlam||Salesforce/xLAM-2-3b-fc-r"
+    "exaone-1.2b|LGAI-EXAONE/EXAONE-4.0-1.2B|hermes|--trust-remote-code|LGAI-EXAONE/EXAONE-4.0-1.2B"
+    "llama-fin-8b|Salesforce/Llama-Fin-8b|llama3_json|--max-model-len 8192|Salesforce/Llama-Fin-8b"
+)
+
+# Server 1 GPU 1 (5 모델)
+GROUP_S1_B=(
+    "llama-3.2-3b|meta-llama/Llama-3.2-3B-Instruct|llama3_json||meta-llama/Llama-3.2-3B-Instruct"
+    "ministral-3b|mistralai/Ministral-3-3B-Instruct-2512|mistral||mistralai/Ministral-3-3B-Instruct-2512"
+    "hermes-3-8b|NousResearch/Hermes-3-Llama-3.1-8B|hermes||NousResearch/Hermes-3-Llama-3.1-8B"
+    "ax-light|skt/A.X-4.0-Light|hermes||skt/A.X-4.0-Light"
+    "fino1-8b|TheFinAI/Fino1-8B|llama3_json||TheFinAI/Fino1-8B"
+)
+
+# Server 2 — TP=4 (gpt-oss-120b, 4 GPUs)
+GROUP_S2_TP4=(
+    "gpt-oss-120b|openai/gpt-oss-120b|openai|--tensor-parallel-size 4 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager --reasoning-parser openai_gptoss|openai/gpt-oss-120b"
+)
+
+# Server 2 — TP=2 (3 pair 병렬, 각 70B+)
+GROUP_S2_TP2_A=(
+    "llama-3.3-70b|meta-llama/Llama-3.3-70B-Instruct|llama3_json|--tensor-parallel-size 2 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager|meta-llama/Llama-3.3-70B-Instruct"
+)
+GROUP_S2_TP2_B=(
+    "xlam-70b|Salesforce/Llama-xLAM-2-70b-fc-r|xlam|--tensor-parallel-size 2 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager|Salesforce/Llama-xLAM-2-70b-fc-r"
+)
+GROUP_S2_TP2_C=(
+    "ax-4.0|skt/A.X-4.0|hermes|--tensor-parallel-size 2 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager|skt/A.X-4.0"
+)
+
+# Server 2 — Single-GPU Large (9 모델 → 3 lanes × 3 모델)
+GROUP_S2_LARGE_L1=(
+    "qwen35-27b|Qwen/Qwen3.5-27B|qwen3_coder|--reasoning-parser qwen3 --enforce-eager|Qwen/Qwen3.5-27B"
+    "qwen36-27b|Qwen/Qwen3.6-27B|qwen3_xml||Qwen/Qwen3.6-27B"
+    "qwen36-35b-a3b|Qwen/Qwen3.6-35B-A3B|qwen3_xml|--max-model-len 32768|Qwen/Qwen3.6-35B-A3B"
+)
+GROUP_S2_LARGE_L2=(
+    "gemma-4-31b|google/gemma-4-31B-it|hermes||google/gemma-4-31B-it"
+    "mistral-small|mistralai/Mistral-Small-3.2-24B-Instruct-2506|mistral||mistralai/Mistral-Small-3.2-24B-Instruct-2506"
+    "exaone-32b|LGAI-EXAONE/EXAONE-4.0-32B|hermes|--trust-remote-code|LGAI-EXAONE/EXAONE-4.0-32B"
+)
+GROUP_S2_LARGE_L3=(
+    "gpt-oss-20b|openai/gpt-oss-20b|openai|--reasoning-parser openai_gptoss|openai/gpt-oss-20b"
+    "kanana-2-inst|kakaocorp/kanana-2-30b-a3b-instruct|hermes||kakaocorp/kanana-2-30b-a3b-instruct"
+    "kanana-2-think|kakaocorp/kanana-2-30b-a3b-thinking-2601|hermes|--reasoning-parser deepseek_r1|kakaocorp/kanana-2-30b-a3b-thinking-2601"
+)
+
+# ===========================================================================
+# Legacy / ad-hoc GROUPS
+# ===========================================================================
+
 # SMOKE: 파이프라인 검증용 (가장 작은 2개 모델)
 GROUP_SMOKE=(
     "qwen35-0.8b|Qwen/Qwen3.5-0.8B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-0.8B"
     "qwen25-1.5b|Qwen/Qwen2.5-1.5B-Instruct|hermes||Qwen/Qwen2.5-1.5B-Instruct"
+)
+
+# SMOKE_NEW: 신규 모델 vLLM 호환성 검증 (2026-04-29 추가, gpt-oss-120b 제외 — 서버2 분담)
+# phi-4 (14B)는 FC 미지원으로 제외 → Phi-4-mini-instruct (3.8B, FC 학습됨)로 교체
+# Llama-Fin-8b: max_position_embeddings=8192 → --max-model-len 8192 강제
+GROUP_SMOKE_NEW=(
+    "phi-4-mini|microsoft/Phi-4-mini-instruct|hermes||microsoft/Phi-4-mini-instruct"
+    "llama-fin-8b|Salesforce/Llama-Fin-8b|llama3_json|--max-model-len 8192|Salesforce/Llama-Fin-8b"
+    "fino1-8b|TheFinAI/Fino1-8B|llama3_json||TheFinAI/Fino1-8B"
+    "gemma-4-e4b|principled-intelligence/gemma-4-E4B-it-text-only|hermes||principled-intelligence/gemma-4-E4B-it-text-only"
+    "gemma-4-31b|google/gemma-4-31B-it|hermes||google/gemma-4-31B-it"
+    "qwen36-27b|Qwen/Qwen3.6-27B|qwen3_xml||Qwen/Qwen3.6-27B"
+    "qwen36-35b-a3b|Qwen/Qwen3.6-35B-A3B|qwen3_xml|--max-model-len 32768|Qwen/Qwen3.6-35B-A3B"
+)
+
+# SMOKE_RECHECK: 실패 모델 재시도용 (현 smoke 종료 후 단독 실행)
+GROUP_SMOKE_RECHECK=(
+    "phi-4-mini|microsoft/Phi-4-mini-instruct|hermes||microsoft/Phi-4-mini-instruct"
+    "llama-fin-8b|Salesforce/Llama-Fin-8b|llama3_json|--max-model-len 8192|Salesforce/Llama-Fin-8b"
+)
+
+# SMOKE_ARCH: 새 architecture (Gemma-4, Qwen3.6) transformers 5.7.0 업그레이드 후 검증
+# Gemma-4 E4B-it 공식은 multimodal (audio_tower) → vLLM 0.17.0 quantized linear 호환 X
+# → principled-intelligence/gemma-4-E4B-it-text-only (audio/vision 제거, 동일 chat template) 사용
+GROUP_SMOKE_ARCH=(
+    "gemma-4-e4b|principled-intelligence/gemma-4-E4B-it-text-only|hermes||principled-intelligence/gemma-4-E4B-it-text-only"
+    "gemma-4-31b|google/gemma-4-31B-it|hermes||google/gemma-4-31B-it"
+    "qwen36-27b|Qwen/Qwen3.6-27B|qwen3_xml||Qwen/Qwen3.6-27B"
+    "qwen36-35b-a3b|Qwen/Qwen3.6-35B-A3B|qwen3_xml|--max-model-len 32768|Qwen/Qwen3.6-35B-A3B"
 )
 
 # RECOVERY: Group B 비정상 종료로 누락된 mistral-nemo 단독 실행
@@ -162,9 +254,23 @@ case "$GROUP" in
     C2)    MODELS=("${GROUP_C2[@]}") ;;
     TP2)   MODELS=("${GROUP_TP2[@]}") ;;
     SMOKE) MODELS=("${GROUP_SMOKE[@]}") ;;
+    SMOKE_NEW) MODELS=("${GROUP_SMOKE_NEW[@]}") ;;
+    SMOKE_RECHECK) MODELS=("${GROUP_SMOKE_RECHECK[@]}") ;;
+    SMOKE_ARCH) MODELS=("${GROUP_SMOKE_ARCH[@]}") ;;
     RECOVERY) MODELS=("${GROUP_RECOVERY[@]}") ;;
     A_OFFLOAD) MODELS=("${GROUP_A_OFFLOAD[@]}") ;;
-    *)     echo "Unknown group: $GROUP (A, B, C, C1, C2, TP2, SMOKE)"; exit 1 ;;
+    # Server 1
+    S1_A) MODELS=("${GROUP_S1_A[@]}") ;;
+    S1_B) MODELS=("${GROUP_S1_B[@]}") ;;
+    # Server 2
+    S2_TP4) MODELS=("${GROUP_S2_TP4[@]}") ;;
+    S2_TP2_A) MODELS=("${GROUP_S2_TP2_A[@]}") ;;
+    S2_TP2_B) MODELS=("${GROUP_S2_TP2_B[@]}") ;;
+    S2_TP2_C) MODELS=("${GROUP_S2_TP2_C[@]}") ;;
+    S2_LARGE_L1) MODELS=("${GROUP_S2_LARGE_L1[@]}") ;;
+    S2_LARGE_L2) MODELS=("${GROUP_S2_LARGE_L2[@]}") ;;
+    S2_LARGE_L3) MODELS=("${GROUP_S2_LARGE_L3[@]}") ;;
+    *)     echo "Unknown group: $GROUP (A, B, C, C1, C2, TP2, SMOKE, SMOKE_NEW, SMOKE_RECHECK, SMOKE_ARCH, RECOVERY, A_OFFLOAD, S1_A, S1_B, S2_TP4, S2_TP2_A, S2_TP2_B, S2_TP2_C, S2_LARGE_L1, S2_LARGE_L2, S2_LARGE_L3)"; exit 1 ;;
 esac
 
 # Mode → output/cases 결정

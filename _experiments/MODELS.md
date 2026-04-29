@@ -40,8 +40,11 @@ NeurIPS 2026 E&D 제출 기준 평가 대상 모델 + RQ별 매핑.
 
 | # | 모델 | HF 경로 | 크기 | tool-call-parser | think | 서버 | RQ |
 |---|---|---|---|---|---|---|---|
-| 7 | Gemma-4-E4B-it | `google/gemma-4-E4B-it` | eff 4B | hermes (검증 필요) | reasoning mode 내장 | S1 | RQ1, RQ2 |
-| 8 | Gemma-4-31B-it | `google/gemma-4-31B-it` | 31B Dense | hermes (검증 필요) | reasoning mode 내장 | S2 | RQ1, RQ2 |
+| 7 | Gemma-4-E4B-it (text-only) | `principled-intelligence/gemma-4-E4B-it-text-only` | eff 4B | hermes (검증 중) | reasoning mode 내장 | S1 | RQ1, RQ2 |
+| 8 | Gemma-4-31B-it | `google/gemma-4-31B-it` | 31B Dense | hermes (검증 중) | reasoning mode 내장 | S2 | RQ1, RQ2 |
+
+> **Gemma-4-E4B-it 교체 사유**: 공식 `google/gemma-4-E4B-it`는 multimodal (audio_tower + vision_tower 포함). vLLM 0.17.0의 `TransformersMultiModalForCausalLM`이 Gemma-4 quantized linear (`Gemma4ClippableLinear`) 파라미터 적재 실패 (`input_max` 누락). text-only 변형 (`principled-intelligence/gemma-4-E4B-it-text-only`)은 audio/vision encoder 제거, 동일 chat template/tokenizer로 drop-in replacement.
+> **31B-it**: 별도 검증 중 (smoke pending).
 
 #### A4. Mistral 계열 — 2개
 
@@ -171,8 +174,8 @@ NeurIPS 2026 E&D 제출 기준 평가 대상 모델 + RQ별 매핑.
 
 | 모델 | HF 경로 | tool-call-parser | 우선순위 | 예상 risk |
 |---|---|---|---|---|
-| Gemma-4-E4B-it | `google/gemma-4-E4B-it` | hermes | 高 | vLLM 0.17.0 호환성 (2026-04 출시) |
-| Gemma-4-31B-it | `google/gemma-4-31B-it` | hermes | 高 | 동일 |
+| Gemma-4-E4B-it (text-only) | `principled-intelligence/gemma-4-E4B-it-text-only` | hermes | 高 | 공식 multimodal 변형은 vLLM 비호환 (audio_tower) → text-only 변형 사용 |
+| Gemma-4-31B-it | `google/gemma-4-31B-it` | hermes | 高 | smoke 검증 중 (multimodal 여부 미확정) |
 | Qwen3.6-27B | `Qwen/Qwen3.6-27B` | qwen3_xml | 高 | parser 검증 (2026-04-22 출시) |
 | Qwen3.6-35B-A3B | `Qwen/Qwen3.6-35B-A3B` | qwen3_xml | 高 | 동일 |
 | Phi-4-mini-instruct | `microsoft/Phi-4-mini-instruct` | hermes | 中 | post-training FC 학습 (Microsoft 공식). phi-4 (14B)는 FC 미지원으로 제외 |
@@ -210,7 +213,7 @@ NeurIPS 2026 E&D 제출 기준 평가 대상 모델 + RQ별 매핑.
 |---|---|
 | Qwen3.6-27B | A1 (NEW 세대 Dense) |
 | Qwen3.6-35B-A3B | A1 (NEW 세대 MoE) |
-| Gemma-4-E4B-it | A3 (NEW small) |
+| Gemma-4-E4B-it (text-only 변형) | A3 (NEW small, principled-intelligence/gemma-4-E4B-it-text-only) |
 | Gemma-4-31B-it | A3 (NEW large) |
 | Phi-4-mini-instruct | A5 (NEW small, FC 학습된 mini variant) |
 | gpt-oss-120b | A6 (NEW large reasoning) |
@@ -224,3 +227,4 @@ NeurIPS 2026 E&D 제출 기준 평가 대상 모델 + RQ별 매핑.
 | 일자 | 변경 |
 |---|---|
 | 2026-04-29 | 44 모델 → 24 모델 reduce. Qwen3 (2507) 시리즈 제거 (3.5+3.6으로 대체), Cloud API (gpt-4o-mini, claude-sonnet-4-5) 제거, phi-4 (14B, FC 미지원) → Phi-4-mini-instruct (3.8B, FC 지원) 교체. 8종 추가 (Qwen3.6 Dense+MoE, Gemma-4 E4B/31B-it, Phi-4-mini-instruct, gpt-oss-120b, Salesforce/Llama-Fin-8b, TheFinAI/Fino1-8B). 옛 FinGPT-v3 / FinMA (Llama-1/2 base)는 outdated로 제외. HF 경로 모두 검증. |
+| 2026-04-29 (smoke 후속) | Gemma-4-E4B-it 공식판은 multimodal (audio_tower)로 vLLM 0.17.0 호환 X → `principled-intelligence/gemma-4-E4B-it-text-only` (drop-in replacement)로 교체. transformers 5.3.0 → 5.7.0 + mistral_common 1.9.1 → 1.11.1 업그레이드. Gemma-4-31B-it 호환성 검증 진행 중. |
