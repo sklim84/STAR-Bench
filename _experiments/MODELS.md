@@ -26,8 +26,8 @@ NeurIPS 2026 E&D 제출 기준 평가 대상 모델 + RQ별 매핑.
 |---|---|---|---|---|---|---|---|---|
 | 1 | Qwen3.5-4B | `Qwen/Qwen3.5-4B` | 4B | Dense | qwen3_coder + reasoning_qwen3 | think+nothink | S1 | RQ1, RQ3, RQ2 |
 | 2 | Qwen3.5-27B | `Qwen/Qwen3.5-27B` | 27B | Dense | qwen3_coder + enforce-eager | think+nothink | S2 | RQ1, RQ3, RQ2, RQ4 |
-| 3 | Qwen3.6-27B | `Qwen/Qwen3.6-27B` | 27B | Dense | qwen3_xml (검증 필요) | thinking-preservation | S2 | RQ1, RQ2, 세대비교 |
-| 4 | Qwen3.6-35B-A3B | `Qwen/Qwen3.6-35B-A3B` | 35B | MoE (active 3B) | qwen3_xml (검증 필요) | (확인 필요) | S2 | RQ1, RQ2, MoE 분석 |
+| 3 | Qwen3.6-27B | `Qwen/Qwen3.6-27B` | 27B | Dense | qwen3_xml ✅ | thinking-preservation | S2 | RQ1, RQ2, 세대비교 |
+| 4 | Qwen3.6-35B-A3B | `Qwen/Qwen3.6-35B-A3B` | 35B | MoE (active 3B) | qwen3_xml + `--max-model-len 32768` ✅ | (확인 필요) | S2 | RQ1, RQ2, MoE 분석 |
 
 #### A2. Llama 계열 (Meta) — 2개
 
@@ -40,11 +40,10 @@ NeurIPS 2026 E&D 제출 기준 평가 대상 모델 + RQ별 매핑.
 
 | # | 모델 | HF 경로 | 크기 | tool-call-parser | think | 서버 | RQ |
 |---|---|---|---|---|---|---|---|
-| 7 | Gemma-4-E4B-it (text-only) | `principled-intelligence/gemma-4-E4B-it-text-only` | eff 4B | hermes (검증 중) | reasoning mode 내장 | S1 | RQ1, RQ2 |
-| 8 | Gemma-4-31B-it | `google/gemma-4-31B-it` | 31B Dense | hermes (검증 중) | reasoning mode 내장 | S2 | RQ1, RQ2 |
+| 7 | Gemma-4-E4B-it | `google/gemma-4-E4B-it` | eff 4B | **gemma4** | reasoning mode 내장 | S1 | RQ1, RQ2 |
+| 8 | Gemma-4-31B-it | `google/gemma-4-31B-it` | 31B Dense | **gemma4** | reasoning mode 내장 | S2 | RQ1, RQ2 |
 
-> **Gemma-4-E4B-it 교체 사유**: 공식 `google/gemma-4-E4B-it`는 multimodal (audio_tower + vision_tower 포함). vLLM 0.17.0의 `TransformersMultiModalForCausalLM`이 Gemma-4 quantized linear (`Gemma4ClippableLinear`) 파라미터 적재 실패 (`input_max` 누락). text-only 변형 (`principled-intelligence/gemma-4-E4B-it-text-only`)은 audio/vision encoder 제거, 동일 chat template/tokenizer로 drop-in replacement.
-> **31B-it**: 별도 검증 중 (smoke pending).
+> **Gemma-4 호환성**: 공식 multimodal (`google/gemma-4-E4B-it`)는 vLLM 0.19.0 + transformers 5.7.0 + 전용 `gemma4` parser 조합으로 정상 동작 (smoke 검증: E4B 4/5, 31B 5/5). vLLM 0.17.0에서는 `Gemma4ClippableLinear input_max` 누락으로 적재 실패. hermes parser 사용 시 chat template 형식 (`<|tool_call>call:func{...}<tool_call|>`) 불일치로 called_tools 미생성. text-only 변형 (`principled-intelligence/...`)은 weight loading 버그가 별도로 존재해 사용 권장하지 않음.
 
 #### A4. Mistral 계열 — 2개
 
@@ -57,7 +56,7 @@ NeurIPS 2026 E&D 제출 기준 평가 대상 모델 + RQ별 매핑.
 
 | # | 모델 | HF 경로 | 크기 | tool-call-parser | think | 서버 | RQ |
 |---|---|---|---|---|---|---|---|
-| 11 | Phi-4-mini-instruct | `microsoft/Phi-4-mini-instruct` | 3.8B Dense | hermes (검증 필요) | n/a | S1 | RQ1 |
+| 11 | Phi-4-mini-instruct | `microsoft/Phi-4-mini-instruct` | 3.8B Dense | (검증 중: phi4_mini_json 0/5 → pythonic/hermes/llama3_json 시도) | n/a | S1 | RQ1 |
 
 > phi-4 (14B)는 native function calling 미지원으로 제외 (스모크 결과 5/5 wrong_func, called_tools=[]). Phi-4-mini-instruct는 post-training으로 FC 학습 (Microsoft 공식 명시). 단 "function name hallucination" 한계 존재 (Microsoft 명시).
 
@@ -228,3 +227,88 @@ NeurIPS 2026 E&D 제출 기준 평가 대상 모델 + RQ별 매핑.
 |---|---|
 | 2026-04-29 | 44 모델 → 24 모델 reduce. Qwen3 (2507) 시리즈 제거 (3.5+3.6으로 대체), Cloud API (gpt-4o-mini, claude-sonnet-4-5) 제거, phi-4 (14B, FC 미지원) → Phi-4-mini-instruct (3.8B, FC 지원) 교체. 8종 추가 (Qwen3.6 Dense+MoE, Gemma-4 E4B/31B-it, Phi-4-mini-instruct, gpt-oss-120b, Salesforce/Llama-Fin-8b, TheFinAI/Fino1-8B). 옛 FinGPT-v3 / FinMA (Llama-1/2 base)는 outdated로 제외. HF 경로 모두 검증. |
 | 2026-04-29 (smoke 후속) | Gemma-4-E4B-it 공식판은 multimodal (audio_tower)로 vLLM 0.17.0 호환 X → `principled-intelligence/gemma-4-E4B-it-text-only` (drop-in replacement)로 교체. transformers 5.3.0 → 5.7.0 + mistral_common 1.9.1 → 1.11.1 업그레이드. Gemma-4-31B-it 호환성 검증 진행 중. |
+| 2026-04-29 (vLLM 0.19 업그레이드 후) | vLLM 0.17.0 → 0.19.0 업그레이드로 Gemma-4 공식 multimodal 직접 지원. **Gemma-4-E4B-it 공식판 (`google/gemma-4-E4B-it`)으로 환원** (text-only 변형은 weight loading 버그 별도 발생). 전용 parser `gemma4` 사용 (hermes parser 사용 시 chat template 형식 불일치로 0/5 실패). Phi-4-mini-instruct는 전용 `phi4_mini_json` parser도 0/5 실패 → pythonic/hermes/llama3_json 대안 파서 검증 진행 중. |
+
+---
+
+## 7. 환경 요구사항 (Server 2 셋업 가이드)
+
+Server 1에서 검증된 환경 사양. Server 2도 동일하게 맞춰야 신규 모델 (Gemma-4, Qwen3.6, Phi-4-mini-instruct) 호환.
+
+### 7.1 패키지 버전
+
+| 패키지 | 버전 | 비고 |
+|---|---|---|
+| vLLM | **0.19.0** | Gemma-4 day-one, qwen3_xml/gemma4/phi4_mini_json 전용 parser 추가 |
+| transformers | **5.7.0** | Gemma-4 architecture 지원 (5.3.0 미지원). vLLM 0.19 설치 시 4.57.6으로 다운그레이드 → 5.7.0 재업그레이드 필요 (pip warning 무시) |
+| mistral_common | 1.11.1 | Mistral 계열 |
+| torch | 2.10.0 | flash_attn 시스템판은 비호환 → `/tmp/fake_flash_attn` 스텁 사용 (run_round1.sh 자동 생성) |
+
+```bash
+pip install --upgrade vllm==0.19.0
+pip install --upgrade transformers==5.7.0 mistral_common==1.11.1  # vLLM dep warning 무시
+pip cache purge  # 디스크 부족 시 (49GB tmpfs는 47GB 차면 install 실패)
+```
+
+### 7.2 신규 아키텍처 모델별 vLLM 인자
+
+| 모델 | tool-call-parser | 추가 인자 | 검증 결과 |
+|---|---|---|---|
+| Gemma-4-E4B-it (multimodal) | **gemma4** | (기본) | 4/5 ✅ — `<\|tool_call>call:func{...}<tool_call\|>` 형식 자동 파싱 |
+| Gemma-4-31B-it | **gemma4** | (기본) | 5/5 🌟 |
+| Qwen3.6-27B | qwen3_xml | (기본) | 5/5 ✅ |
+| Qwen3.6-35B-A3B | qwen3_xml | `--max-model-len 32768` | 5/5 ✅ — 기본 max-len 초과 방지 |
+| Phi-4-mini-instruct | (검증 중) | (기본) | phi4_mini_json 0/5 ❌ → pythonic/hermes/llama3_json 시도 중 |
+| Llama-Fin-8b | llama3_json (검증 필요) | `--max-model-len 8192` | max_position_embeddings=8192 강제 필요 |
+| Fino1-8B | llama3_json (검증 필요) | (기본) | 1/5 (parser 변경 검토) |
+| gpt-oss-120b | openai | `--tensor-parallel-size 4 --max-model-len 16384 --reasoning-parser openai_gptoss --enforce-eager` | TP=4, S2 전용 |
+
+### 7.3 ⚠ 주의사항 (호환성 함정)
+
+- **Gemma-4 + hermes parser 금지**: chat template이 `<\|tool_call>call:func{...}<tool_call\|>` 형식을 사용. hermes의 `<tool_call>{json}</tool_call>` pattern과 불일치하여 called_tools=[] 발생. 반드시 `gemma4` parser 사용.
+- **Gemma-4-E4B-it text-only 변형 (`principled-intelligence/...-text-only`) 사용 금지**: vLLM 0.19에서 `model.layers.0.layer_scalar` weight loading 실패. 공식 multimodal (`google/gemma-4-E4B-it`) + `gemma4` parser 사용.
+- **vLLM 0.19 + transformers 4.57.6 (자동 설치) 조합 금지**: Gemma-4 모델 적재 시 architecture 인식 실패. 반드시 transformers 5.7.0으로 재업그레이드.
+- **Gemma-4-31B-it Q4_0 cache mode**: 일부 quantization 메타데이터 적재 시간이 길어 vLLM 기동 max_wait 600s 권장.
+- **Qwen3.6 35B-A3B (MoE)**: 전체 35B parameter지만 active 3B만 forward — TP 없이 single-GPU 가능. 단 KV cache + MoE expert 적재로 `--max-model-len 32768` 명시 필요 (기본값 적용 시 OOM 또는 적재 거부).
+- **`HF_TOKEN`**: `.env`에 `HF_TOKEN : hf_xxx` (콜론+스페이스, `=` 아님) 형식. Server 2도 동일하게 `.env` 작성하거나 export 필요.
+- **VLLM_ATTENTION_BACKEND=XFORMERS 제거**: vLLM 0.17부터 미지원. TP=2 worker crash 유발하므로 환경변수에 남겨두지 말 것.
+
+### 7.4 Server 2 셋업 명령 (요약)
+
+```bash
+# 1. 저장소 clone (서브모듈 + LFS 포함)
+git clone --recurse-submodules https://github.com/<user>/KA-001-AML-Assistant.git
+cd KA-001-AML-Assistant
+git lfs pull  # _datasets 대용량 파일 (parquet/duckdb)
+
+# 2. 환경 설정
+echo "HF_TOKEN : hf_xxx" > .env
+pip install --upgrade vllm==0.19.0
+pip install --upgrade transformers==5.7.0 mistral_common==1.11.1
+
+# 3. 스모크 검증 (S2 대상 13개 모델 전체 5건씩)
+BENCH_MAX_TOTAL=5 bash _paper/_experiments/scripts/run_round1.sh \
+    --gpu 0 --port 11434 --group S2_LARGE_L1 --mode kr
+
+# 4. 본 실험 (마스터 오케스트레이터)
+nohup bash _paper/_experiments/scripts/run_round1_master.sh \
+    --server 2 --modes kr,en,mt > master_s2.log 2>&1 &
+```
+
+### 7.5 Server 2 분담 모델 호환성 사전 체크리스트
+
+| 모델 | parser | 추가 인자 | Server 1 사전 검증 | 서버 2 추가 검증 필요 |
+|---|---|---|---|---|
+| Qwen3.5-27B | qwen3_coder | `--reasoning-parser qwen3 --enforce-eager` | ✅ Round 1 v3 통과 | (skip) |
+| Qwen3.6-27B | qwen3_xml | (기본) | ✅ smoke 5/5 | (skip) |
+| Qwen3.6-35B-A3B | qwen3_xml | `--max-model-len 32768` | ✅ smoke 5/5 | (skip) |
+| Llama-3.3-70B-Instruct | llama3_json | TP=2, `--enforce-eager` | ✅ Round 1 v3 통과 | (skip) |
+| Gemma-4-31B-it | gemma4 | (기본) | ✅ smoke 5/5 (vLLM 0.19) | **vLLM 0.19 + transformers 5.7.0 필수** |
+| Mistral-Small-3.2-24B | mistral | (기본) | ✅ Round 1 v3 통과 | (skip) |
+| EXAONE-4.0-32B | hermes | `--trust-remote-code` | ✅ Round 1 v3 통과 | (skip) |
+| gpt-oss-20b | openai | `--reasoning-parser openai_gptoss` | ✅ Round 1 v3 통과 | (skip) |
+| gpt-oss-120b | openai | TP=4, `--reasoning-parser openai_gptoss --enforce-eager --max-model-len 16384` | ❌ S1 GPU 부족 | **TP=4 메모리 검증 필수 (4× 80GB)** |
+| xLAM-2-70b | xlam | TP=2, `--enforce-eager` | ✅ Round 1 v3 통과 | (skip) |
+| A.X-4.0 | hermes | TP=2, `--enforce-eager` | ✅ Round 1 v3 통과 | (skip) |
+| kanana-2-30b-a3b-instruct | hermes + kanana plugin | (기본) | ✅ Round 1 v3 통과 | kanana_tool_calls plugin 경로 확인 |
+| kanana-2-30b-a3b-thinking-2601 | hermes + kanana plugin | `--reasoning-parser deepseek_r1` | ✅ Round 1 v3 통과 | 동일 |
