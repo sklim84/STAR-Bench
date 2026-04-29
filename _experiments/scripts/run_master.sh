@@ -1,17 +1,17 @@
 #!/bin/bash
 # ============================================================================
-# Round 1 마스터 오케스트레이터 (MODELS.md 24-model + 서버 분담 후, 2026-04-29)
+# 마스터 오케스트레이터 (MODELS.md 24-model + 서버 분담)
 #
 # 24 모델 × 3 차원 (KR/EN/MT) × 1 round
 #   Server 1 (2× H100): 11 모델 (S1_A 6 + S1_B 5 단일-GPU)
 #   Server 2 (6× H100): 13 모델 (TP=4 1 + TP=2 3 + Single-GPU Large 9)
 #
 # 사용법:
-#   nohup bash run_round1_master.sh --server 1 > master_s1.log 2>&1 &
-#   nohup bash run_round1_master.sh --server 2 > master_s2.log 2>&1 &
-#   bash run_round1_master.sh --server 1 --modes kr        # KR phase만
-#   bash run_round1_master.sh --server 2 --skip-tp4        # TP=4 (gpt-oss-120b) 스킵
-#   bash run_round1_master.sh --server 1 --skip-thinking   # think=True 변형 제외
+#   nohup bash run_master.sh --server 1 > master_s1.log 2>&1 &
+#   nohup bash run_master.sh --server 2 > master_s2.log 2>&1 &
+#   bash run_master.sh --server 1 --modes kr        # KR phase만
+#   bash run_master.sh --server 2 --skip-tp4        # TP=4 (gpt-oss-120b) 스킵
+#   bash run_master.sh --server 1 --skip-thinking   # think=True 변형 제외
 # ============================================================================
 
 set -uo pipefail
@@ -19,7 +19,7 @@ set -uo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 LOG_DIR="$PROJECT_ROOT/_paper/_experiments/logs"
-RUN_SCRIPT="$SCRIPT_DIR/run_round1.sh"
+RUN_SCRIPT="$SCRIPT_DIR/run_benchmark.sh"
 
 SERVER=""
 MODES="kr,en,mt"
@@ -51,7 +51,7 @@ fi
 
 mkdir -p "$LOG_DIR"
 
-ts() { echo "$(date '+%Y-%m-%d %H:%M:%S') [MASTER-S$SERVER] $*" | tee -a "$LOG_DIR/round1_master_s${SERVER}.log"; }
+ts() { echo "$(date '+%Y-%m-%d %H:%M:%S') [MASTER-S$SERVER] $*" | tee -a "$LOG_DIR/master_s${SERVER}.log"; }
 
 # ============================================================================
 # Server 1 (2× H100) — S1_A (GPU 0) + S1_B (GPU 1) 병렬
@@ -156,7 +156,7 @@ run_phase_s2() {
 }
 
 # 메인
-ts "Round 1 마스터 시작: SERVER=$SERVER MODES=$MODES SKIP_TP2=$SKIP_TP2 SKIP_TP4=$SKIP_TP4 SKIP_THINKING=$SKIP_THINKING"
+ts "마스터 시작: SERVER=$SERVER MODES=$MODES SKIP_TP2=$SKIP_TP2 SKIP_TP4=$SKIP_TP4 SKIP_THINKING=$SKIP_THINKING"
 START_TIME=$(date +%s)
 
 IFS=',' read -ra MODE_LIST <<< "$MODES"
@@ -181,5 +181,5 @@ done
 END_TIME=$(date +%s)
 ELAPSED=$((END_TIME - START_TIME))
 ts "════════════════════════════════════════════════════════════"
-ts "Round 1 전체 완료. 소요 시간: $((ELAPSED/3600))시간 $((ELAPSED%3600/60))분"
+ts "전체 완료. 소요 시간: $((ELAPSED/3600))시간 $((ELAPSED%3600/60))분"
 ts "════════════════════════════════════════════════════════════"

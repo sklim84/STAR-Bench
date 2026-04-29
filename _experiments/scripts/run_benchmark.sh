@@ -1,16 +1,17 @@
 #!/bin/bash
 # ============================================================================
-# Round 1 재실험 스크립트 (HOFINET 정정 후)
+# Per-GPU 벤치마크 실행기 (HOFINET 정정본, 24-model 분담)
 #
-# 44개 모델 × 3 차원(KR single_turn, EN single_turn, multi-turn STR) × 1 round
-# 결과 저장: _paper/_experiments/round1{,_en,_multiturn}/eval/
+# 24개 모델 × 3 차원(KR single_turn, EN single_turn, multi-turn STR)
+# 결과 저장: _paper/_experiments/results_{kr,en,mt}/eval/
 #
 # 사용법:
-#   bash _experiments/scripts/run_round1.sh --gpu 0 --port 11434 --group A --mode kr
-#   bash _experiments/scripts/run_round1.sh --gpu 1 --port 11435 --group B --mode kr
-#   bash _experiments/scripts/run_round1.sh --gpu 0,1 --port 11434 --group TP2 --mode kr
+#   bash _experiments/scripts/run_benchmark.sh --gpu 0 --port 11434 --group S1_A --mode kr
+#   bash _experiments/scripts/run_benchmark.sh --gpu 1 --port 11435 --group S1_B --mode kr
+#   bash _experiments/scripts/run_benchmark.sh --gpu 0,1 --port 11434 --group S2_TP2_A --mode kr
 #
-# group: A (GPU 0 small), B (GPU 1 small), C (medium 20-32B), TP2 (70B+ 양 GPU)
+# group: S1_A/S1_B (서버1 단일-GPU), S2_TP4/S2_TP2_*/S2_LARGE_* (서버2)
+#        SMOKE_*, RECOVERY 등은 ad-hoc 검증용
 # mode:  kr (KR single_turn), en (EN single_turn), mt (multi-turn STR)
 # ============================================================================
 
@@ -24,9 +25,9 @@ HF_TOKEN="${HF_TOKEN:-}"
 PROJECT_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
 
 # 결과 디렉토리 (mode별)
-RESULT_KR="$PROJECT_ROOT/_paper/_experiments/round1"
-RESULT_EN="$PROJECT_ROOT/_paper/_experiments/round1_en"
-RESULT_MT="$PROJECT_ROOT/_paper/_experiments/round1_multiturn"
+RESULT_KR="$PROJECT_ROOT/_paper/_experiments/results_kr"
+RESULT_EN="$PROJECT_ROOT/_paper/_experiments/results_en"
+RESULT_MT="$PROJECT_ROOT/_paper/_experiments/results_mt"
 CASES_KR="$PROJECT_ROOT/_paper/benchmarks"
 CASES_EN="$PROJECT_ROOT/_paper/benchmarks_en"
 LOG_DIR="$PROJECT_ROOT/_paper/_experiments/logs"
@@ -141,10 +142,12 @@ GROUP_C2=(
 # ===========================================================================
 
 # Server 1 GPU 0 (6 모델)
+# - Gemma-4-E4B-it: 공식 multimodal + gemma4 parser (vLLM 0.19 + transformers 5.7.0 필수)
+# - Phi-4-mini: phi4_mini_json + vLLM 공식 jinja chat template (functools[...] 형식 강제)
 GROUP_S1_A=(
     "qwen35-4b|Qwen/Qwen3.5-4B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-4B"
-    "gemma-4-e4b|principled-intelligence/gemma-4-E4B-it-text-only|hermes||principled-intelligence/gemma-4-E4B-it-text-only"
-    "phi-4-mini|microsoft/Phi-4-mini-instruct|hermes||microsoft/Phi-4-mini-instruct"
+    "gemma-4-e4b|google/gemma-4-E4B-it|gemma4||google/gemma-4-E4B-it"
+    "phi-4-mini|microsoft/Phi-4-mini-instruct|phi4_mini_json|--chat-template $PROJECT_ROOT/_paper/_experiments/scripts/tool_chat_template_phi4_mini.jinja|microsoft/Phi-4-mini-instruct"
     "xlam-3b|Salesforce/xLAM-2-3b-fc-r|xlam||Salesforce/xLAM-2-3b-fc-r"
     "exaone-1.2b|LGAI-EXAONE/EXAONE-4.0-1.2B|hermes|--trust-remote-code|LGAI-EXAONE/EXAONE-4.0-1.2B"
     "llama-fin-8b|Salesforce/Llama-Fin-8b|llama3_json|--max-model-len 8192|Salesforce/Llama-Fin-8b"
@@ -222,13 +225,31 @@ GROUP_SMOKE_RECHECK=(
 )
 
 # SMOKE_ARCH: 새 architecture (Gemma-4, Qwen3.6) transformers 5.7.0 업그레이드 후 검증
-# Gemma-4 E4B-it 공식은 multimodal (audio_tower) → vLLM 0.17.0 quantized linear 호환 X
-# → principled-intelligence/gemma-4-E4B-it-text-only (audio/vision 제거, 동일 chat template) 사용
+# vLLM 0.19에 모델 전용 parser 존재: gemma4, phi4_mini_json
+# Gemma-4 E4B-it 공식 multimodal 재시도 (vLLM 0.19 + gemma4 parser)
 GROUP_SMOKE_ARCH=(
-    "gemma-4-e4b|principled-intelligence/gemma-4-E4B-it-text-only|hermes||principled-intelligence/gemma-4-E4B-it-text-only"
-    "gemma-4-31b|google/gemma-4-31B-it|hermes||google/gemma-4-31B-it"
+    "phi-4-mini|microsoft/Phi-4-mini-instruct|phi4_mini_json||microsoft/Phi-4-mini-instruct"
+    "gemma-4-e4b|google/gemma-4-E4B-it|gemma4||google/gemma-4-E4B-it"
+    "gemma-4-31b|google/gemma-4-31B-it|gemma4||google/gemma-4-31B-it"
     "qwen36-27b|Qwen/Qwen3.6-27B|qwen3_xml||Qwen/Qwen3.6-27B"
     "qwen36-35b-a3b|Qwen/Qwen3.6-35B-A3B|qwen3_xml|--max-model-len 32768|Qwen/Qwen3.6-35B-A3B"
+)
+
+# SMOKE_PHI4: Phi-4-mini-instruct alternative parser 검증
+# phi4_mini_json (dedicated) 0/5 실패 → pythonic, hermes, openai 시도
+# alias 뒤에 parser 식별자 붙여 결과 디렉토리 분리
+GROUP_SMOKE_PHI4=(
+    "phi-4-mini-pyt|microsoft/Phi-4-mini-instruct|pythonic||microsoft/Phi-4-mini-instruct"
+    "phi-4-mini-hermes|microsoft/Phi-4-mini-instruct|hermes||microsoft/Phi-4-mini-instruct"
+    "phi-4-mini-llama3|microsoft/Phi-4-mini-instruct|llama3_json||microsoft/Phi-4-mini-instruct"
+)
+
+# SMOKE_PHI4_TEMPLATE: Phi-4-mini-instruct + 공식 vLLM chat template
+# 원인 진단: Microsoft 기본 chat template(<|tool|>/<|tool_calls|>)과 vLLM phi4_mini_json parser
+# (functools[...] regex)의 형식 불일치로 0/5 실패. vLLM examples의 tool_chat_template_phi4_mini.jinja는
+# 모델이 functools[...] 형식으로 출력하도록 system 지시 → parser 매칭됨.
+GROUP_SMOKE_PHI4_TEMPLATE=(
+    "phi-4-mini-tmpl|microsoft/Phi-4-mini-instruct|phi4_mini_json|--chat-template $PROJECT_ROOT/_paper/_experiments/scripts/tool_chat_template_phi4_mini.jinja|microsoft/Phi-4-mini-instruct"
 )
 
 # RECOVERY: Group B 비정상 종료로 누락된 mistral-nemo 단독 실행
@@ -257,6 +278,8 @@ case "$GROUP" in
     SMOKE_NEW) MODELS=("${GROUP_SMOKE_NEW[@]}") ;;
     SMOKE_RECHECK) MODELS=("${GROUP_SMOKE_RECHECK[@]}") ;;
     SMOKE_ARCH) MODELS=("${GROUP_SMOKE_ARCH[@]}") ;;
+    SMOKE_PHI4) MODELS=("${GROUP_SMOKE_PHI4[@]}") ;;
+    SMOKE_PHI4_TEMPLATE) MODELS=("${GROUP_SMOKE_PHI4_TEMPLATE[@]}") ;;
     RECOVERY) MODELS=("${GROUP_RECOVERY[@]}") ;;
     A_OFFLOAD) MODELS=("${GROUP_A_OFFLOAD[@]}") ;;
     # Server 1
@@ -324,7 +347,7 @@ run_benchmark() {
 
 # 메인 루프
 ts "============================================================"
-ts "Round 1 재실험: GROUP=$GROUP MODE=$MODE GPU=$GPU_ID PORT=$PORT"
+ts "벤치마크 시작: GROUP=$GROUP MODE=$MODE GPU=$GPU_ID PORT=$PORT"
 ts "OUTPUT: $OUTPUT_DIR"
 ts "총 ${#MODELS[@]}개 모델 (think/nothink 변형 포함)"
 ts "============================================================"
@@ -354,17 +377,31 @@ for ((idx=0; idx<${#MODELS[@]}; idx++)); do
 
     vllm_cmd="CUDA_VISIBLE_DEVICES=$CUDA_DEVICES PYTHONPATH=$FLASH_ATTN_STUB:\${PYTHONPATH:-} HF_TOKEN=$HF_TOKEN python -m vllm.entrypoints.openai.api_server --model $hf_model --port $PORT --max-model-len 32768 --gpu-memory-utilization 0.95 --tool-call-parser $parser --enable-auto-tool-choice $extra_args $KANANA_OPTS"
     ts "  vLLM 시작 (CUDA=$CUDA_DEVICES)"
-    eval "$vllm_cmd" > "$LOG_DIR/vllm_round1_${MODE}_${alias}.log" 2>&1 &
+    eval "$vllm_cmd" > "$LOG_DIR/vllm_${MODE}_${alias}.log" 2>&1 &
 
     if ! wait_for_server "$PORT" 600; then
         ts "  [SKIP] $alias 서버 기동 실패"
-        tail -50 "$LOG_DIR/vllm_round1_${MODE}_${alias}.log" 2>/dev/null || true
+        tail -50 "$LOG_DIR/vllm_${MODE}_${alias}.log" 2>/dev/null || true
         stop_server "$PORT"
         continue
     fi
 
     # bench_models 공백 분리
     bench_models_spaced=$(echo "$bench_models" | tr ',' ' ')
+
+    # SMOKE_PHI4*: 동일 HF model을 다른 parser/template로 반복 검증하므로 매 회 checkpoint + eval JSON 모두 clear
+    # (--resume이 eval_*.json 존재 시 모델 skip하므로 eval도 삭제)
+    if [[ "$GROUP" == SMOKE_PHI4* ]]; then
+        for bm in $bench_models_spaced; do
+            safe=$(echo "$bm" | tr ':/.' '___')
+            cp_file="$OUTPUT_DIR/checkpoint/checkpoint_${safe}.jsonl"
+            [ -f "$cp_file" ] && rm -f "$cp_file" && ts "  checkpoint 삭제: $cp_file"
+            for ev in "$OUTPUT_DIR"/eval/eval_${safe}_*.json; do
+                [ -f "$ev" ] && rm -f "$ev" && ts "  eval 삭제: $ev"
+            done
+        done
+    fi
+
     VLLM_BASE_URL="http://localhost:$PORT/v1" run_benchmark "$bench_models_spaced" || true
 
     stop_server "$PORT"
