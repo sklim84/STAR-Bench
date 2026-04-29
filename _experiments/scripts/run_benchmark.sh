@@ -162,7 +162,7 @@ GROUP_S1_B=(
     "llama-3.2-3b|meta-llama/Llama-3.2-3B-Instruct|llama3_json||meta-llama/Llama-3.2-3B-Instruct"
     "ministral-3b|mistralai/Ministral-3-3B-Instruct-2512|mistral||mistralai/Ministral-3-3B-Instruct-2512"
     "hermes-3-8b|NousResearch/Hermes-3-Llama-3.1-8B|hermes||NousResearch/Hermes-3-Llama-3.1-8B"
-    "ax-light|skt/A.X-4.0-Light|hermes||skt/A.X-4.0-Light"
+    "ax-light|skt/A.X-4.0-Light|hermes|--max-model-len 16384|skt/A.X-4.0-Light"
     "dragon-qwen-fin|DragonLLM/Qwen-Open-Finance-R-8B|qwen3_xml|--reasoning-parser qwen3|DragonLLM/Qwen-Open-Finance-R-8B"
 )
 
@@ -245,9 +245,10 @@ GROUP_SMOKE_DRAGONLLM=(
     "dragon-qwen-fin|DragonLLM/Qwen-Open-Finance-R-8B|qwen3_xml|--reasoning-parser qwen3|DragonLLM/Qwen-Open-Finance-R-8B"
 )
 
-# RECOVERY: Group B 비정상 종료로 누락된 mistral-nemo 단독 실행
+# RECOVERY: vLLM 부팅 실패로 KR phase에서 SKIP된 ax-light 단독 보충
+# 원인: vLLM 0.19에서 max_position_embeddings(16384) < default --max-model-len(32768) 검사 강화
 GROUP_RECOVERY=(
-    "mistral-nemo|mistralai/Mistral-Nemo-Instruct-2407|mistral||mistralai/Mistral-Nemo-Instruct-2407"
+    "ax-light|skt/A.X-4.0-Light|hermes|--max-model-len 16384|skt/A.X-4.0-Light"
 )
 
 # A_OFFLOAD: Group A 후반부 5 entries를 GPU 1 idle 시간에 병렬 처리 (master Group A는 자체 흐름 유지)
