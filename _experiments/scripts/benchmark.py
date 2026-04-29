@@ -2057,6 +2057,14 @@ def main():
     else:
         selected = MODELS
 
+    # BENCH_SKIP_THINK=1: think=True 변형 제외 (thinking ablation 별도 진행 시)
+    if os.environ.get("BENCH_SKIP_THINK") == "1":
+        before = len(selected)
+        selected = [m for m in selected if m.get("think") is not True]
+        skipped = before - len(selected)
+        if skipped:
+            _ts_print(f"[BENCH_SKIP_THINK=1] think=True 변형 {skipped}개 제외")
+
     # 이미 실행된 모델 건너뛰기
     existing = load_existing_results(output_dir) if args.resume else {}
     if existing:

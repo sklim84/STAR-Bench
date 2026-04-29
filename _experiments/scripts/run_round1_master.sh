@@ -9,7 +9,9 @@
 #   nohup bash run_round1_master.sh > round1_master.log 2>&1 &
 #   bash run_round1_master.sh --modes kr,en,mt              # 기본
 #   bash run_round1_master.sh --modes kr                    # KR만
-#   bash run_round1_master.sh --skip-tp2                    # TP=2 단계 스킵 (테스트용)
+#   bash run_round1_master.sh --skip-tp2                    # TP=2 단계 스킵 (별도 서버 분담 시)
+#   bash run_round1_master.sh --skip-thinking               # think=True 변형 제외 (별도 ablation 진행 시)
+#   bash run_round1_master.sh --skip-tp2 --skip-thinking    # 두 그룹 모두 분리
 # ============================================================================
 
 set -uo pipefail
@@ -21,14 +23,21 @@ RUN_SCRIPT="$SCRIPT_DIR/run_round1.sh"
 
 MODES="kr,en,mt"
 SKIP_TP2=false
+SKIP_THINKING=false
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --modes) MODES="$2"; shift 2 ;;
         --skip-tp2) SKIP_TP2=true; shift ;;
+        --skip-thinking) SKIP_THINKING=true; shift ;;
         *) echo "Unknown: $1"; exit 1 ;;
     esac
 done
+
+# benchmark.py가 think=True 변형을 제외하도록 환경변수 export (sub-runner들이 상속)
+if $SKIP_THINKING; then
+    export BENCH_SKIP_THINK=1
+fi
 
 mkdir -p "$LOG_DIR"
 
@@ -82,7 +91,7 @@ run_phase() {
 }
 
 # 메인
-ts "Round 1 마스터 시작: MODES=$MODES SKIP_TP2=$SKIP_TP2"
+ts "Round 1 마스터 시작: MODES=$MODES SKIP_TP2=$SKIP_TP2 SKIP_THINKING=$SKIP_THINKING"
 START_TIME=$(date +%s)
 
 IFS=',' read -ra MODE_LIST <<< "$MODES"

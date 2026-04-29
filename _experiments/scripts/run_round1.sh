@@ -209,10 +209,11 @@ stop_server() {
 
 run_benchmark() {
     local model_names=$1
-    local max_env=""
-    [ -n "$MAX_TOTAL" ] && max_env="BENCH_MAX_TOTAL=$MAX_TOTAL"
-    ts "  벤치마크: $max_env PYTHONPATH=$PROJECT_ROOT/_paper python -m $BENCH_MODULE --models $model_names --output $OUTPUT_DIR $BENCH_EXTRA"
-    env $max_env PYTHONPATH="$PROJECT_ROOT/_paper:${PYTHONPATH:-}" python -m "$BENCH_MODULE" --models $model_names --output "$OUTPUT_DIR" $BENCH_EXTRA
+    local extra_env=""
+    [ -n "$MAX_TOTAL" ] && extra_env="$extra_env BENCH_MAX_TOTAL=$MAX_TOTAL"
+    [ "${BENCH_SKIP_THINK:-0}" = "1" ] && extra_env="$extra_env BENCH_SKIP_THINK=1"
+    ts "  벤치마크: $extra_env PYTHONPATH=$PROJECT_ROOT/_paper python -m $BENCH_MODULE --models $model_names --output $OUTPUT_DIR $BENCH_EXTRA"
+    env $extra_env PYTHONPATH="$PROJECT_ROOT/_paper:${PYTHONPATH:-}" python -m "$BENCH_MODULE" --models $model_names --output "$OUTPUT_DIR" $BENCH_EXTRA
 }
 
 # 메인 루프
