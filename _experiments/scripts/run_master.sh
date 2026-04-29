@@ -12,6 +12,7 @@
 #   bash run_master.sh --server 1 --modes kr        # KR phase만
 #   bash run_master.sh --server 2 --skip-tp4        # TP=4 (gpt-oss-120b) 스킵
 #   bash run_master.sh --server 1 --skip-thinking   # think=True 변형 제외
+#   bash run_master.sh --server 2 --rq2-ablation    # RQ2 4-way 추가 분 (KR-EN, EN-EN)
 # ============================================================================
 
 set -uo pipefail
@@ -26,6 +27,7 @@ MODES="kr,en,mt"
 SKIP_TP2=false
 SKIP_TP4=false
 SKIP_THINKING=false
+RQ2_ABLATION=false       # RQ2 ablation 모드: GROUP_RQ2_REPS만 --tools-lang en으로 실행
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -34,9 +36,16 @@ while [[ $# -gt 0 ]]; do
         --skip-tp2) SKIP_TP2=true; shift ;;
         --skip-tp4) SKIP_TP4=true; shift ;;
         --skip-thinking) SKIP_THINKING=true; shift ;;
+        --rq2-ablation) RQ2_ABLATION=true; shift ;;
         *) echo "Unknown: $1"; exit 1 ;;
     esac
 done
+
+# RQ2 ablation 모드는 mt phase 의미 없음 (multi-turn은 KR cases만 평가)
+if $RQ2_ABLATION && [[ "$MODES" == *"mt"* ]]; then
+    echo "[INFO] --rq2-ablation 모드: mt 제거 (KR-EN/EN-EN single-turn ablation 전용)"
+    MODES=$(echo "$MODES" | tr ',' '\n' | grep -v "^mt$" | paste -sd ',' || echo "kr,en")
+fi
 
 if [[ -z "$SERVER" ]]; then
     echo "ERROR: --server <1|2> 필수"
@@ -155,15 +164,44 @@ run_phase_s2() {
     ts "[S2] Phase $mode 완료"
 }
 
+# ============================================================================
+# RQ2 4-way ablation (KR-EN / EN-EN) — 6 representatives만 실행, --tools-lang en
+# Server 2 전용: 6 reps 모두 large/TP=2이므로 GPU 6개 병렬 활용
+#   GPU 0,1: TP=2 (Llama-3.3-70B)
+#   GPU 2,3: TP=2 (A.X-4.0)
+#   GPU 4: Qwen3.5-27B + Qwen3.6-27B (순차)
+#   GPU 5: Gemma-4-31B + EXAONE-4.0-32B (순차)
+# 단순화: 그냥 GROUP_RQ2_REPS를 단일-pass로 GPU 0,1 (TP=2) 순차 처리해도 됨.
+# 여기는 단일 pass (GPU 0,1 TP=2 자동) — 70B/72B 들 때 자동으로 양 GPU 활용
+# ============================================================================
+run_phase_rq2() {
+    local mode=$1
+    ts "════════════════════════════════════════════════════════════"
+    ts "[RQ2-ABLATION] MODE=$mode --tools-lang en (KR-EN if mode=kr, EN-EN if mode=en)"
+    ts "════════════════════════════════════════════════════════════"
+    nohup bash "$RUN_SCRIPT" --gpu 0,1 --port 11434 --group RQ2_REPS --mode "$mode" --tools-lang en \
+        > "$LOG_DIR/rq2_${mode}_tools_en.log" 2>&1 &
+    PID_RQ2=$!
+    ts "  PID: RQ2=$PID_RQ2"
+    wait "$PID_RQ2" || ts "  RQ2 종료 (rc=$?)"
+    ts "[RQ2-ABLATION] $mode 완료"
+}
+
 # 메인
-ts "마스터 시작: SERVER=$SERVER MODES=$MODES SKIP_TP2=$SKIP_TP2 SKIP_TP4=$SKIP_TP4 SKIP_THINKING=$SKIP_THINKING"
+ts "마스터 시작: SERVER=$SERVER MODES=$MODES SKIP_TP2=$SKIP_TP2 SKIP_TP4=$SKIP_TP4 SKIP_THINKING=$SKIP_THINKING RQ2_ABLATION=$RQ2_ABLATION"
 START_TIME=$(date +%s)
 
 IFS=',' read -ra MODE_LIST <<< "$MODES"
 for mode in "${MODE_LIST[@]}"; do
     case "$mode" in
         kr|en|mt)
-            if [[ "$SERVER" == "1" ]]; then
+            if $RQ2_ABLATION; then
+                if [[ "$mode" == "mt" ]]; then
+                    ts "[INFO] RQ2 ablation은 single-turn만 — mt 스킵"
+                    continue
+                fi
+                run_phase_rq2 "$mode"
+            elif [[ "$SERVER" == "1" ]]; then
                 run_phase_s1 "$mode"
             elif [[ "$SERVER" == "2" ]]; then
                 run_phase_s2 "$mode"

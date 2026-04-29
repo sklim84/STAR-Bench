@@ -12,7 +12,7 @@ NeurIPS 2026 E&D 제출 기준 평가 대상 모델 + RQ별 매핑.
 | C. 금융 특화 | Llama-3 기반 최신 모델만 (옛 Llama-1/2 기반은 제외) | 2 |
 | 합계 | | 24 (+ 5 thinking 변형 = 29 runs/mode) |
 
-> **금융 특화 모델 선정**: 옛 FinGPT-v3 (Llama-2), FinMA-7B (Llama-1)는 base 모델이 outdated되어 제외. 2025 출시 Llama-3 기반 모델 (Salesforce/Llama-Fin-8b, TheFinAI/Fino1-8B)로 대체하여 Llama-3.x 동시대 모델과 fair comparison 가능. BloombergGPT 등은 비공개로 제외.
+> **금융 특화 모델 선정**: 옛 FinGPT-v3 (Llama-2), FinMA-7B (Llama-1)는 base outdated. domain SFT가 FC 능력을 손상시킨 모델 (Salesforce/Llama-Fin-8b, TheFinAI/Fino1-8B)도 smoke 0/5로 제외. 최종 후보는 DragonLLM Open Finance Suite — base capability 보존을 명시적 학습 목표로 설정한 2025-11 출시 8B 2종. BloombergGPT 등 비공개 제외.
 
 ---
 
@@ -91,12 +91,14 @@ NeurIPS 2026 E&D 제출 기준 평가 대상 모델 + RQ별 매핑.
 
 ---
 
-### C. 금융 특화 모델 (2개) — Llama-3 기반 modern variants
+### C. 금융 특화 모델 (2개) — DragonLLM Open Finance Suite (FC 보존)
 
 | # | 모델 | HF 경로 | 크기 | base | tool-call-parser | think | 서버 | 비고 | RQ |
 |---|---|---|---|---|---|---|---|---|---|
-| 23 | Llama-Fin-8b (Salesforce) | `Salesforce/Llama-Fin-8b` | 8B | Llama-3-8B-Instruct | llama3_json + `--max-model-len 8192` | n/a | S1 | Salesforce는 xLAM (FC SOTA) 개발사. smoke 0/5 → SFT 영향으로 FC 학습 약화 가능성, parser 변경 검토 필요 | RQ1, RQ6 (Finance vs General) |
-| 24 | Fino1-8B (TheFinAI) | `TheFinAI/Fino1-8B` | 8B | Llama-3.1-8B-Instruct | llama3_json | n/a | S1 | financial reasoning 특화 (SFT + RL on FinQA). smoke 1/5 — base FC 능력 일부 보존 | RQ1, RQ6 |
+| 23 | Llama-Open-Finance-8B (DragonLLM) | `DragonLLM/Llama-Open-Finance-8B` | 8B | Llama-3.1-8B | llama3_json | n/a | S1 (GPU 0) | AGEFI+Dragon LLM, FC 의도 보존. smoke 3/5 score 0.78. parallel TC 미지원 (single-tool만) | RQ1, RQ6 (Finance vs General) |
+| 24 | Qwen-Open-Finance-R-8B (DragonLLM) | `DragonLLM/Qwen-Open-Finance-R-8B` | 8B | Qwen3-8B | qwen3_xml + `--reasoning-parser qwen3` | n/a (R = reasoning preserved) | S1 (GPU 1) | reasoning + FC 보존. smoke 3/5 score 0.73, 시간 133s/5건 (think on by default) | RQ1, RQ6 |
+
+> **DragonLLM 선정 근거**: AGEFI(프랑스 금융 매체) + Dragon LLM(EU AI Grand Challenge 우승)의 LLM Open Finance Initiative. base의 native FC 능력을 학습 과정에서 보존하도록 의도된 설계. 8B 2종 모두 gated=auto repo이므로 첫 사용 시 HF UI에서 access 요청 필요. HuggingFace 다운로드 1.4K (2025-10 출시 동시기 finance 모델 중 최상위).
 
 ---
 
@@ -164,13 +166,13 @@ NeurIPS 2026 E&D 제출 기준 평가 대상 모델 + RQ별 매핑.
 
 | 비교 축 | 금융 특화 | 일반 (medium counterpart) |
 |---|---|---|
-| Finance | Salesforce/Llama-Fin-8b, TheFinAI/Fino1-8B (모두 Llama-3 기반 8B) | Llama-3.2-3B-Instruct, Hermes-3-Llama-3.1-8B, Ministral-3-3B |
+| Finance | DragonLLM/Llama-Open-Finance-8B (Llama-3.1 base), DragonLLM/Qwen-Open-Finance-R-8B (Qwen-3 base) | Llama-3.2-3B-Instruct, Hermes-3-Llama-3.1-8B, Ministral-3-3B |
 
 → 도메인 특화 효과: implicit (한국어, 학습 데이터 기반) vs explicit (금융, 도메인 fine-tuning) 비교.
 
 ---
 
-## 4. NEW 모델 스모크 검증 결과 (8개, 2026-04-30 기준)
+## 4. 신규/변경 모델 스모크 검증 결과 (2026-04-30 기준)
 
 | 모델 | parser | 추가 인자 | smoke 결과 | 상태 |
 |---|---|---|---|---|
@@ -180,8 +182,8 @@ NeurIPS 2026 E&D 제출 기준 평가 대상 모델 + RQ별 매핑.
 | Qwen3.6-35B-A3B | qwen3_xml | `--max-model-len 32768` | 5/5, score 0.83 | ✅ 정식 포함 |
 | Phi-4-mini-instruct | phi4_mini_json | `--chat-template tool_chat_template_phi4_mini.jinja` | 2/5, score 0.65 | ✅ 정식 포함 (small 한계) |
 | gpt-oss-120b | openai | TP=4, `--reasoning-parser openai_gptoss` | (S2 검증 예정) | ⏳ Server 2 |
-| Llama-Fin-8b | llama3_json | `--max-model-len 8192` | 0/5 | ⚠ FC 능력 약화, baseline으로 포함 |
-| Fino1-8B | llama3_json | (기본) | 1/5 | ⚠ 일부 기능, baseline으로 포함 |
+| DragonLLM/Llama-Open-Finance-8B | llama3_json | (기본) | 3/5, score 0.78 | ✅ 정식 포함 (parallel TC 미지원) |
+| DragonLLM/Qwen-Open-Finance-R-8B | qwen3_xml + `--reasoning-parser qwen3` | (기본) | 3/5, score 0.73 | ✅ 정식 포함 (reasoning preserved, 시간 ~27s/case) |
 
 > 모든 환경/parser 매핑은 Section 7 (Server 2 셋업 가이드) 참조.
 
@@ -217,8 +219,8 @@ NeurIPS 2026 E&D 제출 기준 평가 대상 모델 + RQ별 매핑.
 | Gemma-4-31B-it | A3 (NEW large) |
 | Phi-4-mini-instruct | A5 (NEW small, FC 학습된 mini variant) |
 | gpt-oss-120b | A6 (NEW large reasoning) |
-| Salesforce/Llama-Fin-8b | C (신규 finance, Llama-3 기반) |
-| TheFinAI/Fino1-8B | C (신규 finance, Llama-3.1 기반 reasoning) |
+| DragonLLM/Llama-Open-Finance-8B | C (finance, Llama-3.1 base, FC 보존) |
+| DragonLLM/Qwen-Open-Finance-R-8B | C (finance, Qwen-3 base, reasoning + FC 보존) |
 
 ---
 
@@ -226,7 +228,8 @@ NeurIPS 2026 E&D 제출 기준 평가 대상 모델 + RQ별 매핑.
 
 | 일자 | 변경 |
 |---|---|
-| 2026-04-29 | 44 모델 → 24 모델 reduce. Qwen3 (2507) 시리즈 제거 (3.5+3.6으로 대체), Cloud API (gpt-4o-mini, claude-sonnet-4-5) 제거, phi-4 (14B, FC 미지원) → Phi-4-mini-instruct (3.8B, FC 지원) 교체. 8종 추가 (Qwen3.6 Dense+MoE, Gemma-4 E4B/31B-it, Phi-4-mini-instruct, gpt-oss-120b, Salesforce/Llama-Fin-8b, TheFinAI/Fino1-8B). 옛 FinGPT-v3 / FinMA (Llama-1/2 base)는 outdated로 제외. HF 경로 모두 검증. |
+| 2026-04-29 | 44 모델 → 24 모델 reduce. Qwen3 (2507) 시리즈 제거 (3.5+3.6으로 대체), Cloud API (gpt-4o-mini, claude-sonnet-4-5) 제거, phi-4 (14B, FC 미지원) → Phi-4-mini-instruct (3.8B, FC 지원) 교체. 신규 추가: Qwen3.6 Dense+MoE, Gemma-4 E4B/31B-it, Phi-4-mini-instruct, gpt-oss-120b. 옛 FinGPT-v3 / FinMA (Llama-1/2 base)는 outdated로 제외. HF 경로 모두 검증. |
+| 2026-04-30 (finance 카테고리 swap) | finance 후보 1차 (Salesforce/Llama-Fin-8b, TheFinAI/Fino1-8B, 모두 Llama-3 base SFT)는 4종 parser ablation 모두 0/5 — 도메인 SFT가 native FC 토큰 패턴을 손상 (catastrophic forgetting). 2차로 DragonLLM Open Finance 8B 2종 (Llama-3.1/Qwen-3 base, FC 보존 의도된 설계) smoke 통과 (3/5, 0.78/0.73)로 swap. 24-model 카운트 유지. |
 | 2026-04-29 (smoke 후속) | Gemma-4-E4B-it 공식판은 multimodal (audio_tower)로 vLLM 0.17.0 호환 X → `principled-intelligence/gemma-4-E4B-it-text-only` (drop-in replacement)로 교체. transformers 5.3.0 → 5.7.0 + mistral_common 1.9.1 → 1.11.1 업그레이드. Gemma-4-31B-it 호환성 검증 진행 중. |
 | 2026-04-29 (vLLM 0.19 업그레이드 후) | vLLM 0.17.0 → 0.19.0 업그레이드로 Gemma-4 공식 multimodal 직접 지원. **Gemma-4-E4B-it 공식판 (`google/gemma-4-E4B-it`)으로 환원** (text-only 변형은 weight loading 버그 별도 발생). 전용 parser `gemma4` 사용 (hermes parser 사용 시 chat template 형식 불일치로 0/5 실패). Phi-4-mini-instruct는 전용 `phi4_mini_json` parser도 0/5 실패 → pythonic/hermes/llama3_json 대안 파서 검증 진행 중. |
 | 2026-04-30 (Phi-4-mini chat template 해결) | Phi-4-mini-instruct는 parser가 아니라 **chat template 문제**로 확정. Microsoft 기본 tokenizer chat template은 `<\|tool_calls\|>...<\|/tool_calls\|>` 형식, 그러나 vLLM `phi4_mini_json` parser는 `functools[...]` (Llama-style) regex로 추출 → 형식 불일치. vLLM 공식 `examples/tool_chat_template_phi4_mini.jinja`를 저장소에 포함 (`_paper/_experiments/scripts/`)하고 `--chat-template` 인자로 전달 → smoke 2/5, score 0.65 (small 모델 한계 수준). 본격 실험에 정식 포함. 스크립트 파일명 정리: `run_round1.sh` → `run_benchmark.sh`, `run_round1_master.sh` → `run_master.sh` (다중 라운드 의미 없음). |
@@ -261,8 +264,8 @@ pip cache purge  # 디스크 부족 시 (49GB tmpfs는 47GB 차면 install 실�
 | Qwen3.6-27B | qwen3_xml | (기본) | 5/5 ✅ |
 | Qwen3.6-35B-A3B | qwen3_xml | `--max-model-len 32768` | 5/5 ✅ — 기본 max-len 초과 방지 |
 | Phi-4-mini-instruct | phi4_mini_json | `--chat-template _paper/_experiments/scripts/tool_chat_template_phi4_mini.jinja` | 2/5 ✅ (small 한계, score 0.65) — 기본 chat template 사용 시 0/5 ❌ |
-| Llama-Fin-8b | llama3_json | `--max-model-len 8192` | smoke 0/5, max_position_embeddings=8192 강제. RQ6 baseline으로 포함 |
-| Fino1-8B | llama3_json | (기본) | smoke 1/5, RQ6 baseline으로 포함 |
+| DragonLLM/Llama-Open-Finance-8B | llama3_json | (기본) | smoke 3/5 score 0.78, parallel TC 미지원 (single-tool 케이스만 처리) |
+| DragonLLM/Qwen-Open-Finance-R-8B | qwen3_xml + `--reasoning-parser qwen3` | (기본) | smoke 3/5 score 0.73, reasoning 모드로 ~27s/case |
 | gpt-oss-120b | openai | `--tensor-parallel-size 4 --max-model-len 16384 --reasoning-parser openai_gptoss --enforce-eager` | TP=4, S2 전용 |
 
 ### 7.3 ⚠ 주의사항 (호환성 함정)
@@ -315,3 +318,84 @@ nohup bash _paper/_experiments/scripts/run_master.sh \
 | A.X-4.0 | hermes | TP=2, `--enforce-eager` | ✅ 사전 실험 통과 | (skip) |
 | kanana-2-30b-a3b-instruct | hermes + kanana plugin | (기본) | ✅ 사전 실험 통과 | kanana_tool_calls plugin 경로 확인 |
 | kanana-2-30b-a3b-thinking-2601 | hermes + kanana plugin | `--reasoning-parser deepseek_r1` | ✅ 사전 실험 통과 | 동일 |
+
+---
+
+## 8. RQ별 실험 실행 가이드
+
+| RQ | 평가 대상 | 실행 명령 | 서버 | 결과 위치 |
+|---|---|---|---|---|
+| **RQ1** Model landscape | 24 baseline | master 기본 실행 (KR mode 결과) | S1 + S2 | `results_kr/` |
+| **RQ2** Language alignment 4-way | 6 reps × {KR-KR, EN-KR, KR-EN, EN-EN} | (기본 KR-KR/EN-KR) + `--rq2-ablation` (KR-EN/EN-EN) | S2 only | `results_{kr,en}/` + `results_{kr,en}_tools_en/` |
+| **RQ3** Thinking mode | 5 think+nothink 페어 | master 기본 실행 (think 변형 자동 포함) | S1 + S2 | `results_{kr,en,mt}/` (think 변형은 별도 entry) |
+| **RQ4** Single vs Multi-turn | 24 baseline | master `--modes mt` 포함 | S1 + S2 | `results_mt/` |
+| **RQ5** BFCL correlation | 10~12 BFCL overlap | (별도) BFCL v4 직접 실행 | manual | `bfcl_results/score/<model>/` |
+| **RQ6** Domain specialization | 10 비교군 | RQ1 결과의 후처리 분석 | (post-hoc) | `analysis/` |
+
+### 8.1 Server 1 (이 서버, 2× H100)
+
+11 모델 × {KR, EN, MT} baseline:
+```bash
+# 한 번에 다 (KR → EN → MT 순차)
+nohup bash _paper/_experiments/scripts/run_master.sh --server 1 --modes kr,en,mt \
+    > master_s1.log 2>&1 &
+
+# 단일 mode
+bash _paper/_experiments/scripts/run_master.sh --server 1 --modes kr
+```
+
+Server 1은 RQ1·RQ3·RQ4·RQ6의 small/medium 데이터 기여. RQ2 representatives는 모두 Server 2 large/TP=2 모델이므로 **Server 1은 RQ2 ablation에 참여하지 않음**.
+
+### 8.2 Server 2 (다른 서버, 6× H100)
+
+13 모델 × {KR, EN, MT} baseline:
+```bash
+nohup bash _paper/_experiments/scripts/run_master.sh --server 2 --modes kr,en,mt \
+    > master_s2.log 2>&1 &
+```
+
+Server 2 baseline 완료 후 **RQ2 ablation** (6 reps × {KR-EN, EN-EN} = 12 runs):
+```bash
+nohup bash _paper/_experiments/scripts/run_master.sh --server 2 --rq2-ablation --modes kr,en \
+    > master_s2_rq2.log 2>&1 &
+```
+
+옵션:
+- `--skip-tp4`: gpt-oss-120b 제외 (TP=4 메모리 검증 후 활성화 권장)
+- `--skip-tp2`: 70B+ 모델 3종 제외
+- `--skip-thinking`: think=True 변형 제외
+
+### 8.3 RQ별 매핑 상세
+
+#### RQ1 (Model landscape, n=24)
+
+전 모델 KR baseline (think 변형 제외, nothink 1개씩만 사용해 fair comparison). 후처리에서 `eval_*_<modelname>_<timestamp>.json` 24개를 집계해 카테고리별 metric 비교.
+
+#### RQ2 (Language alignment, 4-way 2x2)
+
+| 차원 | cases | tools | 실행 명령 |
+|---|---|---|---|
+| KR-KR | KR | KR (default) | `--server 2 --modes kr` (master baseline 자동 포함) |
+| EN-KR | EN | KR (default) | `--server 2 --modes en` (master baseline 자동 포함) |
+| KR-EN | KR | EN | `--server 2 --rq2-ablation --modes kr` |
+| EN-EN | EN | EN | `--server 2 --rq2-ablation --modes en` |
+
+대상 6 reps: Qwen3.5-27B, Qwen3.6-27B, Llama-3.3-70B, Gemma-4-31B-it, EXAONE-4.0-32B, A.X-4.0.
+
+#### RQ3 (Thinking mode, 5 페어)
+
+`benchmark.py`에 think+nothink 두 entry로 등록된 모델만 자동 포함. master 기본 실행 시 양쪽 모두 평가.
+대상 5 핵심: Qwen3.5-4B (S1), Qwen3.5-27B (S2), gpt-oss-20b (S2), gpt-oss-120b (S2), kanana-2-30b-a3b-thinking-2601 (S2).
+Think 변형 제외 시 `--skip-thinking` (또는 환경변수 `BENCH_SKIP_THINK=1`).
+
+#### RQ4 (Single vs Multi-turn)
+
+`mt` mode가 multi-turn STR 시나리오 (50개) 평가. master `--modes kr,en,mt`에 포함.
+
+#### RQ5 (BFCL correlation)
+
+본 master 흐름 외부. BFCL v4 직접 실행 결과를 `bfcl_results/score/<model>/`에 저장. RQ5는 사후 분석 단계에서 AML-Bench score와 BFCL score 매핑.
+
+#### RQ6 (Domain specialization)
+
+RQ1 결과의 카테고리 비교 (한국어 특화 vs 일반 / 금융 특화 vs 일반). 별도 실험 불필요.

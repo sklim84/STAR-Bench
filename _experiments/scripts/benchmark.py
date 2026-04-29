@@ -647,14 +647,14 @@ MODELS = [
         "think": None,
     },
     {
-        "name": "Salesforce/Llama-Fin-8b",
+        "name": "DragonLLM/Llama-Open-Finance-8B",
         "provider": "vllm",
         "base_url": "http://localhost:11434/v1",
         "api_key_env": None,
         "think": None,
     },
     {
-        "name": "TheFinAI/Fino1-8B",
+        "name": "DragonLLM/Qwen-Open-Finance-R-8B",
         "provider": "vllm",
         "base_url": "http://localhost:11434/v1",
         "api_key_env": None,

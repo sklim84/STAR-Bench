@@ -21,6 +21,7 @@ GPU_ID="0"
 PORT="11434"
 GROUP="A"
 MODE="kr"
+TOOLS_LANG=""           # "" (default = KR tools), "en" (RQ2 ablation)
 HF_TOKEN="${HF_TOKEN:-}"
 PROJECT_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
 
@@ -36,10 +37,11 @@ MAX_TOTAL="${BENCH_MAX_TOTAL:-}"
 # CLI 파싱
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --gpu)   GPU_ID="$2"; shift 2 ;;
-        --port)  PORT="$2"; shift 2 ;;
-        --group) GROUP="$2"; shift 2 ;;
-        --mode)  MODE="$2"; shift 2 ;;
+        --gpu)        GPU_ID="$2"; shift 2 ;;
+        --port)       PORT="$2"; shift 2 ;;
+        --group)      GROUP="$2"; shift 2 ;;
+        --mode)       MODE="$2"; shift 2 ;;
+        --tools-lang) TOOLS_LANG="$2"; shift 2 ;;
         *) echo "Unknown: $1"; exit 1 ;;
     esac
 done
@@ -144,22 +146,24 @@ GROUP_C2=(
 # Server 1 GPU 0 (6 모델)
 # - Gemma-4-E4B-it: 공식 multimodal + gemma4 parser (vLLM 0.19 + transformers 5.7.0 필수)
 # - Phi-4-mini: phi4_mini_json + vLLM 공식 jinja chat template (functools[...] 형식 강제)
+# - DragonLLM/Llama-Open-Finance-8B: A안 swap (Llama-Fin-8b 0/5 대체, smoke 3/5 score 0.78)
 GROUP_S1_A=(
     "qwen35-4b|Qwen/Qwen3.5-4B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-4B"
     "gemma-4-e4b|google/gemma-4-E4B-it|gemma4||google/gemma-4-E4B-it"
     "phi-4-mini|microsoft/Phi-4-mini-instruct|phi4_mini_json|--chat-template $PROJECT_ROOT/_paper/_experiments/scripts/tool_chat_template_phi4_mini.jinja|microsoft/Phi-4-mini-instruct"
     "xlam-3b|Salesforce/xLAM-2-3b-fc-r|xlam||Salesforce/xLAM-2-3b-fc-r"
     "exaone-1.2b|LGAI-EXAONE/EXAONE-4.0-1.2B|hermes|--trust-remote-code|LGAI-EXAONE/EXAONE-4.0-1.2B"
-    "llama-fin-8b|Salesforce/Llama-Fin-8b|llama3_json|--max-model-len 8192|Salesforce/Llama-Fin-8b"
+    "dragon-llama-fin|DragonLLM/Llama-Open-Finance-8B|llama3_json||DragonLLM/Llama-Open-Finance-8B"
 )
 
 # Server 1 GPU 1 (5 모델)
+# - DragonLLM/Qwen-Open-Finance-R-8B: A안 swap (Fino1-8B 0/5 대체, smoke 3/5 score 0.73)
 GROUP_S1_B=(
     "llama-3.2-3b|meta-llama/Llama-3.2-3B-Instruct|llama3_json||meta-llama/Llama-3.2-3B-Instruct"
     "ministral-3b|mistralai/Ministral-3-3B-Instruct-2512|mistral||mistralai/Ministral-3-3B-Instruct-2512"
     "hermes-3-8b|NousResearch/Hermes-3-Llama-3.1-8B|hermes||NousResearch/Hermes-3-Llama-3.1-8B"
     "ax-light|skt/A.X-4.0-Light|hermes||skt/A.X-4.0-Light"
-    "fino1-8b|TheFinAI/Fino1-8B|llama3_json||TheFinAI/Fino1-8B"
+    "dragon-qwen-fin|DragonLLM/Qwen-Open-Finance-R-8B|qwen3_xml|--reasoning-parser qwen3|DragonLLM/Qwen-Open-Finance-R-8B"
 )
 
 # Server 2 — TP=4 (gpt-oss-120b, 4 GPUs)
@@ -205,25 +209,6 @@ GROUP_SMOKE=(
     "qwen25-1.5b|Qwen/Qwen2.5-1.5B-Instruct|hermes||Qwen/Qwen2.5-1.5B-Instruct"
 )
 
-# SMOKE_NEW: 신규 모델 vLLM 호환성 검증 (2026-04-29 추가, gpt-oss-120b 제외 — 서버2 분담)
-# phi-4 (14B)는 FC 미지원으로 제외 → Phi-4-mini-instruct (3.8B, FC 학습됨)로 교체
-# Llama-Fin-8b: max_position_embeddings=8192 → --max-model-len 8192 강제
-GROUP_SMOKE_NEW=(
-    "phi-4-mini|microsoft/Phi-4-mini-instruct|hermes||microsoft/Phi-4-mini-instruct"
-    "llama-fin-8b|Salesforce/Llama-Fin-8b|llama3_json|--max-model-len 8192|Salesforce/Llama-Fin-8b"
-    "fino1-8b|TheFinAI/Fino1-8B|llama3_json||TheFinAI/Fino1-8B"
-    "gemma-4-e4b|principled-intelligence/gemma-4-E4B-it-text-only|hermes||principled-intelligence/gemma-4-E4B-it-text-only"
-    "gemma-4-31b|google/gemma-4-31B-it|hermes||google/gemma-4-31B-it"
-    "qwen36-27b|Qwen/Qwen3.6-27B|qwen3_xml||Qwen/Qwen3.6-27B"
-    "qwen36-35b-a3b|Qwen/Qwen3.6-35B-A3B|qwen3_xml|--max-model-len 32768|Qwen/Qwen3.6-35B-A3B"
-)
-
-# SMOKE_RECHECK: 실패 모델 재시도용 (현 smoke 종료 후 단독 실행)
-GROUP_SMOKE_RECHECK=(
-    "phi-4-mini|microsoft/Phi-4-mini-instruct|hermes||microsoft/Phi-4-mini-instruct"
-    "llama-fin-8b|Salesforce/Llama-Fin-8b|llama3_json|--max-model-len 8192|Salesforce/Llama-Fin-8b"
-)
-
 # SMOKE_ARCH: 새 architecture (Gemma-4, Qwen3.6) transformers 5.7.0 업그레이드 후 검증
 # vLLM 0.19에 모델 전용 parser 존재: gemma4, phi4_mini_json
 # Gemma-4 E4B-it 공식 multimodal 재시도 (vLLM 0.19 + gemma4 parser)
@@ -252,6 +237,14 @@ GROUP_SMOKE_PHI4_TEMPLATE=(
     "phi-4-mini-tmpl|microsoft/Phi-4-mini-instruct|phi4_mini_json|--chat-template $PROJECT_ROOT/_paper/_experiments/scripts/tool_chat_template_phi4_mini.jinja|microsoft/Phi-4-mini-instruct"
 )
 
+# SMOKE_DRAGONLLM: DragonLLM (LLM Open Finance) 8B 2종, FC 보존 의도된 finance 모델
+# Llama-Open-Finance-8B: Llama-3.1 base → llama3_json
+# Qwen-Open-Finance-R-8B: Qwen 3 base → qwen3_xml (R = reasoning preserved)
+GROUP_SMOKE_DRAGONLLM=(
+    "dragon-llama-fin|DragonLLM/Llama-Open-Finance-8B|llama3_json||DragonLLM/Llama-Open-Finance-8B"
+    "dragon-qwen-fin|DragonLLM/Qwen-Open-Finance-R-8B|qwen3_xml|--reasoning-parser qwen3|DragonLLM/Qwen-Open-Finance-R-8B"
+)
+
 # RECOVERY: Group B 비정상 종료로 누락된 mistral-nemo 단독 실행
 GROUP_RECOVERY=(
     "mistral-nemo|mistralai/Mistral-Nemo-Instruct-2407|mistral||mistralai/Mistral-Nemo-Instruct-2407"
@@ -267,6 +260,21 @@ GROUP_A_OFFLOAD=(
     "glm-4.7-flash|zai-org/GLM-4.7-Flash|glm47|--trust-remote-code|zai-org/GLM-4.7-Flash"
 )
 
+# RQ2_REPS: 4-way 2x2 (KR-KR/EN-KR/KR-EN/EN-EN) ablation 6 representatives
+# 모두 Server 2 large/TP=2 엔트리 — Server 2에서 --tools-lang en 으로 KR-EN/EN-EN 추가 실행
+# KR-KR (default, kr mode): master S2 baseline에 자동 포함
+# EN-KR (default, en mode): master S2 baseline에 자동 포함
+# KR-EN: bash run_benchmark.sh --gpu ... --group RQ2_REPS --mode kr --tools-lang en
+# EN-EN: bash run_benchmark.sh --gpu ... --group RQ2_REPS --mode en --tools-lang en
+GROUP_RQ2_REPS=(
+    "qwen35-27b|Qwen/Qwen3.5-27B|qwen3_coder|--reasoning-parser qwen3 --enforce-eager|Qwen/Qwen3.5-27B"
+    "qwen36-27b|Qwen/Qwen3.6-27B|qwen3_xml||Qwen/Qwen3.6-27B"
+    "llama-3.3-70b|meta-llama/Llama-3.3-70B-Instruct|llama3_json|--tensor-parallel-size 2 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager|meta-llama/Llama-3.3-70B-Instruct"
+    "gemma-4-31b|google/gemma-4-31B-it|gemma4||google/gemma-4-31B-it"
+    "exaone-32b|LGAI-EXAONE/EXAONE-4.0-32B|hermes|--trust-remote-code|LGAI-EXAONE/EXAONE-4.0-32B"
+    "ax-4.0|skt/A.X-4.0|hermes|--tensor-parallel-size 2 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager|skt/A.X-4.0"
+)
+
 case "$GROUP" in
     A)     MODELS=("${GROUP_A[@]}") ;;
     B)     MODELS=("${GROUP_B[@]}") ;;
@@ -275,11 +283,10 @@ case "$GROUP" in
     C2)    MODELS=("${GROUP_C2[@]}") ;;
     TP2)   MODELS=("${GROUP_TP2[@]}") ;;
     SMOKE) MODELS=("${GROUP_SMOKE[@]}") ;;
-    SMOKE_NEW) MODELS=("${GROUP_SMOKE_NEW[@]}") ;;
-    SMOKE_RECHECK) MODELS=("${GROUP_SMOKE_RECHECK[@]}") ;;
     SMOKE_ARCH) MODELS=("${GROUP_SMOKE_ARCH[@]}") ;;
     SMOKE_PHI4) MODELS=("${GROUP_SMOKE_PHI4[@]}") ;;
     SMOKE_PHI4_TEMPLATE) MODELS=("${GROUP_SMOKE_PHI4_TEMPLATE[@]}") ;;
+    SMOKE_DRAGONLLM) MODELS=("${GROUP_SMOKE_DRAGONLLM[@]}") ;;
     RECOVERY) MODELS=("${GROUP_RECOVERY[@]}") ;;
     A_OFFLOAD) MODELS=("${GROUP_A_OFFLOAD[@]}") ;;
     # Server 1
@@ -293,7 +300,9 @@ case "$GROUP" in
     S2_LARGE_L1) MODELS=("${GROUP_S2_LARGE_L1[@]}") ;;
     S2_LARGE_L2) MODELS=("${GROUP_S2_LARGE_L2[@]}") ;;
     S2_LARGE_L3) MODELS=("${GROUP_S2_LARGE_L3[@]}") ;;
-    *)     echo "Unknown group: $GROUP (A, B, C, C1, C2, TP2, SMOKE, SMOKE_NEW, SMOKE_RECHECK, SMOKE_ARCH, RECOVERY, A_OFFLOAD, S1_A, S1_B, S2_TP4, S2_TP2_A, S2_TP2_B, S2_TP2_C, S2_LARGE_L1, S2_LARGE_L2, S2_LARGE_L3)"; exit 1 ;;
+    # RQ2 4-way ablation
+    RQ2_REPS) MODELS=("${GROUP_RQ2_REPS[@]}") ;;
+    *)     echo "Unknown group: $GROUP"; exit 1 ;;
 esac
 
 # Mode → output/cases 결정
@@ -303,6 +312,12 @@ case "$MODE" in
     mt) OUTPUT_DIR="$RESULT_MT";       BENCH_MODULE="_experiments.scripts.benchmark_multiturn"; BENCH_EXTRA="" ;;
     *)  echo "Unknown mode: $MODE (kr, en, mt)"; exit 1 ;;
 esac
+
+# RQ2 4-way ablation: --tools-lang en일 때 별도 디렉토리/플래그 (kr+en/en+en만 별도 보관, kr/en 기본 결과와 분리)
+if [[ "$TOOLS_LANG" == "en" ]]; then
+    OUTPUT_DIR="${OUTPUT_DIR}_tools_en"
+    BENCH_EXTRA="$BENCH_EXTRA --tools-lang en"
+fi
 
 mkdir -p "$OUTPUT_DIR/eval" "$OUTPUT_DIR/checkpoint" "$LOG_DIR"
 
