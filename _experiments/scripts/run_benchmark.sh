@@ -246,6 +246,11 @@ GROUP_S1_B_NO_DRAGON=(
     "ax-light|skt/A.X-4.0-Light|hermes|--max-model-len 16384|skt/A.X-4.0-Light"
 )
 
+# DRAGON_QWEN_ONLY: dragon-qwen-fin 단독 실행 (사전 실행용)
+GROUP_DRAGON_QWEN_ONLY=(
+    "dragon-qwen-fin|DragonLLM/Qwen-Open-Finance-R-8B|qwen3_xml|--reasoning-parser qwen3|DragonLLM/Qwen-Open-Finance-R-8B"
+)
+
 # SMOKE_DRAGONLLM: DragonLLM (LLM Open Finance) 8B 2종, FC 보존 의도된 finance 모델
 # Llama-Open-Finance-8B: Llama-3.1 base → llama3_json
 # Qwen-Open-Finance-R-8B: Qwen 3 base → qwen3_xml (R = reasoning preserved)
@@ -258,6 +263,17 @@ GROUP_SMOKE_DRAGONLLM=(
 # 원인: vLLM 0.19에서 max_position_embeddings(16384) < default --max-model-len(32768) 검사 강화
 GROUP_RECOVERY=(
     "ax-light|skt/A.X-4.0-Light|hermes|--max-model-len 16384|skt/A.X-4.0-Light"
+)
+
+# RECOVERY_MISSING: connection error로 누락된 케이스 재처리
+# 원인: _CONN_ERROR_THRESHOLD 도달 → _server_dead 트리거 → 나머지 케이스 스킵
+# 사용: KR/EN 각각에서 모델별 eval JSON 삭제 후 --checkpoint --resume으로 누락만 채움
+# DragonLLM/Llama-Open-Finance-8B는 parallel TC 미지원으로 인한 reject (모델 한계)이므로 제외
+GROUP_RECOVERY_MISSING=(
+    "llama-3.2-3b|meta-llama/Llama-3.2-3B-Instruct|llama3_json||meta-llama/Llama-3.2-3B-Instruct"
+    "ministral-3b|mistralai/Ministral-3-3B-Instruct-2512|mistral||mistralai/Ministral-3-3B-Instruct-2512"
+    "qwen35-4b|Qwen/Qwen3.5-4B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-4B"
+    "exaone-1.2b|LGAI-EXAONE/EXAONE-4.0-1.2B|hermes|--trust-remote-code|LGAI-EXAONE/EXAONE-4.0-1.2B"
 )
 
 # A_OFFLOAD: Group A 후반부 5 entries를 GPU 1 idle 시간에 병렬 처리 (master Group A는 자체 흐름 유지)
@@ -298,7 +314,9 @@ case "$GROUP" in
     SMOKE_PHI4_TEMPLATE) MODELS=("${GROUP_SMOKE_PHI4_TEMPLATE[@]}") ;;
     SMOKE_DRAGONLLM) MODELS=("${GROUP_SMOKE_DRAGONLLM[@]}") ;;
     S1_B_NO_DRAGON) MODELS=("${GROUP_S1_B_NO_DRAGON[@]}") ;;
+    DRAGON_QWEN_ONLY) MODELS=("${GROUP_DRAGON_QWEN_ONLY[@]}") ;;
     RECOVERY) MODELS=("${GROUP_RECOVERY[@]}") ;;
+    RECOVERY_MISSING) MODELS=("${GROUP_RECOVERY_MISSING[@]}") ;;
     A_OFFLOAD) MODELS=("${GROUP_A_OFFLOAD[@]}") ;;
     # Server 1
     S1_A) MODELS=("${GROUP_S1_A[@]}") ;;

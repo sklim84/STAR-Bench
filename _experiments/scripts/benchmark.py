@@ -1385,11 +1385,14 @@ def run_model_benchmark(
             result = _evaluate_case_result(entry["case"], entry["tool_events"],
                                            entry["elapsed"], entry["run_exc"])
             total_executed += 1
-            if result.get("error_type") in ("connection_error", "api_error"):
+            # 서버 사망 신호: connection_error / timeout_error만 카운트
+            # api_error (400 BadRequest 포함)는 모델/요청 측 문제이므로 case-level fail로만 기록
+            # (이전 로직은 parallel TC 미지원 모델의 400 reject도 합산해 _server_dead 오트리거함)
+            if result.get("error_type") in ("connection_error", "timeout_error"):
                 _err_counter[0] += 1
                 if _err_counter[0] >= _CONN_ERROR_THRESHOLD:
                     _ts_print(
-                        f"\n    ⚠️  연속 {_err_counter[0]}건 connection error — "
+                        f"\n    ⚠️  연속 {_err_counter[0]}건 connection/timeout error — "
                         f"서버 사망으로 판단, 나머지 케이스 스킵",
                         flush=True,
                     )
