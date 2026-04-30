@@ -11,7 +11,7 @@
 #   bash _experiments/scripts/run_benchmark.sh --gpu 0,1 --port 11434 --group S2_TP2_A --mode kr
 #
 # group: S1_A/S1_B (서버1 단일-GPU), S2_TP4/S2_TP2_*/S2_LARGE_* (서버2)
-#        SMOKE_*, RECOVERY 등은 ad-hoc 검증용
+#        SMOKE (파이프라인 검증), RQ2_REPS (RQ2 ablation 6 representatives)
 # mode:  kr (KR single_turn), en (EN single_turn), mt (multi-turn STR)
 # ============================================================================
 
@@ -73,71 +73,8 @@ fi
 KANANA_PARSER_PLUGIN="$PROJECT_ROOT/_paper/_experiments/scripts/kanana_tool_calls/kanana_tool_calls/functionary_kanana_tool_parser.py"
 KANANA_CHAT_TEMPLATE="$PROJECT_ROOT/_paper/_experiments/scripts/kanana_tool_calls/kanana_tool_calls/lmalign_v1.jinja"
 
-# ── 모델 정의 (44 모델 = 11 + 11 + 10 + 3 entries, think/nothink 확장 포함) ──
-GROUP_A=(
-    "qwen35-0.8b|Qwen/Qwen3.5-0.8B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-0.8B"
-    "qwen35-2b|Qwen/Qwen3.5-2B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-2B"
-    "qwen35-4b|Qwen/Qwen3.5-4B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-4B"
-    "qwen35-9b|Qwen/Qwen3.5-9B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-9B"
-    "qwen3-4b|Qwen/Qwen3-4B-Instruct-2507|qwen3_xml||Qwen/Qwen3-4B-Instruct-2507"
-    "qwen25-1.5b|Qwen/Qwen2.5-1.5B-Instruct|hermes||Qwen/Qwen2.5-1.5B-Instruct"
-    "qwen3-8b|Qwen/Qwen3-8B|qwen3_xml||Qwen/Qwen3-8B"
-    "exaone-4.0-1.2b|LGAI-EXAONE/EXAONE-4.0-1.2B|hermes|--trust-remote-code|LGAI-EXAONE/EXAONE-4.0-1.2B"
-    "glm-4.7-flash|zai-org/GLM-4.7-Flash|glm47|--trust-remote-code|zai-org/GLM-4.7-Flash"
-    "hermes-3-8b|NousResearch/Hermes-3-Llama-3.1-8B|hermes||NousResearch/Hermes-3-Llama-3.1-8B"
-    "ax-light|skt/A.X-4.0-Light|hermes||skt/A.X-4.0-Light"
-)
-# qwen3-4b-think를 GROUP_B 끝에 배치 (thinking 모드 9h+ 소요로 GPU 1을 마지막에 점유,
-# GPU 0의 Group A가 먼저 끝나면 idle 발생 — 추후 A_OFFLOAD 패턴으로 보완 가능)
-GROUP_B=(
-    "xlam-1b|Salesforce/xLAM-2-1b-fc-r|xlam||Salesforce/xLAM-2-1b-fc-r"
-    "xlam-3b|Salesforce/xLAM-2-3b-fc-r|xlam||Salesforce/xLAM-2-3b-fc-r"
-    "xlam-8b|Salesforce/Llama-xLAM-2-8b-fc-r|xlam||Salesforce/Llama-xLAM-2-8b-fc-r"
-    "llama-3.2-1b|meta-llama/Llama-3.2-1B-Instruct|llama3_json||meta-llama/Llama-3.2-1B-Instruct"
-    "llama-3.2-3b|meta-llama/Llama-3.2-3B-Instruct|llama3_json||meta-llama/Llama-3.2-3B-Instruct"
-    "llama-3.1-8b|meta-llama/Llama-3.1-8B-Instruct|llama3_json||meta-llama/Llama-3.1-8B-Instruct"
-    "ministral-3b|mistralai/Ministral-3-3B-Instruct-2512|mistral||mistralai/Ministral-3-3B-Instruct-2512"
-    "ministral-8b|mistralai/Ministral-3-8B-Instruct-2512|mistral||mistralai/Ministral-3-8B-Instruct-2512"
-    "ministral-14b|mistralai/Ministral-3-14B-Instruct-2512|mistral||mistralai/Ministral-3-14B-Instruct-2512"
-    "mistral-nemo|mistralai/Mistral-Nemo-Instruct-2407|mistral||mistralai/Mistral-Nemo-Instruct-2407"
-    "qwen3-4b-think|Qwen/Qwen3-4B-Thinking-2507|qwen3_xml|--reasoning-parser qwen3|Qwen/Qwen3-4B-Thinking-2507"
-)
-GROUP_C=(
-    "qwen35-27b|Qwen/Qwen3.5-27B|qwen3_coder|--reasoning-parser qwen3 --enforce-eager|Qwen/Qwen3.5-27B"
-    "qwen3-30b|Qwen/Qwen3-30B-A3B-Instruct-2507|qwen3_xml|--max-model-len 32768|Qwen/Qwen3-30B-A3B-Instruct-2507"
-    "qwen3-30b-think|Qwen/Qwen3-30B-A3B-Thinking-2507|qwen3_xml|--max-model-len 32768 --reasoning-parser qwen3|Qwen/Qwen3-30B-A3B-Thinking-2507"
-    "qwen3-coder-30b|Qwen/Qwen3-Coder-30B-A3B-Instruct|qwen3_xml|--max-model-len 32768|Qwen/Qwen3-Coder-30B-A3B-Instruct"
-    "exaone-4.0-32b|LGAI-EXAONE/EXAONE-4.0-32B|hermes|--trust-remote-code|LGAI-EXAONE/EXAONE-4.0-32B"
-    "xlam-32b|Salesforce/xLAM-2-32b-fc-r|xlam||Salesforce/xLAM-2-32b-fc-r"
-    "mistral-small|mistralai/Mistral-Small-3.2-24B-Instruct-2506|mistral||mistralai/Mistral-Small-3.2-24B-Instruct-2506"
-    "gpt-oss-20b|openai/gpt-oss-20b|openai|--reasoning-parser openai_gptoss|openai/gpt-oss-20b"
-    "kanana-2-inst|kakaocorp/kanana-2-30b-a3b-instruct|hermes||kakaocorp/kanana-2-30b-a3b-instruct"
-    "kanana-2-think|kakaocorp/kanana-2-30b-a3b-thinking-2601|hermes|--reasoning-parser deepseek_r1|kakaocorp/kanana-2-30b-a3b-thinking-2601"
-)
-GROUP_TP2=(
-    "llama-3.3-70b|meta-llama/Llama-3.3-70B-Instruct|llama3_json|--tensor-parallel-size 2 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager|meta-llama/Llama-3.3-70B-Instruct"
-    "xlam-70b|Salesforce/Llama-xLAM-2-70b-fc-r|xlam|--tensor-parallel-size 2 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager|Salesforce/Llama-xLAM-2-70b-fc-r"
-    "ax-4.0|skt/A.X-4.0|hermes|--tensor-parallel-size 2 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager|skt/A.X-4.0"
-)
-
-# Group C 분할 (GPU 0/1 병렬, 변형 수 균형)
-GROUP_C1=(
-    "${GROUP_C[0]}"  # qwen35-27b (think/nothink, 2변형)
-    "${GROUP_C[3]}"  # qwen3-coder-30b
-    "${GROUP_C[5]}"  # xlam-32b
-    "${GROUP_C[7]}"  # gpt-oss-20b (think/nothink, 2변형)
-    "${GROUP_C[6]}"  # mistral-small
-)
-GROUP_C2=(
-    "${GROUP_C[1]}"  # qwen3-30b
-    "${GROUP_C[2]}"  # qwen3-30b-think (2변형)
-    "${GROUP_C[4]}"  # exaone-4.0-32b
-    "${GROUP_C[8]}"  # kanana-2-inst
-    "${GROUP_C[9]}"  # kanana-2-think (2변형)
-)
-
 # ===========================================================================
-# 서버별 GROUP (MODELS.md 24-model 기준, 2026-04-29)
+# 서버별 GROUP (MODELS.md 24-model 기준)
 # ===========================================================================
 # Server 1 (2× H100 80GB) — 11 모델: small/medium 단일-GPU
 # Server 2 (6× H100 80GB) — 13 모델: large + TP=2 + TP=4
@@ -200,90 +137,13 @@ GROUP_S2_LARGE_L3=(
 )
 
 # ===========================================================================
-# Legacy / ad-hoc GROUPS
+# 보조 그룹
 # ===========================================================================
 
-# SMOKE: 파이프라인 검증용 (가장 작은 2개 모델)
+# SMOKE: 파이프라인 검증용 (가장 작은 2개 모델, 일반 검증)
 GROUP_SMOKE=(
-    "qwen35-0.8b|Qwen/Qwen3.5-0.8B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-0.8B"
-    "qwen25-1.5b|Qwen/Qwen2.5-1.5B-Instruct|hermes||Qwen/Qwen2.5-1.5B-Instruct"
-)
-
-# SMOKE_ARCH: 새 architecture (Gemma-4, Qwen3.6) transformers 5.7.0 업그레이드 후 검증
-# vLLM 0.19에 모델 전용 parser 존재: gemma4, phi4_mini_json
-# Gemma-4 E4B-it 공식 multimodal 재시도 (vLLM 0.19 + gemma4 parser)
-GROUP_SMOKE_ARCH=(
-    "phi-4-mini|microsoft/Phi-4-mini-instruct|phi4_mini_json||microsoft/Phi-4-mini-instruct"
-    "gemma-4-e4b|google/gemma-4-E4B-it|gemma4||google/gemma-4-E4B-it"
-    "gemma-4-31b|google/gemma-4-31B-it|gemma4||google/gemma-4-31B-it"
-    "qwen36-27b|Qwen/Qwen3.6-27B|qwen3_xml||Qwen/Qwen3.6-27B"
-    "qwen36-35b-a3b|Qwen/Qwen3.6-35B-A3B|qwen3_xml|--max-model-len 32768|Qwen/Qwen3.6-35B-A3B"
-)
-
-# SMOKE_PHI4: Phi-4-mini-instruct alternative parser 검증
-# phi4_mini_json (dedicated) 0/5 실패 → pythonic, hermes, openai 시도
-# alias 뒤에 parser 식별자 붙여 결과 디렉토리 분리
-GROUP_SMOKE_PHI4=(
-    "phi-4-mini-pyt|microsoft/Phi-4-mini-instruct|pythonic||microsoft/Phi-4-mini-instruct"
-    "phi-4-mini-hermes|microsoft/Phi-4-mini-instruct|hermes||microsoft/Phi-4-mini-instruct"
-    "phi-4-mini-llama3|microsoft/Phi-4-mini-instruct|llama3_json||microsoft/Phi-4-mini-instruct"
-)
-
-# SMOKE_PHI4_TEMPLATE: Phi-4-mini-instruct + 공식 vLLM chat template
-# 원인 진단: Microsoft 기본 chat template(<|tool|>/<|tool_calls|>)과 vLLM phi4_mini_json parser
-# (functools[...] regex)의 형식 불일치로 0/5 실패. vLLM examples의 tool_chat_template_phi4_mini.jinja는
-# 모델이 functools[...] 형식으로 출력하도록 system 지시 → parser 매칭됨.
-GROUP_SMOKE_PHI4_TEMPLATE=(
-    "phi-4-mini-tmpl|microsoft/Phi-4-mini-instruct|phi4_mini_json|--chat-template $PROJECT_ROOT/_paper/_experiments/scripts/tool_chat_template_phi4_mini.jinja|microsoft/Phi-4-mini-instruct"
-)
-
-# S1_B_NO_DRAGON: S1_B에서 dragon-qwen-fin 제외 (4 모델)
-# 용도: dragon-qwen-fin이 다른 GPU에서 실행 중일 때 나머지 4개를 GPU 0에서 사전 처리
-GROUP_S1_B_NO_DRAGON=(
-    "llama-3.2-3b|meta-llama/Llama-3.2-3B-Instruct|llama3_json||meta-llama/Llama-3.2-3B-Instruct"
-    "ministral-3b|mistralai/Ministral-3-3B-Instruct-2512|mistral||mistralai/Ministral-3-3B-Instruct-2512"
-    "hermes-3-8b|NousResearch/Hermes-3-Llama-3.1-8B|hermes||NousResearch/Hermes-3-Llama-3.1-8B"
-    "ax-light|skt/A.X-4.0-Light|hermes|--max-model-len 16384|skt/A.X-4.0-Light"
-)
-
-# DRAGON_QWEN_ONLY: dragon-qwen-fin 단독 실행 (사전 실행용)
-GROUP_DRAGON_QWEN_ONLY=(
-    "dragon-qwen-fin|DragonLLM/Qwen-Open-Finance-R-8B|qwen3_xml|--reasoning-parser qwen3|DragonLLM/Qwen-Open-Finance-R-8B"
-)
-
-# SMOKE_DRAGONLLM: DragonLLM (LLM Open Finance) 8B 2종, FC 보존 의도된 finance 모델
-# Llama-Open-Finance-8B: Llama-3.1 base → llama3_json
-# Qwen-Open-Finance-R-8B: Qwen 3 base → qwen3_xml (R = reasoning preserved)
-GROUP_SMOKE_DRAGONLLM=(
-    "dragon-llama-fin|DragonLLM/Llama-Open-Finance-8B|llama3_json||DragonLLM/Llama-Open-Finance-8B"
-    "dragon-qwen-fin|DragonLLM/Qwen-Open-Finance-R-8B|qwen3_xml|--reasoning-parser qwen3|DragonLLM/Qwen-Open-Finance-R-8B"
-)
-
-# RECOVERY: vLLM 부팅 실패로 KR phase에서 SKIP된 ax-light 단독 보충
-# 원인: vLLM 0.19에서 max_position_embeddings(16384) < default --max-model-len(32768) 검사 강화
-GROUP_RECOVERY=(
-    "ax-light|skt/A.X-4.0-Light|hermes|--max-model-len 16384|skt/A.X-4.0-Light"
-)
-
-# RECOVERY_MISSING: connection error로 누락된 케이스 재처리
-# 원인: _CONN_ERROR_THRESHOLD 도달 → _server_dead 트리거 → 나머지 케이스 스킵
-# 사용: KR/EN 각각에서 모델별 eval JSON 삭제 후 --checkpoint --resume으로 누락만 채움
-# DragonLLM/Llama-Open-Finance-8B는 parallel TC 미지원으로 인한 reject (모델 한계)이므로 제외
-GROUP_RECOVERY_MISSING=(
-    "llama-3.2-3b|meta-llama/Llama-3.2-3B-Instruct|llama3_json||meta-llama/Llama-3.2-3B-Instruct"
-    "ministral-3b|mistralai/Ministral-3-3B-Instruct-2512|mistral||mistralai/Ministral-3-3B-Instruct-2512"
     "qwen35-4b|Qwen/Qwen3.5-4B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-4B"
     "exaone-1.2b|LGAI-EXAONE/EXAONE-4.0-1.2B|hermes|--trust-remote-code|LGAI-EXAONE/EXAONE-4.0-1.2B"
-)
-
-# A_OFFLOAD: Group A 후반부 5 entries를 GPU 1 idle 시간에 병렬 처리 (master Group A는 자체 흐름 유지)
-# Master Group A가 [7/11]~[11/11] 도달 시점에 이미 결과 존재 → --resume으로 즉시 skip
-GROUP_A_OFFLOAD=(
-    "exaone-4.0-1.2b|LGAI-EXAONE/EXAONE-4.0-1.2B|hermes|--trust-remote-code|LGAI-EXAONE/EXAONE-4.0-1.2B"
-    "qwen3-8b|Qwen/Qwen3-8B|qwen3_xml||Qwen/Qwen3-8B"
-    "ax-light|skt/A.X-4.0-Light|hermes||skt/A.X-4.0-Light"
-    "hermes-3-8b|NousResearch/Hermes-3-Llama-3.1-8B|hermes||NousResearch/Hermes-3-Llama-3.1-8B"
-    "glm-4.7-flash|zai-org/GLM-4.7-Flash|glm47|--trust-remote-code|zai-org/GLM-4.7-Flash"
 )
 
 # RQ2_REPS: 4-way 2x2 (KR-KR/EN-KR/KR-EN/EN-EN) ablation 6 representatives
@@ -302,22 +162,6 @@ GROUP_RQ2_REPS=(
 )
 
 case "$GROUP" in
-    A)     MODELS=("${GROUP_A[@]}") ;;
-    B)     MODELS=("${GROUP_B[@]}") ;;
-    C)     MODELS=("${GROUP_C[@]}") ;;
-    C1)    MODELS=("${GROUP_C1[@]}") ;;
-    C2)    MODELS=("${GROUP_C2[@]}") ;;
-    TP2)   MODELS=("${GROUP_TP2[@]}") ;;
-    SMOKE) MODELS=("${GROUP_SMOKE[@]}") ;;
-    SMOKE_ARCH) MODELS=("${GROUP_SMOKE_ARCH[@]}") ;;
-    SMOKE_PHI4) MODELS=("${GROUP_SMOKE_PHI4[@]}") ;;
-    SMOKE_PHI4_TEMPLATE) MODELS=("${GROUP_SMOKE_PHI4_TEMPLATE[@]}") ;;
-    SMOKE_DRAGONLLM) MODELS=("${GROUP_SMOKE_DRAGONLLM[@]}") ;;
-    S1_B_NO_DRAGON) MODELS=("${GROUP_S1_B_NO_DRAGON[@]}") ;;
-    DRAGON_QWEN_ONLY) MODELS=("${GROUP_DRAGON_QWEN_ONLY[@]}") ;;
-    RECOVERY) MODELS=("${GROUP_RECOVERY[@]}") ;;
-    RECOVERY_MISSING) MODELS=("${GROUP_RECOVERY_MISSING[@]}") ;;
-    A_OFFLOAD) MODELS=("${GROUP_A_OFFLOAD[@]}") ;;
     # Server 1
     S1_A) MODELS=("${GROUP_S1_A[@]}") ;;
     S1_B) MODELS=("${GROUP_S1_B[@]}") ;;
@@ -329,7 +173,8 @@ case "$GROUP" in
     S2_LARGE_L1) MODELS=("${GROUP_S2_LARGE_L1[@]}") ;;
     S2_LARGE_L2) MODELS=("${GROUP_S2_LARGE_L2[@]}") ;;
     S2_LARGE_L3) MODELS=("${GROUP_S2_LARGE_L3[@]}") ;;
-    # RQ2 4-way ablation
+    # 보조
+    SMOKE) MODELS=("${GROUP_SMOKE[@]}") ;;
     RQ2_REPS) MODELS=("${GROUP_RQ2_REPS[@]}") ;;
     *)     echo "Unknown group: $GROUP"; exit 1 ;;
 esac
@@ -432,19 +277,6 @@ for ((idx=0; idx<${#MODELS[@]}; idx++)); do
 
     # bench_models 공백 분리
     bench_models_spaced=$(echo "$bench_models" | tr ',' ' ')
-
-    # SMOKE_PHI4*: 동일 HF model을 다른 parser/template로 반복 검증하므로 매 회 checkpoint + eval JSON 모두 clear
-    # (--resume이 eval_*.json 존재 시 모델 skip하므로 eval도 삭제)
-    if [[ "$GROUP" == SMOKE_PHI4* ]]; then
-        for bm in $bench_models_spaced; do
-            safe=$(echo "$bm" | tr ':/.' '___')
-            cp_file="$OUTPUT_DIR/checkpoint/checkpoint_${safe}.jsonl"
-            [ -f "$cp_file" ] && rm -f "$cp_file" && ts "  checkpoint 삭제: $cp_file"
-            for ev in "$OUTPUT_DIR"/eval/eval_${safe}_*.json; do
-                [ -f "$ev" ] && rm -f "$ev" && ts "  eval 삭제: $ev"
-            done
-        done
-    fi
 
     VLLM_BASE_URL="http://localhost:$PORT/v1" run_benchmark "$bench_models_spaced" || true
 
