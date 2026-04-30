@@ -526,13 +526,63 @@ def _inject_scripted_response(
 # ---------------------------------------------------------------------------
 
 
+def _multiturn_result_path(model_id: str, output_dir: Path) -> Path:
+    """모델별 최종 결과 JSON 경로."""
+    sanitized = model_id.replace("/", "_").replace(".", "_")
+    return output_dir / f"multiturn_{sanitized}.json"
+
+
+def _multiturn_checkpoint_path(model_id: str, output_dir: Path) -> Path:
+    """모델별 시나리오 단위 checkpoint jsonl 경로."""
+    sanitized = model_id.replace("/", "_").replace(".", "_")
+    cp_dir = output_dir / "checkpoint"
+    cp_dir.mkdir(parents=True, exist_ok=True)
+    return cp_dir / f"checkpoint_{sanitized}.jsonl"
+
+
+def _load_multiturn_checkpoint(cp_path: Path) -> tuple[set[str], list[dict]]:
+    """checkpoint jsonl 로드 → (완료 시나리오 ID set, 결과 list)."""
+    completed_ids: set[str] = set()
+    cached_results: list[dict] = []
+    if not cp_path.exists():
+        return completed_ids, cached_results
+    with open(cp_path, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                rec = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            sid = rec.get("id")
+            if sid and sid not in completed_ids:
+                completed_ids.add(sid)
+                cached_results.append(rec)
+    return completed_ids, cached_results
+
+
+def _append_multiturn_checkpoint(cp_path: Path, record: dict) -> None:
+    """시나리오 결과 한 건을 checkpoint jsonl에 append."""
+    cp_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(cp_path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+
 def run_multiturn_benchmark(
     model: dict,
     output_dir: Path,
     *,
     debug: bool = False,
+    use_checkpoint: bool = False,
+    resume: bool = False,
 ) -> dict:
-    """단일 모델에 대해 전체 멀티턴 시나리오를 실행한다."""
+    """단일 모델에 대해 전체 멀티턴 시나리오를 실행한다.
+
+    Args:
+        use_checkpoint: True면 시나리오 단위 jsonl 저장 + 끊긴 시점부터 재개.
+        resume: True면 이미 multiturn_<model>.json이 존재할 때 통째 스킵.
+    """
     model_id = _model_key(model)
     think_label = ""
     if model.get("think") is True:
@@ -544,19 +594,43 @@ def run_multiturn_benchmark(
     _ts_print(f"  [멀티턴] 모델: {model['name']} ({model['provider']}){think_label}")
     _ts_print(f"{'='*60}")
 
+    # 모델 레벨 resume: 최종 결과 JSON 존재 시 스킵
+    result_path = _multiturn_result_path(model_id, output_dir)
+    if resume and result_path.exists():
+        _ts_print(f"  [건너뜀] {model_id} — 기존 결과 사용 ({result_path.name})")
+        try:
+            with open(result_path, encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+
     cases = _load_multiturn_cases()
     if not cases:
         _ts_print("  ⚠ 멀티턴 케이스 없음")
         return {}
 
-    _ts_print(f"  시나리오: {len(cases)}건")
+    # 시나리오 레벨 checkpoint 로드
+    cp_path: Path | None = None
+    completed_ids: set[str] = set()
+    scenario_results: list[dict] = []
+    if use_checkpoint:
+        cp_path = _multiturn_checkpoint_path(model_id, output_dir)
+        completed_ids, scenario_results = _load_multiturn_checkpoint(cp_path)
+        if completed_ids:
+            _ts_print(f"  [재개] checkpoint에서 완료 {len(completed_ids)}건 로드")
+
+    _ts_print(f"  시나리오: {len(cases)}건 (남은: {len(cases) - len(completed_ids)}건)")
 
     total_start = time.time()
-    scenario_results = []
 
     for i, scenario in enumerate(cases):
+        sid = scenario.get("id", "")
+        if sid in completed_ids:
+            continue
         result = run_multiturn_scenario(scenario, model, debug=debug)
         scenario_results.append(result)
+        if cp_path is not None:
+            _append_multiturn_checkpoint(cp_path, result)
         _ts_print(
             f"  [{i+1}/{len(cases)}] {scenario['id']}: "
             f"s={result['avg_score']:.3f} h={result['avg_tool_hit']:.3f} "
@@ -595,8 +669,7 @@ def run_multiturn_benchmark(
 
     # 결과 저장
     output_dir.mkdir(parents=True, exist_ok=True)
-    sanitized = model_id.replace("/", "_").replace(".", "_")
-    out_path = output_dir / f"multiturn_{sanitized}.json"
+    out_path = result_path  # 위에서 _multiturn_result_path()로 미리 산출
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(overall, f, ensure_ascii=False, indent=2)
 
@@ -637,6 +710,10 @@ def main():
     parser.add_argument("--output", type=str, default="_experiments/results_multiturn/",
                         help="결과 저장 디렉토리")
     parser.add_argument("--debug", action="store_true", help="턴별 상세 로그")
+    parser.add_argument("--checkpoint", action="store_true",
+                        help="시나리오 단위 checkpoint jsonl 저장 + 중단 시 재개")
+    parser.add_argument("--resume", action="store_true",
+                        help="이미 multiturn_<model>.json 결과가 있는 모델은 건너뛰기")
     args = parser.parse_args()
 
     output_dir = Path(args.output)
@@ -658,7 +735,13 @@ def main():
 
     for model in selected:
         try:
-            run_multiturn_benchmark(model, output_dir, debug=args.debug)
+            run_multiturn_benchmark(
+                model,
+                output_dir,
+                debug=args.debug,
+                use_checkpoint=args.checkpoint,
+                resume=args.resume,
+            )
         except Exception as exc:
             _ts_print(f"  ⚠ 모델 {model['name']} 실행 실패: {exc}")
             logger.exception("모델 %s 실패", model["name"])

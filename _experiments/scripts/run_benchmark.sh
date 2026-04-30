@@ -237,6 +237,15 @@ GROUP_SMOKE_PHI4_TEMPLATE=(
     "phi-4-mini-tmpl|microsoft/Phi-4-mini-instruct|phi4_mini_json|--chat-template $PROJECT_ROOT/_paper/_experiments/scripts/tool_chat_template_phi4_mini.jinja|microsoft/Phi-4-mini-instruct"
 )
 
+# S1_B_NO_DRAGON: S1_B에서 dragon-qwen-fin 제외 (4 모델)
+# 용도: dragon-qwen-fin이 다른 GPU에서 실행 중일 때 나머지 4개를 GPU 0에서 사전 처리
+GROUP_S1_B_NO_DRAGON=(
+    "llama-3.2-3b|meta-llama/Llama-3.2-3B-Instruct|llama3_json||meta-llama/Llama-3.2-3B-Instruct"
+    "ministral-3b|mistralai/Ministral-3-3B-Instruct-2512|mistral||mistralai/Ministral-3-3B-Instruct-2512"
+    "hermes-3-8b|NousResearch/Hermes-3-Llama-3.1-8B|hermes||NousResearch/Hermes-3-Llama-3.1-8B"
+    "ax-light|skt/A.X-4.0-Light|hermes|--max-model-len 16384|skt/A.X-4.0-Light"
+)
+
 # SMOKE_DRAGONLLM: DragonLLM (LLM Open Finance) 8B 2종, FC 보존 의도된 finance 모델
 # Llama-Open-Finance-8B: Llama-3.1 base → llama3_json
 # Qwen-Open-Finance-R-8B: Qwen 3 base → qwen3_xml (R = reasoning preserved)
@@ -288,6 +297,7 @@ case "$GROUP" in
     SMOKE_PHI4) MODELS=("${GROUP_SMOKE_PHI4[@]}") ;;
     SMOKE_PHI4_TEMPLATE) MODELS=("${GROUP_SMOKE_PHI4_TEMPLATE[@]}") ;;
     SMOKE_DRAGONLLM) MODELS=("${GROUP_SMOKE_DRAGONLLM[@]}") ;;
+    S1_B_NO_DRAGON) MODELS=("${GROUP_S1_B_NO_DRAGON[@]}") ;;
     RECOVERY) MODELS=("${GROUP_RECOVERY[@]}") ;;
     A_OFFLOAD) MODELS=("${GROUP_A_OFFLOAD[@]}") ;;
     # Server 1
@@ -310,7 +320,7 @@ esac
 case "$MODE" in
     kr) OUTPUT_DIR="$RESULT_KR";       BENCH_MODULE="_experiments.scripts.benchmark";          BENCH_EXTRA="--checkpoint --resume" ;;
     en) OUTPUT_DIR="$RESULT_EN";       BENCH_MODULE="_experiments.scripts.benchmark";          BENCH_EXTRA="--cases-dir $CASES_EN --checkpoint --resume" ;;
-    mt) OUTPUT_DIR="$RESULT_MT";       BENCH_MODULE="_experiments.scripts.benchmark_multiturn"; BENCH_EXTRA="" ;;
+    mt) OUTPUT_DIR="$RESULT_MT";       BENCH_MODULE="_experiments.scripts.benchmark_multiturn"; BENCH_EXTRA="--checkpoint --resume" ;;
     *)  echo "Unknown mode: $MODE (kr, en, mt)"; exit 1 ;;
 esac
 
