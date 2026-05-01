@@ -153,12 +153,29 @@ GROUP_SMOKE=(
 # KR-EN: bash run_benchmark.sh --gpu ... --group RQ2_REPS --mode kr --tools-lang en
 # EN-EN: bash run_benchmark.sh --gpu ... --group RQ2_REPS --mode en --tools-lang en
 GROUP_RQ2_REPS=(
-    "qwen35-27b|Qwen/Qwen3.5-27B|qwen3_coder|--reasoning-parser qwen3 --enforce-eager|Qwen/Qwen3.5-27B"
+    "qwen35-27b|Qwen/Qwen3.5-27B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-27B"
     "qwen36-27b|Qwen/Qwen3.6-27B|qwen3_xml||Qwen/Qwen3.6-27B"
-    "llama-3.3-70b|meta-llama/Llama-3.3-70B-Instruct|llama3_json|--tensor-parallel-size 2 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager|meta-llama/Llama-3.3-70B-Instruct"
+    "llama-3.3-70b|meta-llama/Llama-3.3-70B-Instruct|llama3_json|--tensor-parallel-size 2 --max-model-len 16384 --gpu-memory-utilization 0.95|meta-llama/Llama-3.3-70B-Instruct"
     "gemma-4-31b|google/gemma-4-31B-it|gemma4||google/gemma-4-31B-it"
     "exaone-32b|LGAI-EXAONE/EXAONE-4.0-32B|hermes|--trust-remote-code|LGAI-EXAONE/EXAONE-4.0-32B"
-    "ax-4.0|skt/A.X-4.0|hermes|--tensor-parallel-size 2 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager|skt/A.X-4.0"
+    "ax-4.0|skt/A.X-4.0|hermes|--tensor-parallel-size 2 --max-model-len 16384 --gpu-memory-utilization 0.95|skt/A.X-4.0"
+)
+
+# S1_RQ2_RECOVERY_QWEN: 누락 KR-EN Qwen3.5-27B (think+nothink)
+# 단일 GPU + max-model-len 32768 (long context cases 처리)
+GROUP_S1_RQ2_RECOVERY_QWEN=(
+    "qwen35-27b|Qwen/Qwen3.5-27B|qwen3_coder|--max-model-len 32768 --reasoning-parser qwen3|Qwen/Qwen3.5-27B"
+)
+
+# S1_RQ2_RECOVERY_EXAONE: 누락 KR-EN EXAONE-32B
+GROUP_S1_RQ2_RECOVERY_EXAONE=(
+    "exaone-32b|LGAI-EXAONE/EXAONE-4.0-32B|hermes|--max-model-len 32768 --trust-remote-code|LGAI-EXAONE/EXAONE-4.0-32B"
+)
+
+# S1_RQ2_RECOVERY_GEMMA: 누락 EN-EN Gemma-4-31B-it
+# concurrency=2 + --enforce-eager로 vLLM scheduler hang 회피
+GROUP_S1_RQ2_RECOVERY_GEMMA=(
+    "gemma-4-31b|google/gemma-4-31B-it|gemma4|--max-model-len 32768 --enforce-eager|google/gemma-4-31B-it"
 )
 
 case "$GROUP" in
@@ -176,6 +193,9 @@ case "$GROUP" in
     # 보조
     SMOKE) MODELS=("${GROUP_SMOKE[@]}") ;;
     RQ2_REPS) MODELS=("${GROUP_RQ2_REPS[@]}") ;;
+    S1_RQ2_RECOVERY_QWEN) MODELS=("${GROUP_S1_RQ2_RECOVERY_QWEN[@]}") ;;
+    S1_RQ2_RECOVERY_EXAONE) MODELS=("${GROUP_S1_RQ2_RECOVERY_EXAONE[@]}") ;;
+    S1_RQ2_RECOVERY_GEMMA) MODELS=("${GROUP_S1_RQ2_RECOVERY_GEMMA[@]}") ;;
     *)     echo "Unknown group: $GROUP"; exit 1 ;;
 esac
 
