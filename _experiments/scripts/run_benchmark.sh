@@ -178,6 +178,11 @@ GROUP_S1_RQ2_RECOVERY_GEMMA=(
     "gemma-4-31b|google/gemma-4-31B-it|gemma4|--max-model-len 32768 --enforce-eager|google/gemma-4-31B-it"
 )
 
+# S1_RQ2_RECOVERY_GEMMA_TP2: 양 GPU 활용 가속 (Lane A 종료 후 사용)
+GROUP_S1_RQ2_RECOVERY_GEMMA_TP2=(
+    "gemma-4-31b|google/gemma-4-31B-it|gemma4|--tensor-parallel-size 2 --max-model-len 32768 --gpu-memory-utilization 0.9 --enforce-eager|google/gemma-4-31B-it"
+)
+
 case "$GROUP" in
     # Server 1
     S1_A) MODELS=("${GROUP_S1_A[@]}") ;;
@@ -196,6 +201,7 @@ case "$GROUP" in
     S1_RQ2_RECOVERY_QWEN) MODELS=("${GROUP_S1_RQ2_RECOVERY_QWEN[@]}") ;;
     S1_RQ2_RECOVERY_EXAONE) MODELS=("${GROUP_S1_RQ2_RECOVERY_EXAONE[@]}") ;;
     S1_RQ2_RECOVERY_GEMMA) MODELS=("${GROUP_S1_RQ2_RECOVERY_GEMMA[@]}") ;;
+    S1_RQ2_RECOVERY_GEMMA_TP2) MODELS=("${GROUP_S1_RQ2_RECOVERY_GEMMA_TP2[@]}") ;;
     *)     echo "Unknown group: $GROUP"; exit 1 ;;
 esac
 
