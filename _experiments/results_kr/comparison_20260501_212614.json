@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-01T00:29:49.833036",
+  "timestamp": "2026-05-01T21:26:14.233891",
   "models": [
     "DragonLLM/Llama-Open-Finance-8B",
     "DragonLLM/Qwen-Open-Finance-R-8B",
@@ -10,6 +10,9 @@
     "Qwen/Qwen3.5-27B__think",
     "Qwen/Qwen3.5-4B__nothink",
     "Qwen/Qwen3.5-4B__think",
+    "Qwen/Qwen3.6-27B",
+    "Qwen/Qwen3.6-35B-A3B",
+    "Salesforce/Llama-xLAM-2-70b-fc-r",
     "Salesforce/xLAM-2-3b-fc-r",
     "google/gemma-4-31B-it",
     "google/gemma-4-E4B-it",
@@ -17,6 +20,7 @@
     "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink",
     "kakaocorp/kanana-2-30b-a3b-thinking-2601__think",
     "meta-llama/Llama-3.2-3B-Instruct",
+    "meta-llama/Llama-3.3-70B-Instruct",
     "microsoft/Phi-4-mini-instruct",
     "mistralai/Ministral-3-3B-Instruct-2512",
     "mistralai/Mistral-Small-3.2-24B-Instruct-2506",
@@ -25,8 +29,7 @@
     "openai/gpt-oss-20b__nothink",
     "openai/gpt-oss-20b__think",
     "skt/A.X-4.0-Light",
-    "skt/A.X-4.0",
-    "meta-llama/Llama-3.3-70B-Instruct"
+    "skt/A.X-4.0"
   ],
   "model_summaries": [
     {
@@ -347,6 +350,112 @@
       }
     },
     {
+      "model": "Qwen/Qwen3.6-27B",
+      "provider": "vllm",
+      "total_cases": 1258,
+      "avg_score": 0.8873,
+      "primary_tool_hit_rate": 0.9102,
+      "avg_tool_recall": 0.9614,
+      "avg_tool_precision": 0.4707,
+      "avg_param_accuracy": 0.9083,
+      "avg_param_key_accuracy": 0.9207,
+      "total_hallucinated_params": 1113,
+      "total_elapsed_sec": 9288.02,
+      "by_error_type": {
+        "other": 873,
+        "wrong_func": 43,
+        "correct": 172,
+        "hallucinated_call": 68,
+        "wrong_value": 90,
+        "missing_param": 10,
+        "api_error": 2
+      },
+      "by_difficulty": {
+        "easy": {
+          "count": 673,
+          "avg_score": 0.8924
+        },
+        "medium": {
+          "count": 412,
+          "avg_score": 0.869
+        },
+        "hard": {
+          "count": 173,
+          "avg_score": 0.9109
+        }
+      }
+    },
+    {
+      "model": "Qwen/Qwen3.6-35B-A3B",
+      "provider": "vllm",
+      "total_cases": 1258,
+      "avg_score": 0.8855,
+      "primary_tool_hit_rate": 0.9094,
+      "avg_tool_recall": 0.9554,
+      "avg_tool_precision": 0.482,
+      "avg_param_accuracy": 0.9031,
+      "avg_param_key_accuracy": 0.9187,
+      "total_hallucinated_params": 958,
+      "total_elapsed_sec": 4581.1,
+      "by_error_type": {
+        "other": 851,
+        "wrong_func": 54,
+        "correct": 195,
+        "hallucinated_call": 60,
+        "wrong_value": 92,
+        "missing_param": 6
+      },
+      "by_difficulty": {
+        "easy": {
+          "count": 673,
+          "avg_score": 0.8884
+        },
+        "medium": {
+          "count": 412,
+          "avg_score": 0.8775
+        },
+        "hard": {
+          "count": 173,
+          "avg_score": 0.8936
+        }
+      }
+    },
+    {
+      "model": "Salesforce/Llama-xLAM-2-70b-fc-r",
+      "provider": "vllm",
+      "total_cases": 1258,
+      "avg_score": 0.8336,
+      "primary_tool_hit_rate": 0.8275,
+      "avg_tool_recall": 0.8555,
+      "avg_tool_precision": 0.7401,
+      "avg_param_accuracy": 0.7922,
+      "avg_param_key_accuracy": 0.8636,
+      "total_hallucinated_params": 1239,
+      "total_elapsed_sec": 5291.74,
+      "by_error_type": {
+        "other": 324,
+        "wrong_func": 182,
+        "correct": 538,
+        "hallucinated_call": 35,
+        "wrong_value": 175,
+        "missing_param": 4
+      },
+      "by_difficulty": {
+        "easy": {
+          "count": 673,
+          "avg_score": 0.8472
+        },
+        "medium": {
+          "count": 412,
+          "avg_score": 0.8152
+        },
+        "hard": {
+          "count": 173,
+          "avg_score": 0.8248
+        }
+      }
+    },
+    {
       "model": "Salesforce/xLAM-2-3b-fc-r",
       "provider": "vllm",
       "total_cases": 1258,
@@ -578,6 +687,42 @@
       }
     },
     {
+      "model": "meta-llama/Llama-3.3-70B-Instruct",
+      "provider": "vllm",
+      "total_cases": 1258,
+      "avg_score": 0.8495,
+      "primary_tool_hit_rate": 0.8092,
+      "avg_tool_recall": 0.9092,
+      "avg_tool_precision": 0.7978,
+      "avg_param_accuracy": 0.8028,
+      "avg_param_key_accuracy": 0.8757,
+      "total_hallucinated_params": 4863,
+      "total_elapsed_sec": 1655.9,
+      "by_error_type": {
+        "wrong_func": 103,
+        "correct": 788,
+        "other": 39,
+        "hallucinated_call": 127,
+        "wrong_value": 184,
+        "api_error": 10,
+        "missing_param": 7
+      },
+      "by_difficulty": {
+        "easy": {
+          "count": 673,
+          "avg_score": 0.8449
+        },
+        "medium": {
+          "count": 412,
+          "avg_score": 0.849
+        },
+        "hard": {
+          "count": 173,
+          "avg_score": 0.8691
+        }
+      }
+    },
+    {
       "model": "microsoft/Phi-4-mini-instruct",
       "provider": "vllm",
       "total_cases": 1258,
@@ -652,17 +797,18 @@
     {
       "model": "mistralai/Mistral-Small-3.2-24B-Instruct-2506",
       "provider": "vllm",
-      "total_cases": 1250,
-      "avg_score": 0.8628,
-      "primary_tool_hit_rate": 0.8888,
-      "avg_tool_recall": 0.9148,
-      "avg_tool_precision": 0.6391,
-      "avg_param_accuracy": 0.815,
-      "avg_param_key_accuracy": 0.8706,
+      "total_cases": 1258,
+      "avg_score": 0.8588,
+      "primary_tool_hit_rate": 0.8847,
+      "avg_tool_recall": 0.9106,
+      "avg_tool_precision": 0.6359,
+      "avg_param_accuracy": 0.8114,
+      "avg_param_key_accuracy": 0.8667,
       "total_hallucinated_params": 1052,
-      "total_elapsed_sec": 9706.43,
+      "total_elapsed_sec": 36.41,
       "by_error_type": {
-        "other": 557,
+        "other": 559,
+        "api_error": 6,
         "wrong_func": 106,
         "correct": 385,
         "hallucinated_call": 33,
@@ -671,36 +817,37 @@
       },
       "by_difficulty": {
         "easy": {
-          "count": 672,
-          "avg_score": 0.8772
+          "count": 673,
+          "avg_score": 0.8759
         },
         "medium": {
-          "count": 408,
-          "avg_score": 0.8339
+          "count": 412,
+          "avg_score": 0.8305
         },
         "hard": {
-          "count": 170,
-          "avg_score": 0.8748
+          "count": 173,
+          "avg_score": 0.8597
         }
       }
     },
     {
       "model": "openai/gpt-oss-120b__nothink",
       "provider": "vllm",
-      "total_cases": 1256,
-      "avg_score": 0.8011,
-      "primary_tool_hit_rate": 0.8225,
-      "avg_tool_recall": 0.8309,
-      "avg_tool_precision": 0.4922,
-      "avg_param_accuracy": 0.7954,
-      "avg_param_key_accuracy": 0.8053,
+      "total_cases": 1258,
+      "avg_score": 0.7998,
+      "primary_tool_hit_rate": 0.8211,
+      "avg_tool_recall": 0.8296,
+      "avg_tool_precision": 0.4914,
+      "avg_param_accuracy": 0.7942,
+      "avg_param_key_accuracy": 0.804,
       "total_hallucinated_params": 1437,
-      "total_elapsed_sec": 148.52,
+      "total_elapsed_sec": 4.75,
       "by_error_type": {
-        "wrong_func": 188,
         "other": 664,
+        "wrong_func": 188,
         "correct": 239,
         "hallucinated_call": 35,
+        "api_error": 2,
         "wrong_value": 81,
         "missing_param": 49
       },
@@ -710,8 +857,8 @@
           "avg_score": 0.8431
         },
         "medium": {
-          "count": 410,
-          "avg_score": 0.7232
+          "count": 412,
+          "avg_score": 0.7197
         },
         "hard": {
           "count": 173,
@@ -722,20 +869,21 @@
     {
       "model": "openai/gpt-oss-120b__think",
       "provider": "vllm",
-      "total_cases": 1256,
-      "avg_score": 0.8003,
-      "primary_tool_hit_rate": 0.8193,
-      "avg_tool_recall": 0.8295,
-      "avg_tool_precision": 0.4986,
-      "avg_param_accuracy": 0.7935,
-      "avg_param_key_accuracy": 0.8028,
+      "total_cases": 1258,
+      "avg_score": 0.799,
+      "primary_tool_hit_rate": 0.818,
+      "avg_tool_recall": 0.8282,
+      "avg_tool_precision": 0.4978,
+      "avg_param_accuracy": 0.7922,
+      "avg_param_key_accuracy": 0.8016,
       "total_hallucinated_params": 1313,
-      "total_elapsed_sec": 655.96,
+      "total_elapsed_sec": 3.46,
       "by_error_type": {
         "other": 658,
         "wrong_func": 192,
         "correct": 243,
         "hallucinated_call": 35,
+        "api_error": 2,
         "wrong_value": 77,
         "missing_param": 51
       },
@@ -745,8 +893,8 @@
           "avg_score": 0.8457
         },
         "medium": {
-          "count": 410,
-          "avg_score": 0.7304
+          "count": 412,
+          "avg_score": 0.7269
         },
         "hard": {
           "count": 173,
@@ -757,70 +905,72 @@
     {
       "model": "openai/gpt-oss-20b__nothink",
       "provider": "vllm",
-      "total_cases": 1254,
-      "avg_score": 0.8155,
-      "primary_tool_hit_rate": 0.8381,
-      "avg_tool_recall": 0.8386,
-      "avg_tool_precision": 0.5546,
-      "avg_param_accuracy": 0.8006,
-      "avg_param_key_accuracy": 0.8214,
-      "total_hallucinated_params": 1346,
-      "total_elapsed_sec": 8521.08,
+      "total_cases": 1258,
+      "avg_score": 0.8136,
+      "primary_tool_hit_rate": 0.8362,
+      "avg_tool_recall": 0.8368,
+      "avg_tool_precision": 0.5533,
+      "avg_param_accuracy": 0.7989,
+      "avg_param_key_accuracy": 0.8196,
+      "total_hallucinated_params": 1348,
+      "total_elapsed_sec": 39.26,
       "by_error_type": {
-        "other": 636,
+        "other": 637,
         "wrong_func": 178,
         "correct": 271,
         "hallucinated_call": 25,
         "wrong_value": 94,
-        "missing_param": 50
+        "missing_param": 50,
+        "api_error": 3
       },
       "by_difficulty": {
         "easy": {
-          "count": 672,
-          "avg_score": 0.8658
+          "count": 673,
+          "avg_score": 0.8659
         },
         "medium": {
-          "count": 411,
-          "avg_score": 0.7333
+          "count": 412,
+          "avg_score": 0.7315
         },
         "hard": {
-          "count": 171,
-          "avg_score": 0.8153
+          "count": 173,
+          "avg_score": 0.8058
         }
       }
     },
     {
       "model": "openai/gpt-oss-20b__think",
       "provider": "vllm",
-      "total_cases": 1255,
-      "avg_score": 0.8154,
-      "primary_tool_hit_rate": 0.8398,
-      "avg_tool_recall": 0.8385,
-      "avg_tool_precision": 0.5571,
-      "avg_param_accuracy": 0.7973,
-      "avg_param_key_accuracy": 0.8193,
-      "total_hallucinated_params": 1345,
-      "total_elapsed_sec": 8476.95,
+      "total_cases": 1258,
+      "avg_score": 0.815,
+      "primary_tool_hit_rate": 0.8394,
+      "avg_tool_recall": 0.8381,
+      "avg_tool_precision": 0.5566,
+      "avg_param_accuracy": 0.797,
+      "avg_param_key_accuracy": 0.8189,
+      "total_hallucinated_params": 1349,
+      "total_elapsed_sec": 27.32,
       "by_error_type": {
-        "other": 633,
+        "other": 635,
         "wrong_func": 176,
         "correct": 272,
         "hallucinated_call": 25,
         "wrong_value": 94,
-        "missing_param": 55
+        "missing_param": 55,
+        "api_error": 1
       },
       "by_difficulty": {
         "easy": {
-          "count": 672,
-          "avg_score": 0.8664
+          "count": 673,
+          "avg_score": 0.8665
         },
         "medium": {
           "count": 412,
           "avg_score": 0.7345
         },
         "hard": {
-          "count": 171,
-          "avg_score": 0.8102
+          "count": 173,
+          "avg_score": 0.8063
         }
       }
     },
@@ -863,61 +1013,35 @@
       "model": "skt/A.X-4.0",
       "provider": "vllm",
       "total_cases": 1258,
-      "avg_score": 0.0033,
-      "primary_tool_hit_rate": 0.0032,
-      "avg_tool_recall": 0.0032,
-      "avg_tool_precision": 0.0019,
-      "avg_param_accuracy": 0.004,
-      "avg_param_key_accuracy": 0.004,
-      "total_hallucinated_params": 0,
-      "total_elapsed_sec": 9.65,
+      "avg_score": 0.8484,
+      "primary_tool_hit_rate": 0.8831,
+      "avg_tool_recall": 0.8996,
+      "avg_tool_precision": 0.6848,
+      "avg_param_accuracy": 0.7662,
+      "avg_param_key_accuracy": 0.8329,
+      "total_hallucinated_params": 624,
+      "total_elapsed_sec": 17393.0,
       "by_error_type": {
-        "other": 1256,
-        "correct": 1,
-        "wrong_func": 1
+        "correct": 449,
+        "other": 426,
+        "wrong_func": 105,
+        "hallucinated_call": 30,
+        "wrong_value": 214,
+        "api_error": 12,
+        "missing_param": 22
       },
       "by_difficulty": {
         "easy": {
           "count": 673,
-          "avg_score": 0.0048
+          "avg_score": 0.8732
         },
         "medium": {
           "count": 412,
-          "avg_score": 0.0023
+          "avg_score": 0.8073
         },
         "hard": {
           "count": 173,
-          "avg_score": 0.0
-        }
-      }
-    },
-    {
-      "model": "meta-llama/Llama-3.3-70B-Instruct",
-      "provider": "vllm",
-      "total_cases": 1258,
-      "avg_score": 0.0,
-      "primary_tool_hit_rate": 0.0,
-      "avg_tool_recall": 0.0,
-      "avg_tool_precision": 0.0,
-      "avg_param_accuracy": 0.0,
-      "avg_param_key_accuracy": 0.0,
-      "total_hallucinated_params": 0,
-      "total_elapsed_sec": 29.54,
-      "by_error_type": {
-        "other": 1258
-      },
-      "by_difficulty": {
-        "easy": {
-          "count": 673,
-          "avg_score": 0.0
-        },
-        "medium": {
-          "count": 412,
-          "avg_score": 0.0
-        },
-        "hard": {
-          "count": 173,
-          "avg_score": 0.0
+          "avg_score": 0.8501
         }
       }
     }
@@ -987,6 +1111,27 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9188,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 605.68
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.9093,
+        "primary_tool_hit_rate": 0.9138,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 248.71
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.773,
+        "primary_tool_hit_rate": 0.6897,
+        "avg_param_accuracy": 0.9138,
+        "total": 58,
+        "elapsed_sec": 228.55
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.6651,
         "primary_tool_hit_rate": 0.6034,
@@ -1036,6 +1181,13 @@
         "total": 58,
         "elapsed_sec": 2.0
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.9187,
+        "primary_tool_hit_rate": 0.8793,
+        "avg_param_accuracy": 0.931,
+        "total": 58,
+        "elapsed_sec": 76.02
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.6647,
         "primary_tool_hit_rate": 0.5517,
@@ -1055,7 +1207,7 @@
         "primary_tool_hit_rate": 0.931,
         "avg_param_accuracy": 0.9655,
         "total": 58,
-        "elapsed_sec": 522.31
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.8026,
@@ -1069,21 +1221,21 @@
         "primary_tool_hit_rate": 0.7931,
         "avg_param_accuracy": 0.8879,
         "total": 58,
-        "elapsed_sec": 91.82
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__nothink": {
         "avg_score": 0.7914,
         "primary_tool_hit_rate": 0.7759,
         "avg_param_accuracy": 0.8793,
         "total": 58,
-        "elapsed_sec": 450.91
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.7914,
         "primary_tool_hit_rate": 0.7759,
         "avg_param_accuracy": 0.8793,
         "total": 58,
-        "elapsed_sec": 445.73
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.5073,
@@ -1093,18 +1245,11 @@
         "elapsed_sec": 376.66
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.8247,
+        "primary_tool_hit_rate": 0.8448,
+        "avg_param_accuracy": 0.8362,
         "total": 58,
-        "elapsed_sec": 1.05
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 58,
-        "elapsed_sec": 1.18
+        "elapsed_sec": 1233.08
       }
     },
     "analyze_cross_institution_flow": {
@@ -1171,6 +1316,27 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9443,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 633.54
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.9409,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 245.35
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.7267,
+        "primary_tool_hit_rate": 0.5862,
+        "avg_param_accuracy": 0.8621,
+        "total": 58,
+        "elapsed_sec": 321.46
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.8487,
         "primary_tool_hit_rate": 0.8276,
@@ -1220,6 +1386,13 @@
         "total": 58,
         "elapsed_sec": 3.11
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.9477,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 0.9425,
+        "total": 58,
+        "elapsed_sec": 91.78
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.5477,
         "primary_tool_hit_rate": 0.3448,
@@ -1239,35 +1412,35 @@
         "primary_tool_hit_rate": 0.8793,
         "avg_param_accuracy": 0.9713,
         "total": 58,
-        "elapsed_sec": 570.88
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.8829,
         "primary_tool_hit_rate": 0.9138,
         "avg_param_accuracy": 0.9483,
         "total": 58,
-        "elapsed_sec": 88.71
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__think": {
         "avg_score": 0.8771,
         "primary_tool_hit_rate": 0.9138,
         "avg_param_accuracy": 0.931,
         "total": 58,
-        "elapsed_sec": 100.39
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__nothink": {
         "avg_score": 0.8312,
         "primary_tool_hit_rate": 0.8448,
         "avg_param_accuracy": 0.8822,
         "total": 58,
-        "elapsed_sec": 433.08
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.8312,
         "primary_tool_hit_rate": 0.8448,
         "avg_param_accuracy": 0.8822,
         "total": 58,
-        "elapsed_sec": 407.12
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.6573,
@@ -1277,18 +1450,11 @@
         "elapsed_sec": 474.16
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.9244,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 0.9483,
         "total": 58,
-        "elapsed_sec": 1.04
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 58,
-        "elapsed_sec": 1.98
+        "elapsed_sec": 1178.94
       }
     },
     "analyze_network": {
@@ -1355,6 +1521,27 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9105,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 27.2
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.8965,
+        "primary_tool_hit_rate": 0.9138,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 214.76
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.9478,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 0.9655,
+        "total": 58,
+        "elapsed_sec": 215.91
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.9013,
         "primary_tool_hit_rate": 0.8621,
@@ -1404,6 +1591,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.9625,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 61.62
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.8776,
         "primary_tool_hit_rate": 0.8793,
@@ -1423,7 +1617,7 @@
         "primary_tool_hit_rate": 0.9655,
         "avg_param_accuracy": 1.0,
         "total": 58,
-        "elapsed_sec": 347.87
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.8342,
@@ -1444,14 +1638,14 @@
         "primary_tool_hit_rate": 0.8621,
         "avg_param_accuracy": 0.8966,
         "total": 58,
-        "elapsed_sec": 406.72
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.8474,
         "primary_tool_hit_rate": 0.8621,
         "avg_param_accuracy": 0.8966,
         "total": 58,
-        "elapsed_sec": 404.21
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.8603,
@@ -1461,18 +1655,11 @@
         "elapsed_sec": 274.64
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.9462,
+        "primary_tool_hit_rate": 0.9655,
+        "avg_param_accuracy": 1.0,
         "total": 58,
-        "elapsed_sec": 0.0
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 58,
-        "elapsed_sec": 1.53
+        "elapsed_sec": 883.49
       }
     },
     "compare_periods": {
@@ -1539,6 +1726,27 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.921,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 711.05
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.9176,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 247.82
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.8872,
+        "primary_tool_hit_rate": 0.9655,
+        "avg_param_accuracy": 0.8103,
+        "total": 58,
+        "elapsed_sec": 357.88
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.8201,
         "primary_tool_hit_rate": 0.8621,
@@ -1588,6 +1796,13 @@
         "total": 58,
         "elapsed_sec": 4.77
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.928,
+        "primary_tool_hit_rate": 0.8793,
+        "avg_param_accuracy": 0.9052,
+        "total": 58,
+        "elapsed_sec": 88.19
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.7871,
         "primary_tool_hit_rate": 0.8276,
@@ -1607,7 +1822,7 @@
         "primary_tool_hit_rate": 0.9138,
         "avg_param_accuracy": 0.9526,
         "total": 58,
-        "elapsed_sec": 986.44
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.8778,
@@ -1628,14 +1843,14 @@
         "primary_tool_hit_rate": 0.7759,
         "avg_param_accuracy": 0.7759,
         "total": 58,
-        "elapsed_sec": 400.41
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.7749,
         "primary_tool_hit_rate": 0.7759,
         "avg_param_accuracy": 0.7759,
         "total": 58,
-        "elapsed_sec": 403.56
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.6841,
@@ -1645,18 +1860,11 @@
         "elapsed_sec": 443.34
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.8599,
+        "primary_tool_hit_rate": 0.9138,
+        "avg_param_accuracy": 0.7672,
         "total": 58,
-        "elapsed_sec": 0.0
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 58,
-        "elapsed_sec": 1.25
+        "elapsed_sec": 1026.25
       }
     },
     "detect_aml_patterns": {
@@ -1723,6 +1931,27 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.8621,
+        "primary_tool_hit_rate": 0.8448,
+        "avg_param_accuracy": 0.9138,
+        "total": 58,
+        "elapsed_sec": 0.0
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.8127,
+        "primary_tool_hit_rate": 0.7931,
+        "avg_param_accuracy": 0.8534,
+        "total": 58,
+        "elapsed_sec": 173.47
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.6654,
+        "primary_tool_hit_rate": 0.5862,
+        "avg_param_accuracy": 0.625,
+        "total": 58,
+        "elapsed_sec": 165.83
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.252,
         "primary_tool_hit_rate": 0.1552,
@@ -1772,6 +2001,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.7761,
+        "primary_tool_hit_rate": 0.7241,
+        "avg_param_accuracy": 0.7629,
+        "total": 58,
+        "elapsed_sec": 66.98
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.6102,
         "primary_tool_hit_rate": 0.5517,
@@ -1791,7 +2027,7 @@
         "primary_tool_hit_rate": 0.7931,
         "avg_param_accuracy": 0.8147,
         "total": 58,
-        "elapsed_sec": 242.33
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.7854,
@@ -1812,14 +2048,14 @@
         "primary_tool_hit_rate": 0.7759,
         "avg_param_accuracy": 0.7672,
         "total": 58,
-        "elapsed_sec": 342.79
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.7941,
         "primary_tool_hit_rate": 0.7759,
         "avg_param_accuracy": 0.7672,
         "total": 58,
-        "elapsed_sec": 339.49
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.778,
@@ -1829,18 +2065,11 @@
         "elapsed_sec": 266.52
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.8405,
+        "primary_tool_hit_rate": 0.8103,
+        "avg_param_accuracy": 0.8448,
         "total": 58,
-        "elapsed_sec": 0.0
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 58,
-        "elapsed_sec": 1.64
+        "elapsed_sec": 484.91
       }
     },
     "detect_ctr_candidates": {
@@ -1907,6 +2136,27 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.8344,
+        "primary_tool_hit_rate": 0.8276,
+        "avg_param_accuracy": 0.8966,
+        "total": 58,
+        "elapsed_sec": 584.58
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.9133,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 0.9655,
+        "total": 58,
+        "elapsed_sec": 274.11
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.6306,
+        "primary_tool_hit_rate": 0.5862,
+        "avg_param_accuracy": 0.5546,
+        "total": 58,
+        "elapsed_sec": 290.29
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.5152,
         "primary_tool_hit_rate": 0.4828,
@@ -1956,6 +2206,13 @@
         "total": 58,
         "elapsed_sec": 6.12
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.8599,
+        "primary_tool_hit_rate": 0.7931,
+        "avg_param_accuracy": 0.8879,
+        "total": 58,
+        "elapsed_sec": 88.69
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.7768,
         "primary_tool_hit_rate": 0.7586,
@@ -1975,7 +2232,7 @@
         "primary_tool_hit_rate": 0.7586,
         "avg_param_accuracy": 0.7557,
         "total": 58,
-        "elapsed_sec": 491.11
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.6945,
@@ -1989,21 +2246,21 @@
         "primary_tool_hit_rate": 0.6897,
         "avg_param_accuracy": 0.6897,
         "total": 58,
-        "elapsed_sec": 8.07
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__nothink": {
         "avg_score": 0.6879,
         "primary_tool_hit_rate": 0.6724,
         "avg_param_accuracy": 0.6897,
         "total": 58,
-        "elapsed_sec": 447.8
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.6879,
         "primary_tool_hit_rate": 0.6724,
         "avg_param_accuracy": 0.6897,
         "total": 58,
-        "elapsed_sec": 454.84
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.5938,
@@ -2013,18 +2270,11 @@
         "elapsed_sec": 303.64
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.8442,
+        "primary_tool_hit_rate": 0.8448,
+        "avg_param_accuracy": 0.8491,
         "total": 58,
-        "elapsed_sec": 0.0
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 58,
-        "elapsed_sec": 1.24
+        "elapsed_sec": 644.57
       }
     },
     "detect_dormant_reactivation": {
@@ -2091,6 +2341,27 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9485,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 597.39
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.9477,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 206.97
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.9239,
+        "primary_tool_hit_rate": 0.9655,
+        "avg_param_accuracy": 0.9253,
+        "total": 58,
+        "elapsed_sec": 278.09
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.4216,
         "primary_tool_hit_rate": 0.2931,
@@ -2140,6 +2411,13 @@
         "total": 58,
         "elapsed_sec": 4.42
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.8797,
+        "primary_tool_hit_rate": 0.8966,
+        "avg_param_accuracy": 0.7069,
+        "total": 58,
+        "elapsed_sec": 61.24
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.7579,
         "primary_tool_hit_rate": 0.8448,
@@ -2155,11 +2433,11 @@
         "elapsed_sec": 0.0
       },
       "mistralai/Mistral-Small-3.2-24B-Instruct-2506": {
-        "avg_score": 0.899,
-        "primary_tool_hit_rate": 0.9298,
-        "avg_param_accuracy": 0.8772,
-        "total": 57,
-        "elapsed_sec": 549.02
+        "avg_score": 0.8999,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 0.8793,
+        "total": 58,
+        "elapsed_sec": 13.05
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.9461,
@@ -2173,21 +2451,21 @@
         "primary_tool_hit_rate": 0.9828,
         "avg_param_accuracy": 0.9828,
         "total": 58,
-        "elapsed_sec": 103.43
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__nothink": {
         "avg_score": 0.9261,
         "primary_tool_hit_rate": 0.9828,
         "avg_param_accuracy": 0.931,
         "total": 58,
-        "elapsed_sec": 643.51
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.9261,
         "primary_tool_hit_rate": 0.9828,
         "avg_param_accuracy": 0.931,
         "total": 58,
-        "elapsed_sec": 641.95
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.833,
@@ -2197,18 +2475,11 @@
         "elapsed_sec": 342.37
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.782,
+        "primary_tool_hit_rate": 0.9655,
+        "avg_param_accuracy": 0.3132,
         "total": 58,
-        "elapsed_sec": 0.98
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 58,
-        "elapsed_sec": 1.22
+        "elapsed_sec": 793.4
       }
     },
     "detect_monitoring_alerts": {
@@ -2275,6 +2546,27 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.7787,
+        "primary_tool_hit_rate": 0.7931,
+        "avg_param_accuracy": 0.7931,
+        "total": 58,
+        "elapsed_sec": 584.15
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.7669,
+        "primary_tool_hit_rate": 0.7759,
+        "avg_param_accuracy": 0.7931,
+        "total": 58,
+        "elapsed_sec": 218.52
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.6738,
+        "primary_tool_hit_rate": 0.6552,
+        "avg_param_accuracy": 0.6034,
+        "total": 58,
+        "elapsed_sec": 302.67
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.5951,
         "primary_tool_hit_rate": 0.5517,
@@ -2324,6 +2616,13 @@
         "total": 58,
         "elapsed_sec": 6.67
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.8693,
+        "primary_tool_hit_rate": 0.8103,
+        "avg_param_accuracy": 0.8966,
+        "total": 58,
+        "elapsed_sec": 98.18
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.575,
         "primary_tool_hit_rate": 0.5345,
@@ -2343,7 +2642,7 @@
         "primary_tool_hit_rate": 0.7069,
         "avg_param_accuracy": 0.6897,
         "total": 58,
-        "elapsed_sec": 569.82
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.5098,
@@ -2357,21 +2656,21 @@
         "primary_tool_hit_rate": 0.4655,
         "avg_param_accuracy": 0.4655,
         "total": 58,
-        "elapsed_sec": 5.33
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__nothink": {
-        "avg_score": 0.6429,
-        "primary_tool_hit_rate": 0.625,
-        "avg_param_accuracy": 0.5952,
-        "total": 56,
-        "elapsed_sec": 504.78
+        "avg_score": 0.6371,
+        "primary_tool_hit_rate": 0.6207,
+        "avg_param_accuracy": 0.592,
+        "total": 58,
+        "elapsed_sec": 17.86
       },
       "openai/gpt-oss-20b__think": {
-        "avg_score": 0.6429,
-        "primary_tool_hit_rate": 0.625,
-        "avg_param_accuracy": 0.5952,
-        "total": 56,
-        "elapsed_sec": 503.85
+        "avg_score": 0.6534,
+        "primary_tool_hit_rate": 0.6379,
+        "avg_param_accuracy": 0.6092,
+        "total": 58,
+        "elapsed_sec": 20.83
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.4164,
@@ -2381,18 +2680,11 @@
         "elapsed_sec": 374.12
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.7174,
+        "primary_tool_hit_rate": 0.6897,
+        "avg_param_accuracy": 0.6724,
         "total": 58,
-        "elapsed_sec": 1.28
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 58,
-        "elapsed_sec": 1.21
+        "elapsed_sec": 1034.03
       }
     },
     "detect_smurfing_network": {
@@ -2459,6 +2751,27 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9053,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 595.39
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.9206,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 185.19
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.8715,
+        "primary_tool_hit_rate": 0.8621,
+        "avg_param_accuracy": 0.8592,
+        "total": 58,
+        "elapsed_sec": 190.85
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.4401,
         "primary_tool_hit_rate": 0.3621,
@@ -2508,6 +2821,13 @@
         "total": 58,
         "elapsed_sec": 3.05
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.9004,
+        "primary_tool_hit_rate": 0.8448,
+        "avg_param_accuracy": 0.9267,
+        "total": 58,
+        "elapsed_sec": 115.17
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.8361,
         "primary_tool_hit_rate": 0.8103,
@@ -2527,7 +2847,7 @@
         "primary_tool_hit_rate": 0.8966,
         "avg_param_accuracy": 0.8793,
         "total": 58,
-        "elapsed_sec": 472.9
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.9033,
@@ -2541,21 +2861,21 @@
         "primary_tool_hit_rate": 0.9138,
         "avg_param_accuracy": 0.931,
         "total": 58,
-        "elapsed_sec": 91.47
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__nothink": {
         "avg_score": 0.8932,
         "primary_tool_hit_rate": 0.931,
         "avg_param_accuracy": 0.9052,
         "total": 58,
-        "elapsed_sec": 494.08
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.8932,
         "primary_tool_hit_rate": 0.931,
         "avg_param_accuracy": 0.9052,
         "total": 58,
-        "elapsed_sec": 494.11
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.6621,
@@ -2565,18 +2885,11 @@
         "elapsed_sec": 347.85
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.8701,
+        "primary_tool_hit_rate": 0.8621,
+        "avg_param_accuracy": 0.8966,
         "total": 58,
-        "elapsed_sec": 1.06
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 58,
-        "elapsed_sec": 1.17
+        "elapsed_sec": 869.65
       }
     },
     "get_account_profile": {
@@ -2643,6 +2956,27 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9286,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 451.64
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.921,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 191.5
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.9646,
+        "primary_tool_hit_rate": 0.9655,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 186.11
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.9698,
         "primary_tool_hit_rate": 0.9483,
@@ -2692,6 +3026,13 @@
         "total": 58,
         "elapsed_sec": 1.87
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.8918,
+        "primary_tool_hit_rate": 0.8276,
+        "avg_param_accuracy": 0.931,
+        "total": 58,
+        "elapsed_sec": 37.79
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.8497,
         "primary_tool_hit_rate": 0.8276,
@@ -2711,7 +3052,7 @@
         "primary_tool_hit_rate": 0.9138,
         "avg_param_accuracy": 0.9483,
         "total": 58,
-        "elapsed_sec": 441.73
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.8238,
@@ -2732,14 +3073,14 @@
         "primary_tool_hit_rate": 0.9655,
         "avg_param_accuracy": 1.0,
         "total": 58,
-        "elapsed_sec": 295.78
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.9417,
         "primary_tool_hit_rate": 0.9655,
         "avg_param_accuracy": 1.0,
         "total": 58,
-        "elapsed_sec": 295.59
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.6638,
@@ -2749,18 +3090,11 @@
         "elapsed_sec": 230.32
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.8108,
+        "primary_tool_hit_rate": 0.8103,
+        "avg_param_accuracy": 0.8448,
         "total": 58,
-        "elapsed_sec": 0.0
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 58,
-        "elapsed_sec": 1.26
+        "elapsed_sec": 940.77
       }
     },
     "get_aml_glossary": {
@@ -2827,6 +3161,27 @@
         "total": 8,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9688,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 0.875,
+        "total": 8,
+        "elapsed_sec": 41.66
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.7688,
+        "primary_tool_hit_rate": 0.75,
+        "avg_param_accuracy": 0.625,
+        "total": 8,
+        "elapsed_sec": 17.22
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.3,
+        "primary_tool_hit_rate": 0.125,
+        "avg_param_accuracy": 0.125,
+        "total": 8,
+        "elapsed_sec": 20.76
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.3,
         "primary_tool_hit_rate": 0.125,
@@ -2876,6 +3231,13 @@
         "total": 8,
         "elapsed_sec": 0.46
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.9375,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 0.75,
+        "total": 8,
+        "elapsed_sec": 8.4
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.2,
         "primary_tool_hit_rate": 0.0,
@@ -2895,35 +3257,35 @@
         "primary_tool_hit_rate": 0.5,
         "avg_param_accuracy": 0.5,
         "total": 8,
-        "elapsed_sec": 34.22
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.5,
         "primary_tool_hit_rate": 0.375,
         "avg_param_accuracy": 0.375,
         "total": 8,
-        "elapsed_sec": 13.16
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__think": {
         "avg_score": 0.5,
         "primary_tool_hit_rate": 0.375,
         "avg_param_accuracy": 0.375,
         "total": 8,
-        "elapsed_sec": 13.02
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__nothink": {
         "avg_score": 0.4,
         "primary_tool_hit_rate": 0.25,
         "avg_param_accuracy": 0.25,
         "total": 8,
-        "elapsed_sec": 20.7
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.4,
         "primary_tool_hit_rate": 0.25,
         "avg_param_accuracy": 0.25,
         "total": 8,
-        "elapsed_sec": 19.51
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.2,
@@ -2933,18 +3295,11 @@
         "elapsed_sec": 21.25
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.9688,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 0.875,
         "total": 8,
-        "elapsed_sec": 0.2
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 8,
-        "elapsed_sec": 0.25
+        "elapsed_sec": 60.08
       }
     },
     "get_fraud_type_summary": {
@@ -3011,6 +3366,27 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.8944,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 0.931,
+        "total": 58,
+        "elapsed_sec": 506.6
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.8304,
+        "primary_tool_hit_rate": 0.8621,
+        "avg_param_accuracy": 0.8448,
+        "total": 58,
+        "elapsed_sec": 201.91
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.8639,
+        "primary_tool_hit_rate": 0.8966,
+        "avg_param_accuracy": 0.8793,
+        "total": 58,
+        "elapsed_sec": 294.06
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.3017,
         "primary_tool_hit_rate": 0.2069,
@@ -3060,6 +3436,13 @@
         "total": 58,
         "elapsed_sec": 6.61
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.8319,
+        "primary_tool_hit_rate": 0.7586,
+        "avg_param_accuracy": 0.8448,
+        "total": 58,
+        "elapsed_sec": 60.29
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.5284,
         "primary_tool_hit_rate": 0.4483,
@@ -3079,7 +3462,7 @@
         "primary_tool_hit_rate": 0.9483,
         "avg_param_accuracy": 0.9138,
         "total": 58,
-        "elapsed_sec": 430.6
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.7167,
@@ -3100,14 +3483,14 @@
         "primary_tool_hit_rate": 0.8103,
         "avg_param_accuracy": 0.7931,
         "total": 58,
-        "elapsed_sec": 416.3
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.7914,
         "primary_tool_hit_rate": 0.8103,
         "avg_param_accuracy": 0.7931,
         "total": 58,
-        "elapsed_sec": 407.84
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.419,
@@ -3117,18 +3500,11 @@
         "elapsed_sec": 224.93
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.7614,
+        "primary_tool_hit_rate": 0.7759,
+        "avg_param_accuracy": 0.7241,
         "total": 58,
-        "elapsed_sec": 0.0
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 58,
-        "elapsed_sec": 1.23
+        "elapsed_sec": 1109.74
       }
     },
     "get_institution_report": {
@@ -3195,6 +3571,27 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9203,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 470.41
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.9313,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 149.98
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.9698,
+        "primary_tool_hit_rate": 0.9655,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 257.59
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.8922,
         "primary_tool_hit_rate": 0.8621,
@@ -3244,6 +3641,13 @@
         "total": 58,
         "elapsed_sec": 7.66
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.7489,
+        "primary_tool_hit_rate": 0.6552,
+        "avg_param_accuracy": 0.7759,
+        "total": 58,
+        "elapsed_sec": 40.14
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.6129,
         "primary_tool_hit_rate": 0.5517,
@@ -3263,7 +3667,7 @@
         "primary_tool_hit_rate": 0.9138,
         "avg_param_accuracy": 0.931,
         "total": 58,
-        "elapsed_sec": 430.91
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.7852,
@@ -3284,14 +3688,14 @@
         "primary_tool_hit_rate": 0.8448,
         "avg_param_accuracy": 0.8621,
         "total": 58,
-        "elapsed_sec": 374.32
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.8296,
         "primary_tool_hit_rate": 0.8448,
         "avg_param_accuracy": 0.8621,
         "total": 58,
-        "elapsed_sec": 374.94
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.4155,
@@ -3301,18 +3705,11 @@
         "elapsed_sec": 291.03
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.9082,
+        "primary_tool_hit_rate": 0.9138,
+        "avg_param_accuracy": 0.931,
         "total": 58,
-        "elapsed_sec": 0.0
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 58,
-        "elapsed_sec": 1.24
+        "elapsed_sec": 965.13
       }
     },
     "get_receiving_account_profile": {
@@ -3379,6 +3776,27 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.8922,
+        "primary_tool_hit_rate": 0.8966,
+        "avg_param_accuracy": 0.9655,
+        "total": 58,
+        "elapsed_sec": 540.22
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.8921,
+        "primary_tool_hit_rate": 0.9138,
+        "avg_param_accuracy": 0.9483,
+        "total": 58,
+        "elapsed_sec": 213.92
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.9588,
+        "primary_tool_hit_rate": 0.9828,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 212.25
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.3569,
         "primary_tool_hit_rate": 0.2759,
@@ -3428,6 +3846,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.7652,
+        "primary_tool_hit_rate": 0.7069,
+        "avg_param_accuracy": 0.7759,
+        "total": 58,
+        "elapsed_sec": 46.26
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.4931,
         "primary_tool_hit_rate": 0.431,
@@ -3447,35 +3872,35 @@
         "primary_tool_hit_rate": 0.7931,
         "avg_param_accuracy": 0.7586,
         "total": 58,
-        "elapsed_sec": 540.58
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.705,
         "primary_tool_hit_rate": 0.7069,
         "avg_param_accuracy": 0.7069,
         "total": 58,
-        "elapsed_sec": 4.55
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__think": {
         "avg_score": 0.7198,
         "primary_tool_hit_rate": 0.7241,
         "avg_param_accuracy": 0.7241,
         "total": 58,
-        "elapsed_sec": 84.47
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__nothink": {
         "avg_score": 0.8057,
         "primary_tool_hit_rate": 0.8276,
         "avg_param_accuracy": 0.8276,
         "total": 58,
-        "elapsed_sec": 333.1
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.8057,
         "primary_tool_hit_rate": 0.8276,
         "avg_param_accuracy": 0.8276,
         "total": 58,
-        "elapsed_sec": 314.27
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.5862,
@@ -3485,18 +3910,11 @@
         "elapsed_sec": 299.61
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.8176,
+        "primary_tool_hit_rate": 0.8276,
+        "avg_param_accuracy": 0.8448,
         "total": 58,
-        "elapsed_sec": 1.02
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 58,
-        "elapsed_sec": 1.21
+        "elapsed_sec": 810.3
       }
     },
     "get_statistics": {
@@ -3563,6 +3981,27 @@
         "total": 60,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.8396,
+        "primary_tool_hit_rate": 0.8,
+        "avg_param_accuracy": 1.0,
+        "total": 60,
+        "elapsed_sec": 0.0
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.8331,
+        "primary_tool_hit_rate": 0.8,
+        "avg_param_accuracy": 1.0,
+        "total": 60,
+        "elapsed_sec": 188.04
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.7856,
+        "primary_tool_hit_rate": 0.6833,
+        "avg_param_accuracy": 1.0,
+        "total": 60,
+        "elapsed_sec": 251.53
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.9481,
         "primary_tool_hit_rate": 0.9167,
@@ -3612,6 +4051,13 @@
         "total": 60,
         "elapsed_sec": 0.0
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.6778,
+        "primary_tool_hit_rate": 0.45,
+        "avg_param_accuracy": 1.0,
+        "total": 60,
+        "elapsed_sec": 44.6
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.6633,
         "primary_tool_hit_rate": 0.4167,
@@ -3627,11 +4073,11 @@
         "elapsed_sec": 0.0
       },
       "mistralai/Mistral-Small-3.2-24B-Instruct-2506": {
-        "avg_score": 0.8748,
-        "primary_tool_hit_rate": 0.8621,
-        "avg_param_accuracy": 1.0,
-        "total": 58,
-        "elapsed_sec": 436.58
+        "avg_score": 0.8457,
+        "primary_tool_hit_rate": 0.8333,
+        "avg_param_accuracy": 0.9667,
+        "total": 60,
+        "elapsed_sec": 4.03
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.7656,
@@ -3652,14 +4098,14 @@
         "primary_tool_hit_rate": 0.6833,
         "avg_param_accuracy": 1.0,
         "total": 60,
-        "elapsed_sec": 311.46
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.7906,
         "primary_tool_hit_rate": 0.7167,
         "avg_param_accuracy": 1.0,
         "total": 60,
-        "elapsed_sec": 311.93
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.7125,
@@ -3669,18 +4115,11 @@
         "elapsed_sec": 227.7
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0697,
-        "primary_tool_hit_rate": 0.0667,
-        "avg_param_accuracy": 0.0833,
+        "avg_score": 0.8715,
+        "primary_tool_hit_rate": 0.8333,
+        "avg_param_accuracy": 1.0,
         "total": 60,
         "elapsed_sec": 0.0
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 60,
-        "elapsed_sec": 1.51
       }
     },
     "get_trend_analysis": {
@@ -3747,6 +4186,27 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.932,
+        "primary_tool_hit_rate": 0.9655,
+        "avg_param_accuracy": 0.9943,
+        "total": 58,
+        "elapsed_sec": 657.04
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.9414,
+        "primary_tool_hit_rate": 0.9828,
+        "avg_param_accuracy": 0.9943,
+        "total": 58,
+        "elapsed_sec": 209.62
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.9713,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 0.954,
+        "total": 58,
+        "elapsed_sec": 297.77
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.9661,
         "primary_tool_hit_rate": 0.9828,
@@ -3796,6 +4256,13 @@
         "total": 58,
         "elapsed_sec": 1.83
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.952,
+        "primary_tool_hit_rate": 0.8966,
+        "avg_param_accuracy": 0.977,
+        "total": 58,
+        "elapsed_sec": 79.7
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.8629,
         "primary_tool_hit_rate": 0.8793,
@@ -3815,7 +4282,7 @@
         "primary_tool_hit_rate": 0.9655,
         "avg_param_accuracy": 0.8103,
         "total": 58,
-        "elapsed_sec": 523.53
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.8986,
@@ -3829,21 +4296,21 @@
         "primary_tool_hit_rate": 0.9655,
         "avg_param_accuracy": 0.977,
         "total": 58,
-        "elapsed_sec": 102.06
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__nothink": {
         "avg_score": 0.9091,
         "primary_tool_hit_rate": 0.9483,
         "avg_param_accuracy": 0.931,
         "total": 58,
-        "elapsed_sec": 381.6
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.9091,
         "primary_tool_hit_rate": 0.9483,
         "avg_param_accuracy": 0.931,
         "total": 58,
-        "elapsed_sec": 380.07
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.9207,
@@ -3853,18 +4320,11 @@
         "elapsed_sec": 631.76
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.9353,
+        "primary_tool_hit_rate": 0.9655,
+        "avg_param_accuracy": 0.9598,
         "total": 58,
-        "elapsed_sec": 1.0
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 58,
-        "elapsed_sec": 1.19
+        "elapsed_sec": 1505.31
       }
     },
     "lookup_fiu_reference_types": {
@@ -3931,6 +4391,27 @@
         "total": 8,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.6917,
+        "primary_tool_hit_rate": 0.875,
+        "avg_param_accuracy": 0.125,
+        "total": 8,
+        "elapsed_sec": 68.64
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.7,
+        "primary_tool_hit_rate": 0.875,
+        "avg_param_accuracy": 0.125,
+        "total": 8,
+        "elapsed_sec": 18.17
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.7156,
+        "primary_tool_hit_rate": 0.875,
+        "avg_param_accuracy": 0.1875,
+        "total": 8,
+        "elapsed_sec": 24.22
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.5469,
         "primary_tool_hit_rate": 0.625,
@@ -3980,6 +4461,13 @@
         "total": 8,
         "elapsed_sec": 0.0
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.7,
+        "primary_tool_hit_rate": 0.875,
+        "avg_param_accuracy": 0.125,
+        "total": 8,
+        "elapsed_sec": 10.39
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.325,
         "primary_tool_hit_rate": 0.25,
@@ -3999,35 +4487,35 @@
         "primary_tool_hit_rate": 1.0,
         "avg_param_accuracy": 0.125,
         "total": 8,
-        "elapsed_sec": 31.8
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.7,
         "primary_tool_hit_rate": 0.875,
         "avg_param_accuracy": 0.125,
         "total": 8,
-        "elapsed_sec": 12.0
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__think": {
         "avg_score": 0.7,
         "primary_tool_hit_rate": 0.875,
         "avg_param_accuracy": 0.125,
         "total": 8,
-        "elapsed_sec": 11.17
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__nothink": {
         "avg_score": 0.6031,
         "primary_tool_hit_rate": 0.75,
         "avg_param_accuracy": 0.0625,
         "total": 8,
-        "elapsed_sec": 69.74
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.6031,
         "primary_tool_hit_rate": 0.75,
         "avg_param_accuracy": 0.0625,
         "total": 8,
-        "elapsed_sec": 65.69
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.6594,
@@ -4037,18 +4525,11 @@
         "elapsed_sec": 18.14
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.7438,
+        "primary_tool_hit_rate": 0.875,
+        "avg_param_accuracy": 0.25,
         "total": 8,
-        "elapsed_sec": 0.19
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 8,
-        "elapsed_sec": 0.18
+        "elapsed_sec": 72.31
       }
     },
     "missing_parameters": {
@@ -4115,6 +4596,27 @@
         "total": 25,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.76,
+        "primary_tool_hit_rate": 0.4,
+        "avg_param_accuracy": 1.0,
+        "total": 25,
+        "elapsed_sec": 195.33
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.728,
+        "primary_tool_hit_rate": 0.32,
+        "avg_param_accuracy": 1.0,
+        "total": 25,
+        "elapsed_sec": 81.21
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.888,
+        "primary_tool_hit_rate": 0.72,
+        "avg_param_accuracy": 1.0,
+        "total": 25,
+        "elapsed_sec": 39.57
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.76,
         "primary_tool_hit_rate": 0.4,
@@ -4164,6 +4666,13 @@
         "total": 25,
         "elapsed_sec": 0.34
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.616,
+        "primary_tool_hit_rate": 0.04,
+        "avg_param_accuracy": 1.0,
+        "total": 25,
+        "elapsed_sec": 32.57
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.792,
         "primary_tool_hit_rate": 0.48,
@@ -4183,35 +4692,35 @@
         "primary_tool_hit_rate": 0.64,
         "avg_param_accuracy": 1.0,
         "total": 25,
-        "elapsed_sec": 90.0
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.76,
         "primary_tool_hit_rate": 0.4,
         "avg_param_accuracy": 1.0,
         "total": 25,
-        "elapsed_sec": 23.41
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__think": {
         "avg_score": 0.76,
         "primary_tool_hit_rate": 0.4,
         "avg_param_accuracy": 1.0,
         "total": 25,
-        "elapsed_sec": 27.1
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__nothink": {
         "avg_score": 0.872,
         "primary_tool_hit_rate": 0.68,
         "avg_param_accuracy": 1.0,
         "total": 25,
-        "elapsed_sec": 71.31
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.872,
         "primary_tool_hit_rate": 0.68,
         "avg_param_accuracy": 1.0,
         "total": 25,
-        "elapsed_sec": 67.49
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.904,
@@ -4221,18 +4730,11 @@
         "elapsed_sec": 58.56
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.872,
+        "primary_tool_hit_rate": 0.68,
+        "avg_param_accuracy": 1.0,
         "total": 25,
-        "elapsed_sec": 0.66
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 25,
-        "elapsed_sec": 0.52
+        "elapsed_sec": 110.54
       }
     },
     "multi_tool": {
@@ -4299,6 +4801,27 @@
         "total": 100,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.8906,
+        "primary_tool_hit_rate": 0.96,
+        "avg_param_accuracy": 0.8293,
+        "total": 100,
+        "elapsed_sec": 967.14
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.9037,
+        "primary_tool_hit_rate": 0.96,
+        "avg_param_accuracy": 0.8493,
+        "total": 100,
+        "elapsed_sec": 415.66
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.8059,
+        "primary_tool_hit_rate": 0.8,
+        "avg_param_accuracy": 0.713,
+        "total": 100,
+        "elapsed_sec": 500.85
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.651,
         "primary_tool_hit_rate": 0.71,
@@ -4348,6 +4871,13 @@
         "total": 100,
         "elapsed_sec": 67.68
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.8642,
+        "primary_tool_hit_rate": 0.89,
+        "avg_param_accuracy": 0.7313,
+        "total": 100,
+        "elapsed_sec": 123.62
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.5469,
         "primary_tool_hit_rate": 0.62,
@@ -4363,11 +4893,11 @@
         "elapsed_sec": 0.0
       },
       "mistralai/Mistral-Small-3.2-24B-Instruct-2506": {
-        "avg_score": 0.869,
-        "primary_tool_hit_rate": 0.9192,
-        "avg_param_accuracy": 0.7385,
-        "total": 99,
-        "elapsed_sec": 881.4
+        "avg_score": 0.8603,
+        "primary_tool_hit_rate": 0.91,
+        "avg_param_accuracy": 0.7312,
+        "total": 100,
+        "elapsed_sec": 1.24
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.7523,
@@ -4381,21 +4911,21 @@
         "primary_tool_hit_rate": 0.88,
         "avg_param_accuracy": 0.5897,
         "total": 100,
-        "elapsed_sec": 7.94
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__nothink": {
-        "avg_score": 0.7289,
-        "primary_tool_hit_rate": 0.898,
-        "avg_param_accuracy": 0.5914,
-        "total": 98,
-        "elapsed_sec": 759.93
+        "avg_score": 0.7143,
+        "primary_tool_hit_rate": 0.88,
+        "avg_param_accuracy": 0.5796,
+        "total": 100,
+        "elapsed_sec": 21.37
       },
       "openai/gpt-oss-20b__think": {
-        "avg_score": 0.725,
-        "primary_tool_hit_rate": 0.9091,
-        "avg_param_accuracy": 0.5669,
-        "total": 99,
-        "elapsed_sec": 762.1
+        "avg_score": 0.7177,
+        "primary_tool_hit_rate": 0.9,
+        "avg_param_accuracy": 0.5613,
+        "total": 100,
+        "elapsed_sec": 6.47
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.4519,
@@ -4405,18 +4935,11 @@
         "elapsed_sec": 677.33
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.8594,
+        "primary_tool_hit_rate": 0.95,
+        "avg_param_accuracy": 0.7324,
         "total": 100,
-        "elapsed_sec": 0.0
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 100,
-        "elapsed_sec": 1.96
+        "elapsed_sec": 1564.69
       }
     },
     "predict_fraud": {
@@ -4483,6 +5006,27 @@
         "total": 60,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.7079,
+        "primary_tool_hit_rate": 0.9167,
+        "avg_param_accuracy": 0.1167,
+        "total": 60,
+        "elapsed_sec": 0.0
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.7113,
+        "primary_tool_hit_rate": 0.95,
+        "avg_param_accuracy": 0.1167,
+        "total": 60,
+        "elapsed_sec": 189.64
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.7658,
+        "primary_tool_hit_rate": 0.9667,
+        "avg_param_accuracy": 0.1167,
+        "total": 60,
+        "elapsed_sec": 166.31
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.5708,
         "primary_tool_hit_rate": 0.6667,
@@ -4532,6 +5076,13 @@
         "total": 60,
         "elapsed_sec": 0.0
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.7142,
+        "primary_tool_hit_rate": 0.8667,
+        "avg_param_accuracy": 0.1167,
+        "total": 60,
+        "elapsed_sec": 193.2
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.6633,
         "primary_tool_hit_rate": 0.7833,
@@ -4551,7 +5102,7 @@
         "primary_tool_hit_rate": 0.95,
         "avg_param_accuracy": 0.1167,
         "total": 60,
-        "elapsed_sec": 154.9
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.7286,
@@ -4572,14 +5123,14 @@
         "primary_tool_hit_rate": 0.8833,
         "avg_param_accuracy": 0.1167,
         "total": 60,
-        "elapsed_sec": 304.03
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.7081,
         "primary_tool_hit_rate": 0.8833,
         "avg_param_accuracy": 0.1167,
         "total": 60,
-        "elapsed_sec": 306.59
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.4908,
@@ -4589,18 +5140,11 @@
         "elapsed_sec": 315.04
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.7792,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 0.1167,
         "total": 60,
-        "elapsed_sec": 0.0
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 60,
-        "elapsed_sec": 1.82
+        "elapsed_sec": 320.8
       }
     },
     "query_transactions": {
@@ -4667,6 +5211,27 @@
         "total": 66,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9509,
+        "primary_tool_hit_rate": 0.9545,
+        "avg_param_accuracy": 0.9318,
+        "total": 66,
+        "elapsed_sec": 0.0
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.9706,
+        "primary_tool_hit_rate": 0.9697,
+        "avg_param_accuracy": 0.947,
+        "total": 66,
+        "elapsed_sec": 285.75
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.7004,
+        "primary_tool_hit_rate": 0.803,
+        "avg_param_accuracy": 0.3561,
+        "total": 66,
+        "elapsed_sec": 369.99
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.3735,
         "primary_tool_hit_rate": 0.3636,
@@ -4716,6 +5281,13 @@
         "total": 66,
         "elapsed_sec": 0.0
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.6883,
+        "primary_tool_hit_rate": 0.8333,
+        "avg_param_accuracy": 0.1288,
+        "total": 66,
+        "elapsed_sec": 121.66
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.278,
         "primary_tool_hit_rate": 0.1212,
@@ -4731,39 +5303,39 @@
         "elapsed_sec": 0.0
       },
       "mistralai/Mistral-Small-3.2-24B-Instruct-2506": {
-        "avg_score": 0.7886,
-        "primary_tool_hit_rate": 0.9206,
-        "avg_param_accuracy": 0.3651,
-        "total": 63,
-        "elapsed_sec": 456.56
+        "avg_score": 0.7528,
+        "primary_tool_hit_rate": 0.8788,
+        "avg_param_accuracy": 0.3485,
+        "total": 66,
+        "elapsed_sec": 3.69
       },
       "openai/gpt-oss-120b__nothink": {
-        "avg_score": 0.9781,
-        "primary_tool_hit_rate": 0.9688,
-        "avg_param_accuracy": 0.9688,
-        "total": 64,
-        "elapsed_sec": 5.56
+        "avg_score": 0.9485,
+        "primary_tool_hit_rate": 0.9394,
+        "avg_param_accuracy": 0.9394,
+        "total": 66,
+        "elapsed_sec": 4.72
       },
       "openai/gpt-oss-120b__think": {
-        "avg_score": 0.9738,
-        "primary_tool_hit_rate": 0.9688,
-        "avg_param_accuracy": 0.9609,
-        "total": 64,
-        "elapsed_sec": 5.62
+        "avg_score": 0.9443,
+        "primary_tool_hit_rate": 0.9394,
+        "avg_param_accuracy": 0.9318,
+        "total": 66,
+        "elapsed_sec": 3.44
       },
       "openai/gpt-oss-20b__nothink": {
         "avg_score": 0.9777,
         "primary_tool_hit_rate": 0.9697,
         "avg_param_accuracy": 0.9621,
         "total": 66,
-        "elapsed_sec": 449.55
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.9636,
         "primary_tool_hit_rate": 0.9545,
         "avg_param_accuracy": 0.9394,
         "total": 66,
-        "elapsed_sec": 458.8
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.4216,
@@ -4773,18 +5345,11 @@
         "elapsed_sec": 278.49
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.7183,
+        "primary_tool_hit_rate": 0.8636,
+        "avg_param_accuracy": 0.25,
         "total": 66,
-        "elapsed_sec": 0.0
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 66,
-        "elapsed_sec": 1.55
+        "elapsed_sec": 940.17
       }
     },
     "rank_risky_transactions": {
@@ -4851,6 +5416,27 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9439,
+        "primary_tool_hit_rate": 0.9828,
+        "avg_param_accuracy": 0.9914,
+        "total": 58,
+        "elapsed_sec": 613.78
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.954,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 0.9569,
+        "total": 58,
+        "elapsed_sec": 192.75
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.9612,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 102.19
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.9388,
         "primary_tool_hit_rate": 0.931,
@@ -4900,6 +5486,13 @@
         "total": 58,
         "elapsed_sec": 6.0
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.9793,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 71.15
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.8164,
         "primary_tool_hit_rate": 0.7586,
@@ -4919,7 +5512,7 @@
         "primary_tool_hit_rate": 1.0,
         "avg_param_accuracy": 0.9828,
         "total": 58,
-        "elapsed_sec": 169.57
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.9759,
@@ -4933,21 +5526,21 @@
         "primary_tool_hit_rate": 1.0,
         "avg_param_accuracy": 0.9914,
         "total": 58,
-        "elapsed_sec": 3.13
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__nothink": {
         "avg_score": 0.9806,
         "primary_tool_hit_rate": 1.0,
         "avg_param_accuracy": 0.9914,
         "total": 58,
-        "elapsed_sec": 218.47
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.9806,
         "primary_tool_hit_rate": 1.0,
         "avg_param_accuracy": 0.9914,
         "total": 58,
-        "elapsed_sec": 227.69
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.9112,
@@ -4957,18 +5550,11 @@
         "elapsed_sec": 416.59
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.9612,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 0.8448,
         "total": 58,
-        "elapsed_sec": 0.0
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 58,
-        "elapsed_sec": 1.94
+        "elapsed_sec": 287.38
       }
     },
     "score_account_risk": {
@@ -5035,6 +5621,27 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9111,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 422.17
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.9111,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 201.46
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.9355,
+        "primary_tool_hit_rate": 0.8966,
+        "avg_param_accuracy": 0.9483,
+        "total": 58,
+        "elapsed_sec": 203.18
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.8902,
         "primary_tool_hit_rate": 0.8793,
@@ -5084,6 +5691,13 @@
         "total": 58,
         "elapsed_sec": 2.33
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 0.9586,
+        "primary_tool_hit_rate": 0.8966,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 30.67
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.7474,
         "primary_tool_hit_rate": 0.7241,
@@ -5099,11 +5713,11 @@
         "elapsed_sec": 0.0
       },
       "mistralai/Mistral-Small-3.2-24B-Instruct-2506": {
-        "avg_score": 0.9688,
-        "primary_tool_hit_rate": 0.9649,
+        "avg_score": 0.9684,
+        "primary_tool_hit_rate": 0.9655,
         "avg_param_accuracy": 1.0,
-        "total": 57,
-        "elapsed_sec": 308.97
+        "total": 58,
+        "elapsed_sec": 14.39
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.7681,
@@ -5124,14 +5738,14 @@
         "primary_tool_hit_rate": 0.8276,
         "avg_param_accuracy": 0.8276,
         "total": 58,
-        "elapsed_sec": 388.61
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.7975,
         "primary_tool_hit_rate": 0.8276,
         "avg_param_accuracy": 0.8276,
         "total": 58,
-        "elapsed_sec": 387.57
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.7155,
@@ -5141,18 +5755,11 @@
         "elapsed_sec": 261.01
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_score": 0.9561,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 1.0,
         "total": 58,
-        "elapsed_sec": 1.06
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 58,
-        "elapsed_sec": 1.17
+        "elapsed_sec": 556.23
       }
     },
     "validate_str_fields": {
@@ -5219,6 +5826,27 @@
         "total": 3,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.45,
+        "primary_tool_hit_rate": 0.0,
+        "avg_param_accuracy": 1.0,
+        "total": 3,
+        "elapsed_sec": 14.37
+      },
+      "Qwen/Qwen3.6-35B-A3B": {
+        "avg_score": 0.45,
+        "primary_tool_hit_rate": 0.0,
+        "avg_param_accuracy": 1.0,
+        "total": 3,
+        "elapsed_sec": 9.33
+      },
+      "Salesforce/Llama-xLAM-2-70b-fc-r": {
+        "avg_score": 0.8167,
+        "primary_tool_hit_rate": 0.6667,
+        "avg_param_accuracy": 1.0,
+        "total": 3,
+        "elapsed_sec": 13.78
+      },
       "Salesforce/xLAM-2-3b-fc-r": {
         "avg_score": 0.45,
         "primary_tool_hit_rate": 0.0,
@@ -5268,6 +5896,13 @@
         "total": 3,
         "elapsed_sec": 0.0
       },
+      "meta-llama/Llama-3.3-70B-Instruct": {
+        "avg_score": 1.0,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 1.0,
+        "total": 3,
+        "elapsed_sec": 7.56
+      },
       "microsoft/Phi-4-mini-instruct": {
         "avg_score": 0.6333,
         "primary_tool_hit_rate": 0.3333,
@@ -5287,35 +5922,35 @@
         "primary_tool_hit_rate": 0.3333,
         "avg_param_accuracy": 1.0,
         "total": 3,
-        "elapsed_sec": 22.32
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__nothink": {
         "avg_score": 0.45,
         "primary_tool_hit_rate": 0.0,
         "avg_param_accuracy": 1.0,
         "total": 3,
-        "elapsed_sec": 1.08
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-120b__think": {
         "avg_score": 0.45,
         "primary_tool_hit_rate": 0.0,
         "avg_param_accuracy": 1.0,
         "total": 3,
-        "elapsed_sec": 0.89
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__nothink": {
         "avg_score": 0.45,
         "primary_tool_hit_rate": 0.0,
         "avg_param_accuracy": 1.0,
         "total": 3,
-        "elapsed_sec": 2.07
+        "elapsed_sec": 0.0
       },
       "openai/gpt-oss-20b__think": {
         "avg_score": 0.45,
         "primary_tool_hit_rate": 0.0,
         "avg_param_accuracy": 1.0,
         "total": 3,
-        "elapsed_sec": 1.96
+        "elapsed_sec": 0.0
       },
       "skt/A.X-4.0-Light": {
         "avg_score": 0.45,
@@ -5325,18 +5960,11 @@
         "elapsed_sec": 19.68
       },
       "skt/A.X-4.0": {
-        "avg_score": 0.0,
+        "avg_score": 0.45,
         "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_param_accuracy": 1.0,
         "total": 3,
-        "elapsed_sec": 0.07
-      },
-      "meta-llama/Llama-3.3-70B-Instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
-        "total": 3,
-        "elapsed_sec": 0.07
+        "elapsed_sec": 1.21
       }
     }
   }
