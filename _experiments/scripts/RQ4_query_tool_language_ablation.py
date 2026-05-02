@@ -147,7 +147,7 @@ def main():
 
         # Delta decomposition (full4 only, exclude outlier from bars)
         if full4_clean:
-            fig, ax = plt.subplots(figsize=(5.5, 3.2))
+            fig, ax = plt.subplots(figsize=(5.5, 4.2))
             x = np.arange(len(full4_clean))
             w = 0.27
             d_q = [r['delta_query_tool_kr'] for r in full4_clean]
@@ -159,7 +159,7 @@ def main():
             ax.axhline(0, color='black', linewidth=0.5)
             ax.set_xticks(x)
             ax.set_xticklabels([r['model'] for r in full4_clean], fontsize=FS_TICK,
-                               rotation=20, ha='right')
+                               rotation=30, ha='right')
             ax.set_ylabel(r'$\Delta h$ vs KR--KR', fontsize=FS_LABEL)
             ax.legend(fontsize=FS_LEGEND - 1, loc='best', frameon=False)
             style_axes(ax)
