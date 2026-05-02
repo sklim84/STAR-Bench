@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-01T19:59:00.134828",
+  "timestamp": "2026-05-02T10:47:20.416396",
   "models": [
     "DragonLLM/Llama-Open-Finance-8B",
     "DragonLLM/Qwen-Open-Finance-R-8B",
@@ -10,11 +10,15 @@
     "Qwen/Qwen3.5-27B__think",
     "Qwen/Qwen3.5-4B__nothink",
     "Qwen/Qwen3.5-4B__think",
+    "Qwen/Qwen3.6-27B",
     "Qwen/Qwen3.6-35B-A3B",
     "Salesforce/Llama-xLAM-2-70b-fc-r",
     "Salesforce/xLAM-2-3b-fc-r",
     "google/gemma-4-31B-it",
     "google/gemma-4-E4B-it",
+    "kakaocorp/kanana-2-30b-a3b-instruct",
+    "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink",
+    "kakaocorp/kanana-2-30b-a3b-thinking-2601__think",
     "meta-llama/Llama-3.2-3B-Instruct",
     "meta-llama/Llama-3.3-70B-Instruct",
     "microsoft/Phi-4-mini-instruct",
@@ -25,7 +29,7 @@
     "openai/gpt-oss-20b__nothink",
     "openai/gpt-oss-20b__think",
     "skt/A.X-4.0-Light",
-    "kakaocorp/kanana-2-30b-a3b-instruct"
+    "skt/A.X-4.0"
   ],
   "model_summaries": [
     {
@@ -349,6 +353,42 @@
       }
     },
     {
+      "model": "Qwen/Qwen3.6-27B",
+      "provider": "vllm",
+      "total_cases": 1258,
+      "avg_score": 0.8603,
+      "primary_tool_hit_rate": 0.8728,
+      "avg_tool_recall": 0.9421,
+      "avg_tool_precision": 0.427,
+      "avg_param_accuracy": 0.8825,
+      "avg_param_key_accuracy": 0.9046,
+      "total_hallucinated_params": 1088,
+      "total_elapsed_sec": 37389.61,
+      "by_error_type": {
+        "other": 853,
+        "wrong_func": 69,
+        "correct": 135,
+        "hallucinated_call": 89,
+        "wrong_value": 102,
+        "missing_param": 8,
+        "api_error": 2
+      },
+      "by_difficulty": {
+        "easy": {
+          "count": 673,
+          "avg_score": 0.8645
+        },
+        "medium": {
+          "count": 412,
+          "avg_score": 0.8447
+        },
+        "hard": {
+          "count": 173,
+          "avg_score": 0.881
+        }
+      }
+    },
+    {
       "model": "Qwen/Qwen3.6-35B-A3B",
       "provider": "vllm",
       "total_cases": 1258,
@@ -517,6 +557,113 @@
         "hard": {
           "count": 173,
           "avg_score": 0.7804
+        }
+      }
+    },
+    {
+      "model": "kakaocorp/kanana-2-30b-a3b-instruct",
+      "provider": "vllm",
+      "total_cases": 1258,
+      "avg_score": 0.8602,
+      "primary_tool_hit_rate": 0.8903,
+      "avg_tool_recall": 0.9381,
+      "avg_tool_precision": 0.5728,
+      "avg_param_accuracy": 0.8071,
+      "avg_param_key_accuracy": 0.8961,
+      "total_hallucinated_params": 2441,
+      "total_elapsed_sec": 2538.55,
+      "by_error_type": {
+        "other": 553,
+        "wrong_func": 71,
+        "hallucinated_call": 67,
+        "correct": 362,
+        "wrong_value": 188,
+        "missing_param": 17
+      },
+      "by_difficulty": {
+        "easy": {
+          "count": 673,
+          "avg_score": 0.8748
+        },
+        "medium": {
+          "count": 412,
+          "avg_score": 0.8304
+        },
+        "hard": {
+          "count": 173,
+          "avg_score": 0.8747
+        }
+      }
+    },
+    {
+      "model": "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink",
+      "provider": "vllm",
+      "total_cases": 1258,
+      "avg_score": 0.8756,
+      "primary_tool_hit_rate": 0.8919,
+      "avg_tool_recall": 0.9446,
+      "avg_tool_precision": 0.6404,
+      "avg_param_accuracy": 0.8326,
+      "avg_param_key_accuracy": 0.9055,
+      "total_hallucinated_params": 968,
+      "total_elapsed_sec": 9827.12,
+      "by_error_type": {
+        "correct": 407,
+        "other": 529,
+        "wrong_func": 67,
+        "hallucinated_call": 68,
+        "wrong_value": 178,
+        "missing_param": 8,
+        "api_error": 1
+      },
+      "by_difficulty": {
+        "easy": {
+          "count": 673,
+          "avg_score": 0.8929
+        },
+        "medium": {
+          "count": 412,
+          "avg_score": 0.8412
+        },
+        "hard": {
+          "count": 173,
+          "avg_score": 0.8905
+        }
+      }
+    },
+    {
+      "model": "kakaocorp/kanana-2-30b-a3b-thinking-2601__think",
+      "provider": "vllm",
+      "total_cases": 1258,
+      "avg_score": 0.8676,
+      "primary_tool_hit_rate": 0.8784,
+      "avg_tool_recall": 0.9335,
+      "avg_tool_precision": 0.6419,
+      "avg_param_accuracy": 0.8281,
+      "avg_param_key_accuracy": 0.8942,
+      "total_hallucinated_params": 972,
+      "total_elapsed_sec": 10246.48,
+      "by_error_type": {
+        "correct": 424,
+        "other": 504,
+        "wrong_func": 81,
+        "hallucinated_call": 70,
+        "wrong_value": 168,
+        "missing_param": 9,
+        "api_error": 2
+      },
+      "by_difficulty": {
+        "easy": {
+          "count": 673,
+          "avg_score": 0.882
+        },
+        "medium": {
+          "count": 412,
+          "avg_score": 0.8382
+        },
+        "hard": {
+          "count": 173,
+          "avg_score": 0.8814
         }
       }
     },
@@ -879,32 +1026,38 @@
       }
     },
     {
-      "model": "kakaocorp/kanana-2-30b-a3b-instruct",
+      "model": "skt/A.X-4.0",
       "provider": "vllm",
       "total_cases": 1258,
-      "avg_score": 0.0,
-      "primary_tool_hit_rate": 0.0,
-      "avg_tool_recall": 0.0,
-      "avg_tool_precision": 0.0,
-      "avg_param_accuracy": 0.0,
-      "avg_param_key_accuracy": 0.0,
-      "total_hallucinated_params": 0,
-      "total_elapsed_sec": 31.29,
+      "avg_score": 0.7865,
+      "primary_tool_hit_rate": 0.8116,
+      "avg_tool_recall": 0.8429,
+      "avg_tool_precision": 0.5617,
+      "avg_param_accuracy": 0.7234,
+      "avg_param_key_accuracy": 0.7839,
+      "total_hallucinated_params": 544,
+      "total_elapsed_sec": 20844.6,
       "by_error_type": {
-        "other": 1258
+        "other": 508,
+        "correct": 288,
+        "wrong_func": 136,
+        "hallucinated_call": 51,
+        "wrong_value": 193,
+        "api_error": 50,
+        "missing_param": 32
       },
       "by_difficulty": {
         "easy": {
           "count": 673,
-          "avg_score": 0.0
+          "avg_score": 0.7988
         },
         "medium": {
           "count": 412,
-          "avg_score": 0.0
+          "avg_score": 0.7517
         },
         "hard": {
           "count": 173,
-          "avg_score": 0.0
+          "avg_score": 0.822
         }
       }
     }
@@ -974,6 +1127,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9109,
+        "primary_tool_hit_rate": 0.9138,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 1729.57
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.9231,
         "primary_tool_hit_rate": 0.9483,
@@ -1008,6 +1168,27 @@
         "avg_param_accuracy": 0.9569,
         "total": 58,
         "elapsed_sec": 79.72
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.9172,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 0.9655,
+        "total": 58,
+        "elapsed_sec": 95.32
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.9296,
+        "primary_tool_hit_rate": 0.9138,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 1011.27
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.9296,
+        "primary_tool_hit_rate": 0.9138,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 993.47
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.7547,
@@ -1079,12 +1260,12 @@
         "total": 58,
         "elapsed_sec": 631.09
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.8496,
+        "primary_tool_hit_rate": 0.8621,
+        "avg_param_accuracy": 0.9052,
         "total": 58,
-        "elapsed_sec": 1.51
+        "elapsed_sec": 1209.73
       }
     },
     "analyze_cross_institution_flow": {
@@ -1151,6 +1332,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9181,
+        "primary_tool_hit_rate": 0.9655,
+        "avg_param_accuracy": 0.9655,
+        "total": 58,
+        "elapsed_sec": 2033.21
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.9299,
         "primary_tool_hit_rate": 0.9655,
@@ -1185,6 +1373,27 @@
         "avg_param_accuracy": 0.9828,
         "total": 58,
         "elapsed_sec": 62.42
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.9452,
+        "primary_tool_hit_rate": 0.9828,
+        "avg_param_accuracy": 0.9655,
+        "total": 58,
+        "elapsed_sec": 90.63
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.9505,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 1081.56
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.9505,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 1082.25
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.7638,
@@ -1256,12 +1465,12 @@
         "total": 58,
         "elapsed_sec": 761.12
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.7582,
+        "primary_tool_hit_rate": 0.7931,
+        "avg_param_accuracy": 0.7931,
         "total": 58,
-        "elapsed_sec": 1.6
+        "elapsed_sec": 980.19
       }
     },
     "analyze_network": {
@@ -1328,6 +1537,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.8889,
+        "primary_tool_hit_rate": 0.9138,
+        "avg_param_accuracy": 0.9655,
+        "total": 58,
+        "elapsed_sec": 1346.71
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.875,
         "primary_tool_hit_rate": 0.8966,
@@ -1362,6 +1578,27 @@
         "avg_param_accuracy": 0.931,
         "total": 58,
         "elapsed_sec": 98.39
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.9169,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 0.9741,
+        "total": 58,
+        "elapsed_sec": 98.71
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.9493,
+        "primary_tool_hit_rate": 0.9655,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 0.0
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.9463,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 0.0
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.8024,
@@ -1433,12 +1670,12 @@
         "total": 58,
         "elapsed_sec": 477.3
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.9295,
+        "primary_tool_hit_rate": 0.9655,
+        "avg_param_accuracy": 1.0,
         "total": 58,
-        "elapsed_sec": 1.3
+        "elapsed_sec": 1069.82
       }
     },
     "compare_periods": {
@@ -1505,6 +1742,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.92,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 0.9741,
+        "total": 58,
+        "elapsed_sec": 2071.36
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.925,
         "primary_tool_hit_rate": 0.9483,
@@ -1539,6 +1783,27 @@
         "avg_param_accuracy": 0.9569,
         "total": 58,
         "elapsed_sec": 118.61
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.8796,
+        "primary_tool_hit_rate": 0.9138,
+        "avg_param_accuracy": 0.8879,
+        "total": 58,
+        "elapsed_sec": 125.15
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.9118,
+        "primary_tool_hit_rate": 0.8966,
+        "avg_param_accuracy": 0.9914,
+        "total": 58,
+        "elapsed_sec": 0.0
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.9186,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 0.9655,
+        "total": 58,
+        "elapsed_sec": 0.0
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.6037,
@@ -1610,12 +1875,12 @@
         "total": 58,
         "elapsed_sec": 559.73
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.848,
+        "primary_tool_hit_rate": 0.8966,
+        "avg_param_accuracy": 0.806,
         "total": 58,
-        "elapsed_sec": 1.3
+        "elapsed_sec": 1519.43
       }
     },
     "detect_aml_patterns": {
@@ -1682,6 +1947,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.8194,
+        "primary_tool_hit_rate": 0.8103,
+        "avg_param_accuracy": 0.8592,
+        "total": 58,
+        "elapsed_sec": 1613.34
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.7874,
         "primary_tool_hit_rate": 0.7759,
@@ -1716,6 +1988,27 @@
         "avg_param_accuracy": 0.5575,
         "total": 58,
         "elapsed_sec": 67.28
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.7588,
+        "primary_tool_hit_rate": 0.7414,
+        "avg_param_accuracy": 0.7557,
+        "total": 58,
+        "elapsed_sec": 82.32
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.8378,
+        "primary_tool_hit_rate": 0.8103,
+        "avg_param_accuracy": 0.8075,
+        "total": 58,
+        "elapsed_sec": 0.0
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.8452,
+        "primary_tool_hit_rate": 0.8103,
+        "avg_param_accuracy": 0.8276,
+        "total": 58,
+        "elapsed_sec": 0.0
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.7218,
@@ -1787,12 +2080,12 @@
         "total": 58,
         "elapsed_sec": 327.74
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.7534,
+        "primary_tool_hit_rate": 0.6897,
+        "avg_param_accuracy": 0.75,
         "total": 58,
-        "elapsed_sec": 1.48
+        "elapsed_sec": 647.81
       }
     },
     "detect_ctr_candidates": {
@@ -1859,6 +2152,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.7998,
+        "primary_tool_hit_rate": 0.7586,
+        "avg_param_accuracy": 0.8793,
+        "total": 58,
+        "elapsed_sec": 1687.16
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.8866,
         "primary_tool_hit_rate": 0.8793,
@@ -1893,6 +2193,27 @@
         "avg_param_accuracy": 0.8103,
         "total": 58,
         "elapsed_sec": 86.15
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.9078,
+        "primary_tool_hit_rate": 0.8966,
+        "avg_param_accuracy": 0.9655,
+        "total": 58,
+        "elapsed_sec": 115.84
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.9376,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 620.77
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.9065,
+        "primary_tool_hit_rate": 0.9138,
+        "avg_param_accuracy": 0.9655,
+        "total": 58,
+        "elapsed_sec": 1022.64
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.8363,
@@ -1964,12 +2285,12 @@
         "total": 58,
         "elapsed_sec": 496.35
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.5764,
+        "primary_tool_hit_rate": 0.569,
+        "avg_param_accuracy": 0.5618,
         "total": 58,
-        "elapsed_sec": 1.49
+        "elapsed_sec": 1096.38
       }
     },
     "detect_dormant_reactivation": {
@@ -2036,6 +2357,13 @@
         "total": 58,
         "elapsed_sec": 9.09
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9155,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 2054.53
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.9293,
         "primary_tool_hit_rate": 0.9655,
@@ -2070,6 +2398,27 @@
         "avg_param_accuracy": 0.3879,
         "total": 58,
         "elapsed_sec": 96.26
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.9707,
+        "primary_tool_hit_rate": 0.9655,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 100.03
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.9451,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 1674.07
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.946,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 1531.39
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.7793,
@@ -2141,12 +2490,12 @@
         "total": 58,
         "elapsed_sec": 419.46
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.7688,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 0.3448,
         "total": 58,
-        "elapsed_sec": 1.58
+        "elapsed_sec": 993.12
       }
     },
     "detect_monitoring_alerts": {
@@ -2213,6 +2562,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.7565,
+        "primary_tool_hit_rate": 0.7414,
+        "avg_param_accuracy": 0.7874,
+        "total": 58,
+        "elapsed_sec": 1838.75
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.7734,
         "primary_tool_hit_rate": 0.7931,
@@ -2247,6 +2603,27 @@
         "avg_param_accuracy": 0.5862,
         "total": 58,
         "elapsed_sec": 110.4
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.7145,
+        "primary_tool_hit_rate": 0.7586,
+        "avg_param_accuracy": 0.546,
+        "total": 58,
+        "elapsed_sec": 135.83
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.7333,
+        "primary_tool_hit_rate": 0.7414,
+        "avg_param_accuracy": 0.6494,
+        "total": 58,
+        "elapsed_sec": 1095.5
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.7333,
+        "primary_tool_hit_rate": 0.7414,
+        "avg_param_accuracy": 0.6494,
+        "total": 58,
+        "elapsed_sec": 1000.35
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.483,
@@ -2318,12 +2695,12 @@
         "total": 58,
         "elapsed_sec": 455.6
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.4664,
+        "primary_tool_hit_rate": 0.3966,
+        "avg_param_accuracy": 0.3966,
         "total": 58,
-        "elapsed_sec": 1.52
+        "elapsed_sec": 743.39
       }
     },
     "detect_smurfing_network": {
@@ -2390,6 +2767,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.8547,
+        "primary_tool_hit_rate": 0.8621,
+        "avg_param_accuracy": 0.9138,
+        "total": 58,
+        "elapsed_sec": 1756.76
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.8627,
         "primary_tool_hit_rate": 0.8621,
@@ -2424,6 +2808,27 @@
         "avg_param_accuracy": 0.5517,
         "total": 58,
         "elapsed_sec": 97.76
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.9128,
+        "primary_tool_hit_rate": 0.8966,
+        "avg_param_accuracy": 0.9224,
+        "total": 58,
+        "elapsed_sec": 97.3
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.9295,
+        "primary_tool_hit_rate": 0.9655,
+        "avg_param_accuracy": 0.9526,
+        "total": 58,
+        "elapsed_sec": 1282.26
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.9295,
+        "primary_tool_hit_rate": 0.9655,
+        "avg_param_accuracy": 0.9526,
+        "total": 58,
+        "elapsed_sec": 1188.92
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.818,
@@ -2495,12 +2900,12 @@
         "total": 58,
         "elapsed_sec": 577.53
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.7814,
+        "primary_tool_hit_rate": 0.7586,
+        "avg_param_accuracy": 0.806,
         "total": 58,
-        "elapsed_sec": 1.6
+        "elapsed_sec": 919.59
       }
     },
     "get_account_profile": {
@@ -2567,6 +2972,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9003,
+        "primary_tool_hit_rate": 0.8966,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 1350.08
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.9072,
         "primary_tool_hit_rate": 0.9138,
@@ -2601,6 +3013,27 @@
         "avg_param_accuracy": 0.8276,
         "total": 58,
         "elapsed_sec": 81.14
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.9224,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 181.13
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.9199,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 0.0
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.912,
+        "primary_tool_hit_rate": 0.9138,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 0.0
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.7151,
@@ -2672,12 +3105,12 @@
         "total": 58,
         "elapsed_sec": 351.43
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.8315,
+        "primary_tool_hit_rate": 0.8448,
+        "avg_param_accuracy": 0.8793,
         "total": 58,
-        "elapsed_sec": 1.26
+        "elapsed_sec": 780.53
       }
     },
     "get_aml_glossary": {
@@ -2744,6 +3177,13 @@
         "total": 8,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9688,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 0.875,
+        "total": 8,
+        "elapsed_sec": 73.8
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.8688,
         "primary_tool_hit_rate": 0.875,
@@ -2778,6 +3218,27 @@
         "avg_param_accuracy": 0.875,
         "total": 8,
         "elapsed_sec": 7.2
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.9688,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 0.875,
+        "total": 8,
+        "elapsed_sec": 11.11
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.8688,
+        "primary_tool_hit_rate": 0.875,
+        "avg_param_accuracy": 0.75,
+        "total": 8,
+        "elapsed_sec": 21.1
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.8688,
+        "primary_tool_hit_rate": 0.875,
+        "avg_param_accuracy": 0.75,
+        "total": 8,
+        "elapsed_sec": 21.11
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.516,
@@ -2849,12 +3310,12 @@
         "total": 8,
         "elapsed_sec": 26.8
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.9688,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 0.875,
         "total": 8,
-        "elapsed_sec": 0.18
+        "elapsed_sec": 77.04
       }
     },
     "get_fraud_type_summary": {
@@ -2921,6 +3382,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.7486,
+        "primary_tool_hit_rate": 0.7586,
+        "avg_param_accuracy": 0.7414,
+        "total": 58,
+        "elapsed_sec": 1566.77
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.554,
         "primary_tool_hit_rate": 0.5345,
@@ -2955,6 +3423,27 @@
         "avg_param_accuracy": 0.3966,
         "total": 58,
         "elapsed_sec": 100.61
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.787,
+        "primary_tool_hit_rate": 0.8966,
+        "avg_param_accuracy": 0.6034,
+        "total": 58,
+        "elapsed_sec": 123.43
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.6514,
+        "primary_tool_hit_rate": 0.6724,
+        "avg_param_accuracy": 0.5172,
+        "total": 58,
+        "elapsed_sec": 0.0
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.5172,
+        "primary_tool_hit_rate": 0.4655,
+        "avg_param_accuracy": 0.4655,
+        "total": 58,
+        "elapsed_sec": 0.0
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.6379,
@@ -3026,12 +3515,12 @@
         "total": 58,
         "elapsed_sec": 338.83
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.5963,
+        "primary_tool_hit_rate": 0.6207,
+        "avg_param_accuracy": 0.4828,
         "total": 58,
-        "elapsed_sec": 1.41
+        "elapsed_sec": 1182.94
       }
     },
     "get_institution_report": {
@@ -3098,6 +3587,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9197,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 1349.99
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.9302,
         "primary_tool_hit_rate": 0.9483,
@@ -3132,6 +3628,27 @@
         "avg_param_accuracy": 0.8621,
         "total": 58,
         "elapsed_sec": 83.1
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.9375,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 142.04
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.9355,
+        "primary_tool_hit_rate": 0.9138,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 0.0
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.9253,
+        "primary_tool_hit_rate": 0.8966,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 234.58
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.4066,
@@ -3203,12 +3720,12 @@
         "total": 58,
         "elapsed_sec": 514.59
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.8694,
+        "primary_tool_hit_rate": 0.8793,
+        "avg_param_accuracy": 0.931,
         "total": 58,
-        "elapsed_sec": 1.27
+        "elapsed_sec": 992.28
       }
     },
     "get_receiving_account_profile": {
@@ -3275,6 +3792,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.8304,
+        "primary_tool_hit_rate": 0.8276,
+        "avg_param_accuracy": 0.8966,
+        "total": 58,
+        "elapsed_sec": 1425.09
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.8739,
         "primary_tool_hit_rate": 0.8793,
@@ -3309,6 +3833,27 @@
         "avg_param_accuracy": 0.7931,
         "total": 58,
         "elapsed_sec": 88.88
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.6716,
+        "primary_tool_hit_rate": 0.6552,
+        "avg_param_accuracy": 0.6897,
+        "total": 58,
+        "elapsed_sec": 117.65
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.9253,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 979.11
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.9253,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 938.9
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.304,
@@ -3380,12 +3925,12 @@
         "total": 58,
         "elapsed_sec": 336.0
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.7535,
+        "primary_tool_hit_rate": 0.7586,
+        "avg_param_accuracy": 0.7931,
         "total": 58,
-        "elapsed_sec": 1.6
+        "elapsed_sec": 1634.33
       }
     },
     "get_statistics": {
@@ -3452,6 +3997,13 @@
         "total": 60,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.8801,
+        "primary_tool_hit_rate": 0.8667,
+        "avg_param_accuracy": 1.0,
+        "total": 60,
+        "elapsed_sec": 1434.35
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.88,
         "primary_tool_hit_rate": 0.8667,
@@ -3486,6 +4038,27 @@
         "avg_param_accuracy": 1.0,
         "total": 60,
         "elapsed_sec": 99.72
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.8797,
+        "primary_tool_hit_rate": 0.8667,
+        "avg_param_accuracy": 1.0,
+        "total": 60,
+        "elapsed_sec": 162.92
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.834,
+        "primary_tool_hit_rate": 0.7667,
+        "avg_param_accuracy": 1.0,
+        "total": 60,
+        "elapsed_sec": 0.0
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.8597,
+        "primary_tool_hit_rate": 0.8167,
+        "avg_param_accuracy": 1.0,
+        "total": 60,
+        "elapsed_sec": 0.0
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.6464,
@@ -3557,12 +4130,12 @@
         "total": 60,
         "elapsed_sec": 295.59
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.8535,
+        "primary_tool_hit_rate": 0.8167,
+        "avg_param_accuracy": 1.0,
         "total": 60,
-        "elapsed_sec": 1.45
+        "elapsed_sec": 871.81
       }
     },
     "get_trend_analysis": {
@@ -3629,6 +4202,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.923,
+        "primary_tool_hit_rate": 0.9483,
+        "avg_param_accuracy": 0.9885,
+        "total": 58,
+        "elapsed_sec": 2223.33
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.9197,
         "primary_tool_hit_rate": 0.9483,
@@ -3663,6 +4243,27 @@
         "avg_param_accuracy": 0.8391,
         "total": 58,
         "elapsed_sec": 77.55
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.9698,
+        "primary_tool_hit_rate": 0.9828,
+        "avg_param_accuracy": 0.9713,
+        "total": 58,
+        "elapsed_sec": 80.76
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.9612,
+        "primary_tool_hit_rate": 0.9828,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 1048.28
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.9612,
+        "primary_tool_hit_rate": 0.9828,
+        "avg_param_accuracy": 0.9828,
+        "total": 58,
+        "elapsed_sec": 971.64
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.8362,
@@ -3734,12 +4335,12 @@
         "total": 58,
         "elapsed_sec": 793.48
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.9056,
+        "primary_tool_hit_rate": 0.9138,
+        "avg_param_accuracy": 0.931,
         "total": 58,
-        "elapsed_sec": 1.5
+        "elapsed_sec": 1250.71
       }
     },
     "lookup_fiu_reference_types": {
@@ -3806,6 +4407,13 @@
         "total": 8,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.6875,
+        "primary_tool_hit_rate": 0.875,
+        "avg_param_accuracy": 0.125,
+        "total": 8,
+        "elapsed_sec": 163.56
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.5948,
         "primary_tool_hit_rate": 0.75,
@@ -3840,6 +4448,27 @@
         "avg_param_accuracy": 0.125,
         "total": 8,
         "elapsed_sec": 8.86
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.5969,
+        "primary_tool_hit_rate": 0.75,
+        "avg_param_accuracy": 0.0625,
+        "total": 8,
+        "elapsed_sec": 13.4
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.6844,
+        "primary_tool_hit_rate": 0.875,
+        "avg_param_accuracy": 0.0625,
+        "total": 8,
+        "elapsed_sec": 66.84
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.6844,
+        "primary_tool_hit_rate": 0.875,
+        "avg_param_accuracy": 0.0625,
+        "total": 8,
+        "elapsed_sec": 66.86
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.5833,
@@ -3911,12 +4540,12 @@
         "total": 8,
         "elapsed_sec": 54.28
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.6844,
+        "primary_tool_hit_rate": 0.875,
+        "avg_param_accuracy": 0.0625,
         "total": 8,
-        "elapsed_sec": 0.21
+        "elapsed_sec": 82.14
       }
     },
     "missing_parameters": {
@@ -3983,6 +4612,13 @@
         "total": 25,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.728,
+        "primary_tool_hit_rate": 0.32,
+        "avg_param_accuracy": 1.0,
+        "total": 25,
+        "elapsed_sec": 522.34
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.744,
         "primary_tool_hit_rate": 0.36,
@@ -4017,6 +4653,27 @@
         "avg_param_accuracy": 1.0,
         "total": 25,
         "elapsed_sec": 20.34
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.68,
+        "primary_tool_hit_rate": 0.2,
+        "avg_param_accuracy": 1.0,
+        "total": 25,
+        "elapsed_sec": 37.16
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.792,
+        "primary_tool_hit_rate": 0.48,
+        "avg_param_accuracy": 1.0,
+        "total": 25,
+        "elapsed_sec": 246.52
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.792,
+        "primary_tool_hit_rate": 0.48,
+        "avg_param_accuracy": 1.0,
+        "total": 25,
+        "elapsed_sec": 246.51
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.6,
@@ -4088,12 +4745,12 @@
         "total": 25,
         "elapsed_sec": 165.16
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.92,
+        "primary_tool_hit_rate": 0.8,
+        "avg_param_accuracy": 1.0,
         "total": 25,
-        "elapsed_sec": 0.67
+        "elapsed_sec": 76.35
       }
     },
     "multi_tool": {
@@ -4160,6 +4817,13 @@
         "total": 100,
         "elapsed_sec": 4.92
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.8834,
+        "primary_tool_hit_rate": 0.94,
+        "avg_param_accuracy": 0.828,
+        "total": 100,
+        "elapsed_sec": 3652.88
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.8968,
         "primary_tool_hit_rate": 0.95,
@@ -4194,6 +4858,27 @@
         "avg_param_accuracy": 0.6716,
         "total": 100,
         "elapsed_sec": 193.66
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.8693,
+        "primary_tool_hit_rate": 0.95,
+        "avg_param_accuracy": 0.7398,
+        "total": 100,
+        "elapsed_sec": 274.99
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.8803,
+        "primary_tool_hit_rate": 0.94,
+        "avg_param_accuracy": 0.7514,
+        "total": 100,
+        "elapsed_sec": 0.0
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.8723,
+        "primary_tool_hit_rate": 0.92,
+        "avg_param_accuracy": 0.7578,
+        "total": 100,
+        "elapsed_sec": 0.0
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.137,
@@ -4265,12 +4950,12 @@
         "total": 100,
         "elapsed_sec": 996.43
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.7635,
+        "primary_tool_hit_rate": 0.85,
+        "avg_param_accuracy": 0.6589,
         "total": 100,
-        "elapsed_sec": 2.2
+        "elapsed_sec": 1721.06
       }
     },
     "predict_fraud": {
@@ -4337,6 +5022,13 @@
         "total": 60,
         "elapsed_sec": 7.07
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.6285,
+        "primary_tool_hit_rate": 0.8,
+        "avg_param_accuracy": 0.1167,
+        "total": 60,
+        "elapsed_sec": 2244.2
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.6353,
         "primary_tool_hit_rate": 0.8167,
@@ -4371,6 +5063,27 @@
         "avg_param_accuracy": 0.1167,
         "total": 60,
         "elapsed_sec": 181.46
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.7397,
+        "primary_tool_hit_rate": 0.95,
+        "avg_param_accuracy": 0.1167,
+        "total": 60,
+        "elapsed_sec": 103.73
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.7358,
+        "primary_tool_hit_rate": 0.9167,
+        "avg_param_accuracy": 0.1167,
+        "total": 60,
+        "elapsed_sec": 0.0
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.7297,
+        "primary_tool_hit_rate": 0.9,
+        "avg_param_accuracy": 0.1167,
+        "total": 60,
+        "elapsed_sec": 0.0
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.7022,
@@ -4442,12 +5155,12 @@
         "total": 60,
         "elapsed_sec": 312.6
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.6758,
+        "primary_tool_hit_rate": 0.8,
+        "avg_param_accuracy": 0.1167,
         "total": 60,
-        "elapsed_sec": 1.56
+        "elapsed_sec": 463.36
       }
     },
     "query_transactions": {
@@ -4514,6 +5227,13 @@
         "total": 66,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9472,
+        "primary_tool_hit_rate": 0.9697,
+        "avg_param_accuracy": 0.8939,
+        "total": 66,
+        "elapsed_sec": 2324.82
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.9747,
         "primary_tool_hit_rate": 0.9697,
@@ -4548,6 +5268,27 @@
         "avg_param_accuracy": 0.1515,
         "total": 66,
         "elapsed_sec": 164.04
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.7552,
+        "primary_tool_hit_rate": 0.9545,
+        "avg_param_accuracy": 0.1894,
+        "total": 66,
+        "elapsed_sec": 138.52
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.7763,
+        "primary_tool_hit_rate": 0.9697,
+        "avg_param_accuracy": 0.2273,
+        "total": 66,
+        "elapsed_sec": 0.0
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.7605,
+        "primary_tool_hit_rate": 0.9394,
+        "avg_param_accuracy": 0.2273,
+        "total": 66,
+        "elapsed_sec": 0.0
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.4936,
@@ -4619,12 +5360,12 @@
         "total": 66,
         "elapsed_sec": 467.54
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.7879,
+        "primary_tool_hit_rate": 0.9242,
+        "avg_param_accuracy": 0.3712,
         "total": 66,
-        "elapsed_sec": 1.47
+        "elapsed_sec": 1199.91
       }
     },
     "rank_risky_transactions": {
@@ -4691,6 +5432,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.9313,
+        "primary_tool_hit_rate": 0.9828,
+        "avg_param_accuracy": 0.9655,
+        "total": 58,
+        "elapsed_sec": 1655.36
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.9426,
         "primary_tool_hit_rate": 1.0,
@@ -4725,6 +5473,27 @@
         "avg_param_accuracy": 0.9828,
         "total": 58,
         "elapsed_sec": 89.27
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.9721,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 84.32
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.977,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 0.9569,
+        "total": 58,
+        "elapsed_sec": 0.0
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.9849,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 0.9569,
+        "total": 58,
+        "elapsed_sec": 299.03
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.7746,
@@ -4796,12 +5565,12 @@
         "total": 58,
         "elapsed_sec": 505.31
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.9957,
+        "primary_tool_hit_rate": 1.0,
+        "avg_param_accuracy": 0.9828,
         "total": 58,
-        "elapsed_sec": 1.33
+        "elapsed_sec": 278.31
       }
     },
     "score_account_risk": {
@@ -4868,6 +5637,13 @@
         "total": 58,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.8947,
+        "primary_tool_hit_rate": 0.8966,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 1255.95
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.9112,
         "primary_tool_hit_rate": 0.931,
@@ -4902,6 +5678,27 @@
         "avg_param_accuracy": 1.0,
         "total": 58,
         "elapsed_sec": 93.17
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.9082,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 1.0,
+        "total": 58,
+        "elapsed_sec": 124.99
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.8938,
+        "primary_tool_hit_rate": 0.8621,
+        "avg_param_accuracy": 0.9655,
+        "total": 58,
+        "elapsed_sec": 696.42
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.8938,
+        "primary_tool_hit_rate": 0.8621,
+        "avg_param_accuracy": 0.9655,
+        "total": 58,
+        "elapsed_sec": 645.39
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.8917,
@@ -4973,12 +5770,12 @@
         "total": 58,
         "elapsed_sec": 281.43
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
-        "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.9335,
+        "primary_tool_hit_rate": 0.931,
+        "avg_param_accuracy": 1.0,
         "total": 58,
-        "elapsed_sec": 1.65
+        "elapsed_sec": 1053.19
       }
     },
     "validate_str_fields": {
@@ -5045,6 +5842,13 @@
         "total": 3,
         "elapsed_sec": 0.0
       },
+      "Qwen/Qwen3.6-27B": {
+        "avg_score": 0.45,
+        "primary_tool_hit_rate": 0.0,
+        "avg_param_accuracy": 1.0,
+        "total": 3,
+        "elapsed_sec": 15.66
+      },
       "Qwen/Qwen3.6-35B-A3B": {
         "avg_score": 0.45,
         "primary_tool_hit_rate": 0.0,
@@ -5079,6 +5883,27 @@
         "avg_param_accuracy": 1.0,
         "total": 3,
         "elapsed_sec": 0.89
+      },
+      "kakaocorp/kanana-2-30b-a3b-instruct": {
+        "avg_score": 0.45,
+        "primary_tool_hit_rate": 0.0,
+        "avg_param_accuracy": 1.0,
+        "total": 3,
+        "elapsed_sec": 1.2
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink": {
+        "avg_score": 0.45,
+        "primary_tool_hit_rate": 0.0,
+        "avg_param_accuracy": 1.0,
+        "total": 3,
+        "elapsed_sec": 3.37
+      },
+      "kakaocorp/kanana-2-30b-a3b-thinking-2601__think": {
+        "avg_score": 0.45,
+        "primary_tool_hit_rate": 0.0,
+        "avg_param_accuracy": 1.0,
+        "total": 3,
+        "elapsed_sec": 3.38
       },
       "meta-llama/Llama-3.2-3B-Instruct": {
         "avg_score": 0.775,
@@ -5150,12 +5975,12 @@
         "total": 3,
         "elapsed_sec": 16.26
       },
-      "kakaocorp/kanana-2-30b-a3b-instruct": {
-        "avg_score": 0.0,
+      "skt/A.X-4.0": {
+        "avg_score": 0.45,
         "primary_tool_hit_rate": 0.0,
-        "avg_param_accuracy": 0.0,
+        "avg_param_accuracy": 1.0,
         "total": 3,
-        "elapsed_sec": 0.09
+        "elapsed_sec": 1.11
       }
     }
   }
