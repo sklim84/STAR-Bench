@@ -23,19 +23,39 @@ EVAL_DIR = os.path.join(os.path.dirname(__file__), "../../_experiments/results_k
 OUT_DIR  = os.path.join(os.path.dirname(__file__), "../../_experiments/results_RQ1/")
 os.makedirs(OUT_DIR, exist_ok=True)
 
-OUTLIERS = {
+TARGET_MODELS = {
+    "skt/A.X-4.0-Light", "skt/A.X-4.0",
+    "LGAI-EXAONE/EXAONE-4.0-1.2B", "LGAI-EXAONE/EXAONE-4.0-32B",
+    "kakaocorp/kanana-2-30b-a3b-instruct",
+    "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink",
+    "kakaocorp/kanana-2-30b-a3b-thinking-2601__think",
+    "DragonLLM/Llama-Open-Finance-8B", "DragonLLM/Qwen-Open-Finance-R-8B",
+    "openai/gpt-oss-20b__nothink", "openai/gpt-oss-20b__think",
+    "openai/gpt-oss-120b__nothink", "openai/gpt-oss-120b__think",
+    "meta-llama/Llama-3.2-3B-Instruct", "meta-llama/Llama-3.3-70B-Instruct",
+    "mistralai/Ministral-3-3B-Instruct-2512",
+    "mistralai/Mistral-Small-3.2-24B-Instruct-2506",
+    "microsoft/Phi-4-mini-instruct",
+    "Qwen/Qwen3.5-4B__nothink", "Qwen/Qwen3.5-4B__think",
+    "Qwen/Qwen3.5-27B__nothink", "Qwen/Qwen3.5-27B__think",
+    "Qwen/Qwen3.6-27B", "Qwen/Qwen3.6-35B-A3B",
+    "Salesforce/xLAM-2-3b-fc-r", "Salesforce/Llama-xLAM-2-70b-fc-r",
+    "google/gemma-4-E4B-it", "google/gemma-4-31B-it",
+    "NousResearch/Hermes-3-Llama-3.1-8B",
 }
 
 # ── 집계: expected_tool -> called_tool -> count ───────────────────────────────
 conf = defaultdict(lambda: defaultdict(int))
+n_models_used = 0
 
 for fn in sorted(os.listdir(EVAL_DIR)):
     if not fn.endswith(".json"):
         continue
     with open(os.path.join(EVAL_DIR, fn)) as f:
         d = json.load(f)
-    if d["model"] in OUTLIERS:
+    if d["model"] not in TARGET_MODELS:
         continue
+    n_models_used += 1
     for cat, cat_data in d["by_category"].items():
         for case in cat_data["per_case"]:
             if case["error_type"] == "wrong_func":
@@ -120,7 +140,7 @@ ax.set_xlabel("Called tool (wrong)", fontsize=FS_LABEL)
 ax.set_ylabel("Expected tool", fontsize=FS_LABEL)
 
 cb = fig.colorbar(im, ax=ax, fraction=0.03, pad=0.02)
-cb.set_label("Miscall count\n(28 valid models)", fontsize=FS_ANNOT)
+cb.set_label("Miscall count\n(29 models)", fontsize=FS_ANNOT)
 cb.ax.tick_params(labelsize=FS_ANNOT)
 
 # 대각선 없는 행렬이므로 대각 highlight 불필요
