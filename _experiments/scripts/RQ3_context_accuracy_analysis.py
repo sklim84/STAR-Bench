@@ -89,24 +89,67 @@ def main():
               ensure_ascii=False, indent=2)
 
     try:
-        # Plot A: context vs completion
-        fig, ax = plt.subplots(figsize=(5, 3.6))
+        # Plot A: context vs completion — family color + selective labels
+        # Family inference (matches fig:size_efficiency palette)
+        FAMILY_COLORS = {
+            'Kanana': '#76B7B2', 'EXAONE': '#B07AA1', 'skt': '#9C755F',
+            'Qwen': '#4E79A7', 'Mistral': '#E15759', 'Llama': '#59A14F',
+            'xLAM': '#F28E2B', 'gpt-oss': '#FF9DA7', 'Gemma': '#F28E2B',
+            'Finance': '#59A14F', 'Phi': '#BAB0AC', 'Other': '#BAB0AC',
+        }
+        def fam(m):
+            ml = m.lower()
+            if 'kanana' in ml: return 'Kanana'
+            if 'exaone' in ml: return 'EXAONE'
+            if 'a.x-4.0' in ml or 'skt' in ml: return 'skt'
+            if 'qwen' in ml and 'xlam' not in ml:
+                if 'open-finance' in ml or 'dragonllm' in ml: return 'Finance'
+                return 'Qwen'
+            if 'mistral' in ml or 'ministral' in ml: return 'Mistral'
+            if 'xlam' in ml: return 'xLAM'
+            if 'llama' in ml:
+                if 'open-finance' in ml or 'dragonllm' in ml: return 'Finance'
+                return 'Llama'
+            if 'gpt-oss' in ml: return 'gpt-oss'
+            if 'gemma' in ml: return 'Gemma'
+            if 'phi' in ml: return 'Phi'
+            if 'hermes' in ml: return 'Llama'
+            return 'Other'
+
+        # Narrative anchor models (본문 §4.4 거명 + 극단 사례)
+        ANCHOR_LABELS = {
+            'Salesforce/Llama-xLAM-2-70b-fc-r': 'xLAM-2-70B',
+            'DragonLLM/Llama-Open-Finance-8B':  'Open-Finance-8B',
+            'kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink': 'Kanana-2-Think',
+            'mistralai/Mistral-Small-3.2-24B-Instruct-2506': 'Mistral-Small-24B',
+            'mistralai/Ministral-3-3B-Instruct-2512':        'Ministral-3-3B',
+        }
+
+        fig, ax = plt.subplots(figsize=(5.5, 4.2))
+        seen_fam = set()
         for r in valid:
-            c = get_color(r['model'])
+            f = fam(r['model'])
+            color = FAMILY_COLORS.get(f, FAMILY_COLORS['Other'])
+            label = f if f not in seen_fam else None
+            seen_fam.add(f)
             ax.scatter(r['ctx_acc_mean'], r['scenario_complete_rate'],
-                       s=50, alpha=0.85, c=c,
+                       s=55, alpha=0.85, c=color, label=label,
                        edgecolors='white', linewidths=0.5, zorder=3)
-            ax.annotate(short_name(r['model'], 14),
-                        (r['ctx_acc_mean'], r['scenario_complete_rate']),
-                        fontsize=FS_ANNOT - 2, alpha=0.7,
-                        xytext=(3, 3), textcoords='offset points')
+            mid = r.get('model_id') or r['model']
+            if mid in ANCHOR_LABELS:
+                ax.annotate(ANCHOR_LABELS[mid],
+                            (r['ctx_acc_mean'], r['scenario_complete_rate']),
+                            fontsize=FS_ANNOT - 1, alpha=0.85,
+                            xytext=(4, 4), textcoords='offset points')
         ax.set_xlabel(r'context\_accuracy (mean)', fontsize=FS_LABEL)
         ax.set_ylabel(r'scenario\_complete\_rate $c$', fontsize=FS_LABEL)
         style_axes(ax)
         if s_rho is not None:
-            ax.text(0.05, 0.95, fr'Spearman $\rho$={s_rho:.3f} (p={s_p:.3f})',
+            ax.text(0.04, 0.96, fr'Spearman $\rho$={s_rho:.3f} (p={s_p:.3f})',
                     transform=ax.transAxes, va='top', fontsize=FS_LEGEND,
                     bbox=dict(facecolor='white', alpha=0.85, edgecolor='none'))
+        ax.legend(fontsize=FS_LEGEND - 1, loc='lower right', frameon=True,
+                  framealpha=0.9, ncol=2, title='Family', title_fontsize=FS_LEGEND - 1)
         plt.tight_layout()
         plt.savefig(OUT_DIR / 'fig_context_vs_completion.pdf', dpi=300, bbox_inches='tight')
         plt.savefig(OUT_DIR / 'fig_context_vs_completion.png', dpi=300, bbox_inches='tight')
