@@ -91,14 +91,16 @@ for idx, (grp, off) in enumerate(zip(GROUP_ORDER, offsets)):
         )
 
 ax.set_xticks(x)
-ax.set_xticklabels(sd_labels, fontsize=FS_TICK)
-ax.set_ylabel("Tool hit $h$", fontsize=FS_LABEL)
+ax.set_xticklabels(sd_labels, fontsize=12)
+ax.set_ylabel("Tool hit $h$", fontsize=13)
 ax.set_ylim(0, 1.06)
 ax.axhline(0.5, color="#aaaaaa", linewidth=0.7, linestyle="--", alpha=0.7)
-style_axes(ax)
+# 네모박스: 4면 spine 모두 표시 (fig:bfcl과 일치)
+ax.grid(True, alpha=0.3)
+ax.tick_params(axis="y", labelsize=12)
 
 ax.legend(
-    fontsize=FS_LEGEND,
+    fontsize=11,
     loc="lower left",
     framealpha=0.88,
     ncol=2,
