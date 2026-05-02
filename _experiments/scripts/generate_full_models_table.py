@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 
 EVAL_DIR = Path('_paper/_experiments/results_kr/eval')
-MT_DIR = Path('_paper/_experiments/results_mt')
+MT_DIR = Path('_paper/_experiments/results_mt/eval')
 
 # 한국어 특화 그룹 + 그룹별 모델 순서 (옛 tab:full_models 순서 참조)
 GROUPS = [

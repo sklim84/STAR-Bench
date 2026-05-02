@@ -21,7 +21,7 @@ import json
 from pathlib import Path
 
 EVAL_DIR = Path('_paper/_experiments/results_kr/eval')
-MT_DIR = Path('_paper/_experiments/results_mt')
+MT_DIR = Path('_paper/_experiments/results_mt/eval')
 
 # 대표 모델 + 표시 순서 (계열 그룹화)
 DISPLAY_ORDER = [

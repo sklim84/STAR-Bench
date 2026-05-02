@@ -14,7 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _plot_style import (plt, get_color, COL_NEUTRAL, COL_ACCENT, FS_TICK, FS_LABEL,
                           FS_TITLE, FS_LEGEND, FS_ANNOT, style_axes, short_name)
 
-MT_DIR = Path('_paper/_experiments/results_mt')
+MT_DIR = Path('_paper/_experiments/results_mt/eval')
 OUT_DIR = Path('_paper/_experiments/results_RQ3')
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 

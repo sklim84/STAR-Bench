@@ -527,9 +527,14 @@ def _inject_scripted_response(
 
 
 def _multiturn_result_path(model_id: str, output_dir: Path) -> Path:
-    """모델별 최종 결과 JSON 경로."""
+    """모델별 최종 결과 JSON 경로 (output_dir/eval/multiturn_<model>.json).
+
+    benchmark.py 싱글턴 결과(`eval/eval_<model>_<ts>.json`)와 일관되게 eval/ 하위에 저장한다.
+    """
     sanitized = model_id.replace("/", "_").replace(".", "_")
-    return output_dir / f"multiturn_{sanitized}.json"
+    eval_dir = output_dir / "eval"
+    eval_dir.mkdir(parents=True, exist_ok=True)
+    return eval_dir / f"multiturn_{sanitized}.json"
 
 
 def _multiturn_checkpoint_path(model_id: str, output_dir: Path) -> Path:
