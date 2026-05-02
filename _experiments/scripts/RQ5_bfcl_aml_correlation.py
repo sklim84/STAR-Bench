@@ -35,7 +35,10 @@ BFCL_TO_AML = {
     'Phi-4-mini-instruct (Prompt)': 'microsoft/Phi-4-mini-instruct',
     'Qwen3.5-27B (Prompt)': 'Qwen/Qwen3.5-27B__nothink',
     'Qwen3.5-4B (Prompt)': 'Qwen/Qwen3.5-4B__nothink',
+    'Qwen3.5-9B (Prompt)': 'Qwen/Qwen3.5-9B__nothink',
+    'Qwen3-4B-Instruct-2507 (Prompt)': 'Qwen/Qwen3-4B-Instruct-2507',
     'xLAM-2-3b-fc-r (FC)': 'Salesforce/xLAM-2-3b-fc-r',
+    'xLAM-2-32b-fc-r (FC)': 'Salesforce/xLAM-2-32b-fc-r',
     'xLAM-2-70b-fc-r (FC)': 'Salesforce/Llama-xLAM-2-70b-fc-r',
 }
 
@@ -143,7 +146,7 @@ def main():
                 return '#B07AA1'
             return '#59A14F'
 
-        fig, ax = plt.subplots(figsize=(5.5, 4.0))
+        fig, ax = plt.subplots(figsize=(5.5, 4.2))
         for p in pairs:
             color = family_color(p['aml_name'])
             ax.scatter(p['bfcl_acc'], p['aml_score'] * 100,
@@ -168,9 +171,9 @@ def main():
                             xytext=(dx, dy), textcoords='offset points',
                             fontsize=FS_LEGEND - 1, ha=ha, va=va)
 
-        ax.set_xlabel('BFCL v4 Overall Accuracy (\%)', fontsize=FS_LABEL)
-        ax.set_ylabel(r'AML-Bench KR Tool Hit $h$ (\%)', fontsize=FS_LABEL)
-        ax.tick_params(labelsize=FS_TICK)
+        ax.set_xlabel(r'BFCL v4 Overall Accuracy (\%)', fontsize=13)
+        ax.set_ylabel(r'AML-Bench KR Tool Hit $h$ (\%)', fontsize=13)
+        ax.tick_params(labelsize=12)
         ax.grid(True, alpha=0.3)
 
         legend_elements = [
@@ -181,12 +184,13 @@ def main():
             Patch(facecolor='#B07AA1', edgecolor='black', label='Mistral'),
             Patch(facecolor='#59A14F', edgecolor='black', label='Other'),
         ]
-        ax.legend(handles=legend_elements, loc='lower right', fontsize=FS_LEGEND - 1, framealpha=0.95)
-        style_axes(ax)
+        ax.legend(handles=legend_elements, loc='lower right', fontsize=11, framealpha=0.95)
+        # 4면 spine + grid (fig:subdomain_grouped_bar과 시각 통일)
         plt.tight_layout()
         FIG_DIR.mkdir(parents=True, exist_ok=True)
-        plt.savefig(FIG_DIR / 'fig_bfcl_vs_aml.pdf', dpi=300, bbox_inches='tight')
-        plt.savefig(FIG_DIR / 'fig_bfcl_vs_aml.png', dpi=300, bbox_inches='tight')
+        # bbox_inches='tight' 제거 - 동일 figsize의 다른 서브피겨와 saved image 크기 동일하게 유지
+        plt.savefig(FIG_DIR / 'fig_bfcl_vs_aml.pdf', dpi=300)
+        plt.savefig(FIG_DIR / 'fig_bfcl_vs_aml.png', dpi=300)
         plt.close()
         print(f'  saved: {FIG_DIR}/fig_bfcl_vs_aml.{{pdf,png}}')
     except Exception as e:
