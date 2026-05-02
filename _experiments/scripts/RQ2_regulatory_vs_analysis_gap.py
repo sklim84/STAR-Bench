@@ -21,6 +21,28 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 REGULATORY = {'validate_str_fields', 'lookup_fiu_reference_types', 'detect_ctr_candidates'}
 EXCLUDE = {'multi_tool', 'missing_parameters'}  # 합성 카테고리 제외
 
+# 본문 29-모델 세트 (regen_size_vs_performance.py와 동일)
+TARGET_MODELS = {
+    "skt/A.X-4.0-Light", "skt/A.X-4.0",
+    "LGAI-EXAONE/EXAONE-4.0-1.2B", "LGAI-EXAONE/EXAONE-4.0-32B",
+    "kakaocorp/kanana-2-30b-a3b-instruct",
+    "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink",
+    "kakaocorp/kanana-2-30b-a3b-thinking-2601__think",
+    "DragonLLM/Llama-Open-Finance-8B", "DragonLLM/Qwen-Open-Finance-R-8B",
+    "openai/gpt-oss-20b__nothink", "openai/gpt-oss-20b__think",
+    "openai/gpt-oss-120b__nothink", "openai/gpt-oss-120b__think",
+    "meta-llama/Llama-3.2-3B-Instruct", "meta-llama/Llama-3.3-70B-Instruct",
+    "mistralai/Ministral-3-3B-Instruct-2512",
+    "mistralai/Mistral-Small-3.2-24B-Instruct-2506",
+    "microsoft/Phi-4-mini-instruct",
+    "Qwen/Qwen3.5-4B__nothink", "Qwen/Qwen3.5-4B__think",
+    "Qwen/Qwen3.5-27B__nothink", "Qwen/Qwen3.5-27B__think",
+    "Qwen/Qwen3.6-27B", "Qwen/Qwen3.6-35B-A3B",
+    "Salesforce/xLAM-2-3b-fc-r", "Salesforce/Llama-xLAM-2-70b-fc-r",
+    "google/gemma-4-E4B-it", "google/gemma-4-31B-it",
+    "NousResearch/Hermes-3-Llama-3.1-8B",
+}
+
 def main():
     files = sorted(EVAL_DIR.glob('eval_*.json'))
     rows = []
@@ -28,6 +50,8 @@ def main():
     for f in files:
         d = json.load(f.open())
         model = d['model']
+        if model not in TARGET_MODELS:
+            continue
         reg_h = []; ana_h = []; per_cat = {}
         for cat_name, cat in d.get('by_category', {}).items():
             if cat_name in EXCLUDE:
@@ -77,7 +101,7 @@ def main():
         sorted_rows = sorted(rows, key=lambda r: r['analysis_h_mean'])
         names = [short_name(r['model'], 18) for r in sorted_rows]
         x = range(len(sorted_rows))
-        fig, ax = plt.subplots(figsize=(6, 3.6))
+        fig, ax = plt.subplots(figsize=(5.5, 4.2))
         ax.plot(x, [r['analysis_h_mean'] for r in sorted_rows], 'o-',
                 label='Analysis (general)', color=COL_GOOD,
                 markersize=5, linewidth=1.2, alpha=0.85)
