@@ -85,6 +85,7 @@ legend_elements = [
 ax.legend(handles=legend_elements, loc='lower right', fontsize=11, framealpha=0.95)
 
 plt.tight_layout()
-plt.savefig('_paper/figures/fig_bfcl_vs_aml.png', dpi=300, bbox_inches='tight')
-plt.savefig('_paper/figures/fig_bfcl_vs_aml.pdf', bbox_inches='tight')
+# bbox_inches='tight' 제거 - 동일 figsize의 다른 서브피겨와 saved image 크기 동일하게 유지
+plt.savefig('_paper/figures/fig_bfcl_vs_aml.png', dpi=300)
+plt.savefig('_paper/figures/fig_bfcl_vs_aml.pdf')
 print('Saved: _paper/figures/fig_bfcl_vs_aml.{png,pdf} @ 300 DPI')

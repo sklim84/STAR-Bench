@@ -91,7 +91,7 @@ for idx, (grp, off) in enumerate(zip(GROUP_ORDER, offsets)):
         )
 
 ax.set_xticks(x)
-ax.set_xticklabels(sd_labels, fontsize=12)
+ax.set_xticklabels(sd_labels, fontsize=12, rotation=20, ha="right")
 ax.set_ylabel("Tool hit $h$", fontsize=13)
 ax.set_ylim(0, 1.06)
 ax.axhline(0.5, color="#aaaaaa", linewidth=0.7, linestyle="--", alpha=0.7)
@@ -110,10 +110,11 @@ ax.legend(
 
 fig.tight_layout()
 
+# bbox_inches='tight' 제거 - 동일 figsize의 다른 서브피겨와 saved image 크기 동일하게 유지
 out_pdf = os.path.join(OUT_DIR, "fig_subdomain_grouped_bar.pdf")
 out_png = os.path.join(OUT_DIR, "fig_subdomain_grouped_bar.png")
-fig.savefig(out_pdf, dpi=300, bbox_inches="tight")
-fig.savefig(out_png, dpi=300, bbox_inches="tight")
+fig.savefig(out_pdf, dpi=300)
+fig.savefig(out_png, dpi=300)
 print(f"Saved: {out_pdf}")
 print(f"Saved: {out_png}")
 
