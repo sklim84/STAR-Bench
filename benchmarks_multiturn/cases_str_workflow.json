@@ -137,7 +137,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "출금계좌 78432에서 2024년 4분기 동안 심야 시간대(01~03시)에 집중적으로 4,950만원 내외의 유사 금액을 다수 계좌(330021, 550078, 112345)로 반복 이체. AI 모델 예측 확률 91%, 네트워크 분석 결과 8개 연결 계좌 중 이상거래 비율 26.67%. 분할이체를 통한 자금세탁 의심.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.91,
               "aml_patterns": [
                 "분할거래"
@@ -298,7 +298,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "출금계좌 55201에서 2024년 12월 전화/휴대전화(매체구분5) 채널을 통해 3,000만원 내외의 거액을 2개 계좌(881234, 992345)로 연속 이체. AI 모델 예측 확률 84%. 보이스피싱 수법의 전형적 패턴(전화 채널 이용, 거액 즉시 이체)에 해당.",
-              "fraud_type": "보이스피싱",
+              "fraud_type": "다중거래의 동시요청",
               "fraud_probability": 0.84,
               "tools_used": [
                 "query_transactions",
@@ -456,7 +456,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "출금금융회사 134 소속 계좌 78432가 34개의 다수 거래상대와 거래하며, 심야거래비율 42%, 이상거래비율 7.69%를 보임. 위험도 평가 78점(고위험). 다수 계좌로의 분산 이체 패턴이 대포통장 이용 혐의에 해당.",
-              "fraud_type": "대포통장",
+              "fraud_type": "분할거래",
               "fraud_probability": 0.78,
               "tools_used": [
                 "query_transactions",
@@ -616,7 +616,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "출금계좌 91205에서 2024년 8~11월 동안 심야 시간대에 4,700만~4,800만원 내외로 12개 계좌에 분산 이체. 스머핑 스코어 0.85, 네트워크 이상거래 비율 26.87%. 대포통장을 이용한 자금 분산 패턴.",
-              "fraud_type": "대포통장",
+              "fraud_type": "분할거래",
               "fraud_probability": 0.85,
               "aml_patterns": [
                 "자금분산"
@@ -761,7 +761,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "금융회사 88 소속 계좌 12045에서 심야 시간대(0시)에 980만원 내외의 거래를 반복 수행. AI 예측 확률 76%. 불법도박 자금 이동 패턴에 해당.",
-              "fraud_type": "불법도박",
+              "fraud_type": "거액 입금 후 당일/익일 인출",
               "fraud_probability": 0.76,
               "tools_used": [
                 "get_fraud_type_summary",
@@ -914,7 +914,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 33201에서 불특정 다수로부터 자금을 수취하여 특정 계좌로 송금하는 패턴 탐지. 위험도 72점(고위험), 거래상대 다양성 0.91. FIU 참고유형 B-15(불특정 다수 수취 후 송금)에 해당. 유사수신 의심.",
-              "fraud_type": "유사수신",
+              "fraud_type": "기타(자유기술)",
               "fraud_probability": 0.72,
               "tools_used": [
                 "lookup_fiu_reference_types",
@@ -1068,7 +1068,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 44892에서 심야(0시) ATM을 통해 990만원 내외 거래를 12회 반복. CTR 기준(1천만원) 직하 금액으로 분할 의심. AI 예측 확률 88%. ATM 채널 심야 이상거래 비율 2.34%로 고위험.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.88,
               "aml_patterns": [
                 "분할거래",
@@ -1209,7 +1209,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 88231에서 심야(0시)에 4,990만원을 신규 거래처(445012)로 이체. AI 예측 확률 97%(최고위험). 기존 거래 이력 없는 신규 거래처에 대한 거액 심야 이체로 의심.",
-              "fraud_type": "신규거래처",
+              "fraud_type": "기타(자유기술)",
               "fraud_probability": 0.97,
               "tools_used": [
                 "get_statistics",
@@ -1355,7 +1355,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "금융회사 73→305 구간에서 이상거래 비율 1.90%로 집중. 계좌 55012에서 3단계 레이어링(770123→880234→990345) 탐지, 총 1.47억원. 다단계 자금세탁 의심.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.85,
               "aml_patterns": [
                 "레이어링"
@@ -1485,7 +1485,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 77501이 245일간 휴면 후 2024년 12월 재활성화. 재활성화 후 23건 4.25억원 거래, 이상거래비율 34.78%. 심야거래 52%, CTR 대상 8건. 대포통장 활용 후 자금 인출 의심.",
-              "fraud_type": "대포통장",
+              "fraud_type": "분할거래",
               "fraud_probability": 0.82,
               "tools_used": [
                 "detect_dormant_reactivation",
@@ -1636,7 +1636,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 22801에서 990만원 정액거래를 12월 한 달간 15회 반복(R003 알림). CTR 기준 직하 금액으로 구조화(structuring) 의심. 위험도 81점(고위험), 심야거래 55%. 자금세탁 목적의 분할거래 패턴.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.81,
               "aml_patterns": [
                 "정액거래",
@@ -1793,7 +1793,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "2024Q4 이상거래비율 0.47%로 Q3 대비 53.2% 급증. 기타 유형 245건이 분산 발생. 계좌 99012 등에서 1,500만원 내외 거래 집중. 특정 유형 단정 불가하나 급증 추세 주의.",
-              "fraud_type": "기타",
+              "fraud_type": "기타(자유기술)",
               "tools_used": [
                 "get_trend_analysis",
                 "compare_periods",
@@ -1920,7 +1920,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "입금계좌 445012에 15개 계좌에서 총 23.4억원 자금 집중(스머핑 스코어 0.82). 3~4단계 순환거래 2건(1.42억+1.98억) 탐지. 자금 수집 후 순환 이체를 통한 자금세탁 의심.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.82,
               "aml_patterns": [
                 "순환거래",
@@ -2034,7 +2034,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "출금계좌 67301에서 2024Q4 동안 심야(3시) 텔레뱅킹으로 4,700만원 내외 반복 이체(14건). AI 예측 확률 89%. 자금세탁 의심.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.89,
               "tools_used": [
                 "query_transactions",
@@ -2182,7 +2182,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 42105에서 2024.12.10~12.20 전화(매체구분5) 채널로 5,000만원 내외 거액 2건 연속 이체. AI 예측 92%. FIU B-08(전화사기 관련 자금이동) 해당. 보이스피싱 전형적 패턴.",
-              "fraud_type": "보이스피싱",
+              "fraud_type": "다중거래의 동시요청",
               "fraud_probability": 0.92,
               "tools_used": [
                 "query_transactions",
@@ -2344,7 +2344,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "금융회사 205에서 신규거래처 유형 이상거래 678건으로 최다. 계좌 44201이 2024Q4에 다수 신규 거래처(990123 등)로 2,500만원 내외 이체. 위험도 65점(중위험). 거래상대 다양성 0.88로 높음.",
-              "fraud_type": "신규거래처",
+              "fraud_type": "기타(자유기술)",
               "fraud_probability": 0.65,
               "tools_used": [
                 "get_institution_report",
@@ -2443,7 +2443,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 55089에 22개 계좌에서 총 31.2억원 자금 수집(스머핑 스코어 0.91). funnel 패턴 탐지: 18개 입금원→2개 출금처. 대포통장을 통한 자금 집중·인출 패턴.",
-              "fraud_type": "대포통장",
+              "fraud_type": "분할거래",
               "fraud_probability": 0.91,
               "aml_patterns": [
                 "자금수집",
@@ -2554,7 +2554,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "금융회사 73→305 구간 이상거래 비율 1.90%(234건). 계좌 55012에서 심야(21시) 4,900만원 내외 반복 이체. 기관간 자금 흐름 집중 패턴. 자금세탁 의심.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.85,
               "tools_used": [
                 "analyze_cross_institution_flow",
@@ -2699,7 +2699,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 88923에서 심야(0시) 전화 채널로 7,500만원 거액 이체(R001 알림). AI 예측 93%. 보이스피싱 피해 의심. 2주간 4.23억원 거래.",
-              "fraud_type": "보이스피싱",
+              "fraud_type": "다중거래의 동시요청",
               "fraud_probability": 0.93,
               "tools_used": [
                 "detect_monitoring_alerts",
@@ -2843,7 +2843,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 33045에서 4단계 레이어링(440456→550567→660678→770789) 탐지, 총 2.34억원. 6개월간 78건 17.8억원 거래. 다단계 자금 이동을 통한 자금세탁 의심.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.88,
               "aml_patterns": [
                 "레이어링"
@@ -2969,7 +2969,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 66801에서 동일일(12/15) 980만원 이하로 4건(합계 3,800만원) 분할거래. CTR 기준 회피 목적의 structuring 의심. 위험도 74점(고위험), 금액이상도 0.82.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.74,
               "aml_patterns": [
                 "분할거래",
@@ -3093,7 +3093,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "2024년 하반기 이상거래 3,560건으로 상반기 대비 52.1% 급증. 신규거래처 유형 2,134건 최다. 계좌 55201 등에서 1,800만원 내외 신규 거래처 이체 집중.",
-              "fraud_type": "신규거래처",
+              "fraud_type": "기타(자유기술)",
               "tools_used": [
                 "compare_periods",
                 "query_transactions"
@@ -3244,7 +3244,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 77234에서 500만원 내외 소액 반복 이체 245건(총 8.9억원). FIU B-27(불법 사행성 게임 관련 다수 소액 입금)에 해당. 심야 시간대(21시) 집중. 불법도박 자금 이동 의심.",
-              "fraud_type": "불법도박",
+              "fraud_type": "거액 입금 후 당일/익일 인출",
               "tools_used": [
                 "lookup_fiu_reference_types",
                 "query_transactions",
@@ -3362,7 +3362,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 44290에 42개 다수 계좌에서 28.9억원 유입, 28개 계좌로 분산 이체. 심야거래 61%, 이상거래 14.42%. 다수→1→다수 자금 경유 패턴으로 대포통장 활용 의심.",
-              "fraud_type": "대포통장",
+              "fraud_type": "분할거래",
               "fraud_probability": 0.8,
               "tools_used": [
                 "get_account_profile",
@@ -3603,7 +3603,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 99801에서 1주일간 전화 채널로 8건 3.2억원 거래, 이상거래율 37.5%. 8,500만원 거래 AI 예측 87%. 소수 거래처에 거액 전화 이체. 보이스피싱 피해 의심.",
-              "fraud_type": "보이스피싱",
+              "fraud_type": "다중거래의 동시요청",
               "fraud_probability": 0.87,
               "tools_used": [
                 "predict_fraud",
@@ -3735,7 +3735,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "금융회사 88의 최다이상거래 계좌 62018: 89건 중 18건(20.22%) 이상. 심야거래 48%, 15개 거래상대. AI 예측 91%. 자금세탁 의심.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.91,
               "tools_used": [
                 "get_institution_report",
@@ -3880,7 +3880,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "입금계좌 661023에 45개 계좌에서 총 45.6억원 집중 유입(스머핑 스코어 0.94). 심야입금 52%. 출금계좌 82301 등에서 4,700만원 내외 반복 이체. 대포통장을 통한 자금 수집 의심.",
-              "fraud_type": "대포통장",
+              "fraud_type": "분할거래",
               "fraud_probability": 0.94,
               "aml_patterns": [
                 "자금수집"
@@ -4038,7 +4038,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 33567 거래패턴 급변(R005): 월 3건→31건(933% 증가), 평균금액 120만→1,471만(1,126% 증가). 12월 이상거래 9건 발생(이전 0건). 신규거래처(881023 등)와의 급격한 거래 증가.",
-              "fraud_type": "신규거래처",
+              "fraud_type": "기타(자유기술)",
               "tools_used": [
                 "detect_monitoring_alerts",
                 "query_transactions",
@@ -4180,7 +4180,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 45201 AI 위험도 98%(1순위). 2-hop 네트워크 18개 계좌, 이상거래 32.84%. 3단계 순환거래(45201→780123→902345→45201) 1.48억원 탐지. 자금세탁 의심.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.98,
               "aml_patterns": [
                 "순환거래"
@@ -4351,7 +4351,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 55801 보이스피싱 최다 관련(14건). 전화 채널로 5,500만원 내외 거액 이체. 위험도 85점(고위험), 금액이상도 0.88. 2개월간 7.56억원. 보이스피싱 피해 의심.",
-              "fraud_type": "보이스피싱",
+              "fraud_type": "다중거래의 동시요청",
               "fraud_probability": 0.85,
               "tools_used": [
                 "get_fraud_type_summary",
@@ -4541,7 +4541,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "2024년 12월 이상거래 1,567건으로 연중 최다. 텔레뱅킹 채널 이상거래비율 1.12%로 최고위험. 계좌 45201에서 심야(0시) 텔레뱅킹 4,900만원 이체, AI 예측 93%. 자금세탁 의심.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.93,
               "tools_used": [
                 "get_trend_analysis",
@@ -4677,7 +4677,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 88712 대포통장 최다 관련(23건). funnel 패턴: 28개 입금원→3개 출금처, 총 유입 56.7억원. 다수 계좌에서 자금을 수집하여 소수 계좌로 이체하는 대포통장 전형적 패턴.",
-              "fraud_type": "대포통장",
+              "fraud_type": "분할거래",
               "fraud_probability": 0.9,
               "aml_patterns": [
                 "funnel"
@@ -4803,7 +4803,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 11290이 356일 휴면 후 12월 재활성화. 15건 6.8억원 중 이상거래 53.33%. 심야 67%. 12/5 980만원 이하 5건 분할(합계 4,700만원) → CTR 회피 의심. 휴면→재활성화+분할거래 복합 자금세탁 패턴.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.9,
               "aml_patterns": [
                 "휴면재활성화",
@@ -5064,7 +5064,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "금융회사 73→305 구간 이상거래 1.90%. 계좌 55012에서 3~4단계 레이어링 2건(총 3.48억원) 탐지. 다수 중간 계좌(770123, 880234 등)를 경유하는 자금세탁 의심.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.92,
               "aml_patterns": [
                 "레이어링"
@@ -5238,7 +5238,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 72301 심야 인터넷뱅킹 이상거래 최다. 22개 상대 계좌, 이상거래 26.97%, 심야 58%. 4,850만원 내외 반복 이체. 대포통장 활용 의심.",
-              "fraud_type": "대포통장",
+              "fraud_type": "분할거래",
               "fraud_probability": 0.85,
               "tools_used": [
                 "analyze_channel_risk",
@@ -5516,7 +5516,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 77401에서 12/20 하루에 18건 1.72억원 거래(R002 알림). 모든 건이 1,000만원 미만(최대 980만원)으로 CTR 기준 회피 목적의 구조화(structuring). 자금세탁 의심.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.95,
               "aml_patterns": [
                 "구조화",
@@ -5686,7 +5686,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 66501 불법도박 최다 관련(19건). 심야(21시) 300만원 내외 소액 반복 이체 156건(총 4.78억원). FIU B-27(불법 사행성 게임 관련 다수 소액 입금) 해당. 불법도박 자금 이동 의심.",
-              "fraud_type": "불법도박",
+              "fraud_type": "거액 입금 후 당일/익일 인출",
               "tools_used": [
                 "get_statistics",
                 "get_fraud_type_summary",
@@ -5853,7 +5853,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "출금계좌 41205에서 전화채널로 4,800만원 내외 12건(5.34억원) 이체. AI 예측 94%. 입금계좌 661234에 32개 계좌에서 34.5억원 유입(스머핑 스코어 0.89). 보이스피싱 피해금 수집 계좌 의심.",
-              "fraud_type": "보이스피싱",
+              "fraud_type": "다중거래의 동시요청",
               "fraud_probability": 0.94,
               "aml_patterns": [
                 "자금수집"
@@ -6017,7 +6017,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "기관 205→88 구간 R004 알림(집중도 0.78). 계좌 44201에서 기관88 소속 다수 신규 계좌(991234 등)로 1,200만원 내외 반복 이체. 특정 기관 집중+신규거래처 패턴.",
-              "fraud_type": "신규거래처",
+              "fraud_type": "기타(자유기술)",
               "tools_used": [
                 "detect_monitoring_alerts",
                 "analyze_cross_institution_flow",
@@ -6172,7 +6172,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 29501→99801 3단계 경로(29501→551023→773245→99801) 탐지, 총 1.45억원. 심야(3시) 4,900만원 이체, AI 예측 90%. 중간 계좌를 경유한 자금세탁 의심.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.9,
               "aml_patterns": [
                 "레이어링"
@@ -6440,7 +6440,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 34901 R001 심야대량거래(12/25 0시 9,800만원). 이상거래 35.29%, 심야 71%, 위험도 89점(고위험). 12월 한 달 12.3억원. 심야 거액 자금세탁 의심.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.89,
               "tools_used": [
                 "detect_monitoring_alerts",
@@ -6586,7 +6586,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 81402에서 심야(21시) 4,750만원 내외 반복 이체 67건(15.6억원), 이상거래 19건. AI 예측 86%. 다수 계좌로 분산이체 패턴. 대포통장 의심.",
-              "fraud_type": "대포통장",
+              "fraud_type": "분할거래",
               "fraud_probability": 0.86,
               "tools_used": [
                 "query_transactions",
@@ -6878,7 +6878,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 88234에 89개 불특정 다수 계좌에서 56.7억원 유입(FIU B-15 해당). 거래상대 다양성 0.95(극대). 위험도 76점(고위험). 유사수신(무등록 금융업) 의심.",
-              "fraud_type": "유사수신",
+              "fraud_type": "기타(자유기술)",
               "fraud_probability": 0.76,
               "tools_used": [
                 "lookup_fiu_reference_types",
@@ -7031,7 +7031,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 55601 R003 정액거래(990만원×22건). 12/10 6건(5,940만원), 12/15 5건(4,950만원) 등 동일일 분할거래. 이상거래율 48.89%, 심야 45%. CTR 기준 회피 목적의 구조화(Structuring). 자금세탁 의심.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.92,
               "aml_patterns": [
                 "구조화",
@@ -7241,7 +7241,7 @@
             "name": "generate_str",
             "arguments": {
               "summary": "계좌 99301에서 6개월간 78건 21.2억원 거래, 이상거래 25건(32%). 심야(0시) 4,950만원 반복 이체. AI 예측 95%, 위험도 91점(고위험). 22개 연결계좌 네트워크. FIU B-03(다수계좌 자금분산), B-05(심야 비정상) 해당. 자금세탁 강력 의심.",
-              "fraud_type": "자금세탁",
+              "fraud_type": "갑작스러운 거래패턴의 변화",
               "fraud_probability": 0.95,
               "aml_patterns": [
                 "자금분산",

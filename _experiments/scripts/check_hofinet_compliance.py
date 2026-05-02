@@ -133,19 +133,27 @@ def collect_singleturn():
 
 def collect_multiturn():
     """멀티턴 시나리오 수집 + 검사."""
-    # generate_str.fraud_type enum (agent.py 기준, HOFINET 영문)
-    VALID_GENSTR_FRAUD_EN = {
-        'Sudden Change in Transaction Pattern', 'Transaction with New Counterparty',
-        'Split Transaction', 'Concurrent Multiple Transactions',
-        'Same-Day Withdrawal after Large Deposit',
-        'Late-Night/Early-Morning Bulk Transactions',
+    # generate_str.fraud_type enum: STR 양식 §VI-4 16종 + §VI-5 code 31 = 17종
+    # (agent.py canonical enum)
+    VALID_GENSTR_FRAUD = {
+        '갑작스러운 거래패턴의 변화',     # §VI-4 code 15
+        '원격지거래',                       # §VI-4 code 16
+        '교환거래',                         # §VI-4 code 17
+        '분할거래',                         # §VI-4 code 18
+        '현금에 집착하는 거래',            # §VI-4 code 19
+        '거액 입금 후 당일/익일 인출',     # §VI-4 code 20
+        '무기명증서 관련거래',              # §VI-4 code 21
+        '계좌개설 없이 거액 환전/송금',    # §VI-4 code 22
+        '의심스러운 담보대출/보험약관대출', # §VI-4 code 23
+        '주금 납입/잔액증명서 발급',       # §VI-4 code 24
+        '다중거래의 동시요청',              # §VI-4 code 25
+        '빈번한 입출금',                    # §VI-4 code 26
+        '의심스러운 대여금고/보호예수',    # §VI-4 code 27
+        '법인/타인자산 담보 거래',         # §VI-4 code 28
+        '무관업종 보험청약',                # §VI-4 code 29
+        '테러자금으로 의심',                # §VI-4 code 30
+        '기타(자유기술)',                   # §VI-5 code 31
     }
-    # HOFINET 한글 공식명 (§4.1)
-    VALID_GENSTR_FRAUD_KR = {
-        '갑작스러운 거래패턴의 변화', '신규 수신처 거래', '분할 거래',
-        '다중거래의 동시 요청', '거액 입금 후 당일 인출', '심야/새벽 대량 거래',
-    }
-    VALID_GENSTR_FRAUD = VALID_GENSTR_FRAUD_EN | VALID_GENSTR_FRAUD_KR
 
     out = []
     for f in sorted(glob.glob('_paper/benchmarks_multiturn/cases_*.json')):
