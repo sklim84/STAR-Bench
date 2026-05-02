@@ -24,7 +24,6 @@ OUT_DIR  = os.path.join(os.path.dirname(__file__), "../../_experiments/results_R
 os.makedirs(OUT_DIR, exist_ok=True)
 
 OUTLIERS = {
-    "google/gemma-4-31B-it",
 }
 
 # ── 집계: expected_tool -> called_tool -> count ───────────────────────────────
