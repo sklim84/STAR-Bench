@@ -124,7 +124,8 @@ phase2() {
 # Llama-3.2-3B는 BFCL에 'meta-llama/Llama-3.2-3B-Instruct-FC' key로 등록 (model_config.py:1348)
 # ─────────────────────────────────────────────────────────────────
 recovery() {
-    run_bfcl 0 11434 "meta-llama/Llama-3.2-3B-Instruct" "llama3_json" 32768 "" "llama_3.2_3b" \
+    # GPU 1, port 11435 (Lane 1 GPU 활용 — Phase 1 Lane 0이 GPU 0 점유 중일 때 안전)
+    run_bfcl 1 11435 "meta-llama/Llama-3.2-3B-Instruct" "llama3_json" 32768 "" "llama_3.2_3b_fc" \
         "meta-llama/Llama-3.2-3B-Instruct-FC"
 }
 
