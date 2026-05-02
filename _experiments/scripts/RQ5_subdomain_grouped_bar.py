@@ -67,7 +67,7 @@ bar_w   = total_w / n_grp
 offsets = np.linspace(-(total_w - bar_w) / 2, (total_w - bar_w) / 2, n_grp)
 
 # ── 플롯 ─────────────────────────────────────────────────────────────────────
-fig, ax = plt.subplots(figsize=(7.5, 4.0))
+fig, ax = plt.subplots(figsize=(5.5, 4.2))
 
 for idx, (grp, off) in enumerate(zip(GROUP_ORDER, offsets)):
     vals = [group_means[grp][sd] for sd in sub_domains]

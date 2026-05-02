@@ -29,7 +29,7 @@ def family_color(name):
     return '#59A14F'
 
 # Compact figure ~0.5 linewidth → 4.2 inch square works well
-fig, ax = plt.subplots(figsize=(4.5, 4.0))
+fig, ax = plt.subplots(figsize=(5.5, 4.2))
 
 # Plot points
 x_all, y_all = [], []
