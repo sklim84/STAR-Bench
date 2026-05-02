@@ -712,7 +712,7 @@ def _aggregate_by_subcategory(results: list[dict]) -> dict:
 def main():
     parser = argparse.ArgumentParser(description="멀티턴 STR 워크플로우 벤치마크")
     parser.add_argument("--models", nargs="+", help="실행할 모델 이름 (MODELS 레지스트리 기준)")
-    parser.add_argument("--output", type=str, default="_experiments/results_multiturn/",
+    parser.add_argument("--output", type=str, default="_experiments/results_mt/",
                         help="결과 저장 디렉토리")
     parser.add_argument("--debug", action="store_true", help="턴별 상세 로그")
     parser.add_argument("--checkpoint", action="store_true",
