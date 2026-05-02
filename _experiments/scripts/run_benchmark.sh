@@ -183,6 +183,24 @@ GROUP_S1_RQ2_RECOVERY_GEMMA_TP2=(
     "gemma-4-31b|google/gemma-4-31B-it|gemma4|--tensor-parallel-size 2 --max-model-len 32768 --gpu-memory-utilization 0.9 --enforce-eager|google/gemma-4-31B-it"
 )
 
+# BFCL ↔ AML 매칭 확장: BFCL에 평가됐으나 AML 미평가인 7 모델을 KR로 평가
+# Lane 0 (GPU 0, port 11434): 4 Qwen 모델 (단일 GPU 30B 이하)
+GROUP_BFCL_AML_LANE0=(
+    "qwen3-30b-a3b-inst|Qwen/Qwen3-30B-A3B-Instruct-2507|qwen3_xml|--max-model-len 32768|Qwen/Qwen3-30B-A3B-Instruct-2507"
+    "qwen3-8b|Qwen/Qwen3-8B|qwen3_xml||Qwen/Qwen3-8B"
+    "qwen3-4b-inst|Qwen/Qwen3-4B-Instruct-2507|qwen3_xml||Qwen/Qwen3-4B-Instruct-2507"
+    "qwen35-9b|Qwen/Qwen3.5-9B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-9B"
+)
+# Lane 1 (GPU 1, port 11435): 2 xLAM 모델 (단일 GPU)
+GROUP_BFCL_AML_LANE1=(
+    "xlam-2-1b|Salesforce/xLAM-2-1b-fc-r|xlam||Salesforce/xLAM-2-1b-fc-r"
+    "xlam-2-8b|Salesforce/Llama-xLAM-2-8b-fc-r|xlam||Salesforce/Llama-xLAM-2-8b-fc-r"
+)
+# TP=2 (양 GPU 활용): xLAM-2-32B
+GROUP_BFCL_AML_TP2=(
+    "xlam-2-32b|Salesforce/xLAM-2-32b-fc-r|xlam|--tensor-parallel-size 2 --max-model-len 32768 --gpu-memory-utilization 0.9 --enforce-eager|Salesforce/xLAM-2-32b-fc-r"
+)
+
 case "$GROUP" in
     # Server 1
     S1_A) MODELS=("${GROUP_S1_A[@]}") ;;
@@ -202,6 +220,9 @@ case "$GROUP" in
     S1_RQ2_RECOVERY_EXAONE) MODELS=("${GROUP_S1_RQ2_RECOVERY_EXAONE[@]}") ;;
     S1_RQ2_RECOVERY_GEMMA) MODELS=("${GROUP_S1_RQ2_RECOVERY_GEMMA[@]}") ;;
     S1_RQ2_RECOVERY_GEMMA_TP2) MODELS=("${GROUP_S1_RQ2_RECOVERY_GEMMA_TP2[@]}") ;;
+    BFCL_AML_LANE0) MODELS=("${GROUP_BFCL_AML_LANE0[@]}") ;;
+    BFCL_AML_LANE1) MODELS=("${GROUP_BFCL_AML_LANE1[@]}") ;;
+    BFCL_AML_TP2) MODELS=("${GROUP_BFCL_AML_TP2[@]}") ;;
     *)     echo "Unknown group: $GROUP"; exit 1 ;;
 esac
 
