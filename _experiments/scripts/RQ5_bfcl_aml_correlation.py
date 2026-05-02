@@ -35,10 +35,7 @@ BFCL_TO_AML = {
     'Phi-4-mini-instruct (Prompt)': 'microsoft/Phi-4-mini-instruct',
     'Qwen3.5-27B (Prompt)': 'Qwen/Qwen3.5-27B__nothink',
     'Qwen3.5-4B (Prompt)': 'Qwen/Qwen3.5-4B__nothink',
-    'Qwen3.5-9B (Prompt)': 'Qwen/Qwen3.5-9B__nothink',
-    'Qwen3-4B-Instruct-2507 (Prompt)': 'Qwen/Qwen3-4B-Instruct-2507',
     'xLAM-2-3b-fc-r (FC)': 'Salesforce/xLAM-2-3b-fc-r',
-    'xLAM-2-32b-fc-r (FC)': 'Salesforce/xLAM-2-32b-fc-r',
     'xLAM-2-70b-fc-r (FC)': 'Salesforce/Llama-xLAM-2-70b-fc-r',
 }
 
