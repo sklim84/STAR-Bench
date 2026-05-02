@@ -37,8 +37,8 @@ TARGETS = [
     ('meta-llama/Llama-3.3-70B-Instruct', 'Llama-3.3-70B'),
     ('skt/A.X-4.0', 'A.X-4.0'),
 ]
-# 평가 이상치(h≈0.126) — KR-tool 셀 비정상 → 평균 산출 시 제외
-OUTLIERS = {'google/gemma-4-31B-it'}
+# Gemma-4-31B-it는 2026-05-02 parser hermes→gemma4 fix로 정상화 (h=0.940) → outlier 해제
+OUTLIERS = set()
 
 
 def load_cell(cell_dir):

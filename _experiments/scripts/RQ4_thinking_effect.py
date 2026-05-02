@@ -27,7 +27,8 @@ THINKING_PAIRS = [
 ]
 
 # 평가 이상치(h≈0.126) 제외 표시
-OUTLIERS = {'kakaocorp/kanana-2-30b-a3b-thinking-2601'}
+# Kanana-2-Think는 2026-05-02 parser bug fix 재실험으로 정상화 (h~0.72) → outlier 해제
+OUTLIERS = set()
 
 def load_kr():
     out = {}
