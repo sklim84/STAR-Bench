@@ -42,6 +42,13 @@ MEDIA_NL_MAP = {
     '휴대전화': 4, '모바일': 4,
     '건별이체': 5,
     '대량이체': 7, '대량 이체': 7,
+    # EN equivalents
+    'PC banking': 1, 'PC Banking': 1,
+    'internet banking': 2, 'Internet banking': 2, 'Internet Banking': 2,
+    'phone banking': 3, 'Phone banking': 3, 'Phone Banking': 3,
+    'mobile phone': 4, 'Mobile phone': 4, 'Mobile Phone': 4, 'mobile banking': 4,
+    'per-transaction': 5, 'Per-transaction': 5, 'Per-Transaction': 5,
+    'bulk transfer': 7, 'Bulk transfer': 7, 'Bulk Transfer': 7,
 }
 # 자연어 → 자금구분 매핑 (HOFINET.MD §6.2)
 FUND_NL_MAP = {
@@ -50,7 +57,8 @@ FUND_NL_MAP = {
     '타행자동이체': 4, '타행 자동이체': 4, '자동이체': 4,
 }
 # 일반 자금 키워드(이체/출금)는 코드 모호 — 검사 제외
-INVALID_MEDIA_NL = {'창구', '영업점', '지점'}
+INVALID_MEDIA_NL = {'창구', '영업점', '지점',
+                    'counter', 'Counter', 'teller', 'Teller', 'branch window'}
 
 
 def check_case(case_id, params, question, source):
@@ -96,8 +104,10 @@ def check_case(case_id, params, question, source):
 
     # 자연어 vs 매체구분 정합성
     if question:
+        import re
         for nl in INVALID_MEDIA_NL:
-            if nl in question:
+            # word-boundary 매칭으로 'counter'가 'counterparty/counterpart' 부분이 되는 false positive 방지
+            if re.search(rf'(?<![A-Za-z]){re.escape(nl)}(?![A-Za-z])', question):
                 violations.append(('nl_invalid_media', f'자연어 "{nl}" not in HOFINET media types'))
         # NL 매체 명시되었는데 코드와 불일치
         if '매체구분' in params:
@@ -108,23 +118,22 @@ def check_case(case_id, params, question, source):
     return violations
 
 
-def collect_singleturn():
-    """싱글턴 케이스 수집 + 검사."""
+def collect_singleturn(lang='kr'):
+    """싱글턴 케이스 수집 + 검사. lang: 'kr' 또는 'en'."""
+    base = '_paper/benchmarks' if lang == 'kr' else '_paper/benchmarks_en'
     out = []
-    for f in sorted(glob.glob('_paper/benchmarks/cases_*.json')):
+    for f in sorted(glob.glob(f'{base}/cases_*.json')):
         d = json.load(open(f))
         for c in d:
             cid = c.get('id')
             q = c.get('question', '')
             expected = c.get('expected', {})
             param_checks = expected.get('param_checks', {})
-            tools = expected.get('tools_must_include') or expected.get('tool_order') or []
-            # predict_fraud는 HOFINET 6필드 모두 갖는 핵심 케이스
             for tool, params in param_checks.items():
                 v = check_case(cid, params, q, f)
                 for vtype, vmsg in v:
                     out.append({
-                        'source': Path(f).name, 'case_id': cid, 'tool': tool,
+                        'source': f'{lang}/' + Path(f).name, 'case_id': cid, 'tool': tool,
                         'violation_type': vtype, 'detail': vmsg,
                         'question_excerpt': q[:120],
                     })
@@ -200,7 +209,9 @@ def collect_multiturn():
 
 
 def main():
-    st = collect_singleturn()
+    st_kr = collect_singleturn('kr')
+    st_en = collect_singleturn('en')
+    st = st_kr + st_en
     mt = collect_multiturn()
 
     # 집계
