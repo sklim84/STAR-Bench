@@ -581,12 +581,14 @@ def run_multiturn_benchmark(
     debug: bool = False,
     use_checkpoint: bool = False,
     resume: bool = False,
+    force_rerun: bool = False,
 ) -> dict:
     """단일 모델에 대해 전체 멀티턴 시나리오를 실행한다.
 
     Args:
         use_checkpoint: True면 시나리오 단위 jsonl 저장 + 끊긴 시점부터 재개.
         resume: True면 이미 multiturn_<model>.json이 존재할 때 통째 스킵.
+        force_rerun: True면 모델/시나리오 cache 모두 우회하고 재실행.
     """
     model_id = _model_key(model)
     think_label = ""
@@ -621,7 +623,11 @@ def run_multiturn_benchmark(
     if use_checkpoint:
         cp_path = _multiturn_checkpoint_path(model_id, output_dir)
         completed_ids, scenario_results = _load_multiturn_checkpoint(cp_path)
-        if completed_ids:
+        if force_rerun and completed_ids:
+            _ts_print(f"  [force-rerun] checkpoint {len(completed_ids)}건 무시")
+            completed_ids = set()
+            scenario_results = []
+        elif completed_ids:
             _ts_print(f"  [재개] checkpoint에서 완료 {len(completed_ids)}건 로드")
 
     _ts_print(f"  시나리오: {len(cases)}건 (남은: {len(cases) - len(completed_ids)}건)")
@@ -719,6 +725,9 @@ def main():
                         help="시나리오 단위 checkpoint jsonl 저장 + 중단 시 재개")
     parser.add_argument("--resume", action="store_true",
                         help="이미 multiturn_<model>.json 결과가 있는 모델은 건너뛰기")
+    parser.add_argument("--force-rerun", action="store_true",
+                        help="--checkpoint 모드에서 이미 완료된 시나리오도 재실행. "
+                             "--resume 모델 단위 skip도 우회.")
     args = parser.parse_args()
 
     output_dir = Path(args.output)
@@ -745,7 +754,8 @@ def main():
                 output_dir,
                 debug=args.debug,
                 use_checkpoint=args.checkpoint,
-                resume=args.resume,
+                resume=args.resume and not args.force_rerun,
+                force_rerun=args.force_rerun,
             )
         except Exception as exc:
             _ts_print(f"  ⚠ 모델 {model['name']} 실행 실패: {exc}")

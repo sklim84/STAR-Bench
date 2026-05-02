@@ -76,18 +76,18 @@ wait_pid "$EN_A_PID" "S1_A EN"
 wait_pid "$EN_B_PID" "S1_B EN"
 ts "Phase 2 완료. MT phase trigger."
 
-# Phase 3: 멀티턴 KR (50 scenario 전체, --case-ids 미지원)
+# Phase 3: 멀티턴 KR (50 scenario 전체, --case-ids 미지원, --force-rerun으로 cache 우회)
 ts ""
-ts "[Phase 3] 멀티턴 KR 재실험 시작 (50 시나리오 전체)"
+ts "[Phase 3] 멀티턴 KR 재실험 시작 (50 시나리오 전체, force-rerun)"
 
 nohup bash "$RUNNER" \
-    --gpu 0 --port 11434 --group S1_A --mode mt \
+    --gpu 0 --port 11434 --group S1_A --mode mt --force-rerun \
     > "$LOG_DIR/s1a_mt.log" 2>&1 &
 MT_A_PID=$!
 ts "  S1_A MT PID=$MT_A_PID"
 
 nohup bash "$RUNNER" \
-    --gpu 1 --port 11435 --group S1_B --mode mt \
+    --gpu 1 --port 11435 --group S1_B --mode mt --force-rerun \
     > "$LOG_DIR/s1b_mt.log" 2>&1 &
 MT_B_PID=$!
 ts "  S1_B MT PID=$MT_B_PID"
