@@ -96,6 +96,8 @@ logger = logging.getLogger(__name__)
 # --tools-lang en 활성화 플래그 (main에서 설정)
 _TOOLS_LANG_EN: bool = False
 _MAX_TOKENS: int = 4096  # --max-tokens CLI 옵션으로 덮어쓰기 가능 (입력 토큰 오버플로우 완화용)
+_CASE_ID_FILTER = None  # --case-ids / --case-ids-file: 부분 재실험 시 특정 ID set
+_FORCE_RERUN: bool = False  # --force-rerun: 체크포인트 캐시 무시 (--case-ids와 함께 사용)
 
 
 def _ts_print(msg: str = "", *, end: str = "\n", flush: bool = True) -> None:
@@ -1337,6 +1339,13 @@ def run_model_benchmark(
             _ts_print(f"  [{cat_name}] 데이터셋 없음, 건너뜀")
             continue
 
+        # --case-ids 필터: 지정된 ID만 통과
+        if _CASE_ID_FILTER is not None:
+            cases = [c for c in cases if c.get("id") in _CASE_ID_FILTER]
+            if not cases:
+                continue
+            _ts_print(f"  [{cat_name}] case-ids 필터 적용: {len(cases)}건")
+
         if max_total:
             remaining = max_total - total_executed
             cases = cases[:remaining]
@@ -1358,7 +1367,7 @@ def run_model_benchmark(
                         "status": "dead", "tool_events": None,
                         "elapsed": 0.0, "run_exc": None}
             key_local = (cat_name, case_id_local)
-            if key_local in completed and result_cache:
+            if key_local in completed and result_cache and not _FORCE_RERUN:
                 return {"idx": idx, "case_id": case_id_local, "case": case,
                         "status": "cached", "cached_result": result_cache[key_local]}
             te, el, exc = _run_case_chat(case, model, debug_chat=debug_chat)
@@ -2041,6 +2050,25 @@ def main():
         default=4096,
         help="모델 응답 최대 토큰 (기본 4096). 입력 토큰이 서버 max-model-len에 근접하는 케이스에서는 2048로 낮춰 오버플로우 방지.",
     )
+    parser.add_argument(
+        "--case-ids",
+        default=None,
+        metavar="ID1,ID2,...",
+        help="특정 case ID만 실행 (콤마 구분). HOFINET 정정 등 부분 재실험용. "
+             "예: --case-ids mt_006,mt_008,pf_001",
+    )
+    parser.add_argument(
+        "--case-ids-file",
+        default=None,
+        metavar="PATH",
+        help="case ID 목록을 담은 텍스트 파일 (한 줄에 하나) 또는 JSON 배열. "
+             "--case-ids보다 우선. 대량 ID 지정용.",
+    )
+    parser.add_argument(
+        "--force-rerun",
+        action="store_true",
+        help="--checkpoint 모드에서 이미 완료된 case도 재실행 (--case-ids와 함께 사용).",
+    )
     args = parser.parse_args()
 
     # 백그라운드 실행용 로그 리다이렉트
@@ -2072,6 +2100,23 @@ def main():
         _DATASET_DIR = Path(args.cases_dir)
         _DATASET_FILES = {k: _DATASET_DIR / v.name for k, v in _DATASET_FILES.items()}
         _ts_print(f"케이스 디렉토리 오버라이드: {_DATASET_DIR}")
+
+    # --case-ids / --case-ids-file: 특정 ID만 실행 (부분 재실험)
+    global _CASE_ID_FILTER, _FORCE_RERUN
+    _CASE_ID_FILTER = None
+    _FORCE_RERUN = bool(args.force_rerun)
+    if args.case_ids_file:
+        p = Path(args.case_ids_file)
+        raw = p.read_text(encoding="utf-8").strip()
+        if raw.startswith("["):
+            ids = json.loads(raw)
+        else:
+            ids = [x.strip() for x in raw.splitlines() if x.strip() and not x.startswith("#")]
+        _CASE_ID_FILTER = set(ids)
+    elif args.case_ids:
+        _CASE_ID_FILTER = {x.strip() for x in args.case_ids.split(",") if x.strip()}
+    if _CASE_ID_FILTER:
+        _ts_print(f"Case ID 필터: {len(_CASE_ID_FILTER)}건 (force_rerun={_FORCE_RERUN})")
 
     output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
