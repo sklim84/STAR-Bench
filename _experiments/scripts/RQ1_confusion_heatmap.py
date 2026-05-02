@@ -123,13 +123,6 @@ cb = fig.colorbar(im, ax=ax, fraction=0.03, pad=0.02)
 cb.set_label("Miscall count\n(28 valid models)", fontsize=FS_ANNOT)
 cb.ax.tick_params(labelsize=FS_ANNOT)
 
-ax.set_title(
-    "Tool confusion matrix: expected vs.~called tool\n"
-    r"(wrong\_func errors, top-12 expected tools, 28 models)",
-    fontsize=FS_TITLE,
-    pad=6,
-)
-
 # 대각선 없는 행렬이므로 대각 highlight 불필요
 fig.tight_layout()
 

@@ -106,13 +106,6 @@ ax.legend(
     columnspacing=0.8,
 )
 
-ax.set_title(
-    "Subdomain tool hit $h$ by model group\n"
-    "(Finance SFT, KR-specialized, General 8B, Small general)",
-    fontsize=FS_TITLE,
-    pad=6,
-)
-
 fig.tight_layout()
 
 out_pdf = os.path.join(OUT_DIR, "fig_subdomain_grouped_bar.pdf")
