@@ -251,6 +251,10 @@ if [[ "$TOOLS_LANG" == "en" ]]; then
 fi
 
 # 부분 재실험: --case-ids-file / --force-rerun 패스스루
+# CRITICAL: --resume은 모델 단위 skip을 트리거하므로 부분 재실험 모드에서는 자동 제거
+if [[ -n "$CASE_IDS_FILE" ]] || [[ -n "$FORCE_RERUN" ]]; then
+    BENCH_EXTRA="${BENCH_EXTRA// --resume/}"
+fi
 if [[ -n "$CASE_IDS_FILE" ]]; then
     BENCH_EXTRA="$BENCH_EXTRA --case-ids-file $CASE_IDS_FILE"
 fi
