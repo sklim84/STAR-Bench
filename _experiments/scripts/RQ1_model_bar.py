@@ -25,9 +25,6 @@ os.makedirs(OUT_DIR, exist_ok=True)
 
 OUTLIERS = {
     "google/gemma-4-31B-it",
-    "kakaocorp/kanana-2-30b-a3b-instruct",
-    "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink",
-    "kakaocorp/kanana-2-30b-a3b-thinking-2601__think",
 }
 
 # ── 데이터 로드 ──────────────────────────────────────────────────────────────
