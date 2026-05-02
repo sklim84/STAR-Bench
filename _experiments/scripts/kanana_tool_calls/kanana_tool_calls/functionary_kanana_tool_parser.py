@@ -161,8 +161,11 @@ def is_complete_json(input_str):
 
 @ToolParserManager.register_module(["functionary_v3_llama_31"])
 class FunctionaryV3Llama31ToolParser(ToolParser):
-    def __init__(self, tokenizer: Union[PreTrainedTokenizerBase, AnyTokenizer]):
-        super().__init__(tokenizer)
+    def __init__(self, tokenizer: Union[PreTrainedTokenizerBase, AnyTokenizer], tools=None):
+        try:
+            super().__init__(tokenizer, tools)
+        except TypeError:
+            super().__init__(tokenizer)
         self.template = FunctionaryV3Llama31Template(tokenizer=tokenizer)
 
         self._func_prefix = "<function="
