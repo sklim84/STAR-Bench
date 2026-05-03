@@ -107,17 +107,6 @@ GROUP_S1_B=(
     "dragon-qwen-fin|DragonLLM/Qwen-Open-Finance-R-8B|qwen3_xml|--reasoning-parser qwen3|DragonLLM/Qwen-Open-Finance-R-8B"
 )
 
-# S1 멀티턴 Parser-fix 재실험 그룹 (Gemma-4-31B + Kanana 3종 polarity 0.085 fix)
-# GPU 0: Gemma-4-31B
-# GPU 1: Kanana-Instruct + Kanana-Think (NT/T) 순차
-GROUP_S1_MT_FIX_A=(
-    "gemma-4-31b|google/gemma-4-31B-it|gemma4|--max-model-len 32768 --enforce-eager|google/gemma-4-31B-it"
-)
-GROUP_S1_MT_FIX_B=(
-    "kanana-2-inst|kakaocorp/kanana-2-30b-a3b-instruct|functionary_v3_llama_31|--max-model-len 32768|kakaocorp/kanana-2-30b-a3b-instruct"
-    "kanana-2-think|kakaocorp/kanana-2-30b-a3b-thinking-2601|functionary_v3_llama_31|--max-model-len 32768 --reasoning-parser deepseek_r1|kakaocorp/kanana-2-30b-a3b-thinking-2601"
-)
-
 # Server 2 — TP=4 (gpt-oss-120b, 4 GPUs)
 GROUP_S2_TP4=(
     "gpt-oss-120b|openai/gpt-oss-120b|openai|--tensor-parallel-size 4 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager --reasoning-parser openai_gptoss|openai/gpt-oss-120b"
@@ -148,7 +137,7 @@ GROUP_S2_LARGE_L2=(
 GROUP_S2_LARGE_L3=(
     "gpt-oss-20b|openai/gpt-oss-20b|openai|--reasoning-parser openai_gptoss|openai/gpt-oss-20b"
     "kanana-2-inst|kakaocorp/kanana-2-30b-a3b-instruct|functionary_v3_llama_31||kakaocorp/kanana-2-30b-a3b-instruct"
-    "kanana-2-think|kakaocorp/kanana-2-30b-a3b-thinking-2601|functionary_v3_llama_31|--reasoning-parser deepseek_r1|kakaocorp/kanana-2-30b-a3b-thinking-2601"
+    "kanana-2-think|kakaocorp/kanana-2-30b-a3b-thinking-2601|functionary_v3_llama_31||kakaocorp/kanana-2-30b-a3b-thinking-2601"
 )
 
 # ===========================================================================
@@ -224,8 +213,6 @@ GROUP_BFCL_AML_TP2=(
 case "$GROUP" in
     # Server 1
     S1_A) MODELS=("${GROUP_S1_A[@]}") ;;
-    S1_MT_FIX_A) MODELS=("${GROUP_S1_MT_FIX_A[@]}") ;;
-    S1_MT_FIX_B) MODELS=("${GROUP_S1_MT_FIX_B[@]}") ;;
     S1_B) MODELS=("${GROUP_S1_B[@]}") ;;
     # Server 2
     S2_TP4) MODELS=("${GROUP_S2_TP4[@]}") ;;
