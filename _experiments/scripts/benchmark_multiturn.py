@@ -114,7 +114,7 @@ def _call_model_single_round(
         messages=messages,
         tools=TOOLS,
         tool_choice="auto",
-        max_completion_tokens=4096,
+        max_completion_tokens=int(os.environ.get("BENCH_MT_MAX_TOKENS", "4096")),
     )
     if not model_name.startswith(("o1", "o3", "o4", "gpt-5")):
         create_kwargs["temperature"] = 0
