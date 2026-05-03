@@ -1,0 +1,2057 @@
+{
+  "model": "meta-llama/Llama-3.3-70B-Instruct",
+  "provider": "vllm",
+  "think": null,
+  "timestamp": "2026-05-03T23:23:48.543593",
+  "total_cases": 33,
+  "total_elapsed_sec": 363.75,
+  "by_category": {
+    "predict_fraud": {
+      "aggregated": {
+        "total": 28,
+        "avg_score": 0.8482,
+        "primary_tool_hit_rate": 0.9286,
+        "avg_tool_recall": 0.9286,
+        "avg_tool_precision": 0.9286,
+        "avg_param_accuracy": 0.6071,
+        "avg_param_key_accuracy": 0.9286,
+        "avg_order_score": 0.9286,
+        "total_hallucinated_params": 0,
+        "by_difficulty": {
+          "easy": {
+            "count": 19,
+            "avg_score": 0.8268
+          },
+          "medium": {
+            "count": 6,
+            "avg_score": 0.9167
+          },
+          "hard": {
+            "count": 3,
+            "avg_score": 0.8472
+          }
+        },
+        "by_error_type": {
+          "wrong_value": 25,
+          "api_error": 2,
+          "correct": 1
+        }
+      },
+      "per_case": [
+        {
+          "id": "pf_001",
+          "difficulty": "easy",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.6667,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9167,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": false,
+              "reason": "거래시간대: 기대=9, 실제='3'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=119, 실제='201'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 15.54
+        },
+        {
+          "id": "pf_002",
+          "difficulty": "easy",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.8333,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9583,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": false,
+              "reason": "출금금융회사일련번호: 기대=118, 실제='305'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 19.63
+        },
+        {
+          "id": "pf_004",
+          "difficulty": "easy",
+          "primary_tool_hit": false,
+          "tool_recall": 0.0,
+          "tool_precision": 0.0,
+          "param_accuracy": 0.0,
+          "param_key_accuracy": 0.0,
+          "order_score": 0.0,
+          "score": 0.0,
+          "hallucinated_param_count": 0,
+          "error_type": "api_error",
+          "called_tools": [],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": false,
+              "reason": "도구 미호출"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": false,
+              "reason": "도구 미호출"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "도구 미호출"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": false,
+              "reason": "도구 미호출"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": false,
+              "reason": "도구 미호출"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": false,
+              "reason": "도구 미호출"
+            }
+          ],
+          "elapsed_sec": 10.61
+        },
+        {
+          "id": "pf_007",
+          "difficulty": "medium",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.6667,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9167,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": false,
+              "reason": "거래시간대: 기대=9, 실제='3'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=122, 실제='305'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 7.67
+        },
+        {
+          "id": "pf_008",
+          "difficulty": "easy",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.6667,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9167,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": false,
+              "reason": "출금금융회사일련번호: 기대=123, 실제='201'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=122, 실제='305'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 11.71
+        },
+        {
+          "id": "pf_010",
+          "difficulty": "medium",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.8333,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9583,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=122, 실제='305'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 24.16
+        },
+        {
+          "id": "pf_012",
+          "difficulty": "easy",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.3333,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.8333,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": false,
+              "reason": "거래시간대: 기대=18, 실제='17'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": false,
+              "reason": "출금금융회사일련번호: 기대=130, 실제='250'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=157, 실제='89'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": false,
+              "reason": "거래금액: 기대=9000000, 실제='2500000'"
+            }
+          ],
+          "elapsed_sec": 9.93
+        },
+        {
+          "id": "pf_013",
+          "difficulty": "easy",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.6667,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9167,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": false,
+              "reason": "출금금융회사일련번호: 기대=147, 실제='73'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=122, 실제='305'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 12.91
+        },
+        {
+          "id": "pf_014",
+          "difficulty": "medium",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.6667,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9167,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=117, 실제='73'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": false,
+              "reason": "매체구분: 기대=2, 실제='4'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 6.64
+        },
+        {
+          "id": "pf_018",
+          "difficulty": "easy",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.6667,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9167,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": false,
+              "reason": "출금금융회사일련번호: 기대=119, 실제='200'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=157, 실제='89'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 13.52
+        },
+        {
+          "id": "pf_020",
+          "difficulty": "easy",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.6667,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9167,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": false,
+              "reason": "거래시간대: 기대=3, 실제='1'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=110, 실제='27'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 9.37
+        },
+        {
+          "id": "pf_022",
+          "difficulty": "medium",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.8333,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9583,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": false,
+              "reason": "매체구분: 기대=2, 실제='4'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 13.36
+        },
+        {
+          "id": "pf_025",
+          "difficulty": "medium",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.6667,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9167,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": false,
+              "reason": "거래시간대: 기대=9, 실제='2'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=157, 실제='400'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 11.62
+        },
+        {
+          "id": "pf_027",
+          "difficulty": "easy",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.8333,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9583,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": false,
+              "reason": "매체구분: 기대=2, 실제='4'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 9.66
+        },
+        {
+          "id": "pf_028",
+          "difficulty": "easy",
+          "primary_tool_hit": false,
+          "tool_recall": 0.0,
+          "tool_precision": 0.0,
+          "param_accuracy": 0.0,
+          "param_key_accuracy": 0.0,
+          "order_score": 0.0,
+          "score": 0.0,
+          "hallucinated_param_count": 0,
+          "error_type": "api_error",
+          "called_tools": [],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": false,
+              "reason": "도구 미호출"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": false,
+              "reason": "도구 미호출"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "도구 미호출"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": false,
+              "reason": "도구 미호출"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": false,
+              "reason": "도구 미호출"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": false,
+              "reason": "도구 미호출"
+            }
+          ],
+          "elapsed_sec": 17.63
+        },
+        {
+          "id": "pf_030",
+          "difficulty": "easy",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.5,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.875,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": false,
+              "reason": "출금금융회사일련번호: 기대=119, 실제='45'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=153, 실제='300'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": false,
+              "reason": "매체구분: 기대=3, 실제='5'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 19.67
+        },
+        {
+          "id": "pf_031",
+          "difficulty": "easy",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.6667,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9167,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=123, 실제='45'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": false,
+              "reason": "매체구분: 기대=2, 실제='4'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 9.54
+        },
+        {
+          "id": "pf_037",
+          "difficulty": "medium",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.3333,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.8333,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": false,
+              "reason": "거래시간대: 기대=3, 실제='0'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": false,
+              "reason": "출금금융회사일련번호: 기대=130, 실제='250'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=113, 실제='66'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": false,
+              "reason": "자금구분: 기대=4, 실제='0'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 13.17
+        },
+        {
+          "id": "pf_038",
+          "difficulty": "hard",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.1667,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.7917,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": false,
+              "reason": "거래시간대: 기대=18, 실제='6'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": false,
+              "reason": "출금금융회사일련번호: 기대=108, 실제='33'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=116, 실제='250'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": false,
+              "reason": "매체구분: 기대=2, 실제='4'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": false,
+              "reason": "거래금액: 기대=120000000, 실제='1200000000'"
+            }
+          ],
+          "elapsed_sec": 10.27
+        },
+        {
+          "id": "pf_039",
+          "difficulty": "hard",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.6667,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9167,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": false,
+              "reason": "출금금융회사일련번호: 기대=131, 실제='99'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=120, 실제='33'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 9.2
+        },
+        {
+          "id": "pf_040",
+          "difficulty": "hard",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.3333,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.8333,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": false,
+              "reason": "거래시간대: 기대=21, 실제='3'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": false,
+              "reason": "출금금융회사일련번호: 기대=113, 실제='600'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=154, 실제='500'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": false,
+              "reason": "자금구분: 기대=4, 실제='0'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 6.55
+        },
+        {
+          "id": "pf_044",
+          "difficulty": "easy",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 1.0,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 1.0,
+          "hallucinated_param_count": 0,
+          "error_type": "correct",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 9.63
+        },
+        {
+          "id": "pf_045",
+          "difficulty": "easy",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.6667,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9167,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": false,
+              "reason": "거래시간대: 기대=9, 실제='3'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": false,
+              "reason": "출금금융회사일련번호: 기대=107, 실제='66'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 9.09
+        },
+        {
+          "id": "pf_ex01",
+          "difficulty": "easy",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.8333,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9583,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": false,
+              "reason": "거래시간대: 기대=9, 실제='3'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 15.48
+        },
+        {
+          "id": "pf_ex02",
+          "difficulty": "easy",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.8333,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9583,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": false,
+              "reason": "거래시간대: 기대=9, 실제='3'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 11.31
+        },
+        {
+          "id": "pf_ex03",
+          "difficulty": "easy",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.6667,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9167,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": false,
+              "reason": "거래시간대: 기대=9, 실제='3'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=119, 실제='201'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 9.37
+        },
+        {
+          "id": "pf_ex04",
+          "difficulty": "easy",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.6667,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9167,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": false,
+              "reason": "거래시간대: 기대=9, 실제='3'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=119, 실제='201'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 9.33
+        },
+        {
+          "id": "pf_ex05",
+          "difficulty": "easy",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.6667,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.9167,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": false,
+              "reason": "거래시간대: 기대=9, 실제='3'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=119, 실제='201'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 11.71
+        }
+      ],
+      "elapsed_sec": 338.33
+    },
+    "multi_tool": {
+      "aggregated": {
+        "total": 5,
+        "avg_score": 0.7008,
+        "primary_tool_hit_rate": 0.8,
+        "avg_tool_recall": 0.8,
+        "avg_tool_precision": 0.8,
+        "avg_param_accuracy": 0.4032,
+        "avg_param_key_accuracy": 0.8,
+        "avg_order_score": 0.8,
+        "total_hallucinated_params": 0,
+        "by_difficulty": {
+          "medium": {
+            "count": 3,
+            "avg_score": 0.5893
+          },
+          "hard": {
+            "count": 2,
+            "avg_score": 0.868
+          }
+        },
+        "by_error_type": {
+          "api_error": 1,
+          "wrong_value": 4
+        }
+      },
+      "per_case": [
+        {
+          "id": "mt_006",
+          "difficulty": "medium",
+          "primary_tool_hit": false,
+          "tool_recall": 0.0,
+          "tool_precision": 0.0,
+          "param_accuracy": 0.0,
+          "param_key_accuracy": 0.0,
+          "order_score": 0.0,
+          "score": 0.0,
+          "hallucinated_param_count": 0,
+          "error_type": "api_error",
+          "called_tools": [],
+          "param_check_details": [
+            {
+              "tool": "query_transactions",
+              "check": "sql_contains",
+              "passed": false,
+              "reason": "도구 미호출"
+            },
+            {
+              "tool": "query_transactions",
+              "check": "sql_valid",
+              "passed": false,
+              "reason": "도구 미호출"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": false,
+              "reason": "도구 미호출"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": false,
+              "reason": "도구 미호출"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": false,
+              "reason": "도구 미호출"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": false,
+              "reason": "도구 미호출"
+            }
+          ],
+          "elapsed_sec": 8.72
+        },
+        {
+          "id": "mt_008",
+          "difficulty": "hard",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.5,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.875,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "get_statistics",
+            "query_transactions",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "query_transactions",
+              "check": "sql_contains",
+              "passed": false,
+              "reason": "SQL에 누락된 키워드: ['201']"
+            },
+            {
+              "tool": "query_transactions",
+              "check": "sql_valid",
+              "passed": false,
+              "reason": "sql_valid=True 기대, error=있음"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": false,
+              "reason": "출금금융회사일련번호: 기대=123, 실제='201'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=122, 실제='305'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 3.96
+        },
+        {
+          "id": "mt_018",
+          "difficulty": "medium",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.5714,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.8929,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "predict_fraud",
+            "get_fraud_type_summary",
+            "get_fraud_type_summary"
+          ],
+          "param_check_details": [
+            {
+              "tool": "get_fraud_type_summary",
+              "check": "fraud_type",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": false,
+              "reason": "출금금융회사일련번호: 기대=118, 실제='305'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=119, 실제='201'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": false,
+              "reason": "자금구분: 기대=4, 실제='0'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 4.08
+        },
+        {
+          "id": "mt_026",
+          "difficulty": "hard",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.4444,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.8611,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "get_institution_report",
+            "query_transactions",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "get_institution_report",
+              "check": "bank_id",
+              "passed": false,
+              "reason": "bank_id: 기대=89, 실제='158'"
+            },
+            {
+              "tool": "query_transactions",
+              "check": "sql_contains",
+              "passed": false,
+              "reason": "SQL에 누락된 키워드: ['89']"
+            },
+            {
+              "tool": "query_transactions",
+              "check": "sql_valid",
+              "passed": false,
+              "reason": "sql_valid=True 기대, error=있음"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": false,
+              "reason": "출금금융회사일련번호: 기대=158, 실제='89'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": false,
+              "reason": "자금구분: 기대=4, 실제='0'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 4.35
+        },
+        {
+          "id": "mt_086",
+          "difficulty": "medium",
+          "primary_tool_hit": true,
+          "tool_recall": 1.0,
+          "tool_precision": 1.0,
+          "param_accuracy": 0.5,
+          "param_key_accuracy": 1.0,
+          "order_score": 1.0,
+          "score": 0.875,
+          "hallucinated_param_count": 0,
+          "error_type": "wrong_value",
+          "called_tools": [
+            "query_transactions",
+            "predict_fraud"
+          ],
+          "param_check_details": [
+            {
+              "tool": "query_transactions",
+              "check": "sql_contains",
+              "passed": false,
+              "reason": "SQL에 누락된 키워드: ['140']"
+            },
+            {
+              "tool": "query_transactions",
+              "check": "sql_valid",
+              "passed": false,
+              "reason": "sql_valid=True 기대, error=있음"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래시간대",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "출금금융회사일련번호",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "입금금융회사일련번호",
+              "passed": false,
+              "reason": "입금금융회사일련번호: 기대=122, 실제='305'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "자금구분",
+              "passed": false,
+              "reason": "자금구분: 기대=0, 실제='4'"
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "매체구분",
+              "passed": true,
+              "reason": ""
+            },
+            {
+              "tool": "predict_fraud",
+              "check": "거래금액",
+              "passed": true,
+              "reason": ""
+            }
+          ],
+          "elapsed_sec": 4.29
+        }
+      ],
+      "elapsed_sec": 25.42
+    }
+  },
+  "overall": {
+    "total": 33,
+    "avg_score": 0.8259,
+    "primary_tool_hit_rate": 0.9091,
+    "avg_tool_recall": 0.9091,
+    "avg_tool_precision": 0.9091,
+    "avg_param_accuracy": 0.5762,
+    "avg_param_key_accuracy": 0.9091,
+    "avg_order_score": 0.9091,
+    "total_hallucinated_params": 0,
+    "by_difficulty": {
+      "easy": {
+        "count": 19,
+        "avg_score": 0.8268
+      },
+      "medium": {
+        "count": 9,
+        "avg_score": 0.8075
+      },
+      "hard": {
+        "count": 5,
+        "avg_score": 0.8556
+      }
+    },
+    "by_error_type": {
+      "wrong_value": 29,
+      "api_error": 3,
+      "correct": 1
+    }
+  }
+}

@@ -1952,13 +1952,15 @@ def print_comparison_summary(comparison: dict) -> None:
     _ts_print(f"\n{'모델':<18} {'함수정확도':>10} {'파라미터':>10} {'종합점수':>10} {'환각':>6} {'시간(초)':>10}")
     _ts_print("-" * 70)
     for ms in comparison["model_summaries"]:
+        elapsed = ms.get('total_elapsed_sec') or 0.0
+        hall = ms.get('total_hallucinated_params') or 0
         _ts_print(
             f"{ms['model']:<18} "
             f"{ms['primary_tool_hit_rate']:>10.1%} "
             f"{ms['avg_param_accuracy']:>10.1%} "
             f"{ms['avg_score']:>10.1%} "
-            f"{ms['total_hallucinated_params']:>6d} "
-            f"{ms['total_elapsed_sec']:>10.1f}"
+            f"{hall:>6d} "
+            f"{elapsed:>10.1f}"
         )
     _ts_print("=" * 70)
 

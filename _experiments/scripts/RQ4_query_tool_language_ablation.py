@@ -40,6 +40,16 @@ TARGETS = [
 # Gemma-4-31B-it는 2026-05-02 parser hermes→gemma4 fix로 정상화 (h=0.940) → outlier 해제
 OUTLIERS = set()
 
+# 파일 저장 시 sanitize (`/`→`_`, `.`→`_`)된 model 필드를 canonical(슬래시)로 역매핑.
+# 동일 모델이 슬래시·언더스코어 두 키로 중복 등록되어 latest 선택이 빗나가는 것 방지.
+_SAFE_TO_CANONICAL = {
+    mid.replace('/', '_').replace('.', '_'): mid for mid, _ in TARGETS
+}
+
+
+def _canonicalize(m: str) -> str:
+    return _SAFE_TO_CANONICAL.get(m, m)
+
 
 def load_cell(cell_dir):
     """Load latest eval per model (model_id -> overall dict)."""
@@ -51,6 +61,7 @@ def load_cell(cell_dir):
         m = d.get('model')
         if not m:
             continue
+        m = _canonicalize(m)
         # keep latest by timestamp in filename
         if m not in by_model or f.name > by_model[m]['_file']:
             o = d.get('overall', {})
