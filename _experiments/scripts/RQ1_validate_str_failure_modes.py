@@ -40,6 +40,9 @@ TARGET_MODELS = {
     "NousResearch/Hermes-3-Llama-3.1-8B",
 }
 
+
+_SAFE_TO_CANONICAL = {m.replace('/', '_').replace('.', '_'): m for m in TARGET_MODELS}
+def _canonicalize(m): return _SAFE_TO_CANONICAL.get(m, m)
 def extract_tool_names(called_tools):
     names = []
     for t in called_tools or []:
@@ -69,7 +72,7 @@ def main():
     for f in files:
         d = json.load(f.open())
         model = d['model']
-        if model not in TARGET_MODELS:
+        if _canonicalize(model) not in TARGET_MODELS:
             continue
         cat = d.get('by_category', {}).get('validate_str_fields', {})
         for c in cat.get('per_case', []):

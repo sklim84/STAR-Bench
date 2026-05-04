@@ -58,11 +58,15 @@ def load_bfcl():
 
 
 def load_aml():
+    # canonicalize: latest eval은 sanitized model name 사용
+    targets = set(BFCL_TO_AML.values())
+    safe_to_canonical = {m.replace('/', '_').replace('.', '_'): m for m in targets}
     out = {}
     for f in sorted(AML_DIR.glob('eval_*.json')):
         d = json.load(f.open())
         m = d.get('model')
         if m:
+            m = safe_to_canonical.get(m, m)
             out[m] = (d.get('overall', {}).get('primary_tool_hit_rate'))
     return out
 

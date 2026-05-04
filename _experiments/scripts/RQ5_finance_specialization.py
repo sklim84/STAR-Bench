@@ -72,10 +72,15 @@ def per_subdomain_h(by_category):
 
 def main():
     files = sorted(EVAL_DIR.glob('eval_*.json'))
+    # canonicalize: latest eval은 sanitized model name 사용
+    all_targets = {m for lst in TARGET_MODELS.values() for m in lst}
+    safe_to_canonical = {m.replace('/', '_').replace('.', '_'): m for m in all_targets}
     by_model = {}
     for f in files:
         d = json.load(f.open())
-        by_model[d['model']] = per_subdomain_h(d.get('by_category', {}))
+        m = d['model']
+        m = safe_to_canonical.get(m, m)
+        by_model[m] = per_subdomain_h(d.get('by_category', {}))
 
     rows = []
     flat_targets = []

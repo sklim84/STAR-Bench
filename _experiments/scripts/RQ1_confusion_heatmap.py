@@ -44,6 +44,9 @@ TARGET_MODELS = {
     "NousResearch/Hermes-3-Llama-3.1-8B",
 }
 
+
+_SAFE_TO_CANONICAL = {m.replace('/', '_').replace('.', '_'): m for m in TARGET_MODELS}
+def _canonicalize(m): return _SAFE_TO_CANONICAL.get(m, m)
 # ── 집계: expected_tool -> called_tool -> count ───────────────────────────────
 conf = defaultdict(lambda: defaultdict(int))
 n_models_used = 0
@@ -53,7 +56,7 @@ for fn in sorted(os.listdir(EVAL_DIR)):
         continue
     with open(os.path.join(EVAL_DIR, fn)) as f:
         d = json.load(f)
-    if d["model"] not in TARGET_MODELS:
+    if _canonicalize(d["model"]) not in TARGET_MODELS:
         continue
     n_models_used += 1
     for cat, cat_data in d["by_category"].items():

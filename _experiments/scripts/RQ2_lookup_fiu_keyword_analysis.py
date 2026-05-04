@@ -40,6 +40,9 @@ TARGET_MODELS = {
     "NousResearch/Hermes-3-Llama-3.1-8B",
 }
 
+
+_SAFE_TO_CANONICAL = {m.replace('/', '_').replace('.', '_'): m for m in TARGET_MODELS}
+def _canonicalize(m): return _SAFE_TO_CANONICAL.get(m, m)
 def main():
     files = sorted(EVAL_DIR.glob('eval_*.json'))
     rows = []
@@ -49,7 +52,7 @@ def main():
     for f in files:
         d = json.load(f.open())
         model = d['model']
-        if model not in TARGET_MODELS:
+        if _canonicalize(model) not in TARGET_MODELS:
             continue
         cat = d.get('by_category', {}).get('lookup_fiu_reference_types', {})
         for c in cat.get('per_case', []):
