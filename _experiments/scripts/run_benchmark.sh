@@ -22,8 +22,6 @@ PORT="11434"
 GROUP="A"
 MODE="kr"
 TOOLS_LANG=""           # "" (default = KR tools), "en" (RQ2 ablation)
-CASE_IDS_FILE=""        # 부분 재실험: case ID 목록 파일
-FORCE_RERUN=""          # 1이면 --force-rerun 추가 (체크포인트 캐시 무시)
 HF_TOKEN="${HF_TOKEN:-}"
 PROJECT_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
 
@@ -44,8 +42,6 @@ while [[ $# -gt 0 ]]; do
         --group)      GROUP="$2"; shift 2 ;;
         --mode)       MODE="$2"; shift 2 ;;
         --tools-lang) TOOLS_LANG="$2"; shift 2 ;;
-        --case-ids-file) CASE_IDS_FILE="$2"; shift 2 ;;
-        --force-rerun)   FORCE_RERUN="1"; shift 1 ;;
         *) echo "Unknown: $1"; exit 1 ;;
     esac
 done
@@ -130,14 +126,14 @@ GROUP_S2_LARGE_L1=(
     "qwen36-35b-a3b|Qwen/Qwen3.6-35B-A3B|qwen3_xml|--max-model-len 32768|Qwen/Qwen3.6-35B-A3B"
 )
 GROUP_S2_LARGE_L2=(
-    "gemma-4-31b|google/gemma-4-31B-it|gemma4||google/gemma-4-31B-it"
+    "gemma-4-31b|google/gemma-4-31B-it|hermes||google/gemma-4-31B-it"
     "mistral-small|mistralai/Mistral-Small-3.2-24B-Instruct-2506|mistral||mistralai/Mistral-Small-3.2-24B-Instruct-2506"
     "exaone-32b|LGAI-EXAONE/EXAONE-4.0-32B|hermes|--trust-remote-code|LGAI-EXAONE/EXAONE-4.0-32B"
 )
 GROUP_S2_LARGE_L3=(
     "gpt-oss-20b|openai/gpt-oss-20b|openai|--reasoning-parser openai_gptoss|openai/gpt-oss-20b"
-    "kanana-2-inst|kakaocorp/kanana-2-30b-a3b-instruct|functionary_v3_llama_31||kakaocorp/kanana-2-30b-a3b-instruct"
-    "kanana-2-think|kakaocorp/kanana-2-30b-a3b-thinking-2601|functionary_v3_llama_31||kakaocorp/kanana-2-30b-a3b-thinking-2601"
+    "kanana-2-inst|kakaocorp/kanana-2-30b-a3b-instruct|hermes||kakaocorp/kanana-2-30b-a3b-instruct"
+    "kanana-2-think|kakaocorp/kanana-2-30b-a3b-thinking-2601|hermes|--reasoning-parser deepseek_r1|kakaocorp/kanana-2-30b-a3b-thinking-2601"
 )
 
 # ===========================================================================
@@ -248,18 +244,6 @@ esac
 if [[ "$TOOLS_LANG" == "en" ]]; then
     OUTPUT_DIR="${OUTPUT_DIR}_tools_en"
     BENCH_EXTRA="$BENCH_EXTRA --tools-lang en"
-fi
-
-# 부분 재실험: --case-ids-file / --force-rerun 패스스루
-# CRITICAL: --resume은 모델 단위 skip을 트리거하므로 부분 재실험 모드에서는 자동 제거
-if [[ -n "$CASE_IDS_FILE" ]] || [[ -n "$FORCE_RERUN" ]]; then
-    BENCH_EXTRA="${BENCH_EXTRA// --resume/}"
-fi
-if [[ -n "$CASE_IDS_FILE" ]]; then
-    BENCH_EXTRA="$BENCH_EXTRA --case-ids-file $CASE_IDS_FILE"
-fi
-if [[ -n "$FORCE_RERUN" ]]; then
-    BENCH_EXTRA="$BENCH_EXTRA --force-rerun"
 fi
 
 mkdir -p "$OUTPUT_DIR/eval" "$OUTPUT_DIR/checkpoint" "$LOG_DIR"
