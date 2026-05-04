@@ -11,9 +11,9 @@
         "predict_fraud": {
           "거래시간대": 9,
           "출금금융회사일련번호": 134,
-          "입금금융회사일련번호": 119,
+          "입금금융회사일련번호": 201,
           "자금구분": 4,
-          "매체구분": 2,
+          "매체구분": 4,
           "거래금액": 5000000
         }
       }
@@ -23,7 +23,7 @@
   },
   {
     "id": "pf_002",
-    "question": "At 3 AM (transaction time zone 3), a withdrawal of 12 million won occurred at the PC banking (media type 1) with a withdrawal source of 305 and a deposit source of 134 (fund type 3). What is the probability that this transaction is suspicious?",
+    "question": "At 3 AM (transaction time zone 3), a withdrawal of 12 million won occurred at the counter (media type 1) with a withdrawal source of 305 and a deposit source of 134 (fund type 3). What is the probability that this transaction is suspicious?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -32,7 +32,7 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 3,
-          "출금금융회사일련번호": 118,
+          "출금금융회사일련번호": 305,
           "입금금융회사일련번호": 134,
           "자금구분": 3,
           "매체구분": 1,
@@ -45,7 +45,7 @@
   },
   {
     "id": "pf_003",
-    "question": "Please use AI to determine whether the transaction with a withdrawal from financial institution 123, a deposit to financial institution 122, at 6 AM (transaction time zone 6), via ATM (media type 2), categorized as transfer (fund type 4), with a transaction amount of 3,000,000 won is suspicious.",
+    "question": "Please use AI to determine whether the transaction with a withdrawal from financial institution 201, a deposit to financial institution 305, at 6 AM (transaction time zone 6), via ATM (media type 2), categorized as transfer (fund type 4), with a transaction amount of 3,000,000 won is suspicious.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -54,8 +54,8 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 6,
-          "출금금융회사일련번호": 123,
-          "입금금융회사일련번호": 122,
+          "출금금융회사일련번호": 201,
+          "입금금융회사일련번호": 305,
           "자금구분": 4,
           "매체구분": 2,
           "거래금액": 3000000
@@ -67,7 +67,7 @@
   },
   {
     "id": "pf_004",
-    "question": "Please predict the likelihood of fraud for a transaction amount of 8,000,000 won with the following parameters: transaction time frame 21, withdrawal institution 134, deposit institution 119, fund type 1 (deposit), and medium type 4 (internet banking).",
+    "question": "Please predict the likelihood of fraud for a transaction amount of 8,000,000 won with the following parameters: transaction time frame 21, withdrawal institution 134, deposit institution 201, fund type 1 (deposit), and medium type 4 (internet banking).",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -77,9 +77,9 @@
         "predict_fraud": {
           "거래시간대": 21,
           "출금금융회사일련번호": 134,
-          "입금금융회사일련번호": 119,
+          "입금금융회사일련번호": 201,
           "자금구분": 1,
-          "매체구분": 2,
+          "매체구분": 4,
           "거래금액": 8000000
         }
       }
@@ -98,7 +98,7 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 12,
-          "출금금융회사일련번호": 123,
+          "출금금융회사일련번호": 201,
           "입금금융회사일련번호": 134,
           "자금구분": 0,
           "매체구분": 3,
@@ -111,7 +111,7 @@
   },
   {
     "id": "pf_006",
-    "question": "Please analyze the following transaction using the suspicious transaction model: transaction time frame = 15, withdrawal source = 305, deposit source = 201, transfer, call center (media (type 7), 7 million won.",
+    "question": "Please analyze the following transaction using the suspicious transaction model: transaction time frame = 15, withdrawal source = 305, deposit source = 201, transfer, call center (media type 6), 7 million won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -120,8 +120,8 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 15,
-          "출금금융회사일련번호": 118,
-          "입금금융회사일련번호": 119,
+          "출금금융회사일련번호": 305,
+          "입금금융회사일련번호": 201,
           "자금구분": 4,
           "매체구분": 6,
           "거래금액": 7000000
@@ -133,7 +133,7 @@
   },
   {
     "id": "pf_007",
-    "question": "Please provide a numerical analysis of the potential for suspicious activity in the following transaction: a PC banking transaction at 9 AM - withdrawal from account 134, deposit to account 305, withdrawal (fund type 3), 10 million won.",
+    "question": "Please provide a numerical analysis of the potential for suspicious activity in the following transaction: a counter transaction at 9 AM - withdrawal from account 134, deposit to account 305, withdrawal (fund type 3), 10 million won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -143,7 +143,7 @@
         "predict_fraud": {
           "거래시간대": 9,
           "출금금융회사일련번호": 134,
-          "입금금융회사일련번호": 122,
+          "입금금융회사일련번호": 305,
           "자금구분": 3,
           "매체구분": 1,
           "거래금액": 10000000
@@ -165,10 +165,10 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 18,
-          "출금금융회사일련번호": 123,
-          "입금금융회사일련번호": 122,
+          "출금금융회사일련번호": 201,
+          "입금금융회사일련번호": 305,
           "자금구분": 4,
-          "매체구분": 3,
+          "매체구분": 5,
           "거래금액": 2000000
         }
       }
@@ -178,7 +178,7 @@
   },
   {
     "id": "pf_009",
-    "question": "Please use AI to predict the likelihood that a transaction of 5 million won, involving a withdrawal from financial institution 118 and a deposit to financial institution 119, during the midnight time frame (transaction time category 0) and through other channels (media type 7), is a suspicious transaction.",
+    "question": "Please use AI to predict the likelihood that a transaction of 5 million won, involving a withdrawal from financial institution 305 and a deposit to financial institution 201, during the midnight time frame (transaction time category 0) and through other channels (media type 7), is a suspicious transaction.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -187,8 +187,8 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 0,
-          "출금금융회사일련번호": 118,
-          "입금금융회사일련번호": 119,
+          "출금금융회사일련번호": 305,
+          "입금금융회사일련번호": 201,
           "자금구분": 4,
           "매체구분": 7,
           "거래금액": 5000000
@@ -200,7 +200,7 @@
   },
   {
     "id": "pf_010",
-    "question": "Please calculate the probability of a suspicious transaction under the following conditions: transaction time in the early morning (time period 3), automated Internet banking machine (ATM, medium classification 2), withdrawal source 134, deposit source 305, fund classification 3 (withdrawal), and transaction amount of 15 million won.",
+    "question": "Please calculate the probability of a suspicious transaction under the following conditions: transaction time in the early morning (time period 3), automated teller machine (ATM, medium classification 2), withdrawal source 134, deposit source 305, fund classification 3 (withdrawal), and transaction amount of 15 million won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -210,7 +210,7 @@
         "predict_fraud": {
           "거래시간대": 3,
           "출금금융회사일련번호": 134,
-          "입금금융회사일련번호": 122,
+          "입금금융회사일련번호": 305,
           "자금구분": 3,
           "매체구분": 2,
           "거래금액": 15000000
@@ -231,8 +231,8 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 15,
-          "출금금융회사일련번호": 158,
+          "거래시간대": 14,
+          "출금금융회사일련번호": 89,
           "입금금융회사일련번호": 150,
           "자금구분": 4,
           "매체구분": 2,
@@ -253,11 +253,11 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 18,
-          "출금금융회사일련번호": 130,
-          "입금금융회사일련번호": 157,
+          "거래시간대": 17,
+          "출금금융회사일련번호": 250,
+          "입금금융회사일련번호": 89,
           "자금구분": 4,
-          "매체구분": 2,
+          "매체구분": 4,
           "거래금액": 9000000
         }
       }
@@ -267,7 +267,7 @@
   },
   {
     "id": "pf_013",
-    "question": "Please use AI to determine whether the transaction of 20 million won, with a withdrawal from account 73, a deposit to account 305, occurring at 2 AM (transaction time zone 3), through a PC banking (media type 1), and classified as a withdrawal (fund type 3), is suspicious.",
+    "question": "Please use AI to determine whether the transaction of 20 million won, with a withdrawal from account 73, a deposit to account 305, occurring at 2 AM (transaction time zone 2), through a counter (media type 1), and classified as a withdrawal (fund type 3), is suspicious.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -275,9 +275,9 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 3,
-          "출금금융회사일련번호": 147,
-          "입금금융회사일련번호": 122,
+          "거래시간대": 2,
+          "출금금융회사일련번호": 73,
+          "입금금융회사일련번호": 305,
           "자금구분": 3,
           "매체구분": 1,
           "거래금액": 20000000
@@ -297,11 +297,11 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 21,
+          "거래시간대": 22,
           "출금금융회사일련번호": 156,
-          "입금금융회사일련번호": 117,
+          "입금금융회사일련번호": 73,
           "자금구분": 3,
-          "매체구분": 2,
+          "매체구분": 4,
           "거래금액": 6000000
         }
       }
@@ -311,7 +311,7 @@
   },
   {
     "id": "pf_015",
-    "question": "What is the probability that a transaction of 4,500,000 won, transferred from account 305 to account 156 via withdrawal at 11 AM (transaction time 11) through the call center (media (type 7) is a suspicious transaction?",
+    "question": "What is the probability that a transaction of 4,500,000 won, transferred from account 305 to account 156 via withdrawal at 11 AM (transaction time 11) through the call center (media type 6) is a suspicious transaction?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -319,8 +319,8 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 12,
-          "출금금융회사일련번호": 118,
+          "거래시간대": 11,
+          "출금금융회사일련번호": 305,
           "입금금융회사일련번호": 156,
           "자금구분": 4,
           "매체구분": 6,
@@ -341,9 +341,9 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 6,
-          "출금금융회사일련번호": 158,
-          "입금금융회사일련번호": 110,
+          "거래시간대": 7,
+          "출금금융회사일련번호": 89,
+          "입금금융회사일련번호": 27,
           "자금구분": 4,
           "매체구분": 5,
           "거래금액": 3500000
@@ -364,8 +364,8 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 6,
-          "출금금융회사일련번호": 134,
-          "입금금융회사일련번호": 127,
+          "출금금융회사일련번호": 27,
+          "입금금융회사일련번호": 200,
           "자금구분": 3,
           "매체구분": 2,
           "거래금액": 5500000
@@ -377,7 +377,7 @@
   },
   {
     "id": "pf_018",
-    "question": "Is a transaction of 15,000,000 won that occurred during time slot 21, with a withdrawal from account 200, a deposit to account 89, classified as a suspicious transaction, considering it involves a transfer (fund type 4) and internet banking (medium type 4)?",
+    "question": "Is a transaction of 15,000,000 won that occurred during time slot 20, with a withdrawal from account 200, a deposit to account 89, classified as a suspicious transaction, considering it involves a transfer (fund type 4) and internet banking (medium type 4)?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -385,11 +385,11 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 21,
-          "출금금융회사일련번호": 119,
-          "입금금융회사일련번호": 157,
+          "거래시간대": 20,
+          "출금금융회사일련번호": 200,
+          "입금금융회사일련번호": 89,
           "자금구분": 4,
-          "매체구분": 2,
+          "매체구분": 4,
           "거래금액": 15000000
         }
       }
@@ -407,9 +407,9 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 15,
-          "출금금융회사일련번호": 147,
-          "입금금융회사일련번호": 127,
+          "거래시간대": 16,
+          "출금금융회사일련번호": 73,
+          "입금금융회사일련번호": 200,
           "자금구분": 1,
           "매체구분": 3,
           "거래금액": 8000000
@@ -421,7 +421,7 @@
   },
   {
     "id": "pf_020",
-    "question": "Please calculate the probability of a suspicious transaction for a transfer of 7,000,000 KRW from withdrawal account 156 to deposit account 27 via telephone banking (media type 5) at 4 AM (transaction time zone 3) with a fund classification of 4.",
+    "question": "Please calculate the probability of a suspicious transaction for a transfer of 7,000,000 KRW from withdrawal account 156 to deposit account 27 via telephone banking (media type 5) at 4 AM (transaction time zone 4) with a fund classification of 4.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -429,11 +429,11 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 3,
+          "거래시간대": 4,
           "출금금융회사일련번호": 156,
-          "입금금융회사일련번호": 110,
+          "입금금융회사일련번호": 27,
           "자금구분": 4,
-          "매체구분": 3,
+          "매체구분": 5,
           "거래금액": 7000000
         }
       }
@@ -451,9 +451,9 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 0,
-          "출금금융회사일련번호": 118,
-          "입금금융회사일련번호": 117,
+          "거래시간대": 1,
+          "출금금융회사일련번호": 305,
+          "입금금융회사일련번호": 73,
           "자금구분": 4,
           "매체구분": 7,
           "거래금액": 25000000
@@ -465,7 +465,7 @@
   },
   {
     "id": "pf_022",
-    "question": "What is the probability of the transaction being suspicious for a transaction with a time frame of 10, withdrawal institution 108, deposit institution 134, fund type 4 (transfer), medium type 4 (internet banking), and transaction amount of 4,500,000 won?",
+    "question": "What is the probability of the transaction being suspicious for a transaction with a time frame of 10, withdrawal institution 33, deposit institution 134, fund type 4 (transfer), medium type 4 (internet banking), and transaction amount of 4,500,000 won?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -473,11 +473,11 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 9,
-          "출금금융회사일련번호": 108,
+          "거래시간대": 10,
+          "출금금융회사일련번호": 33,
           "입금금융회사일련번호": 134,
           "자금구분": 4,
-          "매체구분": 2,
+          "매체구분": 4,
           "거래금액": 4500000
         }
       }
@@ -496,8 +496,8 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 21,
-          "출금금융회사일련번호": 150,
-          "입금금융회사일련번호": 120,
+          "출금금융회사일련번호": 400,
+          "입금금융회사일련번호": 33,
           "자금구분": 4,
           "매체구분": 2,
           "거래금액": 1800000
@@ -518,7 +518,7 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 0,
-          "출금금융회사일련번호": 129,
+          "출금금융회사일련번호": 500,
           "입금금융회사일련번호": 150,
           "자금구분": 4,
           "매체구분": 7,
@@ -531,7 +531,7 @@
   },
   {
     "id": "pf_025",
-    "question": "Please calculate the probability of this transaction being suspicious: withdrawal from source 150, deposit to source 400, withdrawal (funds category 3), transaction amount of 12 million won, at the PC banking (media type 1) during the time frame of 8 AM (transaction time frame 8).",
+    "question": "Please calculate the probability of this transaction being suspicious: withdrawal from source 150, deposit to source 400, withdrawal (funds category 3), transaction amount of 12 million won, at the counter (media type 1) during the time frame of 8 AM (transaction time frame 8).",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -539,9 +539,9 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 9,
+          "거래시간대": 8,
           "출금금융회사일련번호": 150,
-          "입금금융회사일련번호": 157,
+          "입금금융회사일련번호": 400,
           "자금구분": 3,
           "매체구분": 1,
           "거래금액": 12000000
@@ -553,7 +553,7 @@
   },
   {
     "id": "pf_026",
-    "question": "Please predict the likelihood of fraud for a transaction with the following details using XGBoost: transaction time period 23, call center (media (type 7), withdrawal source 99, deposit source 500, fund type 4 (transfer), and transaction amount 35,000,000 won.",
+    "question": "Please predict the likelihood of fraud for a transaction with the following details using XGBoost: transaction time period 23, call center (media type 6), withdrawal source 99, deposit source 500, fund type 4 (transfer), and transaction amount 35,000,000 won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -561,9 +561,9 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 21,
-          "출금금융회사일련번호": 131,
-          "입금금융회사일련번호": 154,
+          "거래시간대": 23,
+          "출금금융회사일련번호": 99,
+          "입금금융회사일련번호": 500,
           "자금구분": 4,
           "매체구분": 6,
           "거래금액": 35000000
@@ -575,7 +575,7 @@
   },
   {
     "id": "pf_027",
-    "question": "Please predict the likelihood of a suspicious transaction for a transaction with the following details: transaction time period 18, withdrawal institution 116, deposit institution 156, fund type 4 (transfer), medium type 4 (internet banking), and transaction amount 4,300,000 won.",
+    "question": "Please predict the likelihood of a suspicious transaction for a transaction with the following details: transaction time period 18, withdrawal institution 77, deposit institution 156, fund type 4 (transfer), medium type 4 (internet banking), and transaction amount 4,300,000 won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -584,10 +584,10 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 18,
-          "출금금융회사일련번호": 116,
+          "출금금융회사일련번호": 77,
           "입금금융회사일련번호": 156,
           "자금구분": 4,
-          "매체구분": 2,
+          "매체구분": 4,
           "거래금액": 4300000
         }
       }
@@ -597,7 +597,7 @@
   },
   {
     "id": "pf_028",
-    "question": "What is the probability that a transaction of 18,000,000 won, occurring at 9 AM (transaction time zone 9), through the PC banking (media type 1), with a withdrawal source of 305 and a deposit source of 77, classified as a transfer (fund type 4), is a suspicious transaction?",
+    "question": "What is the probability that a transaction of 18,000,000 won, occurring at 9 AM (transaction time zone 9), through the counter (media type 1), with a withdrawal source of 305 and a deposit source of 77, classified as a transfer (fund type 4), is a suspicious transaction?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -606,8 +606,8 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 9,
-          "출금금융회사일련번호": 118,
-          "입금금융회사일련번호": 114,
+          "출금금융회사일련번호": 305,
+          "입금금융회사일련번호": 77,
           "자금구분": 4,
           "매체구분": 1,
           "거래금액": 18000000
@@ -628,8 +628,8 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 6,
-          "출금금융회사일련번호": 119,
-          "입금금융회사일련번호": 152,
+          "출금금융회사일련번호": 200,
+          "입금금융회사일련번호": 99,
           "자금구분": 3,
           "매체구분": 2,
           "거래금액": 6800000
@@ -650,10 +650,10 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 15,
-          "출금금융회사일련번호": 119,
-          "입금금융회사일련번호": 153,
+          "출금금융회사일련번호": 45,
+          "입금금융회사일련번호": 300,
           "자금구분": 1,
-          "매체구분": 3,
+          "매체구분": 5,
           "거래금액": 10000000
         }
       }
@@ -673,9 +673,9 @@
         "predict_fraud": {
           "거래시간대": 15,
           "출금금융회사일련번호": 134,
-          "입금금융회사일련번호": 123,
+          "입금금융회사일련번호": 45,
           "자금구분": 4,
-          "매체구분": 2,
+          "매체구분": 4,
           "거래금액": 3200000
         }
       }
@@ -694,8 +694,8 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 21,
-          "출금금융회사일련번호": 128,
-          "입금금융회사일련번호": 119,
+          "출금금융회사일련번호": 88,
+          "입금금융회사일련번호": 201,
           "자금구분": 4,
           "매체구분": 2,
           "거래금액": 7500000
@@ -716,7 +716,7 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 12,
-          "출금금융회사일련번호": 128,
+          "출금금융회사일련번호": 88,
           "입금금융회사일련번호": 134,
           "자금구분": 4,
           "매체구분": 3,
@@ -729,7 +729,7 @@
   },
   {
     "id": "pf_034",
-    "question": "Please predict the likelihood of this transaction being suspicious using the XGBoost model: transaction time slot=6, withdrawal source=600, deposit source=88, fund type=3, medium type=6, transaction amount=9500000.",
+    "question": "Please predict the likelihood of this transaction being suspicious using the XGBoost model: transaction time slot=5, withdrawal source=600, deposit source=88, fund type=3, medium type=6, transaction amount=9500000.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -737,9 +737,9 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 6,
-          "출금금융회사일련번호": 113,
-          "입금금융회사일련번호": 143,
+          "거래시간대": 5,
+          "출금금융회사일련번호": 600,
+          "입금금융회사일련번호": 88,
           "자금구분": 3,
           "매체구분": 6,
           "거래금액": 9500000
@@ -751,7 +751,7 @@
   },
   {
     "id": "pf_035",
-    "question": "Please provide a numerical assessment of the likelihood that this transaction is suspicious: transaction time at midnight (0), channel (type 7) (call center), withdrawal source 400, deposit source 600, transfer type 4 (funds), and transaction amount of 30 million won.",
+    "question": "Please provide a numerical assessment of the likelihood that this transaction is suspicious: transaction time at midnight (0), channel type 6 (call center), withdrawal source 400, deposit source 600, transfer type 4 (funds), and transaction amount of 30 million won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -760,8 +760,8 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 0,
-          "출금금융회사일련번호": 150,
-          "입금금융회사일련번호": 146,
+          "출금금융회사일련번호": 400,
+          "입금금융회사일련번호": 600,
           "자금구분": 4,
           "매체구분": 6,
           "거래금액": 30000000
@@ -782,9 +782,9 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 12,
-          "출금금융회사일련번호": 107,
-          "입금금융회사일련번호": 152,
+          "거래시간대": 13,
+          "출금금융회사일련번호": 66,
+          "입금금융회사일련번호": 99,
           "자금구분": 0,
           "매체구분": 7,
           "거래금액": 5600000
@@ -805,10 +805,10 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 3,
-          "출금금융회사일련번호": 130,
-          "입금금융회사일련번호": 113,
+          "출금금융회사일련번호": 250,
+          "입금금융회사일련번호": 66,
           "자금구분": 4,
-          "매체구분": 3,
+          "매체구분": 5,
           "거래금액": 5000000
         }
       }
@@ -827,11 +827,11 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 18,
-          "출금금융회사일련번호": 108,
-          "입금금융회사일련번호": 116,
+          "거래시간대": 19,
+          "출금금융회사일련번호": 33,
+          "입금금융회사일련번호": 250,
           "자금구분": 1,
-          "매체구분": 2,
+          "매체구분": 4,
           "거래금액": 120000000
         }
       }
@@ -850,11 +850,11 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 21,
-          "출금금융회사일련번호": 131,
-          "입금금융회사일련번호": 120,
+          "거래시간대": 23,
+          "출금금융회사일련번호": 99,
+          "입금금융회사일련번호": 33,
           "자금구분": 3,
-          "매체구분": 4,
+          "매체구분": 7,
           "거래금액": 45000000
         }
       }
@@ -865,7 +865,7 @@
   },
   {
     "id": "pf_040",
-    "question": "Please have the AI determine if the transaction of 100 million won, with a withdrawal of 600 and a deposit of 500 at the PC banking at 10 PM, is a suspicious transaction based on the transfer method.",
+    "question": "Please have the AI determine if the transaction of 100 million won, with a withdrawal of 600 and a deposit of 500 at the counter at 10 PM, is a suspicious transaction based on the transfer method.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -874,8 +874,8 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 21,
-          "출금금융회사일련번호": 113,
-          "입금금융회사일련번호": 154,
+          "출금금융회사일련번호": 600,
+          "입금금융회사일련번호": 500,
           "자금구분": 4,
           "매체구분": 1,
           "거래금액": 100000000
@@ -898,7 +898,7 @@
         "predict_fraud": {
           "거래시간대": 6,
           "출금금융회사일련번호": 112,
-          "입금금융회사일련번호": 151,
+          "입금금융회사일련번호": 223,
           "자금구분": 4,
           "매체구분": 2,
           "거래금액": 2700000
@@ -919,7 +919,7 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 18,
-          "출금금융회사일련번호": 134,
+          "출금금융회사일련번호": 223,
           "입금금융회사일련번호": 112,
           "자금구분": 1,
           "매체구분": 7,
@@ -932,7 +932,7 @@
   },
   {
     "id": "pf_043",
-    "question": "Please predict whether the transaction with the following details is suspicious: transaction time zone 9, withdrawal institution 151, deposit institution 143, fund type 3 (withdrawal), medium type 3 (PB center), transaction amount 16,500,000 won.",
+    "question": "Please predict whether the transaction with the following details is suspicious: transaction time zone 9, withdrawal institution 334, deposit institution 445, fund type 3 (withdrawal), medium type 3 (PB center), transaction amount 16,500,000 won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -941,8 +941,8 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 9,
-          "출금금융회사일련번호": 151,
-          "입금금융회사일련번호": 143,
+          "출금금융회사일련번호": 334,
+          "입금금융회사일련번호": 445,
           "자금구분": 3,
           "매체구분": 3,
           "거래금액": 16500000
@@ -1031,7 +1031,7 @@
   },
   {
     "id": "pf_044",
-    "question": "Please predict the likelihood of a suspicious transaction for a transaction with the following details: transaction time period 12, withdrawal institution 128, deposit institution 154, fund type 4 (transfer), medium type 1 (PC banking), and transaction amount 3,900,000 won.",
+    "question": "Please predict the likelihood of a suspicious transaction for a transaction with the following details: transaction time period 12, withdrawal institution 445, deposit institution 334, fund type 4 (transfer), medium type 1 (counter), and transaction amount 3,900,000 won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -1040,8 +1040,8 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 12,
-          "출금금융회사일련번호": 128,
-          "입금금융회사일련번호": 154,
+          "출금금융회사일련번호": 445,
+          "입금금융회사일련번호": 334,
           "자금구분": 4,
           "매체구분": 1,
           "거래금액": 3900000
@@ -1062,10 +1062,10 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 9,
-          "출금금융회사일련번호": 107,
+          "출금금융회사일련번호": 66,
           "입금금융회사일련번호": 112,
           "자금구분": 4,
-          "매체구분": 2,
+          "매체구분": 4,
           "거래금액": 22000000
         }
       }
@@ -1083,9 +1083,9 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 21,
-          "출금금융회사일련번호": 151,
-          "입금금융회사일련번호": 143,
+          "거래시간대": 23,
+          "출금금융회사일련번호": 334,
+          "입금금융회사일련번호": 445,
           "자금구분": 3,
           "매체구분": 2,
           "거래금액": 9800000
@@ -1098,7 +1098,7 @@
   },
   {
     "id": "pf_047",
-    "question": "Please predict the fraud probability of a transaction with the following details using XGBoost: transaction time frame 15, withdrawal institution 134, deposit institution 146, fund type 1 (deposit), medium (type 7) (call center), transaction amount 68 million won.",
+    "question": "Please predict the fraud probability of a transaction with the following details using XGBoost: transaction time frame 15, withdrawal institution 223, deposit institution 600, fund type 1 (deposit), medium type 6 (call center), transaction amount 68 million won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -1107,8 +1107,8 @@
       "param_checks": {
         "predict_fraud": {
           "거래시간대": 15,
-          "출금금융회사일련번호": 134,
-          "입금금융회사일련번호": 146,
+          "출금금융회사일련번호": 223,
+          "입금금융회사일련번호": 600,
           "자금구분": 1,
           "매체구분": 6,
           "거래금액": 68000000
@@ -1129,9 +1129,9 @@
       ],
       "param_checks": {
         "predict_fraud": {
-          "거래시간대": 3,
-          "출금금융회사일련번호": 129,
-          "입금금융회사일련번호": 151,
+          "거래시간대": 4,
+          "출금금융회사일련번호": 500,
+          "입금금융회사일련번호": 223,
           "자금구분": 4,
           "매체구분": 7,
           "거래금액": 200000000
@@ -1144,7 +1144,7 @@
   },
   {
     "id": "pf_ex01",
-    "question": "Please predict the likelihood of a suspicious transaction for a transaction amount of 5 million won, with a transaction time of 9 AM, a withdrawal from financial institution 134, a deposit to financial institution 119, a transfer (fund type 4), and internet banking (medium type 4).",
+    "question": "Please predict the likelihood of a suspicious transaction for a transaction amount of 5 million won, with a transaction time of 9 AM, a withdrawal from financial institution 134, a deposit to financial institution 201, a transfer (fund type 4), and internet banking (medium type 4).",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -1154,9 +1154,9 @@
         "predict_fraud": {
           "거래시간대": 9,
           "출금금융회사일련번호": 134,
-          "입금금융회사일련번호": 119,
+          "입금금융회사일련번호": 201,
           "자금구분": 4,
-          "매체구분": 2,
+          "매체구분": 4,
           "거래금액": 5000000
         }
       }
@@ -1166,7 +1166,7 @@
   },
   {
     "id": "pf_ex02",
-    "question": "Please predict the likelihood of a suspicious transaction for a transaction amount of 5 million won, with a transaction time of 9 AM, a withdrawal from financial institution 134, a deposit to financial institution 119, a transfer (fund type 4), and internet banking (medium type 4).",
+    "question": "Please predict the likelihood of a suspicious transaction for a transaction amount of 5 million won, with a transaction time of 9 AM, a withdrawal from financial institution 134, a deposit to financial institution 201, a transfer (fund type 4), and internet banking (medium type 4).",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -1176,9 +1176,9 @@
         "predict_fraud": {
           "거래시간대": 9,
           "출금금융회사일련번호": 134,
-          "입금금융회사일련번호": 119,
+          "입금금융회사일련번호": 201,
           "자금구분": 4,
-          "매체구분": 2,
+          "매체구분": 4,
           "거래금액": 5000000
         }
       }
@@ -1198,9 +1198,9 @@
         "predict_fraud": {
           "거래시간대": 9,
           "출금금융회사일련번호": 134,
-          "입금금융회사일련번호": 119,
+          "입금금융회사일련번호": 201,
           "자금구분": 4,
-          "매체구분": 2,
+          "매체구분": 4,
           "거래금액": 5000000
         }
       }
@@ -1220,9 +1220,9 @@
         "predict_fraud": {
           "거래시간대": 9,
           "출금금융회사일련번호": 134,
-          "입금금융회사일련번호": 119,
+          "입금금융회사일련번호": 201,
           "자금구분": 4,
-          "매체구분": 2,
+          "매체구분": 4,
           "거래금액": 5000000
         }
       }
@@ -1242,9 +1242,9 @@
         "predict_fraud": {
           "거래시간대": 9,
           "출금금융회사일련번호": 134,
-          "입금금융회사일련번호": 119,
+          "입금금융회사일련번호": 201,
           "자금구분": 4,
-          "매체구분": 2,
+          "매체구분": 4,
           "거래금액": 5000000
         }
       }
