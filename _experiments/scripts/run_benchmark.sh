@@ -210,6 +210,22 @@ GROUP_BFCL_AML_TP2=(
     "xlam-2-32b|Salesforce/xLAM-2-32b-fc-r|xlam|--tensor-parallel-size 2 --max-model-len 32768 --gpu-memory-utilization 0.9 --enforce-eager|Salesforce/xLAM-2-32b-fc-r"
 )
 
+# ===========================================================================
+# RERUN_REASONING (2026-05-08): T/NT 토글 정정 재실험
+# - gpt-oss: chat_template_kwargs.enable_thinking 무시 → reasoning_effort high/low 사용
+# - kanana-2-thinking-2601: 토글 미지원 → instruct-2601 신규 모델로 NT 비교
+# 같은 그룹 정의이지만 단일 GPU(20b) / TP=4(120b) / 30B-A3B 별도 그룹으로 분리
+# ===========================================================================
+GROUP_RERUN_GPT_OSS_20B=(
+    "gpt-oss-20b|openai/gpt-oss-20b|openai|--reasoning-parser openai_gptoss|openai/gpt-oss-20b"
+)
+GROUP_RERUN_GPT_OSS_120B=(
+    "gpt-oss-120b|openai/gpt-oss-120b|openai|--tensor-parallel-size 4 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager --reasoning-parser openai_gptoss|openai/gpt-oss-120b"
+)
+GROUP_RERUN_KANANA_INST_2601=(
+    "kanana-2-inst-2601|kakaocorp/kanana-2-30b-a3b-instruct-2601|hermes||kakaocorp/kanana-2-30b-a3b-instruct-2601"
+)
+
 case "$GROUP" in
     # Server 1
     S1_A) MODELS=("${GROUP_S1_A[@]}") ;;
@@ -233,6 +249,10 @@ case "$GROUP" in
     BFCL_AML_LANE1) MODELS=("${GROUP_BFCL_AML_LANE1[@]}") ;;
     BFCL_AML_LANE1B) MODELS=("${GROUP_BFCL_AML_LANE1B[@]}") ;;
     BFCL_AML_TP2) MODELS=("${GROUP_BFCL_AML_TP2[@]}") ;;
+    # 2026-05-08 T/NT 정정 재실험
+    RERUN_GPT_OSS_20B) MODELS=("${GROUP_RERUN_GPT_OSS_20B[@]}") ;;
+    RERUN_GPT_OSS_120B) MODELS=("${GROUP_RERUN_GPT_OSS_120B[@]}") ;;
+    RERUN_KANANA_INST_2601) MODELS=("${GROUP_RERUN_KANANA_INST_2601[@]}") ;;
     *)     echo "Unknown group: $GROUP"; exit 1 ;;
 esac
 

@@ -214,19 +214,22 @@ MODELS = [
         "api_key_env": None,
         "think": None,
     },
+    # NT 비교군 (-2601 vintage instruct, 2026-05-08 추가). thinking-2601과 같은 base/시점
     {
-        "name": "kakaocorp/kanana-2-30b-a3b-thinking-2601",
+        "name": "kakaocorp/kanana-2-30b-a3b-instruct-2601",
         "provider": "vllm",
         "base_url": "http://localhost:11434/v1",
         "api_key_env": None,
-        "think": False,
+        "think": None,
     },
+    # always-thinking 모델: enable_thinking 토글 미지원. 단일 entry로 등록
+    # NT 비교는 sibling-variant kanana-2-30b-a3b-instruct-2601과 직접 비교
     {
         "name": "kakaocorp/kanana-2-30b-a3b-thinking-2601",
         "provider": "vllm",
         "base_url": "http://localhost:11434/v1",
         "api_key_env": None,
-        "think": True,
+        "think": None,
     },
     # SKT A.X (SKT, 2025, 한국어 SOTA)
     {
@@ -251,19 +254,13 @@ MODELS = [
         "api_key_env": None,
         "think": None,
     },
+    # always-thinking 모델: enable_thinking 토글 미지원. 단일 entry. NT 비교는 -Instruct-2507
     {
         "name": "Qwen/Qwen3-30B-A3B-Thinking-2507",
         "provider": "vllm",
         "base_url": "http://localhost:11434/v1",
         "api_key_env": None,
-        "think": False,
-    },
-    {
-        "name": "Qwen/Qwen3-30B-A3B-Thinking-2507",
-        "provider": "vllm",
-        "base_url": "http://localhost:11434/v1",
-        "api_key_env": None,
-        "think": True,
+        "think": None,
     },
     # Qwen3 8B
     {
@@ -281,19 +278,13 @@ MODELS = [
         "api_key_env": None,
         "think": None,
     },
+    # always-thinking 모델: enable_thinking 토글 미지원. 단일 entry. NT 비교는 -Instruct-2507
     {
         "name": "Qwen/Qwen3-4B-Thinking-2507",
         "provider": "vllm",
         "base_url": "http://localhost:11434/v1",
         "api_key_env": None,
-        "think": False,
-    },
-    {
-        "name": "Qwen/Qwen3-4B-Thinking-2507",
-        "provider": "vllm",
-        "base_url": "http://localhost:11434/v1",
-        "api_key_env": None,
-        "think": True,
+        "think": None,
     },
     # microsoft/Phi-4-mini-instruct: 제외 — tool call 거의 미생성 (1/1258건, 0.3253)
     # microsoft/Phi-4-mini-reasoning: 제외 — 추론 특화 모델, tool call 미생성 (0.3248)
@@ -1095,11 +1086,20 @@ def chat_with_model(
         )
         if not model_name.startswith(("o1", "o3", "o4", "gpt-5")):
             create_kwargs["temperature"] = 0
-        # vLLM 추론(thinking) 모드 제어
+        # 추론 모드 제어 — 모델 패밀리별 메커니즘 분기
+        # 1) gpt-oss: Harmony 포맷, reasoning_effort 파라미터 사용 (low/medium/high).
+        #    chat_template_kwargs.enable_thinking 무시됨 (vLLM이 apply_chat_template 미사용).
+        #    완전 비활성 불가, T=high / NT=low 의 effort-level ablation으로 해석.
+        # 2) Qwen3.5/3.6 등: chat_template_kwargs.enable_thinking 토글 (vLLM 공식).
+        # 3) always-thinking 모델 (Qwen3-*-Thinking-2507, kanana-2-thinking-2601):
+        #    토글 미지원. think=None으로 등록되어 이 분기 진입하지 않음.
         if think is not None:
-            create_kwargs["extra_body"] = {
-                "chat_template_kwargs": {"enable_thinking": think},
-            }
+            if "gpt-oss" in model_name:
+                create_kwargs["reasoning_effort"] = "high" if think else "low"
+            else:
+                create_kwargs["extra_body"] = {
+                    "chat_template_kwargs": {"enable_thinking": think},
+                }
         response = client.chat.completions.create(**create_kwargs)
         round_elapsed = time.time() - round_start
 
