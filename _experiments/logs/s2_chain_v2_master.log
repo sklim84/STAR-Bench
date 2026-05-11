@@ -1,0 +1,78 @@
+[2026-05-03 04:38:04] ===== Phase 1: KR partial (resuming after L1/L2 정상 완료) =====
+[2026-05-03 04:38:04]   L1/L2 SKIP (이미 완료, eval JSON 존재)
+[2026-05-03 04:38:04]   L3 + TP4 동시 launch
+[2026-05-03 04:38:04]   start S2_LARGE_L3 (kr, GPU=0, port=11434)
+[2026-05-03 04:38:04]   start S2_TP4 (kr, GPU=2,3,4,5, port=11437)
+[2026-05-03 04:38:04]   wait KR_L3 (PID=[2026-05-03 04:38:04]   start S2_LARGE_L3 (kr, GPU=0, port=11434)
+2419245)
+[2026-05-03 04:38:04]   KR_L3 done (rc=1)
+[2026-05-03 04:38:04] FAIL: KR_L3 exit 1
+[2026-05-03 04:38:04] cleanup: pkill run_benchmark.sh + vLLM
+[2026-05-03 04:38:50] ===== Phase 1: KR partial (resuming after L1/L2 정상 완료) =====
+[2026-05-03 04:38:50]   L1/L2 SKIP (이미 완료, eval JSON 존재)
+[2026-05-03 04:38:50]   L3 + TP4 동시 launch
+[2026-05-03 04:38:50]   start S2_LARGE_L3 (kr, GPU=0, port=11434, PID=2420543, log=s2_l3_kr_partial_v2.log)
+[2026-05-03 04:38:50]   start S2_TP4 (kr, GPU=2,3,4,5, port=11437, PID=2420546, log=s2_tp4_kr_partial_v3.log)
+[2026-05-03 04:38:50]   wait KR_L3 (PID=2420543)
+[2026-05-03 04:51:20]   KR_L3 done (rc=127)
+[2026-05-03 04:51:20]   wait KR_TP4 (PID=2420546)
+[2026-05-03 06:30:50]   KR_TP4 done (rc=127)
+[2026-05-03 06:31:05]   KR TP2_A/B/C concurrent
+[2026-05-03 06:31:05]   start S2_TP2_A (kr, GPU=0,1, port=11434, PID=2532887, log=s2_tp2a_kr_partial_v2.log)
+[2026-05-03 06:31:05]   start S2_TP2_B (kr, GPU=2,3, port=11436, PID=2532890, log=s2_tp2b_kr_partial_v2.log)
+[2026-05-03 06:31:05]   start S2_TP2_C (kr, GPU=4,5, port=11438, PID=2532896, log=s2_tp2c_kr_partial_v2.log)
+[2026-05-03 06:31:05]   wait KR_TP2A (PID=2532887)
+[2026-05-03 06:41:35]   KR_TP2A done (rc=127)
+[2026-05-03 06:41:35]   wait KR_TP2B (PID=2532890)
+[2026-05-03 06:41:35]   KR_TP2B done (rc=127)
+[2026-05-03 06:41:35]   wait KR_TP2C (PID=2532896)
+[2026-05-03 06:41:35]   KR_TP2C done (rc=127)
+[2026-05-03 06:41:50]   KR phase done
+[2026-05-03 06:41:50] ===== Phase 2: KR merge =====
+[2026-05-03 06:41:55]   KR merge done
+[2026-05-03 06:41:55] ===== Phase 3: EN partial =====
+[2026-05-03 06:41:55] Phase: en (suffix=en_partial_v2) — L1+L2+TP4 → L3 → TP2_A/B/C
+[2026-05-03 06:41:55]   start S2_LARGE_L1 (en, GPU=0, port=11434, PID=2547516, log=s2_l1_en_partial_v2.log)
+[2026-05-03 06:41:55]   start S2_LARGE_L2 (en, GPU=1, port=11435, PID=2547519, log=s2_l2_en_partial_v2.log)
+[2026-05-03 06:41:55]   start S2_TP4 (en, GPU=2,3,4,5, port=11437, PID=2547525, log=s2_tp4_en_partial_v2.log)
+[2026-05-03 06:41:55]   monitor L1/L2 to free a GPU for L3
+[2026-05-03 06:53:55]   start S2_LARGE_L3 (en, GPU=1, port=11435, PID=2566296, log=s2_l3_en_partial_v2.log)
+[2026-05-03 06:53:55]   wait en_partial_v2_L1 (PID=2547516)
+[2026-05-03 07:59:25]   en_partial_v2_L1 done (rc=127)
+[2026-05-03 07:59:25]   wait en_partial_v2_L2 (PID=2547519)
+[2026-05-03 07:59:25]   en_partial_v2_L2 done (rc=127)
+[2026-05-03 07:59:25]   wait en_partial_v2_L3 (PID=2566296)
+[2026-05-03 07:59:25]   en_partial_v2_L3 done (rc=127)
+[2026-05-03 07:59:25]   wait en_partial_v2_TP4 (PID=2547525)
+[2026-05-03 08:03:25]   en_partial_v2_TP4 done (rc=127)
+[2026-05-03 08:03:40]   en TP2_A/B/C concurrent (GPU 0,1 / 2,3 / 4,5)
+[2026-05-03 08:03:40]   start S2_TP2_A (en, GPU=0,1, port=11434, PID=2637054, log=s2_tp2a_en_partial_v2.log)
+[2026-05-03 08:03:40]   start S2_TP2_B (en, GPU=2,3, port=11436, PID=2637057, log=s2_tp2b_en_partial_v2.log)
+[2026-05-03 08:03:40]   start S2_TP2_C (en, GPU=4,5, port=11438, PID=2637063, log=s2_tp2c_en_partial_v2.log)
+[2026-05-03 08:03:40]   wait en_partial_v2_TP2A (PID=2637054)
+[2026-05-03 08:14:10]   en_partial_v2_TP2A done (rc=127)
+[2026-05-03 08:14:10]   wait en_partial_v2_TP2B (PID=2637057)
+[2026-05-03 08:14:10]   en_partial_v2_TP2B done (rc=127)
+[2026-05-03 08:14:10]   wait en_partial_v2_TP2C (PID=2637063)
+[2026-05-03 08:14:10]   en_partial_v2_TP2C done (rc=127)
+[2026-05-03 08:14:25]   Phase en done
+[2026-05-03 08:14:25] ===== Phase 4: EN merge =====
+[2026-05-03 08:14:29]   EN merge done
+[2026-05-03 08:14:29] ===== Phase 5: MT (50 시나리오 전체) =====
+[2026-05-03 08:14:29] Phase MT prep: backup+delete S2 13 모델 MT checkpoints
+[2026-05-03 08:14:29]     backup+delete checkpoint_LGAI-EXAONE_EXAONE-4_0-32B.jsonl
+[2026-05-03 08:14:29]     backup+delete checkpoint_Qwen_Qwen3_5-27B__nothink.jsonl
+[2026-05-03 08:14:29]     backup+delete checkpoint_Qwen_Qwen3_5-27B__think.jsonl
+[2026-05-03 08:14:29]     backup+delete checkpoint_Qwen_Qwen3_6-27B.jsonl
+[2026-05-03 08:14:29]     backup+delete checkpoint_Qwen_Qwen3_6-35B-A3B.jsonl
+[2026-05-03 08:14:29]     backup+delete checkpoint_openai_gpt-oss-120b__nothink.jsonl
+[2026-05-03 08:14:29]     backup+delete checkpoint_openai_gpt-oss-120b__think.jsonl
+[2026-05-03 08:14:29]     backup+delete checkpoint_openai_gpt-oss-20b__nothink.jsonl
+[2026-05-03 08:14:29]     backup+delete checkpoint_openai_gpt-oss-20b__think.jsonl
+[2026-05-03 08:14:29]     backup+delete checkpoint_skt_A_X-4_0.jsonl
+[2026-05-03 08:14:29]   backed up 10 MT checkpoints to /home/work/kftc_model/KA-001-AML-Assistant/_paper/_experiments/results_mt/checkpoint/.s2_pre_mt_rerun_20260503_081429
+[2026-05-03 08:14:29] Phase: mt (suffix=mt_v2) — L1+L2+TP4 → L3 → TP2_A/B/C
+[2026-05-03 08:14:29]   start S2_LARGE_L1 (mt, GPU=0, port=11434, PID=2652998, log=s2_l1_mt_v2.log)
+[2026-05-03 08:14:29]   start S2_LARGE_L2 (mt, GPU=1, port=11435, PID=2653001, log=s2_l2_mt_v2.log)
+[2026-05-03 08:14:29]   start S2_TP4 (mt, GPU=2,3,4,5, port=11437, PID=2653007, log=s2_tp4_mt_v2.log)
+[2026-05-03 08:14:29]   monitor L1/L2 to free a GPU for L3
