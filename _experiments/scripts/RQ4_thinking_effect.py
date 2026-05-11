@@ -19,15 +19,15 @@ OUT_DIR = Path('_paper/_experiments/results_RQ4')
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 THINKING_PAIRS = [
+    # 동일 모델 enable_thinking 토글 4쌍.
+    # Kanana-2-Think (thinking-2601)는 always-thinking 특성으로 토글 미지원이라 제외.
+    # Kanana sibling-variant pair (Inst-2601 ↔ Think-2601) 비교는 본문에서 별도 보고.
     ('Qwen/Qwen3.5-4B', 'Qwen3.5-4B'),
     ('Qwen/Qwen3.5-27B', 'Qwen3.5-27B'),
     ('openai/gpt-oss-20b', 'gpt-oss-20B'),
     ('openai/gpt-oss-120b', 'gpt-oss-120B'),
-    ('kakaocorp/kanana-2-30b-a3b-thinking-2601', 'Kanana-2-Think'),
 ]
 
-# 평가 이상치(h≈0.126) 제외 표시
-# Kanana-2-Think는 2026-05-02 parser bug fix 재실험으로 정상화 (h~0.72) → outlier 해제
 OUTLIERS = set()
 
 def load_kr():

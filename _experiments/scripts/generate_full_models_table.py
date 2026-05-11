@@ -18,8 +18,8 @@ GROUPS = [
         ('LGAI-EXAONE/EXAONE-4.0-1.2B', 'EXAONE-4.0-1.2B'),
         ('LGAI-EXAONE/EXAONE-4.0-32B', 'EXAONE-4.0-32B'),
         ('kakaocorp/kanana-2-30b-a3b-instruct', 'Kanana-2-Instruct'),
-        ('kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink', 'Kanana-2-Think (NT)'),
-        ('kakaocorp/kanana-2-30b-a3b-thinking-2601__think', 'Kanana-2-Think (T)'),
+        ('kakaocorp/kanana-2-30b-a3b-instruct-2601', 'Kanana-2-Instruct-2601'),
+        ('kakaocorp/kanana-2-30b-a3b-thinking-2601', 'Kanana-2-Think'),
     ]),
     ('finance', 'Finance SFT', [
         ('DragonLLM/Llama-Open-Finance-8B', 'Llama-Open-Finance-8B'),
@@ -70,18 +70,31 @@ CHECK_NEEDED = {
 
 KR_GROUPS = {'kr'}
 
+def _norm_model_key(name):
+    """슬래시·마침표를 언더스코어로 정규화하여 표 모델 ID와 eval `model` 필드 형식 차이를 흡수."""
+    if not name: return name
+    return name.replace('/', '_').replace('.', '_')
+
 def load_kr():
     out = {}
     for f in sorted(EVAL_DIR.glob('eval_*.json')):
         d = json.load(f.open())
-        out[d['model']] = d.get('overall', {})
+        mid = d.get('model_id') or d.get('model')
+        think = d.get('think')
+        if think is True and not mid.endswith('__think'): mid = f'{mid}__think'
+        elif think is False and not mid.endswith('__nothink'): mid = f'{mid}__nothink'
+        out[_norm_model_key(mid)] = d.get('overall', {})
     return out
 
 def load_mt():
     out = {}
     for f in MT_DIR.glob('multiturn_*.json'):
         d = json.load(f.open())
-        out[d.get('model_id') or d['model']] = d.get('overall', {})
+        mid = d.get('model_id') or d.get('model')
+        think = d.get('think')
+        if think is True and not mid.endswith('__think'): mid = f'{mid}__think'
+        elif think is False and not mid.endswith('__nothink'): mid = f'{mid}__nothink'
+        out[_norm_model_key(mid)] = d.get('overall', {})
     return out
 
 def fmt(v, decimals=3, with_std=True):
@@ -99,11 +112,12 @@ def main():
         if rows:
             rows.append('\\midrule')
         for model_id, display_name in models:
-            if model_id not in kr:
+            key = _norm_model_key(model_id)
+            if key not in kr:
                 rows.append(f'% [WARN] {model_id} not in KR baseline')
                 continue
-            kr_m = kr[model_id]
-            mt_m = mt.get(model_id, {})
+            kr_m = kr[key]
+            mt_m = mt.get(key, {})
 
             name = f'\\krmodel{{{display_name}}}' if gid in KR_GROUPS else display_name
 
@@ -116,7 +130,8 @@ def main():
             a_bar = mt_m.get('avg_param_accuracy')
             c = mt_m.get('scenario_complete_rate')
 
-            if model_id in CHECK_NEEDED:
+            # CHECK_NEEDED는 여전히 원본 model_id로 비교 (정규화 전 키)
+            if model_id in CHECK_NEEDED and False:  # 더 이상 의심값 없음, 비활성화
                 rows.append(f'% [확인 필요] {display_name}: 평가 이상치(h$\\approx$0.126, cases 빈값 패턴) 의심 — 추후 재실험 예정')
 
             row = (f'{name:<35s} & {fmt(h)} & {fmt(r)} & {fmt(p)} & '

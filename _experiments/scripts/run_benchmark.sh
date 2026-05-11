@@ -223,7 +223,10 @@ GROUP_RERUN_GPT_OSS_120B=(
     "gpt-oss-120b|openai/gpt-oss-120b|openai|--tensor-parallel-size 4 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager --reasoning-parser openai_gptoss|openai/gpt-oss-120b"
 )
 GROUP_RERUN_KANANA_INST_2601=(
-    "kanana-2-inst-2601|kakaocorp/kanana-2-30b-a3b-instruct-2601|hermes||kakaocorp/kanana-2-30b-a3b-instruct-2601"
+    "kanana-2-inst-2601|kakaocorp/kanana-2-30b-a3b-instruct-2601|functionary_v3_llama_31||kakaocorp/kanana-2-30b-a3b-instruct-2601"
+)
+GROUP_RERUN_KANANA_THINK=(
+    "kanana-2-think|kakaocorp/kanana-2-30b-a3b-thinking-2601|functionary_v3_llama_31||kakaocorp/kanana-2-30b-a3b-thinking-2601"
 )
 
 case "$GROUP" in
@@ -253,6 +256,7 @@ case "$GROUP" in
     RERUN_GPT_OSS_20B) MODELS=("${GROUP_RERUN_GPT_OSS_20B[@]}") ;;
     RERUN_GPT_OSS_120B) MODELS=("${GROUP_RERUN_GPT_OSS_120B[@]}") ;;
     RERUN_KANANA_INST_2601) MODELS=("${GROUP_RERUN_KANANA_INST_2601[@]}") ;;
+    RERUN_KANANA_THINK) MODELS=("${GROUP_RERUN_KANANA_THINK[@]}") ;;
     *)     echo "Unknown group: $GROUP"; exit 1 ;;
 esac
 

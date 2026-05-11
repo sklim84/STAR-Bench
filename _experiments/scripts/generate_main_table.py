@@ -68,21 +68,32 @@ CHECK_NEEDED = {
     'google/gemma-4-31B-it',
 }
 
+def _norm_model_key(name):
+    """슬래시·마침표를 언더스코어로 정규화."""
+    if not name: return name
+    return name.replace('/', '_').replace('.', '_')
+
 def load_kr():
-    """eval JSON 직접 로드 — model 필드가 이미 __nothink/__think suffix 포함."""
+    """eval JSON 로드 — model 필드 형식 차이(슬래시/언더스코어) 정규화."""
     out = {}
     for f in sorted(EVAL_DIR.glob('eval_*.json')):
         d = json.load(f.open())
-        out[d['model']] = d.get('overall', {})
+        mid = d.get('model_id') or d.get('model')
+        think = d.get('think')
+        if think is True and not mid.endswith('__think'): mid = f'{mid}__think'
+        elif think is False and not mid.endswith('__nothink'): mid = f'{mid}__nothink'
+        out[_norm_model_key(mid)] = d.get('overall', {})
     return out
 
 def load_mt():
     out = {}
     for f in MT_DIR.glob('multiturn_*.json'):
         d = json.load(f.open())
-        # model_id가 think 변형 분리. nothink/think 매칭.
-        mid = d.get('model_id') or d['model']
-        out[mid] = d.get('overall', {})
+        mid = d.get('model_id') or d.get('model')
+        think = d.get('think')
+        if think is True and not mid.endswith('__think'): mid = f'{mid}__think'
+        elif think is False and not mid.endswith('__nothink'): mid = f'{mid}__nothink'
+        out[_norm_model_key(mid)] = d.get('overall', {})
     return out
 
 def fmt(v, decimals=3):
@@ -96,11 +107,12 @@ def main():
     rows = []
     last_group = None
     for model_id, display_name, group in DISPLAY_ORDER:
-        if model_id not in kr:
+        key = _norm_model_key(model_id)
+        if key not in kr:
             print(f'WARN: {model_id} not in KR')
             continue
-        kr_m = kr[model_id]
-        mt_m = mt.get(model_id, {})
+        kr_m = kr[key]
+        mt_m = mt.get(key, {})
 
         # group 구분선 (\midrule)
         # check 그룹은 별도 midrule로 분리하지 않고 같은 그룹 내 끝에 배치
