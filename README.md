@@ -63,56 +63,46 @@ results_repro/        — Reproducibility experiment results
 
 ### 1. Single-turn Tool Calling (KR, 1,258 cases × 29 models)
 
-Results sorted by composite score. Mean ± std from 3-round reproducibility experiment.
+데이터는 paper Appendix Table 3 (`tab:full_models`)과 일치. 지표 정의는 paper §Metrics 참조.
+- `h` = primary tool hit rate (선택 도구 일치율)
+- `r` = recall on required tools
+- `p` = precision (false-positive 제어)
+- `a` = average parameter accuracy (인자 일치율)
+- `o` = output schema validity
 
-| Rank | Model | Family | Size | Score | Tool Hit | Param Acc |
-|------|-------|--------|------|-------|----------|-----------|
-| 1 | Qwen3.5-27B (think) | Qwen | 27B | 0.9417±0.018 | 95.4% | 95.4% |
-| 2 | Qwen3.5-27B (nothink) | Qwen | 27B | 0.9356±0.002 | 94.8% | 94.7% |
-| 3 | Qwen3.5-9B (nothink) | Qwen | 9B | 0.9323±0.001 | 95.5% | 95.0% |
-| 4 | xLAM-2-32b | Salesforce | 32B | 0.9333±0.000 | 93.8% | 91.6% |
-| 5 | Qwen3-30B-Thinking (think) | Qwen | 30B | 0.9305±0.001 | 94.5% | 92.6% |
-| 6 | Qwen3-30B-Thinking (nothink) | Qwen | 30B | 0.9300±0.001 | 94.5% | 92.5% |
-| 7 | Ministral-3-14B | Mistral | 14B | 0.9266±0.002 | 93.2% | 92.1% |
-| 8 | Qwen3-8B | Qwen | 8B | 0.9199±0.002 | 92.8% | 91.1% |
-| 9 | Qwen3.5-4B (nothink) | Qwen | 4B | 0.9196±0.002 | 94.2% | 92.2% |
-| 10 | Qwen3.5-4B (think) | Qwen | 4B | 0.9186±0.006 | 95.0% | 93.9% |
-| 11 | kanana-2-30b-thinking (think) | Kakao | 30B | 0.9183±0.000 | 92.8% | 88.7% |
-| 12 | Qwen3-Coder-30B | Qwen | 30B | 0.9182±0.002 | 93.8% | 91.5% |
-| 13 | kanana-2-30b-thinking (nothink) | Kakao | 30B | 0.9178±0.000 | 92.7% | 88.7% |
-| 14 | GLM-4.7-Flash | Zhipu | - | 0.9178±0.008 | 94.7% | 93.2% |
-| 15 | Qwen3.5-9B (think) | Qwen | 9B | 0.9162±0.006 | 93.9% | 94.0% |
-| 16 | EXAONE-4.0-32B | LG AI | 32B | 0.9141±0.000 | 91.4% | 90.1% |
-| 17 | Ministral-3-8B | Mistral | 8B | 0.9101±0.001 | 92.8% | 89.1% |
-| 18 | Qwen3-4B-Thinking (nothink) | Qwen | 4B | 0.9090±0.021 | 92.9% | 88.5% |
-| 19 | Qwen3-4B-Thinking (think) | Qwen | 4B | 0.9086±0.021 | 92.9% | 88.4% |
-| 20 | Llama-3.3-70B | Meta | 70B | 0.8984±0.001 | 91.6% | 87.1% |
-| 21 | Qwen3-30B-Instruct | Qwen | 30B | 0.8958±0.001 | 93.0% | 90.6% |
-| 22 | Ministral-3-3B | Mistral | 3B | 0.8949±0.007 | 90.3% | 87.7% |
-| 23 | A.X-4.0 | SKT | - | 0.8915±0.000 | 89.9% | 84.6% |
-| 24 | Qwen3-4B-Instruct | Qwen | 4B | 0.8861±0.001 | 90.5% | 88.4% |
-| 25 | gpt-oss-20b (nothink) | OpenAI | 20B | 0.8858±0.007 | 88.9% | 87.6% |
-| 26 | Mistral-Small-24B | Mistral | 24B | 0.8854±0.025 | 88.2% | 88.0% |
-| 27 | gpt-oss-20b (think) | OpenAI | 20B | 0.8849±0.007 | 88.8% | 87.5% |
-| 28 | xLAM-2-8b | Salesforce | 8B | 0.8547±0.000 | 85.1% | 81.2% |
-| 29 | Qwen3.5-2B (nothink) | Qwen | 2B | 0.8116±0.015 | 85.1% | 80.7% |
-| 30 | Llama-3.1-8B | Meta | 8B | 0.8071±0.001 | 81.8% | 78.9% |
-| 31 | EXAONE-4.0-1.2B | LG AI | 1.2B | 0.8068±0.000 | 80.4% | 75.0% |
-| 32 | Qwen3.5-0.8B (nothink) | Qwen | 0.8B | 0.7938±0.018 | 82.2% | 74.1% |
-| 33 | xLAM-2-70b | Salesforce | 70B | 0.7900±0.000 | 73.1% | 78.0% |
-| 34 | kanana-2-30b-instruct | Kakao | 30B | 0.7798±0.000 | 74.0% | 74.1% |
-| 35 | Qwen3.5-2B (think) | Qwen | 2B | 0.7683±0.022 | 78.9% | 76.0% |
-| 36 | Qwen2.5-1.5B | Qwen | 1.5B | 0.7376±0.000 | 73.9% | 65.7% |
-| 37 | Llama-3.2-3B | Meta | 3B | 0.7237±0.001 | 74.1% | 69.4% |
-| 38 | xLAM-2-3b | Salesforce | 3B | 0.7232±0.000 | 68.7% | 69.0% |
-| 39 | Qwen3.5-0.8B (think) | Qwen | 0.8B | 0.7124±0.003 | 69.3% | 66.7% |
-| 40 | Hermes-3-Llama-3.1-8B | NousResearch | 8B | 0.6892±0.000 | 62.4% | 65.2% |
-| 41 | A.X-4.0-Light | SKT | - | 0.6592±0.004 | 58.1% | 60.2% |
-| 42 | xLAM-2-1b | Salesforce | 1B | 0.5764±0.000 | 49.9% | 48.8% |
-| 43 | Mistral-Nemo-12B | Mistral | 12B | 0.5647±0.000 | 46.5% | 50.6% |
-| 44 | Llama-3.2-1B | Meta | 1B | 0.5207±0.003 | 56.8% | 28.4% |
+| Category | Model | `h` | `r` | `p` | `a` | `o` |
+|----------|-------|-----|-----|-----|-----|-----|
+| 한국어 특화 | A.X-4.0-Light (7B)        | 0.544 | 0.542 | 0.954 | 0.553 | 0.974 |
+| 한국어 특화 | A.X-4.0 (72B)             | 0.883 | 0.899 | 0.685 | 0.766 | 0.986 |
+| 한국어 특화 | EXAONE-4.0-1.2B           | 0.789 | 0.827 | 0.381 | 0.701 | 0.995 |
+| 한국어 특화 | EXAONE-4.0-32B            | 0.898 | 0.930 | 0.591 | 0.837 | 0.997 |
+| 한국어 특화 | Kanana-2-Instruct         | 0.729 | 0.767 | 0.613 | 0.669 | 0.960 |
+| 한국어 특화 | Kanana-2-Instruct-2601    | 0.787 | 0.816 | 0.515 | 0.697 | 0.987 |
+| 한국어 특화 | Kanana-2-Think            | 0.718 | 0.846 | 0.365 | 0.731 | 0.984 |
+| Finance SFT | Llama-Open-Finance-8B    | 0.734 | 0.763 | 0.775 | 0.666 | 0.925 |
+| Finance SFT | Qwen-Open-Finance-R-8B   | 0.846 | 0.844 | 0.881 | 0.774 | 0.982 |
+| gpt-oss | gpt-oss-20B (NT)             | 0.843 | 0.849 | 0.560 | 0.787 | 0.985 |
+| gpt-oss | gpt-oss-20B (T)              | 0.723 | 0.730 | 0.685 | 0.714 | 0.976 |
+| gpt-oss | gpt-oss-120B (NT)            | 0.839 | 0.851 | 0.524 | 0.803 | 0.984 |
+| gpt-oss | gpt-oss-120B (T)             | 0.772 | 0.782 | 0.483 | 0.760 | 0.983 |
+| General | Llama-3.2-3B                 | 0.527 | 0.623 | 0.442 | 0.517 | 0.836 |
+| General | Llama-3.3-70B                | 0.808 | 0.908 | 0.797 | 0.803 | 0.990 |
+| General | Hermes-3-8B                  | 0.642 | 0.653 | 0.778 | 0.573 | 0.989 |
+| General | Ministral-3-3B               | 0.868 | 0.894 | 0.521 | 0.769 | 0.987 |
+| General | Mistral-Small-24B            | 0.883 | 0.909 | 0.634 | 0.811 | 0.993 |
+| General | Phi-4-mini                   | 0.619 | 0.624 | 0.824 | 0.572 | 0.979 |
+| General | Qwen3.5-4B (NT)              | 0.859 | 0.880 | 0.491 | 0.823 | 0.994 |
+| General | Qwen3.5-4B (T)               | 0.878 | 0.924 | 0.634 | 0.843 | 0.997 |
+| General | Qwen3.5-27B (NT)             | 0.908 | 0.954 | 0.500 | 0.895 | 0.997 |
+| General | Qwen3.5-27B (T)              | 0.909 | 0.959 | 0.522 | 0.891 | 0.998 |
+| General | Qwen3.6-27B                  | 0.910 | 0.961 | 0.471 | 0.908 | 0.997 |
+| General | Qwen3.6-35B-A3B              | 0.909 | 0.955 | 0.482 | 0.903 | 0.999 |
+| General | xLAM-2-3B                    | 0.629 | 0.647 | 0.682 | 0.581 | 0.984 |
+| General | xLAM-2-70B                   | 0.828 | 0.856 | 0.740 | 0.792 | 0.995 |
+| General | Gemma-4-E4B                  | 0.790 | 0.823 | 0.884 | 0.741 | 0.996 |
+| General | Gemma-4-31B                  | 0.914 | 0.945 | 0.520 | 0.887 | 0.997 |
 
-**Overall mean**: 0.845 (KR) / 0.802 (EN)
+> Best `h`: Gemma-4-31B (0.914). 5+ 모델이 `h > 0.88` 구간에 분포 (특정 계열 수렴 없음).
 
 ### 2. Korean vs English Ablation (29 models × 1,258 cases)
 
