@@ -7,7 +7,7 @@ AML-Bench is a domain-specific function calling benchmark for evaluating LLMs as
 ## Key Features
 
 - **1,258 expert-curated test cases** across 24 evaluation categories and 3 difficulty levels (Easy + irrelevance: 673 / Medium: 412 / Hard: 173)
-- **44 models** from 10 families evaluated on vLLM (largest model comparison in domain-specific tool-calling benchmarks)
+- **29 models** from 12 families evaluated on vLLM (largest model comparison in domain-specific tool-calling benchmarks)
 - **2×2 language ablation**: query language (KR/EN) × tool schema language (KR/EN) — controlled decomposition of language effects
 - **Multi-turn STR benchmark**: 50 scenarios evaluating end-to-end suspicious transaction report generation
 - **3-round reproducibility** (KR + EN): mean ± standard deviation reported for all metrics
@@ -61,7 +61,7 @@ results_repro/        — Reproducibility experiment results
 
 ## Experiment Results
 
-### 1. Single-turn Tool Calling (KR, 1,258 cases × 44 models)
+### 1. Single-turn Tool Calling (KR, 1,258 cases × 29 models)
 
 Results sorted by composite score. Mean ± std from 3-round reproducibility experiment.
 
@@ -114,7 +114,7 @@ Results sorted by composite score. Mean ± std from 3-round reproducibility expe
 
 **Overall mean**: 0.845 (KR) / 0.802 (EN)
 
-### 2. Korean vs English Ablation (44 models × 1,258 cases)
+### 2. Korean vs English Ablation (29 models × 1,258 cases)
 
 동일 벤치마크 케이스를 한국어/영어로 실행하여 질문 언어에 따른 정확도 차이를 분석.
 
@@ -142,7 +142,7 @@ Results sorted by composite score. Mean ± std from 3-round reproducibility expe
 - 극단 민감 모델: **Qwen3-Coder-30B** (KR-EN 0.574, EN-EN 0.195) — 도구 스키마 언어 변화에 치명적
 - 99.99% 커버리지 (221,389/221,408) — Llama-3.3-70B 10건은 context-window-filling 특성으로 제외
 
-### 3. Multi-turn STR Benchmark (50 scenarios × 44 models)
+### 3. Multi-turn STR Benchmark (50 scenarios × 29 models)
 
 AML 에이전트가 다중 턴 대화를 통해 의심거래보고서(STR)를 작성하는 end-to-end 시나리오 평가. 3회 반복 실험의 mean±std 보고.
 
@@ -209,12 +209,12 @@ AML 에이전트가 다중 턴 대화를 통해 의심거래보고서(STR)를 �
 
 | 실험 | Round 1 | Round 2 | Round 3 | 상태 |
 |------|---------|---------|---------|------|
-| Singleturn KR (44 models) | ✅ | ✅ | ✅ | 완료 |
-| Singleturn EN (44 models) | ✅ | ✅ | ✅ | 완료 |
-| Multiturn STR (44 models) | ✅ | ✅ | ✅ | 완료 |
+| Singleturn KR (29 models) | ✅ | ✅ | ✅ | 완료 |
+| Singleturn EN (29 models) | ✅ | ✅ | ✅ | 완료 |
+| Multiturn STR (29 models) | ✅ | ✅ | ✅ | 완료 |
 | 2×2 Ablation (C1 KR-EN, C3 EN-EN, 43 models) | ✅ (1회) | — | — | 완료 (단일 라운드) |
 
-**싱글턴 KR**: 3회 반복 완료. `repro_mean_std.json`에 44개 모델 mean±std 수록. 4개 모델은 3회 모두 동일 점수 (완전 결정론적).
+**싱글턴 KR**: 3회 반복 완료. `repro_mean_std.json`에 29개 모델 mean±std 수록. 4개 모델은 3회 모두 동일 점수 (완전 결정론적).
 
 **멀티턴**: 3회 반복 결과 매우 안정적 (mean score 0.617±0.001, complete rate 16.8%±0.1%). 변동 모델: Qwen3.5-2B think (±0.019), gpt-oss-20b nothink (±0.018), GLM-4.7-Flash (±0.012).
 
@@ -249,7 +249,7 @@ AML 에이전트가 다중 턴 대화를 통해 의심거래보고서(STR)를 �
 
 ---
 
-## Evaluated Models (44 models, 14 families)
+## Evaluated Models (29 models, 12 families)
 
 | Family | Models | Parameters | Runtime |
 |--------|--------|------------|---------|
