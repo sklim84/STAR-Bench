@@ -69,14 +69,14 @@ for fn in sorted(os.listdir(EVAL_DIR)):
 # ── 상위 혼동 도구 선택 ───────────────────────────────────────────────────────
 # 각 expected_tool에서 가장 많이 confused된 called_tool의 합산 기준 상위 12개 expected
 tool_total_conf = {exp: sum(v.values()) for exp, v in conf.items()}
-top_expected = sorted(tool_total_conf, key=lambda x: -tool_total_conf[x])[:12]
+top_expected = sorted(tool_total_conf, key=lambda x: -tool_total_conf[x])[:10]
 
-# top_expected에 등장하는 called_tool 중 상위 12개
+# top_expected에 등장하는 called_tool 중 상위 10개
 called_counter: dict[str, int] = defaultdict(int)
 for exp in top_expected:
     for called, cnt in conf[exp].items():
         called_counter[called] += cnt
-top_called = sorted(called_counter, key=lambda x: -called_counter[x])[:12]
+top_called = sorted(called_counter, key=lambda x: -called_counter[x])[:10]
 
 # ── 단축 이름 매핑 ────────────────────────────────────────────────────────────
 SHORT = {
@@ -119,26 +119,30 @@ row_labels = [sn(t) for t in top_expected]
 col_labels = [sn(t) for t in top_called]
 
 # ── 플롯 ─────────────────────────────────────────────────────────────────────
-fig, ax = plt.subplots(figsize=(7.0, 5.5))
+fig, ax = plt.subplots(figsize=(5.0, 4.3))
 
-# cmap: white -> deep blue (zero는 흰색)
+# cmap: white -> deep blue (zero는 흰색). PowerNorm(0.5)로 중간값 색 대비 강화
+# (205 같은 이상치가 선형 스케일을 지배하는 문제 완화).
+from matplotlib.colors import PowerNorm
 cmap = matplotlib.colormaps["Blues"]
-im = ax.imshow(mat, aspect="auto", cmap=cmap, vmin=0)
+im = ax.imshow(mat, aspect="auto", cmap=cmap,
+               norm=PowerNorm(gamma=0.5, vmin=0, vmax=mat.max()))
 
-# 수치 주석
+# 수치 주석: 핵심 혼동 칸만(>= ANNOT_MIN) 표기해 declutter
+ANNOT_MIN = 15
 for i in range(mat.shape[0]):
     for j in range(mat.shape[1]):
         v = int(mat[i, j])
-        if v == 0:
+        if v < ANNOT_MIN:
             continue
-        text_color = "white" if mat[i, j] > mat.max() * 0.6 else "black"
+        text_color = "white" if im.norm(mat[i, j]) > 0.55 else "black"
         ax.text(j, i, str(v), ha="center", va="center",
-                fontsize=FS_ANNOT - 1, color=text_color)
+                fontsize=FS_ANNOT + 1, color=text_color, fontweight="bold")
 
 ax.set_xticks(range(len(col_labels)))
-ax.set_xticklabels(col_labels, rotation=45, ha="right", fontsize=FS_TICK - 1)
+ax.set_xticklabels(col_labels, rotation=45, ha="right", fontsize=FS_TICK)
 ax.set_yticks(range(len(row_labels)))
-ax.set_yticklabels(row_labels, fontsize=FS_TICK - 1)
+ax.set_yticklabels(row_labels, fontsize=FS_TICK)
 ax.set_xlabel("Called tool (wrong)", fontsize=FS_LABEL)
 ax.set_ylabel("Expected tool", fontsize=FS_LABEL)
 
