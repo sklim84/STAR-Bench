@@ -55,7 +55,7 @@ SD_SHORT = {
     "AML Detection & Reporting":    "AML Detect",
     "CTR, Risk & Monitoring":       "CTR/Risk",
     "Flow, Trend & Channel":        "Flow/Trend",
-    "AML Reference":                "AML Ref",
+    "AML Reference":                "AML Compliance",
 }
 sd_labels = [SD_SHORT.get(sd, sd) for sd in sub_domains]
 
