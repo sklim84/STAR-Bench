@@ -38,9 +38,9 @@ group_means = spec["group_means"]
 GROUP_ORDER  = ["finance", "specialized_kr", "general_8b", "small_general"]
 GROUP_LABELS = {
     "finance":       "Finance SFT (8B)",
-    "specialized_kr": "KR-specialized (small)",
+    "specialized_kr": "KR-specialized (small, ≤7B)",
     "general_8b":    "General 8B",
-    "small_general": "Small general (≤3B)",
+    "small_general": "General (small, ≤3B)",
 }
 GROUP_COLORS = {
     "finance":        COL_GOOD,     # 초록
