@@ -53,8 +53,8 @@ GROUP_COLORS = {
 SD_SHORT = {
     "Transaction Stats & Inquiry":  "Txn Stats",
     "AML Detection & Reporting":    "AML Detect",
-    "CTR, Risk & Monitoring":       "CTR/Risk",
-    "Flow, Trend & Channel":        "Flow/Trend",
+    "CTR, Risk & Monitoring":       "CTR & Risk",
+    "Flow, Trend & Channel":        "Flow & Trend",
     "AML Reference":                "AML Compliance",
 }
 sd_labels = [SD_SHORT.get(sd, sd) for sd in sub_domains]
@@ -67,7 +67,7 @@ bar_w   = total_w / n_grp
 offsets = np.linspace(-(total_w - bar_w) / 2, (total_w - bar_w) / 2, n_grp)
 
 # ── 플롯 ─────────────────────────────────────────────────────────────────────
-fig, ax = plt.subplots(figsize=(5.5, 4.2))
+fig, ax = plt.subplots(figsize=(4.6, 3.8))
 
 for idx, (grp, off) in enumerate(zip(GROUP_ORDER, offsets)):
     vals = [group_means[grp][sd] for sd in sub_domains]
@@ -83,38 +83,39 @@ for idx, (grp, off) in enumerate(zip(GROUP_ORDER, offsets)):
     for bar, val in zip(bars, vals):
         ax.text(
             bar.get_x() + bar.get_width() / 2,
-            bar.get_height() + 0.012,
+            bar.get_height() + 0.015,
             f"{val:.2f}",
             ha="center", va="bottom",
-            fontsize=FS_ANNOT - 2,
-            color="#333333",
+            rotation=90,
+            fontsize=9,
+            color="#1a1a1a",
         )
 
 ax.set_xticks(x)
 ax.set_xticklabels(sd_labels, fontsize=12, rotation=20, ha="right")
 ax.set_ylabel("Tool hit $h$", fontsize=13)
-ax.set_ylim(0, 1.06)
+ax.set_ylim(0, 1.18)
 ax.axhline(0.5, color="#aaaaaa", linewidth=0.7, linestyle="--", alpha=0.7)
 # 네모박스: 4면 spine 모두 표시 (fig:bfcl과 일치)
 ax.grid(True, alpha=0.3)
 ax.tick_params(axis="y", labelsize=12)
 
 ax.legend(
-    fontsize=11,
-    loc="lower left",
-    framealpha=0.88,
+    fontsize=10,
+    loc="upper center",
+    bbox_to_anchor=(0.5, -0.26),
+    frameon=False,
     ncol=2,
     handlelength=1.2,
-    columnspacing=0.8,
+    columnspacing=1.2,
 )
 
 fig.tight_layout()
 
-# bbox_inches='tight' 제거 - 동일 figsize의 다른 서브피겨와 saved image 크기 동일하게 유지
 out_pdf = os.path.join(OUT_DIR, "fig_subdomain_grouped_bar.pdf")
 out_png = os.path.join(OUT_DIR, "fig_subdomain_grouped_bar.png")
-fig.savefig(out_pdf, dpi=300)
-fig.savefig(out_png, dpi=300)
+fig.savefig(out_pdf, dpi=300, bbox_inches="tight")
+fig.savefig(out_png, dpi=300, bbox_inches="tight")
 print(f"Saved: {out_pdf}")
 print(f"Saved: {out_png}")
 
