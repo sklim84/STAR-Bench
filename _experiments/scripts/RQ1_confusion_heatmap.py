@@ -128,16 +128,18 @@ cmap = matplotlib.colormaps["Blues"]
 im = ax.imshow(mat, aspect="auto", cmap=cmap,
                norm=PowerNorm(gamma=0.5, vmin=0, vmax=mat.max()))
 
-# 수치 주석: 핵심 혼동 칸만(>= ANNOT_MIN) 표기해 declutter
-ANNOT_MIN = 15
+# 수치 주석: 모든 0 아닌 셀에 표기(colorbar 대체). 핵심 혼동(>=BOLD_MIN)은 굵게/크게.
+BOLD_MIN = 40
 for i in range(mat.shape[0]):
     for j in range(mat.shape[1]):
         v = int(mat[i, j])
-        if v < ANNOT_MIN:
+        if v == 0:
             continue
         text_color = "white" if im.norm(mat[i, j]) > 0.55 else "black"
+        big = v >= BOLD_MIN
         ax.text(j, i, str(v), ha="center", va="center",
-                fontsize=FS_ANNOT + 1, color=text_color, fontweight="bold")
+                fontsize=FS_ANNOT if big else FS_ANNOT - 2,
+                color=text_color, fontweight="bold" if big else "normal")
 
 ax.set_xticks(range(len(col_labels)))
 ax.set_xticklabels(col_labels, rotation=45, ha="right", fontsize=FS_TICK)
@@ -146,11 +148,7 @@ ax.set_yticklabels(row_labels, fontsize=FS_TICK)
 ax.set_xlabel("Called tool (wrong)", fontsize=FS_LABEL)
 ax.set_ylabel("Expected tool", fontsize=FS_LABEL)
 
-cb = fig.colorbar(im, ax=ax, fraction=0.03, pad=0.02)
-cb.set_label("Miscall count\n(29 models)", fontsize=FS_ANNOT)
-cb.ax.tick_params(labelsize=FS_ANNOT)
-
-# 대각선 없는 행렬이므로 대각 highlight 불필요
+# colorbar 제거: 각 셀에 수치를 직접 표기하므로 색 스케일 바는 중복(색은 시각 보조).
 fig.tight_layout()
 
 out_pdf = os.path.join(OUT_DIR, "fig_confusion_heatmap.pdf")
