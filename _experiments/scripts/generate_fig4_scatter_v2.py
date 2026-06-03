@@ -46,15 +46,14 @@ EXCLUDE = {
 
 # 라벨링할 핵심 모델 (substring -> (표시명, ha, va, dx, dy))
 # 모두 축 박스 안쪽으로 향하도록 배치(오른쪽 경계 침범 방지).
-# 강조 모델 2종: (1) 두 언어 모두 강함(top performers, 대각선 상단), (2) 의미 있는 언어 격차
+# 강조 모델 2종: (1) 두 언어 모두 강함(top performers), (2) 의미 있는 언어 격차
+# 두 최상위(Gemma-4-31B,Qwen3.6-27B)는 거의 같은 위치 → 한 라벨로 합치고 리더선으로 연결
 LABELS = {
-    # 두 언어 모두 강한 최상위 모델 (서로 근접 → 라벨 방향 분산)
-    "google_gemma-4-31B-it":               ("Gemma-4-31B", "right", "center", -8, 5),
-    "Qwen_Qwen3_6-27B":                    ("Qwen3.6-27B", "center", "top", 4, -8),
-    # 의미 있는 언어 격차 (성능도 양호)
-    "meta-llama_Llama-3_3-70B-Instruct":   ("Llama-3.3-70B", "center", "top", 0, -7),
-    "kakaocorp/kanana-2-30b-a3b-instruct": ("Kanana-2-Instruct", "left", "bottom", 5, 4),
-    "kakaocorp_kanana-2-30b-a3b-instruct": ("Kanana-2-Instruct", "left", "bottom", 5, 4),
+    "google_gemma-4-31B-it":               ("Gemma-4-31B,\nQwen3.6-27B", "right", "bottom", 2, 14),
+    "Qwen_Qwen3_6-27B":                    ("", "center", "top", 0, 0),          # 마커만(라벨은 위에 합침)
+    "meta-llama_Llama-3_3-70B-Instruct":   ("Llama-3.3-70B", "center", "top", 14, -18),
+    "kakaocorp/kanana-2-30b-a3b-instruct": ("Kanana-2-Instruct", "right", "bottom", -8, 9),
+    "kakaocorp_kanana-2-30b-a3b-instruct": ("Kanana-2-Instruct", "right", "bottom", -8, 9),
 }
 
 
@@ -102,9 +101,10 @@ def main():
                     s=30, edgecolors="white", linewidths=0.4, zorder=3)
     ax.scatter(kr_v[_hi], en_v[_hi], c=mean_h[_hi], cmap=cmap, norm=norm,
                s=72, edgecolors="white", linewidths=1.6, zorder=5)
-    cbar = fig.colorbar(sc, ax=ax, fraction=0.046, pad=0.03)
-    cbar.set_label(r"mean $h$ (KR, EN)", fontsize=8)
-    cbar.ax.tick_params(labelsize=7)
+    cbar = fig.colorbar(sc, ax=ax, fraction=0.036, pad=0.015, shrink=0.7)
+    cbar.set_label(r"mean $h$", fontsize=7)
+    cbar.ax.tick_params(labelsize=6)
+    cbar.outline.set_linewidth(0.4)
 
     lo = min(kr_v.min(), en_v.min()) - 0.04
     hi = max(kr_v.max(), en_v.max()) + 0.04
@@ -115,9 +115,13 @@ def main():
         lab = label_for(m)
         if lab:
             name, ha, va, dx, dy = lab
+            if not name:                      # 마커만(합친 라벨) → 텍스트 생략
+                continue
             ax.annotate(name, (k, e), fontsize=6.3, color="#111", fontweight="bold",
                         xytext=(dx, dy), textcoords="offset points",
-                        ha=ha, va=va, zorder=6)
+                        ha=ha, va=va, zorder=6,
+                        arrowprops=dict(arrowstyle="-", lw=0.5, color="#777",
+                                        shrinkA=1, shrinkB=3))
 
     ax.set_xlabel(r"$h_{\mathrm{KR}}$ (Korean query)", fontsize=9)
     ax.set_ylabel(r"$h_{\mathrm{EN}}$ (English query)", fontsize=9)
