@@ -85,7 +85,7 @@ def main():
     ang += ang[:1]
 
     fig, ax = plt.subplots(figsize=(4.3, 3.0), subplot_kw=dict(polar=True))
-    ax.set_theta_offset(np.pi / 2)          # first axis at top
+    ax.set_theta_offset(np.pi / 2 + np.pi / 4)   # rotate 45deg: 4 axes at corners (right side clear for legend)
     ax.set_theta_direction(-1)              # clockwise
     for disp, (vals, color) in prof.items():
         vv = vals + vals[:1]

@@ -66,7 +66,7 @@ bar_w   = total_w / n_grp
 offsets = np.linspace(-(total_w - bar_w) / 2, (total_w - bar_w) / 2, n_grp)
 
 # ── 플롯 ─────────────────────────────────────────────────────────────────────
-fig, ax = plt.subplots(figsize=(4.6, 3.8))
+fig, ax = plt.subplots(figsize=(5.2, 3.8))
 
 for idx, (grp, off) in enumerate(zip(GROUP_ORDER, offsets)):
     vals = [group_means[grp][sd] for sd in sub_domains]
@@ -91,7 +91,7 @@ for idx, (grp, off) in enumerate(zip(GROUP_ORDER, offsets)):
         )
 
 ax.set_xticks(x)
-ax.set_xticklabels(sd_labels, fontsize=10.5, rotation=20, ha="right")
+ax.set_xticklabels(sd_labels, fontsize=9.5, rotation=0, ha="center")
 ax.set_ylabel("Tool hit $h$", fontsize=13)
 ax.set_ylim(0, 1.18)
 ax.axhline(0.5, color="#aaaaaa", linewidth=0.7, linestyle="--", alpha=0.7)
