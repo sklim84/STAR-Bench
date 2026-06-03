@@ -98,21 +98,23 @@ ana = np.array([r[2] for r in rows])
 reg = np.array([r[1] for r in rows])
 x = np.arange(len(rows))
 
-fig, ax = plt.subplots(figsize=(7.0, 3.0))
-ax.vlines(x, reg, ana, color="#BBBBBB", lw=1.0, zorder=1)
-ax.scatter(x, ana, s=20, color=C_ANA, zorder=3, label="Analysis tools")
-ax.scatter(x, reg, s=20, color=C_REG, marker="s", zorder=3, label="Regulatory tools")
+# single-column (\columnwidth): set figsize to the column width (~3.45in) so the
+# PDF is NOT downscaled in LaTeX and the tick/legend fonts render at true size.
+fig, ax = plt.subplots(figsize=(3.45, 2.7))
+ax.vlines(x, reg, ana, color="#BBBBBB", lw=0.9, zorder=1)
+ax.scatter(x, ana, s=16, color=C_ANA, zorder=3, label="Analysis tools")
+ax.scatter(x, reg, s=16, color=C_REG, marker="s", zorder=3, label="Regulatory tools")
 
 ax.set_xticks(x)
-ax.set_xticklabels(labels, rotation=55, ha="right", fontsize=6)
-ax.tick_params(axis="y", labelsize=7.5)
-ax.set_ylabel("Mean tool hit $h$", fontsize=8.5)
+ax.set_xticklabels(labels, rotation=90, ha="center", fontsize=6.5)
+ax.tick_params(axis="y", labelsize=8)
+ax.set_ylabel("Mean tool hit $h$", fontsize=9)
 ax.set_ylim(0.25, 0.95)
 ax.set_xlim(-0.7, len(rows) - 0.3)
 ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
-ax.legend(fontsize=7, loc="lower right", frameon=True, framealpha=0.9,
-          handletextpad=0.3, borderpad=0.3)
+ax.legend(fontsize=8.5, loc="upper left", frameon=True, framealpha=0.9,
+          markerscale=1.2, handletextpad=0.4, borderpad=0.4)
 
 plt.tight_layout()
 plt.savefig(OUT / "fig_regulatory_vs_analysis_v2.png", dpi=300, bbox_inches="tight")
