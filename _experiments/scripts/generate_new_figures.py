@@ -553,7 +553,7 @@ def fig_tsne_semantic():
         "Multi-tool": "#EDC948", "Missing-param": "#BAB0AC",
     }
 
-    fig, ax = plt.subplots(figsize=(6.6, 3.9))
+    fig, ax = plt.subplots(figsize=(6.0, 4.2))
 
     plotted_subdomains = set()
     for i, (x, y) in enumerate(coords):
@@ -564,7 +564,7 @@ def fig_tsne_semantic():
         ax.scatter(x, y, c=color, s=12, alpha=0.6, edgecolors="none", label=label)
 
     apply_style(ax)
-    ax.tick_params(length=3, labelsize=7)  # tick 값 표시(축 라벨은 생략)
+    ax.tick_params(length=3, labelsize=9)  # tick 값 표시(축 라벨은 생략)
     ax.legend(fontsize=9, loc="upper center", bbox_to_anchor=(0.5, -0.03), ncol=4,
               frameon=False, markerscale=2, columnspacing=1.2, handletextpad=0.3)
 
