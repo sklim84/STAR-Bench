@@ -88,8 +88,8 @@ def main():
     ax.set_theta_direction(-1)              # clockwise
     for disp, (vals, color) in prof.items():
         vv = vals + vals[:1]
-        ax.plot(ang, vv, color=color, linewidth=1.7, marker="o", markersize=3,
-                markeredgecolor="white", markeredgewidth=0.4, label=disp, zorder=3)
+        ax.plot(ang, vv, color=color, linewidth=1.1, marker="o", markersize=2.6,
+                markeredgecolor="white", markeredgewidth=0.3, label=disp, zorder=3)
         ax.fill(ang, vv, color=color, alpha=0.06, zorder=2)
 
     ax.set_xticks(ang[:-1])
