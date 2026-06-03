@@ -42,7 +42,7 @@ OUT = Path(__file__).resolve().parent / "fig_subdomain_radar.png"
 SUBDOMAINS = {
     "Txn\nStats": ["get_statistics", "query_transactions", "get_account_profile",
                    "compare_periods", "get_fraud_type_summary", "get_institution_report"],
-    "AML\nDetect": ["analyze_network", "detect_aml_patterns",
+    "AML\nDetection": ["analyze_network", "detect_aml_patterns",
                     "rank_risky_transactions", "predict_fraud"],
     "CTR\n& Risk": ["detect_ctr_candidates", "score_account_risk", "detect_monitoring_alerts"],
     "Flow\n& Trend": ["detect_dormant_reactivation", "detect_smurfing_network",

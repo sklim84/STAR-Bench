@@ -24,7 +24,7 @@ SUB_DOMAINS = {
     ],
     'AML Detection & Reporting': [
         'analyze_network', 'detect_aml_patterns', 'rank_risky_transactions',
-        'predict_fraud', 'generate_str',
+        'predict_fraud',
     ],
     'CTR, Risk & Monitoring': [
         'detect_ctr_candidates', 'score_account_risk', 'detect_monitoring_alerts',
@@ -36,6 +36,7 @@ SUB_DOMAINS = {
     ],
     'AML Reference': [
         'lookup_fiu_reference_types', 'validate_str_fields', 'get_aml_glossary',
+        'generate_str',
     ],
 }
 

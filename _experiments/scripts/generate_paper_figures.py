@@ -522,7 +522,7 @@ def fig6_subdomain_radar(kr_data):
         "get_fraud_type_summary": "Stats & Inquiry", "get_institution_report": "Stats & Inquiry",
         "analyze_network": "Detection & Report.", "detect_aml_patterns": "Detection & Report.",
         "rank_risky_transactions": "Detection & Report.", "predict_fraud": "Detection & Report.",
-        "generate_str": "Detection & Report.",
+        "generate_str": "AML Compliance",
         "detect_ctr_candidates": "CTR, Risk & Monitor", "score_account_risk": "CTR, Risk & Monitor",
         "detect_monitoring_alerts": "CTR, Risk & Monitor",
         "detect_dormant_reactivation": "Flow & Channel", "detect_smurfing_network": "Flow & Channel",

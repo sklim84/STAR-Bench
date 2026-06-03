@@ -535,9 +535,9 @@ def fig_tsne_semantic():
         "get_statistics": "Txn Stats", "query_transactions": "Txn Stats",
         "get_account_profile": "Txn Stats", "compare_periods": "Txn Stats",
         "get_fraud_type_summary": "Txn Stats", "get_institution_report": "Txn Stats",
-        "analyze_network": "AML Detect", "detect_aml_patterns": "AML Detect",
-        "rank_risky_transactions": "AML Detect", "predict_fraud": "AML Detect",
-        "generate_str": "AML Detect",
+        "analyze_network": "AML Detection", "detect_aml_patterns": "AML Detection",
+        "rank_risky_transactions": "AML Detection", "predict_fraud": "AML Detection",
+        "generate_str": "AML Compliance",
         "detect_ctr_candidates": "CTR & Risk", "score_account_risk": "CTR & Risk",
         "detect_monitoring_alerts": "CTR & Risk",
         "detect_dormant_reactivation": "Flow & Trend", "detect_smurfing_network": "Flow & Trend",
@@ -548,7 +548,7 @@ def fig_tsne_semantic():
         "multi_tool": "Multi-tool", "missing_parameters": "Missing-param",
     }
     subdomain_colors = {
-        "Txn Stats": "#4E79A7", "AML Detect": "#E15759", "CTR & Risk": "#F28E2B",
+        "Txn Stats": "#4E79A7", "AML Detection": "#E15759", "CTR & Risk": "#F28E2B",
         "Flow & Trend": "#59A14F", "AML Compliance": "#B07AA1",
         "Multi-tool": "#EDC948", "Missing-param": "#BAB0AC",
     }
@@ -586,11 +586,11 @@ SUBDOMAIN_MAP = {
     "compare_periods": "Txn\nStats",
     "get_fraud_type_summary": "Txn\nStats",
     "get_institution_report": "Txn\nStats",
-    "analyze_network": "AML\nDetect",
-    "detect_aml_patterns": "AML\nDetect",
-    "rank_risky_transactions": "AML\nDetect",
-    "predict_fraud": "AML\nDetect",
-    "generate_str": "AML\nDetect",
+    "analyze_network": "AML\nDetection",
+    "detect_aml_patterns": "AML\nDetection",
+    "rank_risky_transactions": "AML\nDetection",
+    "predict_fraud": "AML\nDetection",
+    "generate_str": "AML\nCompliance",
     "detect_ctr_candidates": "CTR\n& Risk",
     "score_account_risk": "CTR\n& Risk",
     "detect_monitoring_alerts": "CTR\n& Risk",
@@ -608,7 +608,7 @@ SUBDOMAIN_MAP = {
 }
 
 SUBDOMAIN_ORDER = [
-    "Txn\nStats", "AML\nDetect",
+    "Txn\nStats", "AML\nDetection",
     "CTR\n& Risk", "Flow\n& Trend",
     "AML\nCompliance", "Multi-tool", "Missing-\nparam",
 ]

@@ -52,7 +52,7 @@ GROUP_COLORS = {
 # ── 서브도메인 단축명 ─────────────────────────────────────────────────────────
 SD_SHORT = {
     "Transaction Stats & Inquiry":  "Txn Stats",
-    "AML Detection & Reporting":    "AML Detect",
+    "AML Detection & Reporting":    "AML Detection",
     "CTR, Risk & Monitoring":       "CTR & Risk",
     "Flow, Trend & Channel":        "Flow & Trend",
     "AML Reference":                "AML Compliance",
