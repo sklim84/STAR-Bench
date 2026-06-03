@@ -553,7 +553,7 @@ def fig_tsne_semantic():
         "Multi-tool": "#EDC948", "Missing-param": "#BAB0AC",
     }
 
-    fig, ax = plt.subplots(figsize=(6.0, 4.2))
+    fig, ax = plt.subplots(figsize=(6.6, 3.9))
 
     plotted_subdomains = set()
     for i, (x, y) in enumerate(coords):
