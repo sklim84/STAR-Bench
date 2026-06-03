@@ -113,8 +113,8 @@ ax.set_ylim(0.25, 0.95)
 ax.set_xlim(-0.7, len(rows) - 0.3)
 ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
-ax.legend(fontsize=8.5, loc="upper left", frameon=True, framealpha=0.9,
-          markerscale=1.2, handletextpad=0.4, borderpad=0.4)
+ax.legend(fontsize=7, loc="lower right", frameon=True, framealpha=0.9,
+          markerscale=1.0, handletextpad=0.3, borderpad=0.3)
 
 plt.tight_layout()
 plt.savefig(OUT / "fig_regulatory_vs_analysis_v2.png", dpi=300, bbox_inches="tight")
