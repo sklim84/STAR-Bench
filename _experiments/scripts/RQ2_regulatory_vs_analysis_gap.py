@@ -14,8 +14,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _plot_style import (plt, COL_GOOD, COL_BAD, COL_PURPLE, FS_TICK, FS_LABEL,
                           FS_TITLE, FS_LEGEND, style_axes, short_name)
 
-EVAL_DIR = Path('_paper/_experiments/results_kr/eval')
-OUT_DIR = Path('_paper/_experiments/results_RQ2')
+_SB = Path(__file__).resolve().parents[2]   # star-bench root (fix stale _paper/ path)
+EVAL_DIR = _SB / '_experiments' / 'results_kr' / 'eval'
+OUT_DIR = _SB / '_experiments' / 'results_RQ2'
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Regulatory Reporting subdomain (single-turn tools; generate_str is multi-turn only)

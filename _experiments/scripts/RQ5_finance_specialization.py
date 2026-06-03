@@ -12,8 +12,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _plot_style import (plt, FS_TICK, FS_LABEL, FS_TITLE, FS_LEGEND, style_axes)
 
-EVAL_DIR = Path('_paper/_experiments/results_kr/eval')
-OUT_DIR = Path('_paper/_experiments/results_RQ5')
+_SB = Path(__file__).resolve().parents[2]   # star-bench root (fix stale _paper/ path)
+EVAL_DIR = _SB / '_experiments' / 'results_kr' / 'eval'
+OUT_DIR = _SB / '_experiments' / 'results_RQ5'
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # main.tex tab:tool_suite 매핑 (5 sub-domain)
