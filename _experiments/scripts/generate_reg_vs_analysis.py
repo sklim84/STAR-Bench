@@ -108,13 +108,13 @@ ax.scatter(x, reg, s=16, color=C_REG, marker="s", zorder=3, label="Regulatory to
 ax.set_xticks(x)
 ax.set_xticklabels(labels, rotation=90, ha="center", fontsize=6.5)
 ax.tick_params(axis="y", labelsize=8)
-ax.set_ylabel("Mean tool hit $h$", fontsize=9)
+ax.set_ylabel("Mean tool hit $h$", fontsize=8)
 ax.set_ylim(0.25, 0.95)
 ax.set_xlim(-0.7, len(rows) - 0.3)
 ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
-ax.legend(fontsize=7, loc="lower right", frameon=True, framealpha=0.9,
-          markerscale=1.0, handletextpad=0.3, borderpad=0.3)
+ax.legend(fontsize=6, loc="lower right", frameon=True, framealpha=0.9,
+          markerscale=0.9, handletextpad=0.3, borderpad=0.3)
 
 plt.tight_layout()
 plt.savefig(OUT / "fig_regulatory_vs_analysis_v2.png", dpi=300, bbox_inches="tight")
