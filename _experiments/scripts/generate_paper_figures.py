@@ -517,21 +517,21 @@ def fig5_category_heatmap(kr_data):
 def fig6_subdomain_radar(kr_data):
     """상위 5개 모델의 5개 하위 도메인별 성능 radar chart."""
     SUBDOMAIN = {
-        "get_statistics": "Stats & Inquiry", "query_transactions": "Stats & Inquiry",
-        "get_account_profile": "Stats & Inquiry", "compare_periods": "Stats & Inquiry",
-        "get_fraud_type_summary": "Stats & Inquiry", "get_institution_report": "Stats & Inquiry",
-        "analyze_network": "Detection & Report.", "detect_aml_patterns": "Detection & Report.",
-        "rank_risky_transactions": "Detection & Report.", "predict_fraud": "Detection & Report.",
-        "generate_str": "AML Compliance",
-        "detect_ctr_candidates": "CTR, Risk & Monitor", "score_account_risk": "CTR, Risk & Monitor",
-        "detect_monitoring_alerts": "CTR, Risk & Monitor",
-        "detect_dormant_reactivation": "Flow & Channel", "detect_smurfing_network": "Flow & Channel",
-        "get_trend_analysis": "Flow & Channel", "analyze_channel_risk": "Flow & Channel",
-        "get_receiving_account_profile": "Flow & Channel", "analyze_cross_institution_flow": "Flow & Channel",
-        "lookup_fiu_reference_types": "AML Compliance", "validate_str_fields": "AML Compliance",
-        "get_aml_glossary": "AML Compliance",
+        "get_statistics": "Txn Inquiry", "query_transactions": "Txn Inquiry",
+        "get_account_profile": "Txn Inquiry", "compare_periods": "Txn Inquiry",
+        "get_fraud_type_summary": "Txn Inquiry", "get_institution_report": "Txn Inquiry",
+        "get_receiving_account_profile": "Txn Inquiry",
+        "predict_fraud": "Suspicious Detection", "rank_risky_transactions": "Suspicious Detection",
+        "score_account_risk": "Suspicious Detection", "detect_monitoring_alerts": "Suspicious Detection",
+        "analyze_network": "Money Flow & Network", "detect_aml_patterns": "Money Flow & Network",
+        "detect_smurfing_network": "Money Flow & Network", "detect_dormant_reactivation": "Money Flow & Network",
+        "get_trend_analysis": "Money Flow & Network", "analyze_channel_risk": "Money Flow & Network",
+        "analyze_cross_institution_flow": "Money Flow & Network",
+        "detect_ctr_candidates": "Regulatory Reporting", "lookup_fiu_reference_types": "Regulatory Reporting",
+        "validate_str_fields": "Regulatory Reporting", "get_aml_glossary": "Regulatory Reporting",
+        "generate_str": "Regulatory Reporting",
     }
-    SUBDOMAINS = ["Stats & Inquiry", "Detection & Report.", "CTR, Risk & Monitor", "Flow & Channel", "AML Compliance"]
+    SUBDOMAINS = ["Txn Inquiry", "Suspicious Detection", "Money Flow & Network", "Regulatory Reporting"]
 
     # 대조 있는 5개 계열 대표 모델 선정 (top-5가 아닌 family diversity)
     preferred_fids = [

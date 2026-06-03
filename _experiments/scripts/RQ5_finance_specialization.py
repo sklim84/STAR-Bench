@@ -18,25 +18,23 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # main.tex tab:tool_suite 매핑 (5 sub-domain)
 SUB_DOMAINS = {
-    'Transaction Stats & Inquiry': [
+    'Transaction Inquiry & Statistics': [
         'get_statistics', 'query_transactions', 'get_account_profile',
-        'compare_periods', 'get_fraud_type_summary', 'get_institution_report',
+        'compare_periods', 'get_institution_report', 'get_fraud_type_summary',
+        'get_receiving_account_profile',
     ],
-    'AML Detection & Reporting': [
-        'analyze_network', 'detect_aml_patterns', 'rank_risky_transactions',
-        'predict_fraud',
+    'Suspicious Activity Detection': [
+        'predict_fraud', 'rank_risky_transactions',
+        'score_account_risk', 'detect_monitoring_alerts',
     ],
-    'CTR, Risk & Monitoring': [
-        'detect_ctr_candidates', 'score_account_risk', 'detect_monitoring_alerts',
-    ],
-    'Flow, Trend & Channel': [
-        'detect_dormant_reactivation', 'detect_smurfing_network',
+    'Money Flow & Network Analysis': [
+        'analyze_network', 'detect_aml_patterns', 'detect_smurfing_network',
+        'detect_dormant_reactivation', 'analyze_cross_institution_flow',
         'get_trend_analysis', 'analyze_channel_risk',
-        'get_receiving_account_profile', 'analyze_cross_institution_flow',
     ],
-    'AML Reference': [
-        'lookup_fiu_reference_types', 'validate_str_fields', 'get_aml_glossary',
-        'generate_str',
+    'Regulatory Reporting': [
+        'detect_ctr_candidates', 'lookup_fiu_reference_types',
+        'validate_str_fields', 'get_aml_glossary', 'generate_str',
     ],
 }
 

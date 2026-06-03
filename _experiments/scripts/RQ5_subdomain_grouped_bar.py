@@ -51,11 +51,10 @@ GROUP_COLORS = {
 
 # ── 서브도메인 단축명 ─────────────────────────────────────────────────────────
 SD_SHORT = {
-    "Transaction Stats & Inquiry":  "Txn Stats",
-    "AML Detection & Reporting":    "AML Detection",
-    "CTR, Risk & Monitoring":       "CTR & Risk",
-    "Flow, Trend & Channel":        "Flow & Trend",
-    "AML Reference":                "AML Compliance",
+    "Transaction Inquiry & Statistics": "Txn\nInquiry",
+    "Suspicious Activity Detection":    "Suspicious\nDetection",
+    "Money Flow & Network Analysis":    "Money Flow\n& Network",
+    "Regulatory Reporting":             "Regulatory\nReporting",
 }
 sd_labels = [SD_SHORT.get(sd, sd) for sd in sub_domains]
 

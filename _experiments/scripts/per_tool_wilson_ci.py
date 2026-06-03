@@ -1,6 +1,6 @@
 """Per-tool and per-difficulty Wilson score 95% CIs for AML-Bench.
 
-For each of the 24 tools (+ 7-tool subdomain groups) and each difficulty level,
+For each of the 23 tools and each difficulty level,
 reports:
 - Sample size N
 - Mean score (averaged over 3 rounds across all 44 configs) — domain-level view

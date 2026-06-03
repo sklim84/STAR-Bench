@@ -1,9 +1,9 @@
 """Intro teaser: per-subdomain tool-hit radar for four representative models.
 
 Data-driven from star-bench/_experiments/results_kr/eval. Each axis is one of the
-five AML subdomains (tab:tool_suite); each polygon is one model's mean tool hit $h$
+four AML subdomains (tab:tool_suite); each polygon is one model's mean tool hit $h$
 over the tools in that subdomain. Shows that AML competence is multi-dimensional and
-model-specific, with the AML Compliance axis the most divergent.
+model-specific, with the Regulatory Reporting axis the most divergent.
 """
 import json
 import glob
@@ -38,17 +38,18 @@ PAPER_ROOT = Path(__file__).resolve().parent.parent
 EVAL = _SB / "_experiments" / "results_kr" / "eval"
 OUT = Path(__file__).resolve().parent / "fig_subdomain_radar.png"
 
-# Five AML subdomains -> member tools (matches tab:tool_suite)
+# Four AML subdomains -> member tools (matches tab:tool_suite); generate_str excluded (multi-turn only)
 SUBDOMAINS = {
-    "Txn\nStats": ["get_statistics", "query_transactions", "get_account_profile",
-                   "compare_periods", "get_fraud_type_summary", "get_institution_report"],
-    "AML\nDetection": ["analyze_network", "detect_aml_patterns",
-                    "rank_risky_transactions", "predict_fraud"],
-    "CTR\n& Risk": ["detect_ctr_candidates", "score_account_risk", "detect_monitoring_alerts"],
-    "Flow\n& Trend": ["detect_dormant_reactivation", "detect_smurfing_network",
-                     "get_trend_analysis", "analyze_channel_risk",
-                     "get_receiving_account_profile", "analyze_cross_institution_flow"],
-    "AML\nCompliance": ["lookup_fiu_reference_types", "validate_str_fields", "get_aml_glossary"],
+    "Txn\nInquiry": ["get_statistics", "query_transactions", "get_account_profile",
+                     "compare_periods", "get_institution_report", "get_fraud_type_summary",
+                     "get_receiving_account_profile"],
+    "Suspicious\nDetection": ["predict_fraud", "rank_risky_transactions",
+                              "score_account_risk", "detect_monitoring_alerts"],
+    "Money Flow\n& Network": ["analyze_network", "detect_aml_patterns", "detect_smurfing_network",
+                              "detect_dormant_reactivation", "analyze_cross_institution_flow",
+                              "get_trend_analysis", "analyze_channel_risk"],
+    "Regulatory\nReporting": ["detect_ctr_candidates", "lookup_fiu_reference_types",
+                              "validate_str_fields", "get_aml_glossary"],
 }
 
 # Four representative archetypes (substring match on eval model id) -> (display, color)

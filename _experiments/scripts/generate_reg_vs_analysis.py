@@ -35,7 +35,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 EVAL = _SB / "_experiments" / "results_kr" / "eval"
 OUT = Path(__file__).resolve().parent
 
-REG = {"validate_str_fields", "detect_ctr_candidates", "lookup_fiu_reference_types"}
+# Regulatory Reporting subdomain (single-turn tools; generate_str is multi-turn only)
+REG = {"detect_ctr_candidates", "lookup_fiu_reference_types", "validate_str_fields", "get_aml_glossary"}
 SPECIAL = {"multi_tool", "missing_parameters"}
 EXCLUDE = {
     "Qwen_Qwen3-30B-A3B-Instruct-2507", "Qwen_Qwen3-4B-Instruct-2507",

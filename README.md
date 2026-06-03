@@ -26,11 +26,10 @@ AML-Bench is a domain-specific function calling benchmark for evaluating LLMs as
 
 | Subdomain | Tools | Description |
 |-----------|-------|-------------|
-| Transaction Stats & Inquiry | 6 | Summary statistics, raw queries, account profiles, period comparison |
-| AML Detection & Reporting | 5 | Network analysis, pattern detection, fraud prediction, STR generation |
-| CTR, Risk & Monitoring | 3 | High-value transaction detection, risk scoring, rule-based monitoring |
-| Flow, Trend & Channel | 6 | Dormant reactivation, smurfing, trend analysis, cross-institution flow |
-| AML Reference | 3 | FIU reference lookup, STR validation, AML glossary |
+| Transaction Inquiry & Statistics | 7 | Summary statistics, raw queries, account/receiver profiles, period comparison, fraud-type breakdown |
+| Suspicious Activity Detection | 4 | Fraud probability prediction, risky-transaction ranking, account risk scoring, rule-based monitoring |
+| Money Flow & Network Analysis | 7 | Network analysis, AML pattern (ring/layering/funnel) detection, smurfing, dormant reactivation, cross-institution flow, trend, channel |
+| Regulatory Reporting | 5 | CTR candidate detection, FIU reference lookup, STR field validation, AML glossary, STR generation |
 
 ## Repository Structure
 

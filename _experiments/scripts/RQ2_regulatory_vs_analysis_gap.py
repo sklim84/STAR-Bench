@@ -18,7 +18,8 @@ EVAL_DIR = Path('_paper/_experiments/results_kr/eval')
 OUT_DIR = Path('_paper/_experiments/results_RQ2')
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-REGULATORY = {'validate_str_fields', 'lookup_fiu_reference_types', 'detect_ctr_candidates'}
+# Regulatory Reporting subdomain (single-turn tools; generate_str is multi-turn only)
+REGULATORY = {'detect_ctr_candidates', 'lookup_fiu_reference_types', 'validate_str_fields', 'get_aml_glossary'}
 EXCLUDE = {'multi_tool', 'missing_parameters'}  # 합성 카테고리 제외
 
 # 본문 29-모델 세트 (regen_size_vs_performance.py와 동일)
