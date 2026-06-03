@@ -98,9 +98,9 @@ def main():
     _hi = [i for i, (m, _, _) in enumerate(rows) if label_for(m) is not None]
     _pl = [i for i in range(len(rows)) if i not in _hi]
     sc = ax.scatter(kr_v[_pl], en_v[_pl], c=mean_h[_pl], cmap=cmap, norm=norm,
-                    s=30, edgecolors="white", linewidths=0.4, zorder=3)
+                    s=30, edgecolors="white", linewidths=0.25, zorder=3)
     ax.scatter(kr_v[_hi], en_v[_hi], c=mean_h[_hi], cmap=cmap, norm=norm,
-               s=72, edgecolors="white", linewidths=1.6, zorder=5)
+               s=72, edgecolors="white", linewidths=0.9, zorder=5)
     cbar = fig.colorbar(sc, ax=ax, fraction=0.036, pad=0.015, shrink=0.7)
     cbar.set_label(r"mean $h$", fontsize=7)
     cbar.ax.tick_params(labelsize=6)
