@@ -46,15 +46,15 @@ EXCLUDE = {
 
 # 라벨링할 핵심 모델 (substring -> (표시명, ha, va, dx, dy))
 # 모두 축 박스 안쪽으로 향하도록 배치(오른쪽 경계 침범 방지).
+# 강조 모델 2종: (1) 두 언어 모두 강함(top performers, 대각선 상단), (2) 의미 있는 언어 격차
 LABELS = {
-    "kakaocorp/kanana-2-30b-a3b-instruct": ("Kanana-2-Instruct", "center", "top", 0, -6),
-    "kakaocorp_kanana-2-30b-a3b-instruct": ("Kanana-2-Instruct", "center", "top", 0, -6),
+    # 두 언어 모두 강한 최상위 모델 (서로 근접 → 라벨 방향 분산)
+    "google_gemma-4-31B-it":               ("Gemma-4-31B", "right", "center", -8, 5),
+    "Qwen_Qwen3_6-27B":                    ("Qwen3.6-27B", "center", "top", 4, -8),
+    # 의미 있는 언어 격차 (성능도 양호)
     "meta-llama_Llama-3_3-70B-Instruct":   ("Llama-3.3-70B", "center", "top", 0, -7),
-    "skt_A_X-4_0-Light":                   ("A.X-4.0-Light", "left", "bottom", 6, 2),
-    # EN-advantaged outlier (좌측 빈 공간으로): text가 점 왼쪽으로 뻗음
-    "microsoft_Phi-4-mini-instruct":       ("Phi-4-mini", "right", "center", -6, 0),
-    # KR-advantaged outlier (위쪽 빈 공간으로)
-    "Salesforce_Llama-xLAM-2-70b-fc-r":    ("xLAM-2-70B", "center", "bottom", 0, 6),
+    "kakaocorp/kanana-2-30b-a3b-instruct": ("Kanana-2-Instruct", "left", "bottom", 5, 4),
+    "kakaocorp_kanana-2-30b-a3b-instruct": ("Kanana-2-Instruct", "left", "bottom", 5, 4),
 }
 
 
@@ -89,19 +89,22 @@ def main():
 
     kr_v = np.array([r[1] for r in rows])
     en_v = np.array([r[2] for r in rows])
-    delta = kr_v - en_v
-    colors = ["#1F4E79" if d >= 0 else "#5B8DBE" for d in delta]
+    mean_h = (kr_v + en_v) / 2.0           # 색 = 두 언어 평균 성능(우열)
+    import matplotlib as _mpl
+    norm = _mpl.colors.Normalize(vmin=mean_h.min(), vmax=mean_h.max())
+    cmap = "viridis"
 
-    fig, ax = plt.subplots(figsize=(3.5, 3.15))
-    # 라벨된 outlier는 크게 + 굵은 진한 테두리로 강조, 나머지는 연하게
+    fig, ax = plt.subplots(figsize=(3.8, 3.15))
+    # 강조 모델(두 언어 모두 강함 + 의미 있는 격차)은 크게, 면색=평균성능 유지(우열 보존)
     _hi = [i for i, (m, _, _) in enumerate(rows) if label_for(m) is not None]
     _pl = [i for i in range(len(rows)) if i not in _hi]
-    ax.scatter(kr_v[_pl], en_v[_pl], c=[colors[i] for i in _pl], alpha=0.65, s=30,
-               edgecolors="white", linewidths=0.5, zorder=3)
-    # 강조점은 속을 비워(흰 면) 파란 테두리와 면 색이 확실히 구분되게 함.
-    # (면=white, 테두리=blue → 면≠테두리; KR/EN 우위 방향은 대각선 기준 위치로 드러남)
-    ax.scatter(kr_v[_hi], en_v[_hi], c="white", alpha=1.0, s=42,
-               edgecolors="#1E90FF", linewidths=2.2, zorder=5)
+    sc = ax.scatter(kr_v[_pl], en_v[_pl], c=mean_h[_pl], cmap=cmap, norm=norm,
+                    s=30, edgecolors="white", linewidths=0.4, zorder=3)
+    ax.scatter(kr_v[_hi], en_v[_hi], c=mean_h[_hi], cmap=cmap, norm=norm,
+               s=72, edgecolors="white", linewidths=1.6, zorder=5)
+    cbar = fig.colorbar(sc, ax=ax, fraction=0.046, pad=0.03)
+    cbar.set_label(r"mean $h$ (KR, EN)", fontsize=8)
+    cbar.ax.tick_params(labelsize=7)
 
     lo = min(kr_v.min(), en_v.min()) - 0.04
     hi = max(kr_v.max(), en_v.max()) + 0.04
@@ -112,7 +115,7 @@ def main():
         lab = label_for(m)
         if lab:
             name, ha, va, dx, dy = lab
-            ax.annotate(name, (k, e), fontsize=6.5, color="#222",
+            ax.annotate(name, (k, e), fontsize=6.3, color="#111", fontweight="bold",
                         xytext=(dx, dy), textcoords="offset points",
                         ha=ha, va=va, zorder=6)
 
@@ -128,9 +131,10 @@ def main():
     plt.savefig(OUT, dpi=300, bbox_inches="tight")
     plt.close()
     print(f"Saved {OUT}")
+    _d = kr_v - en_v
     print(f"n={len(rows)} KR={kr_v.mean():.4f} EN={en_v.mean():.4f} "
           f"gap={(kr_v.mean()-en_v.mean())*100:.1f}pp "
-          f"KRadv={int((delta>0).sum())} ENadv={int((delta<0).sum())}")
+          f"KRadv={int((_d>0).sum())} ENadv={int((_d<0).sum())}")
 
 
 if __name__ == "__main__":
