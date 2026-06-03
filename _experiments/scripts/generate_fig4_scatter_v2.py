@@ -49,7 +49,7 @@ EXCLUDE = {
 # 강조 모델 2종: (1) 두 언어 모두 강함(top performers), (2) 의미 있는 언어 격차
 # 두 최상위(Gemma-4-31B,Qwen3.6-27B)는 거의 같은 위치 → 한 라벨로 합치고 리더선으로 연결
 LABELS = {
-    "google_gemma-4-31B-it":               ("Gemma-4-31B,\nQwen3.6-27B", "right", "bottom", 2, 14),
+    "google_gemma-4-31B-it":               ("Gemma-4-31B,\nQwen3.6-27B", "right", "bottom", 3, 6),
     "Qwen_Qwen3_6-27B":                    ("", "center", "top", 0, 0),          # 마커만(라벨은 위에 합침)
     "meta-llama_Llama-3_3-70B-Instruct":   ("Llama-3.3-70B", "center", "top", 14, -18),
     "kakaocorp/kanana-2-30b-a3b-instruct": ("Kanana-2-Instruct", "right", "bottom", -8, 9),
