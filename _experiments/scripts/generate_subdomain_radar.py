@@ -104,7 +104,7 @@ def main():
     ax.spines["polar"].set_linewidth(0.8)
     ax.grid(color="#d0d0d0", alpha=0.9, linewidth=0.5)
     ax.set_facecolor("white")
-    ax.legend(loc="center left", bbox_to_anchor=(1.20, 0.5), ncol=1,
+    ax.legend(loc="center left", bbox_to_anchor=(0.98, 0.5), ncol=1,
               fontsize=8, frameon=False, handletextpad=0.5,
               handlelength=1.4, labelspacing=0.9)
     plt.tight_layout()
