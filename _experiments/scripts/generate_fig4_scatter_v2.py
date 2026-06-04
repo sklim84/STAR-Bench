@@ -42,6 +42,7 @@ EXCLUDE = {
     "Qwen_Qwen3-8B", "Qwen_Qwen3_5-9B__nothink", "Qwen_Qwen3_5-9B__think",
     "Salesforce_Llama-xLAM-2-8b-fc-r", "Salesforce_xLAM-2-1b-fc-r",
     "Salesforce_xLAM-2-32b-fc-r",
+    "kakaocorp/kanana-2-30b-a3b-instruct-2601",  # drop redundant Kanana release (keep orig + Think)
 }
 
 # 라벨링할 핵심 모델 (substring -> (표시명, ha, va, dx, dy))

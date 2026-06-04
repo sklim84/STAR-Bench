@@ -18,7 +18,7 @@ single-turn tool calling.
 - **50 multi-turn STR scenarios** for end-to-end report-writing evaluation.
 - **Controlled bilingual evaluation**: query language (KR/EN) × tool-definition
   language (KR/EN), enabling a 2×2 decomposition of language effects.
-- **29 open-weight models** across families, evaluated with native function calling
+- **28 open-weight models** across families, evaluated with native function calling
   (vLLM-served; OpenAI/Anthropic providers also supported).
 - **Deterministic decoding** (temperature 0); case-level bootstrap (10,000 resamples)
   confirms stable rankings (Kendall τ = 0.929, 95% CI [0.888, 0.960]).

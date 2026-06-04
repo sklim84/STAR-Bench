@@ -43,6 +43,7 @@ EXCLUDE = {
     "Qwen_Qwen3-8B", "Qwen_Qwen3_5-9B__nothink", "Qwen_Qwen3_5-9B__think",
     "Salesforce_Llama-xLAM-2-8b-fc-r", "Salesforce_xLAM-2-1b-fc-r",
     "Salesforce_xLAM-2-32b-fc-r",
+    "kakaocorp/kanana-2-30b-a3b-instruct-2601",  # drop redundant Kanana release (keep orig + Think)
 }
 NAME = {
     "DragonLLM_Llama-Open-Finance-8B": "Llama-Fin-8B",
