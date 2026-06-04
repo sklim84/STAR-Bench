@@ -21,7 +21,7 @@ single-turn tool calling.
 - **28 open-weight models** across families, evaluated with native function calling
   (vLLM-served; OpenAI/Anthropic providers also supported).
 - **Deterministic decoding** (temperature 0); case-level bootstrap (10,000 resamples)
-  confirms stable rankings (Kendall τ = 0.929, 95% CI [0.888, 0.960]).
+  confirms stable rankings (Kendall τ = 0.936, 95% CI [0.900, 0.968]).
 
 ## Benchmark structure
 
