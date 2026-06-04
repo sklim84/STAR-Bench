@@ -171,11 +171,12 @@ def fig_turnwise_line():
     from collections import defaultdict
     MT = _SB / "_experiments" / "results_mt" / "eval"
     MAX_TURN = 5
-    EXCLUDE = {  # 29-model cohort: drop 8 non-cohort variants
+    EXCLUDE = {  # 28-model cohort: drop 8 non-cohort variants + redundant Kanana-2-Instruct-2601
         "Qwen_Qwen3-30B-A3B-Instruct-2507", "Qwen_Qwen3-4B-Instruct-2507",
         "Qwen_Qwen3-8B", "Qwen_Qwen3_5-9B__nothink", "Qwen_Qwen3_5-9B__think",
         "Salesforce_Llama-xLAM-2-8b-fc-r", "Salesforce_xLAM-2-1b-fc-r",
         "Salesforce_xLAM-2-32b-fc-r",
+        "kakaocorp_kanana-2-30b-a3b-instruct-2601",
     }
     turns = list(range(1, MAX_TURN + 1))
     # per-model per-turn mean hit, then aggregate across models
