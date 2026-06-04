@@ -96,7 +96,16 @@ def main():
             'aml_score': am,
         })
     pairs.sort(key=lambda p: -p['bfcl_acc'])
-    print(f'  paired: {len(pairs)}')
+    # Restrict to the 10 highest-BFCL models. The three lowest-BFCL paired models
+    # (Mistral-Small-24B, Ministral-3B, EXAONE-4.0-1.2B) score 0% on every BFCL
+    # function-calling category (non-live AST, live, multi-turn) because BFCL's
+    # local Mistral/EXAONE prompting handler fails to elicit tool calls from these
+    # checkpoints (they emit prose); a native tool-calling re-test gives ~91% simple
+    # AST for Mistral-Small. Those runs are therefore invalid as BFCL data points.
+    # The top-10 BFCL cohort excludes them by construction (they rank 12-14).
+    TOP_N = 10
+    pairs = pairs[:TOP_N]
+    print(f'  paired (BFCL top-{TOP_N}): {len(pairs)}')
 
     try:
         from scipy import stats
