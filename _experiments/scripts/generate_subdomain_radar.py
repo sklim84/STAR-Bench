@@ -95,7 +95,7 @@ def main():
 
     ax.set_xticks(ang[:-1])
     ax.set_xticklabels(axes, fontsize=8.5)
-    ax.tick_params(axis="x", pad=4)
+    ax.tick_params(axis="x", pad=9)
     ax.set_ylim(0, 1)
     ax.set_yticks([0.25, 0.5, 0.75, 1.0])
     ax.set_yticklabels([".25", ".5", ".75", "1"], fontsize=6, color="#888888")
