@@ -14,10 +14,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _plot_style import (plt, FS_TICK, FS_LABEL, FS_LEGEND, style_axes)
 
-BFCL_CSV = Path('_paper/_experiments/bfcl_results/score/data_overall.csv')
-AML_DIR = Path('_paper/_experiments/results_kr/eval')
-OUT_DIR = Path('_paper/_experiments/results_RQ5')
-FIG_DIR = Path('_paper/figures')
+BFCL_CSV = Path('_experiments/bfcl_results/score/data_overall.csv')
+AML_DIR = Path('_experiments/results_kr/eval')
+OUT_DIR = Path('_experiments/results_RQ5')
+FIG_DIR = Path('_experiments/figures')
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # BFCL display_name → AML model_id 매핑

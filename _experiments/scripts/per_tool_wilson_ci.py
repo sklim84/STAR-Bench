@@ -17,7 +17,8 @@ from pathlib import Path
 from collections import defaultdict
 import numpy as np
 
-ROUND1_CKPT = Path("/home/work/kftc_sklim/KA-001-AML-Assistant/_experiments/results/round1/checkpoint")
+_SB = Path(__file__).resolve().parents[2]  # star-bench root
+ROUND1_CKPT = _SB / "_experiments" / "results_kr" / "checkpoint"
 
 
 def wilson_ci(successes: int, n: int, z: float = 1.96) -> tuple[float, float]:
@@ -159,7 +160,8 @@ def main() -> None:
         },
     }
 
-    out_path = Path("/home/work/kftc_sklim/KA-001-AML-Assistant/_experiments/results/per_tool_wilson_ci_round1.json")
+    out_path = _SB / "_experiments" / "results" / "per_tool_wilson_ci_round1.json"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
     with out_path.open("w") as f:
         json.dump(out, f, indent=2, ensure_ascii=False)
     print(f"  Saved: {out_path}")

@@ -19,7 +19,8 @@ from pathlib import Path
 import numpy as np
 from scipy.stats import chi2
 
-ROUND1_CKPT = Path("/home/work/kftc_sklim/KA-001-AML-Assistant/_experiments/results/round1/checkpoint")
+_SB = Path(__file__).resolve().parents[2]  # star-bench root
+ROUND1_CKPT = _SB / "_experiments" / "results_kr" / "checkpoint"
 
 SCORE_THRESHOLD = 0.9
 
@@ -117,7 +118,8 @@ def main() -> None:
               f"{r['delta_pp']:>+6.2f} {r['flip_to_correct']:>4} {r['flip_to_wrong']:>4} "
               f"{r['mcnemar_chi2']:>6.2f} {r['p_value']:>10} {sig:>5}")
 
-    out_path = Path("/home/work/kftc_sklim/KA-001-AML-Assistant/_experiments/results/mcnemar_think_round1.json")
+    out_path = _SB / "_experiments" / "results" / "mcnemar_think_round1.json"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
     with out_path.open("w") as f:
         json.dump(rows, f, indent=2, ensure_ascii=False)
     print(f"\nSaved: {out_path}")

@@ -26,8 +26,8 @@ TARGET="${1:-}"
 GPU="${2:-0}"
 PORT="${3:-11434}"
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
-RUNNER="$PROJECT_ROOT/_paper/_experiments/scripts/run_benchmark.sh"
+PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+RUNNER="$PROJECT_ROOT/_experiments/scripts/run_benchmark.sh"
 
 case "$TARGET" in
     gpt_oss_20b)        GROUP="RERUN_GPT_OSS_20B" ;;

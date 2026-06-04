@@ -7,8 +7,8 @@ results_kr (29 모델) + results_mt (29 모델) 데이터 기반.
 import json
 from pathlib import Path
 
-EVAL_DIR = Path('_paper/_experiments/results_kr/eval')
-MT_DIR = Path('_paper/_experiments/results_mt/eval')
+EVAL_DIR = Path('_experiments/results_kr/eval')
+MT_DIR = Path('_experiments/results_mt/eval')
 
 # 한국어 특화 그룹 + 그룹별 모델 순서 (옛 tab:full_models 순서 참조)
 GROUPS = [
@@ -138,7 +138,7 @@ def main():
                    f'{fmt(a)} & {fmt(o)} & {fmt(h_bar)}  & {fmt(a_bar)}  & {fmt(c)} \\\\')
             rows.append(row)
 
-    out_dir = Path('_paper/_experiments/results_RQ1')
+    out_dir = Path('_experiments/results_RQ1')
     out_dir.mkdir(exist_ok=True, parents=True)
     out_file = out_dir / 'full_models_table_rows.tex'
     with out_file.open('w') as f:

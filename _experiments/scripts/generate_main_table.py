@@ -20,8 +20,8 @@ results_kr (29 모델) + results_mt (29 모델)에서 KR baseline + multiturn �
 import json
 from pathlib import Path
 
-EVAL_DIR = Path('_paper/_experiments/results_kr/eval')
-MT_DIR = Path('_paper/_experiments/results_mt/eval')
+EVAL_DIR = Path('_experiments/results_kr/eval')
+MT_DIR = Path('_experiments/results_mt/eval')
 
 # 대표 모델 + 표시 순서 (계열 그룹화)
 DISPLAY_ORDER = [
@@ -149,7 +149,7 @@ def main():
         print(r)
 
     # 파일 저장
-    out_dir = Path('_paper/_experiments/results_RQ1')
+    out_dir = Path('_experiments/results_RQ1')
     out_dir.mkdir(exist_ok=True, parents=True)
     with (out_dir / 'main_table_rows.tex').open('w') as f:
         f.write('\n'.join(rows) + '\n')

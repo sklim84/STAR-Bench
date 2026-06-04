@@ -13,31 +13,31 @@ v6 벤치마크 데이터셋(1,258건, 24개 카테고리)을 대상으로
 
 사용법:
     # 테스트 (모델당 2건만)
-    BENCH_MAX_CASES=2 python _paper/scripts/benchmark.py --output _paper/results/
+    BENCH_MAX_CASES=2 python _experiments/scripts/benchmark.py --output _experiments/results/
 
     # gpt-4o-mini만 실행
-    python _paper/scripts/benchmark.py --models gpt-4o-mini --output _paper/results/
+    python _experiments/scripts/benchmark.py --models gpt-4o-mini --output _experiments/results/
 
     # Claude 모델 실행
-    python _paper/scripts/benchmark.py --models claude-haiku-4-5-20251001 --output _paper/results/
+    python _experiments/scripts/benchmark.py --models claude-haiku-4-5-20251001 --output _experiments/results/
 
     # 전체 실행
-    python _paper/scripts/benchmark.py --output _paper/results/
+    python _experiments/scripts/benchmark.py --output _experiments/results/
 
     # 특정 모델 재개
-    python _paper/scripts/benchmark.py --models qwen2.5:1.5b --output _paper/results/
+    python _experiments/scripts/benchmark.py --models qwen2.5:1.5b --output _experiments/results/
 
     # 케이스 단위 체크포인트 + 재실행 시 완료 케이스 skip (진짜 resume)
-    python _paper/scripts/benchmark.py --models qwen2.5:0.5b --checkpoint --output _paper/results/
+    python _experiments/scripts/benchmark.py --models qwen2.5:0.5b --checkpoint --output _experiments/results/
 
     # 백그라운드 실행용 로그 파일 (nohup과 함께 사용)
-    nohup python _paper/scripts/benchmark.py --models qwen2.5:0.5b --checkpoint --log-file bench.log &
+    nohup python _experiments/scripts/benchmark.py --models qwen2.5:0.5b --checkpoint --log-file bench.log &
 
     # 상세 로그 (케이스별 score, elapsed, error_type)
-    python _paper/scripts/benchmark.py --models qwen2.5:0.5b --checkpoint -v --log-file bench.log
+    python _experiments/scripts/benchmark.py --models qwen2.5:0.5b --checkpoint -v --log-file bench.log
 
     # 대화 흐름 디버그 (API 호출/도구 실행 라운드별)
-    python _paper/scripts/benchmark.py --models qwen2.5:0.5b --checkpoint --debug-chat --log-file bench.log
+    python _experiments/scripts/benchmark.py --models qwen2.5:0.5b --checkpoint --debug-chat --log-file bench.log
 
 환경 변수:
     OPENAI_API_KEY:     OpenAI API 키 (gpt-4o-mini 실행 시 필요)
@@ -74,7 +74,7 @@ from openpyxl.utils import get_column_letter
 from openai import OpenAI
 
 # 프로젝트 루트를 sys.path에 추가
-_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(_PROJECT_ROOT))
 
 from src.features.agent import (  # noqa: E402
@@ -659,8 +659,8 @@ MODELS = [
 # 데이터셋 / 임계값 (bench_agent_behavior.py에서 동일 사용)
 # ---------------------------------------------------------------------------
 
-_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent  # KA-001-AML-Assistant/
-_DATASET_DIR = _PROJECT_ROOT / "_paper" / "benchmarks"
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent  # star-bench/
+_DATASET_DIR = _PROJECT_ROOT / "benchmarks"
 
 _DATASET_FILES = {
     "get_statistics":          _DATASET_DIR / "cases_get_statistics.json",
@@ -2038,7 +2038,7 @@ def main():
         "--cases-dir",
         default=None,
         metavar="PATH",
-        help="벤치마크 케이스 디렉토리 (기본: _paper/benchmarks/). 한/영 ablation용",
+        help="벤치마크 케이스 디렉토리 (기본: benchmarks/). 한/영 ablation용",
     )
     parser.add_argument(
         "--tools-lang",

@@ -3,7 +3,7 @@
 wrong_func 오류 중 called_tool != expected_tool인 케이스를 집계하여
 상위 혼동 도구 행·열만 추출한 heatmap을 생성한다.
 
-출력: _paper/_experiments/results_RQ1/fig_confusion_heatmap.{pdf,png}
+출력: _experiments/results_RQ1/fig_confusion_heatmap.{pdf,png}
 """
 import json
 import os

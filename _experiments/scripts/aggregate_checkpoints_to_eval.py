@@ -2,7 +2,7 @@
 
 기존 eval_*.json 파일을 체크포인트(리스코어링 반영)에서 재생성한다.
 벤치마크 재실행 없이 현행 checkpoint 데이터만으로 aggregation을 다시 수행하여
-figure 생성 스크립트(_paper/figures/generate_*.py)가 사용할 최신 eval JSON을 만든다.
+figure 생성 스크립트(_experiments/figures/generate_*.py)가 사용할 최신 eval JSON을 만든다.
 
 Usage:
     python -m _experiments.scripts.aggregate_checkpoints_to_eval
@@ -16,8 +16,9 @@ from pathlib import Path
 from collections import defaultdict
 from datetime import datetime
 
-PROJECT_ROOT = Path('/home/work/kftc_sklim/KA-001-AML-Assistant')
-BENCHMARKS = PROJECT_ROOT / '_paper' / 'benchmarks'
+_SB = Path(__file__).resolve().parents[2]  # star-bench root
+PROJECT_ROOT = _SB
+BENCHMARKS = PROJECT_ROOT / 'benchmarks'
 
 # Condition별 eval output 경로
 CONDITIONS = {

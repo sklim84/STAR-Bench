@@ -1,6 +1,6 @@
 """RQ1 신규 figure: 28개 유효 모델 전체 h bar chart (계열별 색상, h+a 병렬).
 
-출력: _paper/_experiments/results_RQ1/fig_model_bar.{pdf,png}
+출력: _experiments/results_RQ1/fig_model_bar.{pdf,png}
 """
 import json
 import os

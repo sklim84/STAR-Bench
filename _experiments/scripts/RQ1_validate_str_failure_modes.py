@@ -15,8 +15,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _plot_style import (plt, COL_BAD, COL_GOOD, COL_ACCENT, COL_PURPLE,
                           FS_TICK, FS_LABEL, FS_TITLE, FS_LEGEND, FS_ANNOT, style_axes)
 
-EVAL_DIR = Path('_paper/_experiments/results_kr/eval')
-OUT_DIR = Path('_paper/_experiments/results_RQ1')
+EVAL_DIR = Path('_experiments/results_kr/eval')
+OUT_DIR = Path('_experiments/results_RQ1')
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 TARGET_MODELS = {

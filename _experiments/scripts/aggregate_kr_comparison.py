@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-OUT_DIR = Path('_paper/_experiments/results_kr')
+OUT_DIR = Path('_experiments/results_kr')
 EVAL_DIR = OUT_DIR / 'eval'
 TS_RE = re.compile(r'_(\d{8}_\d{6})\.json$')
 

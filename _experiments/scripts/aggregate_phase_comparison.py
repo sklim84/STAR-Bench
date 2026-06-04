@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TS_RE = re.compile(r'_(\d{8}_\d{6})\.json$')
 
 
@@ -24,7 +24,7 @@ def normalize_name(model: str, canonicals: set[str]) -> str:
 
 
 def aggregate_phase(phase: str):
-    out_dir = PROJECT_ROOT / f'_paper/_experiments/results_{phase}'
+    out_dir = PROJECT_ROOT / f'_experiments/results_{phase}'
     eval_dir = out_dir / 'eval'
     if not eval_dir.exists():
         print(f'[{phase}] eval dir missing: {eval_dir}')

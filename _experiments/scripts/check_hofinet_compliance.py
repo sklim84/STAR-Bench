@@ -120,7 +120,7 @@ def check_case(case_id, params, question, source):
 
 def collect_singleturn(lang='kr'):
     """싱글턴 케이스 수집 + 검사. lang: 'kr' 또는 'en'."""
-    base = '_paper/benchmarks' if lang == 'kr' else '_paper/benchmarks_en'
+    base = 'benchmarks' if lang == 'kr' else 'benchmarks_en'
     out = []
     for f in sorted(glob.glob(f'{base}/cases_*.json')):
         d = json.load(open(f))
@@ -165,7 +165,7 @@ def collect_multiturn():
     }
 
     out = []
-    for f in sorted(glob.glob('_paper/benchmarks_multiturn/cases_*.json')):
+    for f in sorted(glob.glob('benchmarks_multiturn/cases_*.json')):
         d = json.load(open(f))
         for s in d:
             sid = s.get('id')
@@ -232,7 +232,7 @@ def main():
     summary['n_unique_cases'] = len(summary['unique_cases'])
     summary['unique_cases'] = sorted(summary['unique_cases'])
 
-    out_dir = Path('_paper/_experiments/analysis')
+    out_dir = Path('_experiments/analysis')
     out_dir.mkdir(parents=True, exist_ok=True)
     with (out_dir / 'hofinet_violations.json').open('w') as f:
         json.dump({

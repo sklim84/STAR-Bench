@@ -9,8 +9,8 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-EVAL_DIR = Path('_paper/_experiments/results_mt/eval')
-OUT_DIR = Path('_paper/_experiments/results_mt')
+EVAL_DIR = Path('_experiments/results_mt/eval')
+OUT_DIR = Path('_experiments/results_mt')
 
 
 def main():

@@ -25,8 +25,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
-MT_DIR = Path("_paper/_experiments/results_mt/eval")
-OUT_DIR = Path("_paper/figures")
+MT_DIR = Path("_experiments/results_mt/eval")
+OUT_DIR = Path("_experiments/figures")
 
 TARGETS = [
     ("mistralai/Mistral-Small-3.2-24B-Instruct-2506", "Mistral-Small-24B", "#E15759", "v", "--"),

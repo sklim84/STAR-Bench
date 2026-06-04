@@ -8,7 +8,8 @@ import os
 from collections import defaultdict
 from pathlib import Path
 
-BASE = Path("/home/work/kftc_sklim/KA-001-AML-Assistant/_experiments")
+_SB = Path(__file__).resolve().parents[2]  # star-bench root
+BASE = _SB / "_experiments"
 MT_DIR = BASE / "results_multiturn/round1/eval"
 ST_DIR = BASE / "results/round1/eval"
 OUT_PATH = BASE / "results/error_analysis_multiturn.json"

@@ -17,9 +17,9 @@
 
 set -uo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-LOG_DIR="$PROJECT_ROOT/_paper/_experiments/logs"
+LOG_DIR="$PROJECT_ROOT/_experiments/logs"
 RUN_SCRIPT="$SCRIPT_DIR/run_benchmark.sh"
 
 SERVER=""

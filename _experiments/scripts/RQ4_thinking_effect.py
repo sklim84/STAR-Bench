@@ -13,9 +13,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _plot_style import (plt, COL_NOTHINK, COL_THINK, COL_BAD, FS_TICK, FS_LABEL,
                           FS_TITLE, FS_LEGEND, style_axes, short_name)
 
-EVAL_DIR = Path('_paper/_experiments/results_kr/eval')
-MT_DIR = Path('_paper/_experiments/results_mt/eval')
-OUT_DIR = Path('_paper/_experiments/results_RQ4')
+EVAL_DIR = Path('_experiments/results_kr/eval')
+MT_DIR = Path('_experiments/results_mt/eval')
+OUT_DIR = Path('_experiments/results_RQ4')
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 THINKING_PAIRS = [

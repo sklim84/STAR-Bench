@@ -11,9 +11,11 @@ import json
 import glob
 import os
 import shutil
+from pathlib import Path
 from collections import defaultdict
 
-PROJ = "/home/work/kftc_sklim/KA-001-AML-Assistant"
+_SB = Path(__file__).resolve().parents[2]  # star-bench root
+PROJ = str(_SB)
 
 # 가중치 (evaluator.py와 동일)
 WEIGHTS = {
@@ -28,7 +30,7 @@ WEIGHTS = {
 def load_abstain_ids():
     """벤치마크 케이스에서 abstain(primary_tool=='') 케이스 ID 수집."""
     abstain = set()
-    for cf in glob.glob(f'{PROJ}/_paper/benchmarks/cases_*.json'):
+    for cf in glob.glob(f'{PROJ}/benchmarks/cases_*.json'):
         with open(cf) as f:
             for c in json.load(f):
                 expected = c.get('expected', {})

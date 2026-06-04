@@ -3,7 +3,7 @@
 # Per-GPU 벤치마크 실행기 (HOFINET 정정본, 24-model 분담)
 #
 # 24개 모델 × 3 차원(KR single_turn, EN single_turn, multi-turn STR)
-# 결과 저장: _paper/_experiments/results_{kr,en,mt}/eval/
+# 결과 저장: _experiments/results_{kr,en,mt}/eval/
 #
 # 사용법:
 #   bash _experiments/scripts/run_benchmark.sh --gpu 0 --port 11434 --group S1_A --mode kr
@@ -25,15 +25,15 @@ TOOLS_LANG=""           # "" (default = KR tools), "en" (RQ2 ablation)
 CASE_IDS_FILE=""        # 부분 재실험: case ID 목록 파일
 FORCE_RERUN=""          # 1이면 --force-rerun 추가 (체크포인트 캐시 무시)
 HF_TOKEN="${HF_TOKEN:-}"
-PROJECT_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 
 # 결과 디렉토리 (mode별)
-RESULT_KR="$PROJECT_ROOT/_paper/_experiments/results_kr"
-RESULT_EN="$PROJECT_ROOT/_paper/_experiments/results_en"
-RESULT_MT="$PROJECT_ROOT/_paper/_experiments/results_mt"
-CASES_KR="$PROJECT_ROOT/_paper/benchmarks"
-CASES_EN="$PROJECT_ROOT/_paper/benchmarks_en"
-LOG_DIR="$PROJECT_ROOT/_paper/_experiments/logs"
+RESULT_KR="$PROJECT_ROOT/_experiments/results_kr"
+RESULT_EN="$PROJECT_ROOT/_experiments/results_en"
+RESULT_MT="$PROJECT_ROOT/_experiments/results_mt"
+CASES_KR="$PROJECT_ROOT/benchmarks"
+CASES_EN="$PROJECT_ROOT/benchmarks_en"
+LOG_DIR="$PROJECT_ROOT/_experiments/logs"
 MAX_TOTAL="${BENCH_MAX_TOTAL:-}"
 
 # CLI 파싱
@@ -74,8 +74,8 @@ PYEOF
 fi
 
 # Kanana 커스텀 파서
-KANANA_PARSER_PLUGIN="$PROJECT_ROOT/_paper/_experiments/scripts/kanana_tool_calls/kanana_tool_calls/functionary_kanana_tool_parser.py"
-KANANA_CHAT_TEMPLATE="$PROJECT_ROOT/_paper/_experiments/scripts/kanana_tool_calls/kanana_tool_calls/lmalign_v1.jinja"
+KANANA_PARSER_PLUGIN="$PROJECT_ROOT/_experiments/scripts/kanana_tool_calls/kanana_tool_calls/functionary_kanana_tool_parser.py"
+KANANA_CHAT_TEMPLATE="$PROJECT_ROOT/_experiments/scripts/kanana_tool_calls/kanana_tool_calls/lmalign_v1.jinja"
 
 # ===========================================================================
 # 서버별 GROUP (MODELS.md 24-model 기준)
@@ -91,7 +91,7 @@ KANANA_CHAT_TEMPLATE="$PROJECT_ROOT/_paper/_experiments/scripts/kanana_tool_call
 GROUP_S1_A=(
     "qwen35-4b|Qwen/Qwen3.5-4B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-4B"
     "gemma-4-e4b|google/gemma-4-E4B-it|gemma4||google/gemma-4-E4B-it"
-    "phi-4-mini|microsoft/Phi-4-mini-instruct|phi4_mini_json|--chat-template $PROJECT_ROOT/_paper/_experiments/scripts/tool_chat_template_phi4_mini.jinja|microsoft/Phi-4-mini-instruct"
+    "phi-4-mini|microsoft/Phi-4-mini-instruct|phi4_mini_json|--chat-template $PROJECT_ROOT/_experiments/scripts/tool_chat_template_phi4_mini.jinja|microsoft/Phi-4-mini-instruct"
     "xlam-3b|Salesforce/xLAM-2-3b-fc-r|xlam||Salesforce/xLAM-2-3b-fc-r"
     "exaone-1.2b|LGAI-EXAONE/EXAONE-4.0-1.2B|hermes|--trust-remote-code|LGAI-EXAONE/EXAONE-4.0-1.2B"
     "dragon-llama-fin|DragonLLM/Llama-Open-Finance-8B|llama3_json||DragonLLM/Llama-Open-Finance-8B"
@@ -323,8 +323,8 @@ run_benchmark() {
     local extra_env=""
     [ -n "$MAX_TOTAL" ] && extra_env="$extra_env BENCH_MAX_TOTAL=$MAX_TOTAL"
     [ "${BENCH_SKIP_THINK:-0}" = "1" ] && extra_env="$extra_env BENCH_SKIP_THINK=1"
-    ts "  벤치마크: $extra_env PYTHONPATH=$PROJECT_ROOT/_paper python -m $BENCH_MODULE --models $model_names --output $OUTPUT_DIR $BENCH_EXTRA"
-    env $extra_env PYTHONPATH="$PROJECT_ROOT/_paper:${PYTHONPATH:-}" python -m "$BENCH_MODULE" --models $model_names --output "$OUTPUT_DIR" $BENCH_EXTRA
+    ts "  벤치마크: $extra_env PYTHONPATH=$PROJECT_ROOT python -m $BENCH_MODULE --models $model_names --output $OUTPUT_DIR $BENCH_EXTRA"
+    env $extra_env PYTHONPATH="$PROJECT_ROOT:${PYTHONPATH:-}" python -m "$BENCH_MODULE" --models $model_names --output "$OUTPUT_DIR" $BENCH_EXTRA
 }
 
 # 메인 루프

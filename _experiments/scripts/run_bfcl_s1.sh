@@ -12,10 +12,10 @@
 # ============================================================================
 set -uo pipefail
 ts() { date "+%Y-%m-%d %H:%M:%S"; }
-PROJ="/home/work/kftc_sklim/KA-001-AML-Assistant"
-RESULT_DIR="$PROJ/_paper/_experiments/bfcl_results/result"
-SCORE_DIR="$PROJ/_paper/_experiments/bfcl_results/score"
-LOG_DIR="$PROJ/_paper/_experiments/logs"
+PROJ="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+RESULT_DIR="$PROJ/_experiments/bfcl_results/result"
+SCORE_DIR="$PROJ/_experiments/bfcl_results/score"
+LOG_DIR="$PROJ/_experiments/logs"
 FAKE_FLASH="/tmp/fake_flash_attn"
 HF_TOKEN_VAL=$(grep "^HF_TOKEN" "$PROJ/.env" | sed 's/^[^:=]*[: ]*=//' | tr -d ' "'"'"'')
 
@@ -90,7 +90,7 @@ run_bfcl() {
 phase1_lane0() {
     run_bfcl 0 11434 "LGAI-EXAONE/EXAONE-4.0-1.2B" "hermes" 32768 "--trust-remote-code" "exaone_1.2b"
     run_bfcl 0 11434 "meta-llama/Llama-3.2-3B-Instruct" "llama3_json" 32768 "" "llama_3.2_3b"
-    run_bfcl 0 11434 "microsoft/Phi-4-mini-instruct" "phi4_mini_json" 16384 "--chat-template $PROJ/_paper/_experiments/scripts/tool_chat_template_phi4_mini.jinja" "phi4_mini"
+    run_bfcl 0 11434 "microsoft/Phi-4-mini-instruct" "phi4_mini_json" 16384 "--chat-template $PROJ/_experiments/scripts/tool_chat_template_phi4_mini.jinja" "phi4_mini"
     run_bfcl 0 11434 "NousResearch/Hermes-3-Llama-3.1-8B" "hermes" 32768 "" "hermes3_8b"
     run_bfcl 0 11434 "DragonLLM/Llama-Open-Finance-8B" "llama3_json" 32768 "" "dragon_llama_fin"
     run_bfcl 0 11434 "LGAI-EXAONE/EXAONE-4.0-32B" "hermes" 16384 "--trust-remote-code" "exaone_32b"

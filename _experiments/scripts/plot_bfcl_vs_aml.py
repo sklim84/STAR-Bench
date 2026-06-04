@@ -1,7 +1,7 @@
 """BFCL v4 vs AML-Bench 상관 scatter plot 생성.
 
 입력: /tmp/bfcl_aml_paired.json
-출력: _paper/figures/fig_bfcl_vs_aml.png (그리고 pdf)
+출력: _experiments/figures/fig_bfcl_vs_aml.png (그리고 pdf)
 """
 import json
 import matplotlib
@@ -86,6 +86,6 @@ ax.legend(handles=legend_elements, loc='lower right', fontsize=11, framealpha=0.
 
 plt.tight_layout()
 # bbox_inches='tight' 제거 - 동일 figsize의 다른 서브피겨와 saved image 크기 동일하게 유지
-plt.savefig('_paper/figures/fig_bfcl_vs_aml.png', dpi=300)
-plt.savefig('_paper/figures/fig_bfcl_vs_aml.pdf')
-print('Saved: _paper/figures/fig_bfcl_vs_aml.{png,pdf} @ 300 DPI')
+plt.savefig('_experiments/figures/fig_bfcl_vs_aml.png', dpi=300)
+plt.savefig('_experiments/figures/fig_bfcl_vs_aml.pdf')
+print('Saved: _experiments/figures/fig_bfcl_vs_aml.{png,pdf} @ 300 DPI')

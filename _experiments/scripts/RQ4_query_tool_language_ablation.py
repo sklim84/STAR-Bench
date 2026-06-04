@@ -20,12 +20,12 @@ from _plot_style import (plt, COL_NOTHINK, COL_THINK, COL_BAD, FS_TICK, FS_LABEL
                           FS_TITLE, FS_LEGEND, style_axes)
 
 CELLS = {
-    'KR-KR': Path('_paper/_experiments/results_kr/eval'),
-    'EN-KR': Path('_paper/_experiments/results_en/eval'),
-    'KR-EN': Path('_paper/_experiments/results_kr_tools_en/eval'),
-    'EN-EN': Path('_paper/_experiments/results_en_tools_en/eval'),
+    'KR-KR': Path('_experiments/results_kr/eval'),
+    'EN-KR': Path('_experiments/results_en/eval'),
+    'KR-EN': Path('_experiments/results_kr_tools_en/eval'),
+    'EN-EN': Path('_experiments/results_en_tools_en/eval'),
 }
-OUT_DIR = Path('_paper/_experiments/results_RQ4')
+OUT_DIR = Path('_experiments/results_RQ4')
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 TARGETS = [

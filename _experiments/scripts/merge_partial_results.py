@@ -11,11 +11,11 @@
 
 Usage:
     python merge_partial_results.py \\
-        --output-dir _paper/_experiments/results_kr \\
+        --output-dir _experiments/results_kr \\
         --models <m1> <m2> ...
 
   또는 모든 모델:
-    python merge_partial_results.py --output-dir _paper/_experiments/results_kr --all
+    python merge_partial_results.py --output-dir _experiments/results_kr --all
 
 Options:
     --no-compact-checkpoint  체크포인트 compact 스킵 (재집계만)
@@ -202,7 +202,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--output-dir", required=True,
-                    help="결과 디렉토리 (예: _paper/_experiments/results_kr)")
+                    help="결과 디렉토리 (예: _experiments/results_kr)")
     ap.add_argument("--models", nargs="*", default=None,
                     help="대상 모델 ID. 미지정 시 --all 또는 직접 명시 필요.")
     ap.add_argument("--all", action="store_true",

@@ -43,7 +43,7 @@ import anthropic
 from openai import OpenAI
 
 # 프로젝트 루트를 sys.path에 추가
-_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(_PROJECT_ROOT))
 
 from src.features.agent import (  # noqa: E402
@@ -69,7 +69,7 @@ logger = logging.getLogger(__name__)
 # 데이터 경로
 # ---------------------------------------------------------------------------
 
-_MULTITURN_DIR = _PROJECT_ROOT / "_paper" / "benchmarks_multiturn"
+_MULTITURN_DIR = _PROJECT_ROOT / "benchmarks_multiturn"
 
 
 def _load_multiturn_cases() -> list[dict]:

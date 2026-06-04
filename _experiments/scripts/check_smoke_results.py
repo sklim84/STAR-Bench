@@ -12,8 +12,8 @@ from collections import Counter
 PHASE = sys.argv[1] if len(sys.argv) > 1 else 'kr'
 MODEL = sys.argv[2] if len(sys.argv) > 2 else 'openai_gpt-oss-20b'
 
-evdir = Path(f'_paper/_experiments/results_{PHASE}/eval')
-ckdir = Path(f'_paper/_experiments/results_{PHASE}/checkpoint')
+evdir = Path(f'_experiments/results_{PHASE}/eval')
+ckdir = Path(f'_experiments/results_{PHASE}/checkpoint')
 
 def latest_eval(mode):
     files = sorted(evdir.glob(f'eval_{MODEL}__{mode}_*.json'))

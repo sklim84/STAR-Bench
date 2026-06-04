@@ -1,7 +1,7 @@
 """RQ5 신규 figure: Finance SFT / 한국어 특화 / 범용 8B 모델군의
 서브도메인별 h 비교 grouped bar chart.
 
-출력: _paper/_experiments/results_RQ5/fig_subdomain_grouped_bar.{pdf,png}
+출력: _experiments/results_RQ5/fig_subdomain_grouped_bar.{pdf,png}
 """
 import json
 import os
