@@ -197,15 +197,15 @@ def fig_turnwise_line():
 
     fig, ax = plt.subplots(figsize=(3.5, 2.6))
     ax.fill_between(turns, np.clip(mean - std, 0, 100), np.clip(mean + std, 0, 100),
-                    color=COLORS["Kanana"], alpha=0.18, linewidth=0,
+                    color=_VIR_SD(0.92), alpha=0.30, linewidth=0,
                     label=r"$\pm$1 SD (all models)")
     ax.plot(turns, mean, color="#2A7F79", marker="o", markersize=4.5,
             linewidth=1.8, label="Mean (all models)")
     # annotate the drop at the synthesis/validation turn
     ax.annotate("", xy=(4, mean[3]), xytext=(3, mean[2]),
-                arrowprops=dict(arrowstyle="->", color="#E15759", lw=1.2))
+                arrowprops=dict(arrowstyle="->", color="#555555", lw=1.2))
     ax.text(3.62, (mean[2] + mean[3]) / 2 + 8,
-            f"{mean[2]:.0f}% $\\to$ {mean[3]:.0f}%", fontsize=6.5, color="#E15759",
+            f"{mean[2]:.0f}% $\\to$ {mean[3]:.0f}%", fontsize=6.5, color="#555555",
             ha="left", va="center", fontstyle="italic")
 
     ax.set_xticks(turns)
@@ -548,10 +548,10 @@ def fig_tsne_semantic():
         "generate_str": "Regulatory Reporting",
         "multi_tool": "Multi-tool", "missing_parameters": "Missing-param",
     }
-    subdomain_colors = {
-        "Txn Inquiry": "#4E79A7", "Suspicious Detection": "#E15759", "Money Flow & Network": "#59A14F",
-        "Regulatory Reporting": "#B07AA1",
-        "Multi-tool": "#EDC948", "Missing-param": "#BAB0AC",
+    subdomain_colors = {  # 색감 통일: Fig 9와 동일한 viridis 서브도메인 매핑
+        "Txn Inquiry": _VIR_SD(0.08), "Suspicious Detection": _VIR_SD(0.24), "Money Flow & Network": _VIR_SD(0.40),
+        "Regulatory Reporting": _VIR_SD(0.56),
+        "Multi-tool": _VIR_SD(0.72), "Missing-param": _VIR_SD(0.90),
     }
 
     fig, ax = plt.subplots(figsize=(6.6, 3.9))
@@ -562,7 +562,7 @@ def fig_tsne_semantic():
         color = subdomain_colors.get(sd, "#BAB0AC")
         label = sd if sd not in plotted_subdomains else None
         plotted_subdomains.add(sd)
-        ax.scatter(x, y, c=color, s=12, alpha=0.6, edgecolors="none", label=label)
+        ax.scatter(x, y, color=color, s=12, alpha=0.6, edgecolors="none", label=label)
 
     apply_style(ax)
     ax.tick_params(length=3, labelsize=9)  # tick 값 표시(축 라벨은 생략)
@@ -614,10 +614,9 @@ SUBDOMAIN_ORDER = [
     "Multi-tool", "Missing-\nparam",
 ]
 
-SUBDOMAIN_COLORS_BAR = [
-    "#4E79A7", "#E15759", "#76B7B2", "#F28E2B",
-    "#B07AA1", "#EDC948", "#BAB0AC",
-]
+import matplotlib as _mpl  # 색감 통일: 서브도메인 색을 viridis 계열(blue->green->yellow)에서 샘플
+_VIR_SD = _mpl.colormaps["viridis"]
+SUBDOMAIN_COLORS_BAR = [_VIR_SD(x) for x in [0.08, 0.24, 0.40, 0.56, 0.72, 0.86, 0.97]]
 
 
 def fig_difficulty_distribution_summary():

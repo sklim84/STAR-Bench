@@ -52,12 +52,14 @@ SUBDOMAINS = {
                               "validate_str_fields", "get_aml_glossary"],
 }
 
+import matplotlib as _mplD  # 색감 통일: 4 archetype 라인을 viridis(blue->green->yellow)에서 샘플
+_VIRD = _mplD.colormaps["viridis"]
 # Four representative archetypes (substring match on eval model id) -> (display, color)
 MODELS = [
-    ("google_gemma-4-31B-it",                      "Gemma-4-31B",     "#4E79A7"),
-    ("kakaocorp/kanana-2-30b-a3b-thinking-2601",   "Kanana-2-Think",  "#76B7B2"),
-    ("DragonLLM_Llama-Open-Finance-8B",            "Llama-Fin-8B",    "#59A14F"),
-    ("microsoft_Phi-4-mini-instruct",              "Phi-4-mini",      "#E15759"),
+    ("google_gemma-4-31B-it",                      "Gemma-4-31B",     _VIRD(0.25)),
+    ("kakaocorp/kanana-2-30b-a3b-thinking-2601",   "Kanana-2-Think",  _VIRD(0.50)),
+    ("DragonLLM_Llama-Open-Finance-8B",            "Llama-Fin-8B",    _VIRD(0.72)),
+    ("microsoft_Phi-4-mini-instruct",              "Phi-4-mini",      _VIRD(0.90)),
 ]
 
 
@@ -103,7 +105,7 @@ def main():
     ax.spines["polar"].set_color("#cccccc")
     ax.spines["polar"].set_linewidth(0.8)
     ax.grid(color="#d0d0d0", alpha=0.9, linewidth=0.5)
-    ax.set_facecolor("white")
+    ax.set_facecolor("#f0f3f7")  # radar 원에 옅은 바탕색
     ax.legend(loc="center left", bbox_to_anchor=(0.98, 0.5), ncol=1,
               fontsize=8, frameon=False, handletextpad=0.5,
               handlelength=1.4, labelspacing=0.9)

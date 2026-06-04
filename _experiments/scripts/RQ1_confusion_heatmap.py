@@ -124,8 +124,11 @@ fig, ax = plt.subplots(figsize=(5.0, 4.3))
 # cmap: white -> deep blue (zero는 흰색). PowerNorm(0.5)로 중간값 색 대비 강화
 # (205 같은 이상치가 선형 스케일을 지배하는 문제 완화).
 from matplotlib.colors import PowerNorm
-cmap = matplotlib.colormaps["Blues"]
-im = ax.imshow(mat, aspect="auto", cmap=cmap,
+import numpy as _np
+cmap = matplotlib.colormaps["viridis_r"].copy()  # 색감 통일: viridis 역방향(큰 값=진한색, 0 셀은 흰색)
+cmap.set_bad("#F2F5E1")  # 0 셀: 순백 대신 viridis 저단(연노랑)에 가까운 옅은 톤
+_mat_disp = _np.where(mat > 0, mat, _np.nan)
+im = ax.imshow(_mat_disp, aspect="auto", cmap=cmap,
                norm=PowerNorm(gamma=0.5, vmin=0, vmax=mat.max()))
 
 # 수치 주석: 모든 0 아닌 셀에 표기(colorbar 대체). 핵심 혼동(>=BOLD_MIN)은 굵게/크게.
@@ -135,7 +138,7 @@ for i in range(mat.shape[0]):
         v = int(mat[i, j])
         if v == 0:
             continue
-        text_color = "white" if im.norm(mat[i, j]) > 0.55 else "black"
+        text_color = "white" if im.norm(mat[i, j]) > 0.5 else "black"
         big = v >= BOLD_MIN
         ax.text(j, i, str(v), ha="center", va="center",
                 fontsize=FS_ANNOT if big else FS_ANNOT - 2,

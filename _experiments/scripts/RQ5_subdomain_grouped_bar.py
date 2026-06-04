@@ -42,11 +42,13 @@ GROUP_LABELS = {
     "general_8b":    "General 8B",
     "small_general": "General (small, ≤3B)",
 }
+import matplotlib as _mpl  # viridis 계열(blue->green->yellow)로 통일 — 색감 통일 샘플
+_VIR = _mpl.colormaps["viridis"]
 GROUP_COLORS = {
-    "finance":        COL_GOOD,     # 초록
-    "specialized_kr": COL_PURPLE,   # 보라
-    "general_8b":     COL_NEUTRAL,  # 파랑
-    "small_general":  COL_ACCENT,   # 주황
+    "finance":        _VIR(0.25),   # blue
+    "specialized_kr": _VIR(0.50),   # teal
+    "general_8b":     _VIR(0.72),   # green
+    "small_general":  _VIR(0.90),   # yellow-green
 }
 
 # ── 서브도메인 단축명 ─────────────────────────────────────────────────────────

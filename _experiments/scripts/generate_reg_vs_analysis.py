@@ -77,7 +77,9 @@ NAME = {
     "skt_A_X-4_0-Light": "A.X-4.0-Light",
 }
 
-C_ANA, C_REG = "#59A14F", "#E15759"
+import matplotlib as _mpl  # 색감 통일: viridis 2색 (analysis=blue, regulatory=green)
+_VIR = _mpl.colormaps["viridis"]
+C_ANA, C_REG = _VIR(0.25), _VIR(0.72)
 
 rows = []
 for f in sorted(glob.glob(str(EVAL / "eval_*.json"))):
