@@ -554,7 +554,8 @@ def fig_tsne_semantic():
         "Multi-tool": _VIR_SD(0.72), "Missing-param": _VIR_SD(0.90),
     }
 
-    fig, ax = plt.subplots(figsize=(6.6, 3.9))
+    # 2-panel figure*(\app:diversity)용: 패널 실제 폭(~3.5in)에 맞춰 figsize/폰트 재설정 → 다운스케일 없이 가독성 확보
+    fig, ax = plt.subplots(figsize=(3.6, 2.0))
 
     plotted_subdomains = set()
     for i, (x, y) in enumerate(coords):
@@ -562,12 +563,12 @@ def fig_tsne_semantic():
         color = subdomain_colors.get(sd, "#BAB0AC")
         label = sd if sd not in plotted_subdomains else None
         plotted_subdomains.add(sd)
-        ax.scatter(x, y, color=color, s=12, alpha=0.6, edgecolors="none", label=label)
+        ax.scatter(x, y, color=color, s=10, alpha=0.6, edgecolors="none", label=label)
 
     apply_style(ax)
-    ax.tick_params(length=3, labelsize=9)  # tick 값 표시(축 라벨은 생략)
-    ax.legend(fontsize=9, loc="upper center", bbox_to_anchor=(0.5, -0.03), ncol=4,
-              frameon=False, markerscale=2, columnspacing=1.2, handletextpad=0.3)
+    ax.tick_params(length=3, labelsize=7)  # tick 값 표시(축 라벨은 생략)
+    ax.legend(fontsize=6.5, loc="upper center", bbox_to_anchor=(0.5, -0.04), ncol=2,
+              frameon=False, markerscale=2, columnspacing=1.0, handletextpad=0.3, labelspacing=0.3)
 
     plt.tight_layout()
     plt.savefig(FIGURES_DIR / "fig_tsne_semantic.png", dpi=300, bbox_inches="tight")
@@ -757,23 +758,24 @@ def fig_question_length_boxplot_summary():
         sd = SUBDOMAIN_MAP.get(tool, "Multi-tool")
         lengths_by_sd[sd].extend([len(c.get("question", "")) for c in data])
 
-    fig, ax = plt.subplots(figsize=(10, 5.5))
+    # 2-panel figure*(\app:diversity)용: 패널 실제 폭(~3.5in)에 맞춰 figsize/폰트 재설정 → 다운스케일 없이 가독성 확보
+    fig, ax = plt.subplots(figsize=(3.6, 2.0))
     box_data = [lengths_by_sd[sd] for sd in SUBDOMAIN_ORDER]
 
     bp = ax.boxplot(box_data, patch_artist=True, vert=True,
-                    medianprops=dict(color="black", linewidth=1.5),
-                    whiskerprops=dict(linewidth=0.8),
-                    capprops=dict(linewidth=0.8),
-                    flierprops=dict(marker="o", markersize=3, alpha=0.5))
+                    medianprops=dict(color="black", linewidth=1.2),
+                    whiskerprops=dict(linewidth=0.7),
+                    capprops=dict(linewidth=0.7),
+                    flierprops=dict(marker="o", markersize=2, alpha=0.5))
 
     for patch, color in zip(bp["boxes"], SUBDOMAIN_COLORS_BAR):
         patch.set_facecolor(color)
         patch.set_alpha(0.7)
 
-    ax.set_xticklabels([sd for sd in SUBDOMAIN_ORDER], fontsize=18, rotation=40, ha="right", rotation_mode="anchor")
-    ax.tick_params(axis='y', labelsize=16)
+    ax.set_xticklabels([sd for sd in SUBDOMAIN_ORDER], fontsize=8, rotation=40, ha="right", rotation_mode="anchor")
+    ax.tick_params(axis='y', labelsize=8)
     apply_style(ax, ylabel="Question Length (chars)")
-    ax.yaxis.label.set_size(16)
+    ax.yaxis.label.set_size(8.5)
 
     plt.tight_layout()
     plt.savefig(FIGURES_DIR / "fig_question_length_boxplot_summary.png", dpi=300, bbox_inches="tight")
