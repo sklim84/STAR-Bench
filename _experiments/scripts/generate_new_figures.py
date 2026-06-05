@@ -551,7 +551,7 @@ def fig_tsne_semantic():
     subdomain_colors = {  # 색감 통일: Fig 9와 동일한 viridis 서브도메인 매핑
         "Txn Inquiry": _VIR_SD(0.08), "Suspicious Detection": _VIR_SD(0.24), "Money Flow & Network": _VIR_SD(0.40),
         "Regulatory Reporting": _VIR_SD(0.56),
-        "Multi-tool": _VIR_SD(0.72), "Missing-param": _VIR_SD(0.90),
+        "Multi-tool": _VIR_SD(0.72), "Missing-param": _VIR_SD(0.86),
     }
 
     # 2-panel figure*(\app:diversity)용: 패널 실제 폭(~3.5in)에 맞춰 figsize/폰트 재설정 → 다운스케일 없이 가독성 확보
@@ -561,14 +561,20 @@ def fig_tsne_semantic():
     for i, (x, y) in enumerate(coords):
         sd = subdomain_map.get(tool_labels[i], "Missing-param")
         color = subdomain_colors.get(sd, "#BAB0AC")
-        label = sd if sd not in plotted_subdomains else None
         plotted_subdomains.add(sd)
-        ax.scatter(x, y, color=color, s=10, alpha=0.6, edgecolors="none", label=label)
+        ax.scatter(x, y, color=color, s=10, alpha=0.6, edgecolors="none")
 
     apply_style(ax)
     ax.tick_params(length=3, labelsize=7)  # tick 값 표시(축 라벨은 생략)
-    ax.legend(fontsize=6.5, loc="upper center", bbox_to_anchor=(0.5, -0.04), ncol=2,
-              frameon=False, markerscale=2, columnspacing=1.0, handletextpad=0.3, labelspacing=0.3)
+    # 범례 순서를 Fig 9(qlen)의 SUBDOMAIN_ORDER와 동일하게 강제(명시적 handle)
+    from matplotlib.lines import Line2D as _L2D
+    _tsne_order = ["Txn Inquiry", "Suspicious Detection", "Money Flow & Network",
+                   "Regulatory Reporting", "Multi-tool", "Missing-param"]
+    _handles = [_L2D([0], [0], marker="o", linestyle="", markersize=5,
+                     markerfacecolor=subdomain_colors[sd], markeredgecolor="none", label=sd)
+                for sd in _tsne_order if sd in plotted_subdomains]
+    ax.legend(handles=_handles, fontsize=6.5, loc="upper center", bbox_to_anchor=(0.5, -0.22),
+              ncol=2, frameon=False, columnspacing=1.0, handletextpad=0.3, labelspacing=0.3)
 
     plt.tight_layout()
     plt.savefig(FIGURES_DIR / "fig_tsne_semantic.png", dpi=300, bbox_inches="tight")
@@ -775,7 +781,7 @@ def fig_question_length_boxplot_summary():
     ax.set_xticklabels([sd for sd in SUBDOMAIN_ORDER], fontsize=8, rotation=40, ha="right", rotation_mode="anchor")
     ax.tick_params(axis='y', labelsize=8)
     apply_style(ax, ylabel="Question Length (chars)")
-    ax.yaxis.label.set_size(8.5)
+    ax.yaxis.label.set_size(7)
 
     plt.tight_layout()
     plt.savefig(FIGURES_DIR / "fig_question_length_boxplot_summary.png", dpi=300, bbox_inches="tight")
