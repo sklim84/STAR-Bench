@@ -555,7 +555,7 @@ def fig_tsne_semantic():
     }
 
     # 2-panel figure*(\app:diversity)용: 패널 실제 폭(~3.5in)에 맞춰 figsize/폰트 재설정 → 다운스케일 없이 가독성 확보
-    fig, ax = plt.subplots(figsize=(3.6, 2.0))
+    fig, ax = plt.subplots(figsize=(3.6, 2.3))
 
     plotted_subdomains = set()
     for i, (x, y) in enumerate(coords):
@@ -765,7 +765,7 @@ def fig_question_length_boxplot_summary():
         lengths_by_sd[sd].extend([len(c.get("question", "")) for c in data])
 
     # 2-panel figure*(\app:diversity)용: 패널 실제 폭(~3.5in)에 맞춰 figsize/폰트 재설정 → 다운스케일 없이 가독성 확보
-    fig, ax = plt.subplots(figsize=(3.6, 2.0))
+    fig, ax = plt.subplots(figsize=(3.6, 2.3))
     box_data = [lengths_by_sd[sd] for sd in SUBDOMAIN_ORDER]
 
     bp = ax.boxplot(box_data, patch_artist=True, vert=True,
@@ -778,8 +778,8 @@ def fig_question_length_boxplot_summary():
         patch.set_facecolor(color)
         patch.set_alpha(0.7)
 
-    ax.set_xticklabels([sd for sd in SUBDOMAIN_ORDER], fontsize=8, rotation=40, ha="right", rotation_mode="anchor")
-    ax.tick_params(axis='y', labelsize=8)
+    ax.set_xticklabels([sd for sd in SUBDOMAIN_ORDER], fontsize=7, rotation=40, ha="right", rotation_mode="anchor")
+    ax.tick_params(axis='y', labelsize=7)
     apply_style(ax, ylabel="Question Length (chars)")
     ax.yaxis.label.set_size(7)
 
