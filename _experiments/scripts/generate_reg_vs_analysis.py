@@ -103,7 +103,7 @@ x = np.arange(len(rows))
 
 # single-column (\columnwidth): set figsize to the column width (~3.45in) so the
 # PDF is NOT downscaled in LaTeX and the tick/legend fonts render at true size.
-fig, ax = plt.subplots(figsize=(3.95, 2.7))
+fig, ax = plt.subplots(figsize=(4.3, 2.7))
 ax.vlines(x, reg, ana, color="#BBBBBB", lw=0.9, zorder=1)
 ax.scatter(x, ana, s=16, color=C_ANA, zorder=3, label="Analysis tools")
 ax.scatter(x, reg, s=16, color=C_REG, marker="s", zorder=3, label="Regulatory tools")
