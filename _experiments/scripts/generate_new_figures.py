@@ -770,9 +770,10 @@ def fig_question_length_boxplot_summary():
     box_data = [lengths_by_sd[sd] for sd in SUBDOMAIN_ORDER]
 
     bp = ax.boxplot(box_data, patch_artist=True, vert=True,
-                    medianprops=dict(color="black", linewidth=1.2),
-                    whiskerprops=dict(linewidth=0.7),
-                    capprops=dict(linewidth=0.7),
+                    boxprops=dict(linewidth=0.6),
+                    medianprops=dict(color="black", linewidth=0.8),
+                    whiskerprops=dict(linewidth=0.5),
+                    capprops=dict(linewidth=0.5),
                     flierprops=dict(marker="o", markersize=2, alpha=0.5))
 
     for patch, color in zip(bp["boxes"], SUBDOMAIN_COLORS_BAR):
