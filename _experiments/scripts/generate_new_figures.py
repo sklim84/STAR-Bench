@@ -218,8 +218,7 @@ def fig_turnwise_line():
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.legend(fontsize=6.5, loc="lower left", frameon=True, framealpha=0.9,
-              handlelength=1.6, handletextpad=0.4, borderpad=0.3, labelspacing=0.3,
-              title=f"Across {len(per_model)} models", title_fontsize=6.5)
+              handlelength=1.6, handletextpad=0.4, borderpad=0.3, labelspacing=0.3)
     plt.tight_layout()
     plt.savefig(FIGURES_DIR / "fig_turnwise_line.png", dpi=300, bbox_inches="tight")
     plt.close()
