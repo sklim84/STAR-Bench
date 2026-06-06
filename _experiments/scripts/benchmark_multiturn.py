@@ -436,6 +436,10 @@ def run_multiturn_scenario(
 
         # 평가
         turn_result = _evaluate_turn(turn, actual_tool_calls)
+        # STR 생성 품질 분석(필드 충족/할루시네이션/grounding)용 원본 보존:
+        # 모델이 실제 생성한 tool_calls(특히 generate_str의 summary 등 arguments)를 기록한다.
+        # 평가 점수만 저장하던 기존 동작은 그대로 유지하고, 분석용 raw 필드만 추가.
+        turn_result["actual_tool_calls"] = actual_tool_calls
         turn_results.append(turn_result)
 
         # 대화 이력에 scripted 응답 주입
