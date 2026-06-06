@@ -42,7 +42,7 @@ import glob
 from pathlib import Path
 
 SB = Path(__file__).resolve().parents[2]
-EVAL_DIR = SB / "_experiments" / "results_mt" / "eval"
+EVAL_DIR = SB / "_experiments" / "results_mt_oracle" / "eval"
 CASES = SB / "benchmarks_multiturn" / "cases_str_workflow.json"
 OUT_DIR = SB / "_experiments" / "results_RQ3"
 
@@ -193,17 +193,28 @@ def main():
                          "hallucination": None, "str_overall": None})
             continue
 
-        def avg(x):
-            return round(sum(x) / len(x), 4) if x else None
-        field_cov = avg(d1_list)
-        grounding = avg(ground_list)
-        halluc = avg(halluc_list)
-        term = avg(term_list)
-        # Overall (Table VII): mean of Field, Ground., Term, and (1 - Halluc.) — all
-        # oriented so higher is better. Reported only when the components exist.
-        comps = [c for c in (field_cov, grounding, term,
-                             (1 - halluc) if halluc is not None else None) if c is not None]
+        # PENALIZED scoring (default): a scenario where the model failed to call
+        # generate_str when it should have is a genuine failure (it called the wrong
+        # tool / re-ran analysis), so it scores 0 on every quality axis. Field/Ground/
+        # Term are therefore summed over produced STRs but divided by ALL n_with_str_turn
+        # STR-expected scenarios (non-produced contribute 0). Hallucination is the
+        # complement of grounding under this convention (penalized fidelity).
+        def pen(x):
+            return round(sum(x) / n_with_str_turn, 4) if n_with_str_turn else None
+        field_cov = pen(d1_list)
+        grounding = pen(ground_list)
+        term = pen(term_list)
+        # Penalized hallucination = 1 - penalized fidelity, where fidelity sums per-STR
+        # (1 - halluc) over produced and divides by all STR-expected scenarios. A scenario
+        # with no STR contributes 0 fidelity -> it raises the hallucination figure.
+        fidelity = pen([1 - h for h in halluc_list])  # produced fidelity, penalized
+        halluc = round(1 - fidelity, 4) if fidelity is not None else None
+        # Overall = mean of Field, Ground., Term, fidelity (all penalized, higher=better).
+        comps = [c for c in (field_cov, grounding, term, fidelity) if c is not None]
         str_overall = round(sum(comps) / len(comps), 4) if comps else None
+        # conditional (produced-only) quality kept for reference / sensitivity analysis
+        def cavg(x):
+            return round(sum(x) / len(x), 4) if x else None
         row = {
             "model": model,
             "n_str_turn": n_with_str_turn,
@@ -214,6 +225,11 @@ def main():
             "terminology": term,
             "hallucination": halluc,
             "str_overall": str_overall,
+            # produced-only (conditional) — reference columns
+            "field_cond": cavg(d1_list),
+            "grounding_cond": cavg(ground_list),
+            "terminology_cond": cavg(term_list),
+            "hallucination_cond": cavg(halluc_list),
         }
         for k, v in sec_acc.items():
             row[f"cov::{k}"] = round(sum(v) / len(v), 4)

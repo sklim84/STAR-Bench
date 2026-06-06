@@ -1,0 +1,4297 @@
+{
+  "model": "skt/A.X-4.0-Light",
+  "model_id": "skt/A.X-4.0-Light",
+  "provider": "vllm",
+  "think": null,
+  "timestamp": "2026-06-07T00:57:36.570476",
+  "total_scenarios": 50,
+  "total_elapsed_sec": 586.39,
+  "overall": {
+    "avg_score": 0.3523,
+    "avg_tool_hit": 0.378,
+    "avg_param_accuracy": 0.3267,
+    "context_accuracy": 0.0,
+    "scenario_complete_rate": 0.0
+  },
+  "by_sub_category": {
+    "base": {
+      "count": 14,
+      "avg_score": 0.4256,
+      "complete_rate": 0.0
+    },
+    "missing_parameter": {
+      "count": 14,
+      "avg_score": 0.4107,
+      "complete_rate": 0.0
+    },
+    "long_context": {
+      "count": 22,
+      "avg_score": 0.2686,
+      "complete_rate": 0.0
+    }
+  },
+  "scenarios": [
+    {
+      "id": "mt_str_001",
+      "scenario": "갑작스러운 거래패턴의 변화 의심 계좌 직접 지정 → 조회·예측·네트워크 분석 → STR 작성",
+      "sub_category": "base",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.0,
+          "score": 0.5,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "predict_fraud",
+              "arguments": {
+                "time_slot": 0,
+                "sender_bank": 1,
+                "receiver_bank": 1,
+                "fund_type": 0,
+                "media_type": 1,
+                "amount": 50000
+              },
+              "_id": "chatcmpl-tool-847145bb4670f1e9"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "predict_fraud",
+              "arguments": {
+                "time_slot": 0,
+                "sender_bank": 1,
+                "receiver_bank": 1,
+                "fund_type": 0,
+                "media_type": 1,
+                "amount": 50000
+              },
+              "result": "{\"fraud_probability\": 0.0, \"risk_level\": \"Low\", \"input_values\": {\"time_slot\": 0, \"sender_bank\": 1, \"receiver_bank\": 1, \"fund_type\": 0, \"media_type\": 1, \"amount\": 50000}}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "analyze_network",
+              "arguments": {
+                "account_id": 78432,
+                "hops": 2
+              },
+              "_id": "chatcmpl-tool-b7f643ea1f39afc0"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "analyze_network",
+              "arguments": {
+                "account_id": 78432,
+                "hops": 2
+              },
+              "result": "{\"error\": \"Network retrieval error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.375,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.25,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 12.42
+    },
+    {
+      "id": "mt_str_002",
+      "scenario": "정보 부족 상태에서 STR 요청 → 되물음 → 정보 제공 → 조사 → STR 작성",
+      "sub_category": "missing_parameter",
+      "fraud_type": 4,
+      "setting": "real",
+      "num_turns": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": true,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.0,
+          "score": 0.5,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "predict_fraud",
+              "arguments": {
+                "time_slot": 12,
+                "sender_bank": 100,
+                "receiver_bank": 200,
+                "fund_type": 4,
+                "media_type": 1,
+                "amount": 500000
+              },
+              "_id": "parsed_000"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "predict_fraud",
+              "arguments": {
+                "time_slot": 12,
+                "sender_bank": 100,
+                "receiver_bank": 200,
+                "fund_type": 4,
+                "media_type": 1,
+                "amount": 500000
+              },
+              "result": "{\"fraud_probability\": 0.0, \"risk_level\": \"Low\", \"input_values\": {\"time_slot\": 12, \"sender_bank\": 100, \"receiver_bank\": 200, \"fund_type\": 4, \"media_type\": 1, \"amount\": 500000}}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.5,
+          "score": 0.75,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_ctr_candidates",
+              "arguments": {
+                "mode": "high_value",
+                "date_from": 20240101,
+                "date_to": 20241231,
+                "threshold": 10000000
+              },
+              "_id": "chatcmpl-tool-bf54c2f46bb55ff8"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_ctr_candidates",
+              "arguments": {
+                "mode": "high_value",
+                "date_from": 20240101,
+                "date_to": 20241231,
+                "threshold": 10000000
+              },
+              "result": "{\"error\": \"CTR detection error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.45,
+      "avg_tool_hit": 0.6,
+      "avg_param_accuracy": 0.3,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 19.16
+    },
+    {
+      "id": "mt_str_003",
+      "scenario": "금융회사 단위 이상거래 조회 → 최다 출금계좌 특정 → 프로필·위험도 → STR 작성",
+      "sub_category": "long_context",
+      "fraud_type": 3,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE receiver_bank = 134"
+              },
+              "_id": "chatcmpl-tool-9f0dc10b32fe7245"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE receiver_bank = 134"
+              },
+              "result": "{\"error\": \"Query execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.25,
+      "avg_tool_hit": 0.25,
+      "avg_param_accuracy": 0.25,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 10.38
+    },
+    {
+      "id": "mt_str_004",
+      "scenario": "분할 거래 의심 계좌 거래 조회 → 스머핑 분석 → 네트워크 → STR 작성",
+      "sub_category": "base",
+      "fraud_type": 3,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 91205"
+              },
+              "_id": "chatcmpl-tool-9570d628c7e3629c"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 91205"
+              },
+              "result": "{\"error\": \"Query execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.25,
+      "avg_tool_hit": 0.25,
+      "avg_param_accuracy": 0.25,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 12.92
+    },
+    {
+      "id": "mt_str_005",
+      "scenario": "거액 입금 후 당일 인출 의심 → 유형별 현황 조회 → 거래 조회 → 예측 → STR 작성",
+      "sub_category": "base",
+      "fraud_type": 5,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.0,
+      "avg_tool_hit": 0.0,
+      "avg_param_accuracy": 0.0,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 22.1
+    },
+    {
+      "id": "mt_str_006",
+      "scenario": "심야/새벽 대량 거래 의심 → FIU 참고유형 조회 → 거래 조회 → 위험도 평가 → STR 작성",
+      "sub_category": "base",
+      "fraud_type": 7,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.0,
+          "score": 0.5,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "lookup_fiu_reference_types",
+              "arguments": {
+                "keyword": "심야/새벽 대량 거래"
+              },
+              "_id": "chatcmpl-tool-b7fb45d9464b6b2c"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "lookup_fiu_reference_types",
+              "arguments": {
+                "keyword": "심야/새벽 대량 거래"
+              },
+              "result": "{\"keyword\": \"심야/새벽 대량 거래\", \"count\": 0, \"result\": []}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 33201"
+              },
+              "_id": "chatcmpl-tool-a62a83570b078293"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 33201"
+              },
+              "result": "{\"error\": \"Query execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.375,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.25,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 10.09
+    },
+    {
+      "id": "mt_str_007",
+      "scenario": "채널 위험도 분석 → 심야 ATM 거래 계좌 특정 → 예측 → STR 작성",
+      "sub_category": "base",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "analyze_channel_risk",
+              "arguments": {
+                "date_from": 20230101,
+                "date_to": 20231231
+              },
+              "_id": "parsed_000"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "analyze_channel_risk",
+              "arguments": {
+                "date_from": 20230101,
+                "date_to": 20231231
+              },
+              "result": "{\"error\": \"Channel risk analysis error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.25,
+      "avg_tool_hit": 0.25,
+      "avg_param_accuracy": 0.25,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 18.09
+    },
+    {
+      "id": "mt_str_008",
+      "scenario": "전체 통계 조회 → 위험 거래 랭킹 → 예측 → STR 작성",
+      "sub_category": "base",
+      "fraud_type": 2,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "get_statistics",
+              "arguments": {},
+              "_id": "chatcmpl-tool-8a1d1df5c263dcab"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "get_statistics",
+              "arguments": {},
+              "result": "{\"error\": \"Statistics retrieval error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.25,
+      "avg_tool_hit": 0.25,
+      "avg_param_accuracy": 0.25,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 14.5
+    },
+    {
+      "id": "mt_str_009",
+      "scenario": "기관간 자금 흐름 분석 → 집중 구간 거래 조회 → AML 패턴 탐지 → STR 작성",
+      "sub_category": "base",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.6667,
+          "score": 0.8333,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 73 OR receiver_acc = 305 AND date BETWEEN 73 AND 305"
+              },
+              "_id": "chatcmpl-tool-b740ebbd872ba813"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 73 OR receiver_acc = 305 AND date BETWEEN 73 AND 305"
+              },
+              "result": "{\"error\": \"Query execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "pattern_type": "layering",
+                "min_layers": 3,
+                "limit": 20
+              },
+              "_id": "chatcmpl-tool-b256954fb589a0a3"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "pattern_type": "layering",
+                "min_layers": 3,
+                "limit": 20
+              },
+              "result": "{\"notice\": \"No layering patterns detected. Please ensure Memgraph is running.\", \"result\": []}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.4583,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.4167,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 5.48
+    },
+    {
+      "id": "mt_str_010",
+      "scenario": "휴면계좌 재활성화 탐지 → 프로필 조회 → CTR 확인 → STR 작성",
+      "sub_category": "base",
+      "fraud_type": 3,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_dormant_reactivation",
+              "arguments": {
+                "dormant_days": 180,
+                "min_reactivation_amount": 5000000,
+                "limit": 20
+              },
+              "_id": "parsed_000"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_dormant_reactivation",
+              "arguments": {
+                "dormant_days": 180,
+                "min_reactivation_amount": 5000000,
+                "limit": 20
+              },
+              "result": "{\"error\": \"Dormant account reactivation detection error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "get_account_profile",
+              "arguments": {
+                "account_id": 77501
+              },
+              "_id": "chatcmpl-tool-8a74c35fb671d431"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "get_account_profile",
+              "arguments": {
+                "account_id": 77501
+              },
+              "result": "{\"error\": \"Account profile retrieval error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.5,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.5,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 11.04
+    },
+    {
+      "id": "mt_str_011",
+      "scenario": "모니터링 알림 탐지 → 정액거래 계좌 조회 → 위험도 평가 → STR 작성",
+      "sub_category": "base",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "all"
+              },
+              "_id": "chatcmpl-tool-8dd60c40b32f4427"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "all"
+              },
+              "result": "{\"error\": \"Monitoring rule execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 22801"
+              },
+              "_id": "chatcmpl-tool-99cb2edf89938c48"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 22801"
+              },
+              "result": "{\"error\": \"Query execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "score_account_risk",
+              "arguments": {
+                "account_id": 22801
+              },
+              "_id": "chatcmpl-tool-8b2b52a0bafbd1fc"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "score_account_risk",
+              "arguments": {
+                "account_id": 22801
+              },
+              "result": "{\"error\": \"Risk assessment error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.75,
+      "avg_tool_hit": 0.75,
+      "avg_param_accuracy": 0.75,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 5.65
+    },
+    {
+      "id": "mt_str_012",
+      "scenario": "트렌드 분석 → 급증 기간 비교 → 거래 조회 → STR 작성",
+      "sub_category": "base",
+      "fraud_type": 7,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "get_trend_analysis",
+              "arguments": {
+                "unit": "quarterly"
+              },
+              "_id": "chatcmpl-tool-9d483a214872380a"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "get_trend_analysis",
+              "arguments": {
+                "unit": "quarterly"
+              },
+              "result": "{\"error\": \"Trend analysis error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.25,
+      "avg_tool_hit": 0.25,
+      "avg_param_accuracy": 0.25,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 15.52
+    },
+    {
+      "id": "mt_str_013",
+      "scenario": "입금계좌 프로필 → 자금 수집 패턴 → 순환거래 탐지 → STR 작성",
+      "sub_category": "base",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "get_receiving_account_profile",
+              "arguments": {
+                "account_id": 445012
+              },
+              "_id": "parsed_000"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "get_receiving_account_profile",
+              "arguments": {
+                "account_id": 445012
+              },
+              "result": "{\"error\": \"Receiving account profile lookup error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "pattern_type": "ring",
+                "account_id": 445012
+              },
+              "_id": "chatcmpl-tool-9583263cae61fd4a"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "pattern_type": "ring",
+                "account_id": 445012
+              },
+              "result": "{\"notice\": \"No ring transaction patterns detected. Please ensure Memgraph is running.\", \"result\": []}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.5,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.5,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 15.17
+    },
+    {
+      "id": "mt_str_014",
+      "scenario": "계좌번호 누락 → 되묻기 → 계좌 조회 → 예측 → STR 작성",
+      "sub_category": "missing_parameter",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": true,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.25,
+      "avg_tool_hit": 0.25,
+      "avg_param_accuracy": 0.25,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 17.18
+    },
+    {
+      "id": "mt_str_015",
+      "scenario": "의심유형 미특정 → 되묻기 → 다중거래의 동시 요청 지정 → 조회·예측 → STR",
+      "sub_category": "missing_parameter",
+      "fraud_type": 4,
+      "setting": "real",
+      "num_turns": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": true,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 42105"
+              },
+              "_id": "chatcmpl-tool-8ba8f46cca6dac7a"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 42105"
+              },
+              "result": "{\"error\": \"Query execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 5,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.4,
+      "avg_tool_hit": 0.4,
+      "avg_param_accuracy": 0.4,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 18.85
+    },
+    {
+      "id": "mt_str_016",
+      "scenario": "기간 누락 → 되묻기 → 기간 지정 후 기관보고서 → 위험도 → STR",
+      "sub_category": "missing_parameter",
+      "fraud_type": 2,
+      "setting": "real",
+      "num_turns": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": true,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 5,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.2,
+      "avg_tool_hit": 0.2,
+      "avg_param_accuracy": 0.2,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 17.55
+    },
+    {
+      "id": "mt_str_017",
+      "scenario": "분석 방향 누락 → 되묻기 → 스머핑 방향 지정 → 조회 → STR",
+      "sub_category": "missing_parameter",
+      "fraud_type": 3,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": false,
+          "actual_tool_calls": [
+            {
+              "name": "detect_smurfing_network",
+              "arguments": {
+                "account_id": 55089,
+                "direction": "outbound"
+              },
+              "_id": "chatcmpl-tool-96c065f0b0809794"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_smurfing_network",
+              "arguments": {
+                "account_id": 55089,
+                "direction": "outbound"
+              },
+              "result": "{\"error\": \"Fund collection/distribution pattern detection error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_smurfing_network",
+              "arguments": {
+                "account_id": 55089,
+                "direction": "inbound"
+              },
+              "_id": "chatcmpl-tool-9a97460f7eafdcdf"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_smurfing_network",
+              "arguments": {
+                "account_id": 55089,
+                "direction": "inbound"
+              },
+              "result": "{\"error\": \"Fund collection/distribution pattern detection error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "pattern_type": "funnel",
+                "account_id": 55089
+              },
+              "_id": "chatcmpl-tool-a8b555da20a7df3e"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "pattern_type": "funnel",
+                "account_id": 55089
+              },
+              "result": "{\"notice\": \"No mule account patterns detected. Please ensure Memgraph is running.\", \"result\": []}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.5,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.5,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 4.79
+    },
+    {
+      "id": "mt_str_018",
+      "scenario": "금융회사번호 누락 → 되묻기 → 기관간 흐름 분석 → 거래조회 → STR",
+      "sub_category": "missing_parameter",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": true,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.25,
+      "avg_tool_hit": 0.25,
+      "avg_param_accuracy": 0.25,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 14.01
+    },
+    {
+      "id": "mt_str_019",
+      "scenario": "모니터링 규칙 미지정 → 되묻기 → R001 심야대량 → 계좌 조회 → STR",
+      "sub_category": "missing_parameter",
+      "fraud_type": 4,
+      "setting": "real",
+      "num_turns": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": false,
+          "actual_tool_calls": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "R001"
+              },
+              "_id": "chatcmpl-tool-9005f2effec99f95"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "R001"
+              },
+              "result": "{\"error\": \"Monitoring rule execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 5,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.0,
+      "avg_tool_hit": 0.0,
+      "avg_param_accuracy": 0.0,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 17.9
+    },
+    {
+      "id": "mt_str_020",
+      "scenario": "AML 용어 확인 → 패턴 유형 누락 → 되묻기 → 탐지 → STR",
+      "sub_category": "missing_parameter",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": true,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 33045"
+              },
+              "_id": "chatcmpl-tool-9d9caa89b2525f1c"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 33045"
+              },
+              "result": "{\"error\": \"Query execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.4,
+      "avg_tool_hit": 0.4,
+      "avg_param_accuracy": 0.4,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 14.65
+    },
+    {
+      "id": "mt_str_021",
+      "scenario": "CTR 모드 미지정 → 되묻기 → 분할거래 탐지 → 위험도 → STR",
+      "sub_category": "missing_parameter",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": true,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_ctr_candidates",
+              "arguments": {
+                "mode": "structuring",
+                "date_from": 202301001,
+                "date_to": 202301101,
+                "threshold": 10000000,
+                "limit": 20
+              },
+              "_id": "chatcmpl-tool-80d355b061079242"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_ctr_candidates",
+              "arguments": {
+                "mode": "structuring",
+                "date_from": 202301001,
+                "date_to": 202301101,
+                "threshold": 10000000,
+                "limit": 20
+              },
+              "result": "{\"error\": \"CTR detection error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "score_account_risk",
+              "arguments": {
+                "account_id": 66801
+              },
+              "_id": "chatcmpl-tool-9053afbf6e798f64"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "score_account_risk",
+              "arguments": {
+                "account_id": 66801
+              },
+              "result": "{\"error\": \"Risk assessment error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.75,
+      "avg_tool_hit": 0.75,
+      "avg_param_accuracy": 0.75,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 5.6
+    },
+    {
+      "id": "mt_str_022",
+      "scenario": "비교기간 누락 → 되묻기 → 기간 비교 → 거래 조회 → STR",
+      "sub_category": "missing_parameter",
+      "fraud_type": 2,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": true,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "compare_periods",
+              "arguments": {
+                "period1_start": "20240101",
+                "period1_end": "20240625",
+                "period2_start": "20240626",
+                "period2_end": "20241231"
+              },
+              "_id": "chatcmpl-tool-b4db694a3d5bec1c"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "compare_periods",
+              "arguments": {
+                "period1_start": "20240101",
+                "period1_end": "20240625",
+                "period2_start": "20240626",
+                "period2_end": "20241231"
+              },
+              "result": "{\"error\": \"Period comparison lookup error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.25,
+      "avg_tool_hit": 0.25,
+      "avg_param_accuracy": 0.25,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 7.36
+    },
+    {
+      "id": "mt_str_023",
+      "scenario": "검색어 누락 → 되묻기 → FIU 참고유형 → 거래조회 → STR 검증 → STR",
+      "sub_category": "missing_parameter",
+      "fraud_type": 5,
+      "setting": "real",
+      "num_turns": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": true,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.0,
+          "score": 0.5,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "lookup_fiu_reference_types",
+              "arguments": {
+                "keyword": "거액 입금 후 당일 인출"
+              },
+              "_id": "chatcmpl-tool-b6de1260513f29f2"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "lookup_fiu_reference_types",
+              "arguments": {
+                "keyword": "거액 입금 후 당일 인출"
+              },
+              "result": "{\"keyword\": \"거액 입금 후 당일 인출\", \"count\": 0, \"result\": []}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 77234"
+              },
+              "_id": "chatcmpl-tool-b2ab1565e658f680"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 77234"
+              },
+              "result": "{\"error\": \"Query execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 5,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.5,
+      "avg_tool_hit": 0.6,
+      "avg_param_accuracy": 0.4,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 9.6
+    },
+    {
+      "id": "mt_str_024",
+      "scenario": "계좌번호 오입력 → 되묻기 → 정정 후 프로필 → 입금프로필 → STR",
+      "sub_category": "missing_parameter",
+      "fraud_type": 3,
+      "setting": "real",
+      "num_turns": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": true,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "get_account_profile",
+              "arguments": {
+                "account_id": 44290
+              },
+              "_id": "chatcmpl-tool-8db37ebe0a473a2a"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "get_account_profile",
+              "arguments": {
+                "account_id": 44290
+              },
+              "result": "{\"error\": \"Account profile retrieval error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "get_receiving_account_profile",
+              "arguments": {
+                "account_id": 44290
+              },
+              "_id": "chatcmpl-tool-8c3d9caa19d35613"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "get_receiving_account_profile",
+              "arguments": {
+                "account_id": 44290
+              },
+              "result": "{\"error\": \"Receiving account profile lookup error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 5,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.6,
+      "avg_tool_hit": 0.6,
+      "avg_param_accuracy": 0.6,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 10.52
+    },
+    {
+      "id": "mt_str_025",
+      "scenario": "의심불충분 — 예측 낮음 → 모니터링 알림 없음 → STR 불요 판단",
+      "sub_category": "missing_parameter",
+      "fraud_type": 2,
+      "setting": "real",
+      "num_turns": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": true,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 11045"
+              },
+              "_id": "chatcmpl-tool-8e061cbd699f83e9"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 11045"
+              },
+              "result": "{\"error\": \"Query execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "all",
+                "account_id": 11045
+              },
+              "_id": "chatcmpl-tool-9edec7d6a8e0b9d1"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "all",
+                "account_id": 11045
+              },
+              "result": "{\"error\": \"Monitoring rule execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.8,
+      "avg_tool_hit": 0.8,
+      "avg_param_accuracy": 0.8,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 13.3
+    },
+    {
+      "id": "mt_str_026",
+      "scenario": "거래시간대 누락 → 되묻기 → 예측 → 프로필 → STR 작성",
+      "sub_category": "missing_parameter",
+      "fraud_type": 4,
+      "setting": "real",
+      "num_turns": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": true,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "get_account_profile",
+              "arguments": {
+                "account_id": 99801
+              },
+              "_id": "parsed_000"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "get_account_profile",
+              "arguments": {
+                "account_id": 99801
+              },
+              "result": "{\"error\": \"Account profile retrieval error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.4,
+      "avg_tool_hit": 0.4,
+      "avg_param_accuracy": 0.4,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 19.07
+    },
+    {
+      "id": "mt_str_027",
+      "scenario": "기관보고서 → 최다이상 계좌 프로필(context_ref) → 예측 → STR",
+      "sub_category": "long_context",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "get_institution_report",
+              "arguments": {
+                "bank_id": 88
+              },
+              "_id": "chatcmpl-tool-8a51f395d71836c5"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "get_institution_report",
+              "arguments": {
+                "bank_id": 88
+              },
+              "result": "{\"error\": \"Institution report lookup error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.25,
+      "avg_tool_hit": 0.25,
+      "avg_param_accuracy": 0.25,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 9.7
+    },
+    {
+      "id": "mt_str_028",
+      "scenario": "거래 조회 → 입금계좌 프로필(context_ref) → 자금수집 분석(context_ref) → STR",
+      "sub_category": "long_context",
+      "fraud_type": 3,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 82301"
+              },
+              "_id": "chatcmpl-tool-96fc5b1782fb7b64"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 82301"
+              },
+              "result": "{\"error\": \"Query execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.0,
+          "score": 0.5,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "get_receiving_account_profile",
+              "arguments": {
+                "account_id": 82301
+              },
+              "_id": "chatcmpl-tool-a05c4b5b108e16b7"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "get_receiving_account_profile",
+              "arguments": {
+                "account_id": 82301
+              },
+              "result": "{\"error\": \"Receiving account profile lookup error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.375,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.25,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 10.55
+    },
+    {
+      "id": "mt_str_029",
+      "scenario": "모니터링 알림 → R005 급변 계좌 조회(context_ref) → 기간비교(context_ref) → STR",
+      "sub_category": "long_context",
+      "fraud_type": 2,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "R005"
+              },
+              "_id": "chatcmpl-tool-881196aa3da65678"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "R005"
+              },
+              "result": "{\"error\": \"R005 (Pattern Change) requires date_from and date_to.\"}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "R005",
+                "date_from": 202311001,
+                "date_to": 20231231
+              },
+              "_id": "chatcmpl-tool-82b203b1e7de95de"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "R005",
+                "date_from": 202311001,
+                "date_to": 20231231
+              },
+              "result": "{\"error\": \"Invalid date range. Please enter YYYYMMDD integers where date_from <= date_to.\"}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE fund_type = 3 AND is_fraud = 0 AND receiver_bank != sender_bank"
+              },
+              "_id": "chatcmpl-tool-ad45270bb8f95339"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE fund_type = 3 AND is_fraud = 0 AND receiver_bank != sender_bank"
+              },
+              "result": "{\"error\": \"Query execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        }
+      ],
+      "avg_score": 0.0,
+      "avg_tool_hit": 0.0,
+      "avg_param_accuracy": 0.0,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 1.41
+    },
+    {
+      "id": "mt_str_030",
+      "scenario": "위험랭킹 → 1위 계좌 네트워크(context_ref) → 순환거래 탐지 → STR",
+      "sub_category": "long_context",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "rank_risky_transactions",
+              "arguments": {
+                "sample_size": 1000,
+                "top_k": 5
+              },
+              "_id": "chatcmpl-tool-94f6a371590ac818"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "rank_risky_transactions",
+              "arguments": {
+                "sample_size": 1000,
+                "top_k": 5
+              },
+              "result": "{\"error\": \"Batch prediction error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.5,
+          "score": 0.75,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "pattern_type": "ring"
+              },
+              "_id": "chatcmpl-tool-8262e8609707c507"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "pattern_type": "ring"
+              },
+              "result": "{\"notice\": \"No ring transaction patterns detected. Please ensure Memgraph is running.\", \"result\": []}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.4375,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.375,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 4.43
+    },
+    {
+      "id": "mt_str_031",
+      "scenario": "유형현황 → 상위기관 거래조회(context_ref) → 위험도(context_ref) → STR",
+      "sub_category": "long_context",
+      "fraud_type": 4,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "pattern_type": "concurrent_multiple_transactions"
+              },
+              "_id": "parsed_000"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "pattern_type": "concurrent_multiple_transactions"
+              },
+              "result": "{\"error\": \"Unknown pattern type: concurrent_multiple_transactions. Valid values: ring, layering, funnel, shortest_path, risk_score\"}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.0,
+      "avg_tool_hit": 0.0,
+      "avg_param_accuracy": 0.0,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 14.88
+    },
+    {
+      "id": "mt_str_032",
+      "scenario": "트렌드 → 급증월 거래조회(context_ref) → 채널분석 → 예측(context_ref) → STR",
+      "sub_category": "long_context",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "get_trend_analysis",
+              "arguments": {
+                "unit": "monthly"
+              },
+              "_id": "chatcmpl-tool-877f2807109cc0cf"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "get_trend_analysis",
+              "arguments": {
+                "unit": "monthly"
+              },
+              "result": "{\"error\": \"Trend analysis error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.0,
+          "score": 0.5,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "analyze_channel_risk",
+              "arguments": {
+                "date_from": 20231001,
+                "date_to": 20231231
+              },
+              "_id": "chatcmpl-tool-a39d41dfbce04ba1"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "analyze_channel_risk",
+              "arguments": {
+                "date_from": 20231001,
+                "date_to": 20231231
+              },
+              "result": "{\"error\": \"Channel risk analysis error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 5,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.3,
+      "avg_tool_hit": 0.4,
+      "avg_param_accuracy": 0.2,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 12.18
+    },
+    {
+      "id": "mt_str_033",
+      "scenario": "통계 → 분할 거래 유형 → 최다계좌 funnel 탐지(context_ref) → STR",
+      "sub_category": "long_context",
+      "fraud_type": 3,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "get_statistics",
+              "arguments": {},
+              "_id": "chatcmpl-tool-8e096cb1abbd5627"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "get_statistics",
+              "arguments": {},
+              "result": "{\"error\": \"Statistics retrieval error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.25,
+      "avg_tool_hit": 0.25,
+      "avg_param_accuracy": 0.25,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 10.73
+    },
+    {
+      "id": "mt_str_034",
+      "scenario": "휴면탐지 → 프로필(context_ref) → CTR(context_ref) → 분할거래 → STR",
+      "sub_category": "long_context",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_dormant_reactivation",
+              "arguments": {
+                "dormant_days": 300
+              },
+              "_id": "chatcmpl-tool-875cfa0892865497"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_dormant_reactivation",
+              "arguments": {
+                "dormant_days": 300
+              },
+              "result": "{\"error\": \"Dormant account reactivation detection error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "pattern_type": "split"
+              },
+              "_id": "chatcmpl-tool-9ecb964818f6cc1a"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "pattern_type": "split"
+              },
+              "result": "{\"error\": \"Unknown pattern type: split. Valid values: ring, layering, funnel, shortest_path, risk_score\"}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.25,
+      "avg_tool_hit": 0.25,
+      "avg_param_accuracy": 0.25,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 8.88
+    },
+    {
+      "id": "mt_str_035",
+      "scenario": "의심불충분 — 거래조회 → 예측 낮음 → 패턴 미탐지 → STR 불요",
+      "sub_category": "base",
+      "fraud_type": 7,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 33801"
+              },
+              "_id": "chatcmpl-tool-98ebead3f0f3aa80"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 33801"
+              },
+              "result": "{\"error\": \"Query execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "score_account_risk",
+              "arguments": {
+                "account_id": 33801
+              },
+              "_id": "chatcmpl-tool-b226c5bb79e696a7"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "score_account_risk",
+              "arguments": {
+                "account_id": 33801
+              },
+              "result": "{\"error\": \"Risk assessment error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.75,
+      "avg_tool_hit": 0.75,
+      "avg_param_accuracy": 0.75,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 6.65
+    },
+    {
+      "id": "mt_str_036",
+      "scenario": "기관보고서 → 기관간흐름(context_ref) → 레이어링(context_ref) → STR",
+      "sub_category": "long_context",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "get_institution_report",
+              "arguments": {
+                "bank_id": 73
+              },
+              "_id": "chatcmpl-tool-97f2f81c26df5418"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "get_institution_report",
+              "arguments": {
+                "bank_id": 73
+              },
+              "result": "{\"error\": \"Institution report lookup error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.5,
+          "score": 0.75,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "pattern_type": "layering",
+                "account_id": 73
+              },
+              "_id": "chatcmpl-tool-afb096c743fd9361"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "pattern_type": "layering",
+                "account_id": 73
+              },
+              "result": "{\"notice\": \"No layering patterns detected. Please ensure Memgraph is running.\", \"result\": []}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.4375,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.375,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 4.64
+    },
+    {
+      "id": "mt_str_037",
+      "scenario": "채널분석 → 심야인터넷뱅킹 거래조회(context_ref) → 프로필 → 네트워크(context_ref) → STR",
+      "sub_category": "long_context",
+      "fraud_type": 3,
+      "setting": "real",
+      "num_turns": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 5,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.0,
+      "avg_tool_hit": 0.0,
+      "avg_param_accuracy": 0.0,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 12.31
+    },
+    {
+      "id": "mt_str_038",
+      "scenario": "의심불충분 — 기관보고서 → 거래조회 → 위험도 낮음 → STR 불요",
+      "sub_category": "long_context",
+      "fraud_type": 2,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "get_institution_report",
+              "arguments": {
+                "bank_id": 305
+              },
+              "_id": "chatcmpl-tool-a605a99d9628a553"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "get_institution_report",
+              "arguments": {
+                "bank_id": 305
+              },
+              "result": "{\"error\": \"Institution report lookup error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.5,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.5,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 3.7
+    },
+    {
+      "id": "mt_str_039",
+      "scenario": "R002 동일일다건 알림 → 계좌조회(context_ref) → CTR structuring(context_ref) → STR",
+      "sub_category": "long_context",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "R002"
+              },
+              "_id": "chatcmpl-tool-80897f186756c142"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "R002"
+              },
+              "result": "{\"error\": \"Monitoring rule execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.25,
+      "avg_tool_hit": 0.25,
+      "avg_param_accuracy": 0.25,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 15.4
+    },
+    {
+      "id": "mt_str_040",
+      "scenario": "통계 → 거액 입금 후 당일 인출 유형 → 거래조회(context_ref) → FIU 참조 → STR",
+      "sub_category": "long_context",
+      "fraud_type": 5,
+      "setting": "real",
+      "num_turns": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "get_fraud_type_summary",
+              "arguments": {
+                "fraud_type": 5
+              },
+              "_id": "chatcmpl-tool-b531e51781e8540d"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "get_fraud_type_summary",
+              "arguments": {
+                "fraud_type": 5
+              },
+              "result": "{\"error\": \"Fraud type lookup error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.0,
+          "score": 0.5,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "lookup_fiu_reference_types",
+              "arguments": {
+                "keyword": "Same-Day Withdrawal after Large Deposit"
+              },
+              "_id": "chatcmpl-tool-9b9da490a20482ad"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "lookup_fiu_reference_types",
+              "arguments": {
+                "keyword": "Same-Day Withdrawal after Large Deposit"
+              },
+              "result": "{\"keyword\": \"Same-Day Withdrawal after Large Deposit\", \"count\": 0, \"result\": []}"
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.3,
+      "avg_tool_hit": 0.4,
+      "avg_param_accuracy": 0.2,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 10.62
+    },
+    {
+      "id": "mt_str_041",
+      "scenario": "거래조회 → 예측(context_ref) → 입금프로필(context_ref) → 스머핑 → STR",
+      "sub_category": "long_context",
+      "fraud_type": 4,
+      "setting": "real",
+      "num_turns": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 5,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.0,
+      "avg_tool_hit": 0.0,
+      "avg_param_accuracy": 0.0,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 15.02
+    },
+    {
+      "id": "mt_str_042",
+      "scenario": "R004 기관집중 알림 → 기관간흐름(context_ref) → 거래조회 → STR",
+      "sub_category": "long_context",
+      "fraud_type": 2,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "R004"
+              },
+              "_id": "chatcmpl-tool-980b9160d2a0cebc"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "R004"
+              },
+              "result": "{\"error\": \"Monitoring rule execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.25,
+      "avg_tool_hit": 0.25,
+      "avg_param_accuracy": 0.25,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 10.33
+    },
+    {
+      "id": "mt_str_043",
+      "scenario": "거래조회 → 예측(context_ref) → 네트워크(context_ref) → AML 패턴 최단경로 → STR",
+      "sub_category": "long_context",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.5,
+          "score": 0.75,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "analyze_network",
+              "arguments": {
+                "account_id": 29501
+              },
+              "_id": "parsed_000"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "analyze_network",
+              "arguments": {
+                "account_id": 29501
+              },
+              "result": "{\"error\": \"Network retrieval error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "pattern_type": "shortest_path",
+                "account_a": 29501,
+                "account_b": 99801
+              },
+              "_id": "chatcmpl-tool-9ac2e9d52db96807"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "pattern_type": "shortest_path",
+                "account_a": 29501,
+                "account_b": 99801
+              },
+              "result": "{\"error\": \"Unable to find shortest path as Memgraph is not running.\"}"
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 29501"
+              },
+              "_id": "chatcmpl-tool-b5c7c58eb17bdb72"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 29501"
+              },
+              "result": "{\"error\": \"Query execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        }
+      ],
+      "avg_score": 0.35,
+      "avg_tool_hit": 0.4,
+      "avg_param_accuracy": 0.3,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 11.38
+    },
+    {
+      "id": "mt_str_044",
+      "scenario": "의심불충분 — 프로필 정상 → 예측 낮음 → 패턴 없음 → STR 불요",
+      "sub_category": "base",
+      "fraud_type": 7,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_smurfing_network",
+              "arguments": {
+                "account_id": 55901,
+                "direction": "inbound"
+              },
+              "_id": "chatcmpl-tool-87c2fbac3fa42fed"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_smurfing_network",
+              "arguments": {
+                "account_id": 55901,
+                "direction": "inbound"
+              },
+              "result": "{\"error\": \"Fund collection/distribution pattern detection error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.5,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.5,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 13.46
+    },
+    {
+      "id": "mt_str_045",
+      "scenario": "R001 심야대량 → 프로필(context_ref) → 위험도(context_ref) → 기관보고서 → STR",
+      "sub_category": "long_context",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "R001"
+              },
+              "_id": "chatcmpl-tool-bcff46d30ecd53e7"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "R001"
+              },
+              "result": "{\"error\": \"Monitoring rule execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 5,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.2,
+      "avg_tool_hit": 0.2,
+      "avg_param_accuracy": 0.2,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 9.01
+    },
+    {
+      "id": "mt_str_046",
+      "scenario": "거래조회 → 예측 → STR 초안검증(context_ref) → STR 작성",
+      "sub_category": "long_context",
+      "fraud_type": 3,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 81402"
+              },
+              "_id": "chatcmpl-tool-afbe0db765faab15"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 81402"
+              },
+              "result": "{\"error\": \"Query execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.25,
+      "avg_tool_hit": 0.25,
+      "avg_param_accuracy": 0.25,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 12.63
+    },
+    {
+      "id": "mt_str_047",
+      "scenario": "의심불충분 — 거래적음 → 위험도 낮음 → 네트워크 정상 → STR 불요",
+      "sub_category": "base",
+      "fraud_type": 4,
+      "setting": "real",
+      "num_turns": 4,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 2,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "score_account_risk",
+              "arguments": {
+                "account_id": 22901
+              },
+              "_id": "chatcmpl-tool-96441d2a0f4dde91"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "score_account_risk",
+              "arguments": {
+                "account_id": 22901
+              },
+              "result": "{\"error\": \"Risk assessment error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "analyze_network",
+              "arguments": {
+                "account_id": 22901,
+                "hops": 2
+              },
+              "_id": "chatcmpl-tool-8633900069174cc7"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "analyze_network",
+              "arguments": {
+                "account_id": 22901,
+                "hops": 2
+              },
+              "result": "{\"error\": \"Network retrieval error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.75,
+      "avg_tool_hit": 0.75,
+      "avg_param_accuracy": 0.75,
+      "context_accuracy": null,
+      "scenario_complete": false,
+      "elapsed_sec": 6.34
+    },
+    {
+      "id": "mt_str_048",
+      "scenario": "심야/새벽 대량 거래 FIU참조 → 거래조회 → 수취프로필(context_ref) → 위험도 → STR",
+      "sub_category": "long_context",
+      "fraud_type": 7,
+      "setting": "real",
+      "num_turns": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.0,
+          "score": 0.5,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "lookup_fiu_reference_types",
+              "arguments": {
+                "keyword": "심야/새벽 대량 거래"
+              },
+              "_id": "chatcmpl-tool-a83971f48b1cd121"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "lookup_fiu_reference_types",
+              "arguments": {
+                "keyword": "심야/새벽 대량 거래"
+              },
+              "result": "{\"keyword\": \"심야/새벽 대량 거래\", \"count\": 0, \"result\": []}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 88234"
+              },
+              "_id": "chatcmpl-tool-951fb10f45f8245b"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 88234"
+              },
+              "result": "{\"error\": \"Query execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "score_account_risk",
+              "arguments": {
+                "account_id": 88234
+              },
+              "_id": "chatcmpl-tool-889c31b67c49c49a"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "score_account_risk",
+              "arguments": {
+                "account_id": 88234
+              },
+              "result": "{\"error\": \"Risk assessment error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.5,
+      "avg_tool_hit": 0.6,
+      "avg_param_accuracy": 0.4,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 10.74
+    },
+    {
+      "id": "mt_str_049",
+      "scenario": "R003 정액거래 → 프로필(context_ref) → CTR structuring(context_ref) → AML용어 → STR",
+      "sub_category": "long_context",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 5,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "R003"
+              },
+              "_id": "chatcmpl-tool-b65ff36a5dfd9c1c"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "detect_monitoring_alerts",
+              "arguments": {
+                "rule_id": "R003"
+              },
+              "result": "{\"error\": \"Monitoring rule execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 4,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.0,
+          "score": 0.5,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "get_aml_glossary",
+              "arguments": {
+                "term": "structuring"
+              },
+              "_id": "chatcmpl-tool-ae54ad849a8b91b6"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "get_aml_glossary",
+              "arguments": {
+                "term": "structuring"
+              },
+              "result": "{\"term\": \"Structuring\", \"definition\": \"Dividing cash transactions below the reporting threshold to avoid CTR. Subject to STR reporting.\", \"source\": \"06_CTR, 07a_STR\"}"
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.3,
+      "avg_tool_hit": 0.4,
+      "avg_param_accuracy": 0.2,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 11.7
+    },
+    {
+      "id": "mt_str_050",
+      "scenario": "거래조회 → 예측(context_ref) → 네트워크(context_ref) → 위험도(context_ref) → FIU 참조 → STR",
+      "sub_category": "long_context",
+      "fraud_type": 1,
+      "setting": "real",
+      "num_turns": 6,
+      "turns": [
+        {
+          "turn": 1,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 99301"
+              },
+              "_id": "chatcmpl-tool-aa6fdcfdd56b4528"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 99301"
+              },
+              "result": "{\"error\": \"Query execution error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 3,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.5,
+          "score": 0.75,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "analyze_network",
+              "arguments": {
+                "account_id": 99301
+              },
+              "_id": "chatcmpl-tool-91d1d55a5cb746a0"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "analyze_network",
+              "arguments": {
+                "account_id": 99301
+              },
+              "result": "{\"error\": \"Network retrieval error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [
+            {
+              "name": "score_account_risk",
+              "arguments": {
+                "account_id": 99301
+              },
+              "_id": "chatcmpl-tool-abb831d77e77d368"
+            }
+          ],
+          "executed_results": [
+            {
+              "name": "score_account_risk",
+              "arguments": {
+                "account_id": 99301
+              },
+              "result": "{\"error\": \"Risk assessment error: IO Error: Could not set lock on file \\\"/home/work/kftc_model/KA-001-AML-Assistant/star-bench-web/_datasets/HOFINET.duckdb\\\": Conflicting lock is held in /usr/bin/python3.12 (PID 1819165). See also https://duckdb.org/docs/stable/connect/concurrency\"}"
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": null,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        },
+        {
+          "turn": 6,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
+          "clarification_hit": null,
+          "actual_tool_calls": [],
+          "executed_results": []
+        }
+      ],
+      "avg_score": 0.4583,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.4167,
+      "context_accuracy": 0.0,
+      "scenario_complete": false,
+      "elapsed_sec": 16.76
+    }
+  ]
+}
