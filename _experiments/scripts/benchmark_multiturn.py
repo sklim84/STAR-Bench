@@ -50,6 +50,7 @@ from src.features.agent import (  # noqa: E402
     SYSTEM_PROMPT,
     TOOLS,
     _message_to_dict,
+    _execute_tool,   # real end-to-end mode: run the model's actual tool calls on HOFINET
 )
 
 # benchmark.py에서 공유 유틸리티 import
@@ -373,6 +374,7 @@ def run_multiturn_scenario(
     model: dict,
     *,
     debug: bool = False,
+    setting: str = "oracle",
 ) -> dict:
     """단일 멀티턴 시나리오를 실행하고 평가한다.
 
@@ -440,10 +442,17 @@ def run_multiturn_scenario(
         # 모델이 실제 생성한 tool_calls(특히 generate_str의 summary 등 arguments)를 기록한다.
         # 평가 점수만 저장하던 기존 동작은 그대로 유지하고, 분석용 raw 필드만 추가.
         turn_result["actual_tool_calls"] = actual_tool_calls
-        turn_results.append(turn_result)
 
-        # 대화 이력에 scripted 응답 주입
-        _inject_scripted_response(messages, turn, actual_tool_calls)
+        # 대화 이력 주입: setting에 따라
+        #   oracle(default): 정답 도구 호출+정답 결과를 주입 → 다음 턴이 완벽한 맥락에서 진행
+        #   real          : 모델 실제 호출을 HOFINET 백엔드(_execute_tool)로 실행한 진짜 결과를 주입
+        #                   → 오류가 다음 턴으로 전파되는 end-to-end 설정
+        if setting == "real":
+            executed = _inject_real_response(messages, turn, actual_tool_calls)
+            turn_result["executed_results"] = executed   # 재실험 없이 분석하도록 실행 결과 보존
+        else:
+            _inject_scripted_response(messages, turn, actual_tool_calls)
+        turn_results.append(turn_result)
 
     elapsed = time.time() - start
 
@@ -458,6 +467,7 @@ def run_multiturn_scenario(
         "scenario": scenario["scenario"],
         "sub_category": scenario["sub_category"],
         "fraud_type": scenario.get("fraud_type"),
+        "setting": setting,
         "num_turns": len(scenario["turns"]),
         "turns": turn_results,
         "avg_score": round(sum(scores) / len(scores), 4) if scores else 0.0,
@@ -525,6 +535,50 @@ def _inject_scripted_response(
         })
 
 
+def _inject_real_response(
+    messages: list[dict],
+    turn: dict,
+    actual_tool_calls: list[dict],
+) -> list[dict]:
+    """Real end-to-end injection: run the model's OWN tool calls on the live HOFINET
+    backend (``_execute_tool``) and feed the real results forward — no ground-truth
+    injection. This mirrors the production agent loop, so errors propagate across turns.
+
+    Returns the list of executed {name, arguments, result} records (saved per turn so the
+    oracle-vs-real comparison and error-propagation analysis need no re-run).
+    """
+    executed = []
+    if not actual_tool_calls:
+        # 모델이 도구를 호출하지 않음(텍스트 응답) → assistant 텍스트로 진행
+        messages.append({"role": "assistant", "content": "(no tool call)"})
+        return executed
+
+    tc_list = []
+    for i, call in enumerate(actual_tool_calls):
+        tc_id = f"real_{turn['turn']}_{i:03d}"
+        tc_list.append({
+            "id": tc_id,
+            "type": "function",
+            "function": {
+                "name": call.get("name", ""),
+                "arguments": json.dumps(call.get("arguments", {}), ensure_ascii=False),
+            },
+        })
+    messages.append({"role": "assistant", "content": "", "tool_calls": tc_list})
+
+    for i, call in enumerate(actual_tool_calls):
+        tc_id = f"real_{turn['turn']}_{i:03d}"
+        name = call.get("name", "")
+        args = call.get("arguments", {}) or {}
+        try:
+            result_str = _execute_tool(name, args)   # JSON string from HOFINET backend
+        except Exception as exc:  # backend never raises by design, but be safe
+            result_str = json.dumps({"error": f"tool execution failed: {exc}"}, ensure_ascii=False)
+        messages.append({"role": "tool", "tool_call_id": tc_id, "content": result_str})
+        executed.append({"name": name, "arguments": args, "result": result_str})
+    return executed
+
+
 # ---------------------------------------------------------------------------
 # 전체 실행
 # ---------------------------------------------------------------------------
@@ -586,6 +640,7 @@ def run_multiturn_benchmark(
     use_checkpoint: bool = False,
     resume: bool = False,
     force_rerun: bool = False,
+    setting: str = "oracle",
 ) -> dict:
     """단일 모델에 대해 전체 멀티턴 시나리오를 실행한다.
 
@@ -642,7 +697,7 @@ def run_multiturn_benchmark(
         sid = scenario.get("id", "")
         if sid in completed_ids:
             continue
-        result = run_multiturn_scenario(scenario, model, debug=debug)
+        result = run_multiturn_scenario(scenario, model, debug=debug, setting=setting)
         scenario_results.append(result)
         if cp_path is not None:
             _append_multiturn_checkpoint(cp_path, result)
@@ -736,6 +791,10 @@ def main():
     parser.add_argument("--force-rerun", action="store_true",
                         help="--checkpoint 모드에서 이미 완료된 시나리오도 재실행. "
                              "--resume 모델 단위 skip도 우회.")
+    parser.add_argument("--setting", choices=["oracle", "real"], default="oracle",
+                        help="oracle(default): 매 턴 정답 도구호출+결과 주입(완벽 맥락). "
+                             "real: 모델 실제 호출을 HOFINET 백엔드로 실행한 결과를 주입(오류 전파, end-to-end). "
+                             "real 비교는 별도 출력 권장: --output _experiments/results_mt_real/")
     args = parser.parse_args()
 
     # --cases-dir: 멀티턴 케이스 디렉토리 오버라이드 (한/영 ablation). 싱글턴 benchmark.py와 동일 패턴.
@@ -770,6 +829,7 @@ def main():
                 use_checkpoint=args.checkpoint,
                 resume=args.resume and not args.force_rerun,
                 force_rerun=args.force_rerun,
+                setting=args.setting,
             )
         except Exception as exc:
             _ts_print(f"  ⚠ 모델 {model['name']} 실행 실패: {exc}")
