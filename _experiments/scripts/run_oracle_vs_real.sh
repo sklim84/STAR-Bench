@@ -3,7 +3,7 @@
 #
 # Each model runs on its OWN idle GPU + port concurrently. For each model:
 #   serve via vLLM, run benchmark_multiturn under BOTH settings on that same serving
-#     oracle -> _experiments/results_mt_oracle3/   (ground-truth call+result injected)
+#     oracle -> _experiments/results_mt_oracle/    (ground-truth call+result injected)
 #     real   -> _experiments/results_mt_real/      (model's OWN calls run on HOFINET)
 #   then stop the server (kill the launched process tree, wait for GPU release).
 #
@@ -23,7 +23,7 @@ WS="$(cd "$SB/.." && pwd)"                                         # umbrella ro
 WEB="$WS/star-bench-web"
 PYPATH="$SB:$WEB:${PYTHONPATH:-}"                                  # APPEND (never replace)
 
-ORACLE_OUT="_experiments/results_mt_oracle3/"
+ORACLE_OUT="_experiments/results_mt_oracle/"
 REAL_OUT="_experiments/results_mt_real/"
 LOG_DIR="$SB/_experiments/logs"; mkdir -p "$LOG_DIR"
 
@@ -68,7 +68,7 @@ wait_gpu_free(){ local tag=$1 g=$2 i used;
 
 # run_one: serve one model on (gpu, port), run oracle+real, stop. Self-contained (locals).
 run_one(){
-    local alias=$1 hf=$2 parser=$3 kanana=$4 gpu=$5 port=$6
+    local alias=$1 hf=$2 parser=$3 kanana=$4 gpu=$5 port=$6 extra=${7:-}
     local vllm_log="$LOG_DIR/vllm_ovr_${alias}.log"
     local server_pid="" kopts=""
     [ "$kanana" = "1" ] && kopts="--tool-parser-plugin $KANANA_PARSER_PLUGIN --chat-template $KANANA_CHAT_TEMPLATE"
@@ -79,9 +79,8 @@ run_one(){
     ts "$alias" "vLLM 시작 (GPU=$gpu PORT=$port) → $vllm_log"
     CUDA_VISIBLE_DEVICES="$gpu" PYTHONPATH="$FLASH_ATTN_STUB:${PYTHONPATH:-}" HF_TOKEN="$HF_TOKEN" \
         python -m vllm.entrypoints.openai.api_server \
-        --model "$hf" --port "$port" --max-model-len 32768 \
-        --gpu-memory-utilization 0.95 --tool-call-parser "$parser" \
-        --enable-auto-tool-choice $kopts > "$vllm_log" 2>&1 &
+        --model "$hf" --port "$port" --tool-call-parser "$parser" \
+        --enable-auto-tool-choice $kopts $extra > "$vllm_log" 2>&1 &
     server_pid=$!
 
     # wait for health (max 900s)
@@ -116,15 +115,23 @@ run_one(){
     ts "$alias" "완료 (서버 종료)"
 }
 
-# alias | hf_model | parser | kanana(0/1) | gpu | port  — one idle GPU each, run concurrently
+# Per-model spec: alias|hf_model|parser|kanana(0/1)|gpu|port|extra_args
+#   gpu may be a single id or "1,3" for tensor parallel (set --tensor-parallel-size in extra).
+#   extra_args handles model-specific needs, e.g.:
+#     gpt-oss*   : --reasoning-parser openai_gptoss   (120B also --tensor-parallel-size 4 --enforce-eager)
+#     EXAONE     : --trust-remote-code
+#     Qwen3.5/3.6 (Mamba-hybrid): --max-num-seqs 256
+#     A.X / Llama-3.3-70B / gpt-oss-120B: --max-model-len 16384 --gpu-memory-utilization 0.95
+#   Note: gemma4 parser needs transformers>=5.7.0; kanana custom plugin needs filelock>=3.16.1.
+# Edit this array for the models you want; runs concurrently, one model per GPU.
 MODELS=(
-    "mistral-small|mistralai/Mistral-Small-3.2-24B-Instruct-2506|mistral|0|1|11434"
-    "gemma-4-31b|google/gemma-4-31B-it|gemma4|0|2|11435"
-    "kanana-think|kakaocorp/kanana-2-30b-a3b-thinking-2601|functionary_v3_llama_31|1|3|11436"
+    "mistral-small|mistralai/Mistral-Small-3.2-24B-Instruct-2506|mistral|0|1|11434|"
+    "gemma-4-31b|google/gemma-4-31B-it|gemma4|0|2|11435|"
+    "kanana-think|kakaocorp/kanana-2-30b-a3b-thinking-2601|functionary_v3_llama_31|1|3|11436|"
 )
 
 ts MAIN "============================================================"
-ts MAIN "Oracle-vs-Real 멀티턴 실험 (PARALLEL, ${#MODELS[@]} models)"
+ts MAIN "Oracle-vs-Real (per-model, one GPU each, oracle+real on same serving)"
 ts MAIN "  oracle -> $ORACLE_OUT   real -> $REAL_OUT"
 ts MAIN "  PYTHONPATH=$PYPATH"
 ts MAIN "============================================================"
@@ -132,8 +139,8 @@ ts MAIN "============================================================"
 cd "$SB"
 pids=()
 for spec in "${MODELS[@]}"; do
-    IFS='|' read -r alias hf parser kanana gpu port <<< "$spec"
-    run_one "$alias" "$hf" "$parser" "$kanana" "$gpu" "$port" &
+    IFS='|' read -r alias hf parser kanana gpu port extra <<< "$spec"
+    run_one "$alias" "$hf" "$parser" "$kanana" "$gpu" "$port" "$extra" &
     pids+=($!)
     ts MAIN "launched $alias on GPU $gpu / port $port (pid $!)"
     sleep 3   # stagger launches slightly

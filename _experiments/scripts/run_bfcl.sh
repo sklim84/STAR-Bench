@@ -1,14 +1,14 @@
 #!/bin/bash
 # ============================================================================
-# S1 BFCL 분담 runner — 13 모델
+# BFCL runner — 13 모델
 #  Phase 1 (병렬 단일 GPU 11모델): Lane 0 (GPU 0, 6) + Lane 1 (GPU 1, 5)
 #  Phase 2 (순차 TP=2 2모델): Llama-3.3-70B → A.X-4.0
 #
 # 사용법:
-#   bash run_bfcl_s1.sh                   # 전체
-#   bash run_bfcl_s1.sh phase1_lane0      # Lane 0만
-#   bash run_bfcl_s1.sh phase1_lane1      # Lane 1만
-#   bash run_bfcl_s1.sh phase2            # TP=2만
+#   bash run_bfcl.sh                   # 전체
+#   bash run_bfcl.sh phase1_lane0      # Lane 0만
+#   bash run_bfcl.sh phase1_lane1      # Lane 1만
+#   bash run_bfcl.sh phase2            # TP=2만
 # ============================================================================
 set -uo pipefail
 ts() { date "+%Y-%m-%d %H:%M:%S"; }
@@ -133,7 +133,7 @@ recovery() {
 # Main
 # ─────────────────────────────────────────────────────────────────
 target="${1:-all}"
-echo "$(ts) ==== S1 BFCL runner 시작 (target=$target) ===="
+echo "$(ts) ==== BFCL runner 시작 (target=$target) ===="
 START=$(date +%s)
 
 case "$target" in
