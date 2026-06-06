@@ -76,6 +76,23 @@ WH_PATTERNS = {  # VII.7 종합의견: 6-W, averaged
     "why": [r"의심|혐의|자금세탁|범죄|불법|탈세|구조화|회피"],
 }
 
+# ── regulatory terminology (FATF/FIU STR domain), category-grouped; score = fraction
+#    of categories the model's STR narrative invokes. Measures whether the report is
+#    written in the register a compliance officer expects, not just factually. ──
+TERM_PATTERNS = {
+    "str_report": [r"의심거래보고|의심\s*거래|STR|혐의거래|보고대상|보고\s*의무"],
+    "money_laundering": [r"자금\s*세탁|money\s*laundering|범죄수익|불법\s*자금|탈세"],
+    "cdd_kyc": [r"고객\s*확인|CDD|KYC|실소유자|실제\s*소유자|beneficial\s*owner|신원\s*확인"],
+    "aml_cft": [r"자금세탁방지|AML|CFT|테러\s*자금|FIU|금융정보분석원|특정금융정보법|특금법"],
+    "typology": [r"구조화|분할\s*거래|스머핑|structuring|smurfing|차명|대포통장|자금\s*흐름"],
+    "risk": [r"위험\s*기반|risk[-\s]*based|고위험|위험도|이상\s*거래|모니터링"],
+}
+
+
+def terminology_score(summary):
+    """Fraction of regulatory-terminology categories present in the STR narrative (0-1)."""
+    return round(sum(_match_any(summary, p) for p in TERM_PATTERNS.values()) / len(TERM_PATTERNS), 4)
+
 
 def _match_any(text, patterns):
     return 1.0 if any(re.search(p, text) for p in patterns) else 0.0
@@ -124,7 +141,7 @@ def main():
         model = d.get("model", stem)
         n_with_str_turn = 0      # scenarios whose GT has a generate_str turn
         n_produced = 0           # of those, model actually called generate_str
-        d1_list, halluc_list, ground_list = [], [], []
+        d1_list, halluc_list, ground_list, term_list = [], [], [], []
         sec_acc = {}
         for sc in d.get("scenarios", []):
             gt = cases.get(sc["id"])
@@ -155,6 +172,9 @@ def main():
             for k, v in cov.items():
                 sec_acc.setdefault(k, []).append(v)
 
+            # D4: regulatory terminology register
+            term_list.append(terminology_score(summary))
+
             # source facts = injected prior-turn tool_results (turns before generate_str)
             facts = json.dumps([t.get("tool_result") for t in gt_turns
                                 if t["turn"] < gs_turn_no and t.get("tool_result") is not None],
@@ -169,19 +189,31 @@ def main():
         if n_produced == 0:
             rows.append({"model": model, "n_str_turn": n_with_str_turn, "n_produced": 0,
                          "str_production_rate": 0.0, "field_coverage": None,
-                         "grounding": None, "hallucination": None})
+                         "grounding": None, "terminology": None,
+                         "hallucination": None, "str_overall": None})
             continue
 
         def avg(x):
             return round(sum(x) / len(x), 4) if x else None
+        field_cov = avg(d1_list)
+        grounding = avg(ground_list)
+        halluc = avg(halluc_list)
+        term = avg(term_list)
+        # Overall (Table VII): mean of Field, Ground., Term, and (1 - Halluc.) — all
+        # oriented so higher is better. Reported only when the components exist.
+        comps = [c for c in (field_cov, grounding, term,
+                             (1 - halluc) if halluc is not None else None) if c is not None]
+        str_overall = round(sum(comps) / len(comps), 4) if comps else None
         row = {
             "model": model,
             "n_str_turn": n_with_str_turn,
             "n_produced": n_produced,
             "str_production_rate": round(n_produced / n_with_str_turn, 4) if n_with_str_turn else 0.0,
-            "field_coverage": avg(d1_list),
-            "grounding": avg(ground_list),
-            "hallucination": avg(halluc_list),
+            "field_coverage": field_cov,
+            "grounding": grounding,
+            "terminology": term,
+            "hallucination": halluc,
+            "str_overall": str_overall,
         }
         for k, v in sec_acc.items():
             row[f"cov::{k}"] = round(sum(v) / len(v), 4)
@@ -197,7 +229,7 @@ def main():
     json.dump(rows, open(OUT_DIR / "str_generation_quality.json", "w"),
               ensure_ascii=False, indent=2)
     base_cols = ["model", "n_str_turn", "n_produced", "str_production_rate",
-                 "field_coverage", "grounding", "hallucination"]
+                 "field_coverage", "grounding", "terminology", "hallucination", "str_overall"]
     sec_cols = sorted({k for r in rows for k in r if k.startswith("cov::")})
     with open(OUT_DIR / "str_generation_quality.csv", "w", newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=base_cols + sec_cols)
@@ -209,7 +241,8 @@ def main():
     for r in sorted(rows, key=lambda x: -(x["str_production_rate"] or 0)):
         print(f"  {r['model'][:34]:34s} produced {r['n_produced']:>2}/{r['n_str_turn']:<2} "
               f"({r['str_production_rate']:.2f})  field={r['field_coverage']} "
-              f"ground={r['grounding']} halluc={r['hallucination']}")
+              f"ground={r['grounding']} term={r.get('terminology')} "
+              f"halluc={r['hallucination']} overall={r.get('str_overall')}")
 
 
 if __name__ == "__main__":
