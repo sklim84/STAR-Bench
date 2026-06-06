@@ -15,7 +15,7 @@ gap localizes how much performance depends on perfect upstream context.
 
 Usage:
   PYTHONPATH=. python _experiments/scripts/RQ_oracle_vs_real.py \
-      --oracle _experiments/results_mt/eval --real _experiments/results_mt_real/eval
+      --oracle _experiments/results_mt_oracle/eval --real _experiments/results_mt_real/eval
 Output: _experiments/results_RQ3/oracle_vs_real.{json,csv}
 """
 import json
@@ -65,7 +65,7 @@ def load_dir(d):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--oracle", default=str(SB / "_experiments/results_mt/eval"))
+    ap.add_argument("--oracle", default=str(SB / "_experiments/results_mt_oracle/eval"))
     ap.add_argument("--real", default=str(SB / "_experiments/results_mt_real/eval"))
     args = ap.parse_args()
 
@@ -75,7 +75,7 @@ def main():
         print(f"NO REAL RESULTS in {args.real}.")
         print("Run: PYTHONPATH=. python -m _experiments.scripts.benchmark_multiturn \\")
         print("       --models <3 models> --setting real --output _experiments/results_mt_real/")
-        print("(oracle results are the default run in _experiments/results_mt/).")
+        print("(oracle results are the default run in _experiments/results_mt_oracle/).")
         return
 
     rows = []

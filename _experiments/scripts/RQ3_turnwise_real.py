@@ -3,7 +3,7 @@
 
 이전 버전(figures/generate_new_figures.py)은 하드코딩 placeholder + 29-모델 세트에 없는
 모델(Qwen3-8B, Ministral-14B) 포함.
-본 스크립트는 results_mt/eval/multiturn_*.json에서 per-turn tool_hit를 직접 집계하여
+본 스크립트는 results_mt_oracle/eval/multiturn_*.json에서 per-turn tool_hit를 직접 집계하여
 §4.4 RQ3 narrative와 일치하는 6개 모델만 plot.
 
 선정 6개:
@@ -25,7 +25,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
-MT_DIR = Path("_experiments/results_mt/eval")
+MT_DIR = Path("_experiments/results_mt_oracle/eval")
 OUT_DIR = Path("_experiments/figures")
 
 TARGETS = [

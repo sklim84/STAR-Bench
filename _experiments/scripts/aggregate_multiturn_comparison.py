@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""results_mt/eval/multiturn_<model>.json 29개를 단일 comparison_<ts>.{json,xlsx}로 통합.
+"""results_mt_oracle/eval/multiturn_<model>.json 29개를 단일 comparison_<ts>.{json,xlsx}로 통합.
 
 benchmark.py --comparison-only가 싱글턴 결과만 처리하므로 멀티턴용 별도 통합 스크립트.
 results_kr/results_en의 comparison_*.json 구조와 유사한 단일 통합본 생성.
@@ -9,8 +9,8 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-EVAL_DIR = Path('_experiments/results_mt/eval')
-OUT_DIR = Path('_experiments/results_mt')
+EVAL_DIR = Path('_experiments/results_mt_oracle/eval')
+OUT_DIR = Path('_experiments/results_mt_oracle')
 
 
 def main():

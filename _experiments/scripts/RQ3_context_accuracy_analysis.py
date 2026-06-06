@@ -35,7 +35,7 @@ import numpy as np
 from scipy.stats import spearmanr, rankdata
 
 SB = Path(__file__).resolve().parents[2]
-MT_DIR = SB / "_experiments" / "results_mt" / "eval"
+MT_DIR = SB / "_experiments" / "results_mt_oracle" / "eval"
 KR_DIR = SB / "_experiments" / "results_kr" / "eval"
 OUT_DIR = SB / "_experiments" / "results_RQ3"
 

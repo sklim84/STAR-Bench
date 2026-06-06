@@ -30,7 +30,7 @@ PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 # 결과 디렉토리 (mode별)
 RESULT_KR="$PROJECT_ROOT/_experiments/results_kr"
 RESULT_EN="$PROJECT_ROOT/_experiments/results_en"
-RESULT_MT="$PROJECT_ROOT/_experiments/results_mt"
+RESULT_MT="$PROJECT_ROOT/_experiments/results_mt_oracle"
 CASES_KR="$PROJECT_ROOT/benchmarks"
 CASES_EN="$PROJECT_ROOT/benchmarks_en"
 LOG_DIR="$PROJECT_ROOT/_experiments/logs"

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """main.tex tab:full_models (Appendix 전체 모델 표) LaTeX 생성.
 
-results_kr (29 모델) + results_mt (29 모델) 데이터 기반.
+results_kr (29 모델) + results_mt_oracle (29 모델) 데이터 기반.
 옛 표(41 모델, ±std)와 동일 형식 유지하되 단일 라운드 결과는 ±0.000 placeholder.
 """
 import json
 from pathlib import Path
 
 EVAL_DIR = Path('_experiments/results_kr/eval')
-MT_DIR = Path('_experiments/results_mt/eval')
+MT_DIR = Path('_experiments/results_mt_oracle/eval')
 
 # 한국어 특화 그룹 + 그룹별 모델 순서 (옛 tab:full_models 순서 참조)
 GROUPS = [

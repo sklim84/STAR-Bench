@@ -788,7 +788,7 @@ def _aggregate_by_subcategory(results: list[dict]) -> dict:
 def main():
     parser = argparse.ArgumentParser(description="멀티턴 STR 워크플로우 벤치마크")
     parser.add_argument("--models", nargs="+", help="실행할 모델 이름 (MODELS 레지스트리 기준)")
-    parser.add_argument("--output", type=str, default="_experiments/results_mt/",
+    parser.add_argument("--output", type=str, default="_experiments/results_mt_oracle/",
                         help="결과 저장 디렉토리")
     parser.add_argument("--cases-dir", type=str, default=None,
                         help="멀티턴 케이스 디렉토리 오버라이드(cases_str_workflow.json 포함). "

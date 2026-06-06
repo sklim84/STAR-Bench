@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """main.tex tab:overall (메인 대표 모델 테이블) LaTeX 생성.
 
-results_kr (29 모델) + results_mt (29 모델)에서 KR baseline + multiturn 결과
+results_kr (29 모델) + results_mt_oracle (29 모델)에서 KR baseline + multiturn 결과
 추출하여 LaTeX rows 생성.
 
 대표 모델 선정 기준:
@@ -21,7 +21,7 @@ import json
 from pathlib import Path
 
 EVAL_DIR = Path('_experiments/results_kr/eval')
-MT_DIR = Path('_experiments/results_mt/eval')
+MT_DIR = Path('_experiments/results_mt_oracle/eval')
 
 # 대표 모델 + 표시 순서 (계열 그룹화)
 DISPLAY_ORDER = [
