@@ -198,9 +198,9 @@ def fig_turnwise_line():
     fig, ax = plt.subplots(figsize=(3.5, 2.6))
     ax.fill_between(turns, np.clip(mean - std, 0, 100), np.clip(mean + std, 0, 100),
                     color=_VIR_SD(0.92), alpha=0.30, linewidth=0,
-                    label=r"$\pm$1 SD (all models)")
+                    label=r"$\pm$1 SD")
     ax.plot(turns, mean, color="#2A7F79", marker="o", markersize=4.5,
-            linewidth=1.8, label="Mean (all models)")
+            linewidth=1.8, label="Mean")
     # annotate the drop at the synthesis/validation turn
     ax.annotate("", xy=(4, mean[3]), xytext=(3, mean[2]),
                 arrowprops=dict(arrowstyle="->", color="#555555", lw=1.2))
@@ -218,7 +218,8 @@ def fig_turnwise_line():
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.legend(fontsize=6.5, loc="lower left", frameon=True, framealpha=0.9,
-              handlelength=1.6, handletextpad=0.4, borderpad=0.3, labelspacing=0.3)
+              handlelength=1.6, handletextpad=0.4, borderpad=0.3, labelspacing=0.3,
+              title=f"Across {len(per_model)} models", title_fontsize=6.5)
     plt.tight_layout()
     plt.savefig(FIGURES_DIR / "fig_turnwise_line.png", dpi=300, bbox_inches="tight")
     plt.close()
