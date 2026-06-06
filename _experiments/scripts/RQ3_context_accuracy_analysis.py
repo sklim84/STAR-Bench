@@ -1,183 +1,163 @@
 #!/usr/bin/env python3
-"""RQ3: context_accuracy 모델별 분포 + 시나리오 완주율 상관 (n=22 한정).
+"""RQ3: context-accuracy vs scenario-completion partial correlation.
 
-50 멀티턴 시나리오 중 context_ref가 정의된 시나리오에서만 context_hit 측정.
-모델별 context_accuracy 평균과 scenario_complete_rate 사이의 상관 분석.
+Three design choices make this analysis match the paper's stated method (an earlier
+glob-based version did not, which produced a stale/contradictory partial value):
 
-본문 인용 포인트:
-- 컨텍스트 참조 일관성이 시나리오 완주율의 독립 예측 변수인가?
-- 표본 크기 명시: n_models × n_ctx_scenarios
+1. COHORT. We pin the canonical 28-model cohort explicitly (identical to Table VI):
+   it includes `kanana-2-30b-a3b-thinking-2601` (= Kanana-2-Think, the multi-turn
+   completion leader) and excludes the redundant `kanana-2-30b-a3b-instruct-2601`
+   (dropped in every other analysis: reg_vs_analysis, fig4 scatter, Fig 5 turnwise).
+   A plain multiturn_*.json glob would mis-include the redundant sibling.
+
+2. CONTROL VARIABLE. We control for single-turn h (results_kr
+   overall.primary_tool_hit_rate, the Table VI h column), as the paper states, and
+   also report the multi-turn h-bar (avg_tool_hit) control for transparency.
+
+3. PARTIAL METHOD. Proper rank-based partial Spearman: rank all three variables,
+   then take the first-order partial Pearson on the ranks. Significance is the
+   standard partial-correlation t-test, t = r*sqrt((n-3)/(1-r^2)), df = n-3, two-sided.
+
+Join keys: multiturn uses norm(model_id) (keeps __think/__nothink); single-turn uses
+norm(model); norm(s) = s.replace('/','_').replace('.','_').
+
+Output: _experiments/results_RQ3/context_accuracy_correlation.json (+ per-model CSV).
+Supersedes the previous globbing version (which silently used a non-canonical cohort).
+
+Usage: PYTHONPATH=. python _experiments/scripts/RQ3_context_accuracy_analysis.py
 """
-import json, csv, sys
+import json
+import csv
+import glob
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _plot_style import (plt, get_color, COL_NEUTRAL, COL_ACCENT, FS_TICK, FS_LABEL,
-                          FS_TITLE, FS_LEGEND, FS_ANNOT, style_axes, short_name)
 
-MT_DIR = Path('_experiments/results_mt/eval')
-OUT_DIR = Path('_experiments/results_RQ3')
-OUT_DIR.mkdir(parents=True, exist_ok=True)
+import numpy as np
+from scipy.stats import spearmanr, rankdata
+
+SB = Path(__file__).resolve().parents[2]
+MT_DIR = SB / "_experiments" / "results_mt" / "eval"
+KR_DIR = SB / "_experiments" / "results_kr" / "eval"
+OUT_DIR = SB / "_experiments" / "results_RQ3"
+
+# Canonical 28-model cohort (identical to Table VI). Toggle models are two entries.
+COHORT = [
+    "skt/A.X-4.0-Light", "skt/A.X-4.0",
+    "LGAI-EXAONE/EXAONE-4.0-1.2B", "LGAI-EXAONE/EXAONE-4.0-32B",
+    "kakaocorp/kanana-2-30b-a3b-instruct", "kakaocorp/kanana-2-30b-a3b-thinking-2601",
+    "DragonLLM/Llama-Open-Finance-8B", "DragonLLM/Qwen-Open-Finance-R-8B",
+    "openai/gpt-oss-20b__nothink", "openai/gpt-oss-20b__think",
+    "openai/gpt-oss-120b__nothink", "openai/gpt-oss-120b__think",
+    "meta-llama/Llama-3.2-3B-Instruct", "meta-llama/Llama-3.3-70B-Instruct",
+    "NousResearch/Hermes-3-Llama-3.1-8B",
+    "mistralai/Ministral-3-3B-Instruct-2512",
+    "mistralai/Mistral-Small-3.2-24B-Instruct-2506", "microsoft/Phi-4-mini-instruct",
+    "Qwen/Qwen3.5-4B__nothink", "Qwen/Qwen3.5-4B__think",
+    "Qwen/Qwen3.5-27B__nothink", "Qwen/Qwen3.5-27B__think",
+    "Qwen/Qwen3.6-27B", "Qwen/Qwen3.6-35B-A3B",
+    "Salesforce/xLAM-2-3b-fc-r", "Salesforce/Llama-xLAM-2-70b-fc-r",
+    "google/gemma-4-E4B-it", "google/gemma-4-31B-it",
+]
+
+
+def norm(s):
+    return (s or "").replace("/", "_").replace(".", "_")
+
+
+def partial_spearman(x, y, z):
+    """First-order partial Spearman of (x, y) controlling z: rank then partial Pearson."""
+    rx, ry, rz = rankdata(x), rankdata(y), rankdata(z)
+
+    def pear(a, b):
+        a, b = np.asarray(a, float), np.asarray(b, float)
+        a, b = a - a.mean(), b - b.mean()
+        return float((a * b).sum() / (np.sqrt((a * a).sum()) * np.sqrt((b * b).sum())))
+
+    r_xy, r_xz, r_yz = pear(rx, ry), pear(rx, rz), pear(ry, rz)
+    pr = (r_xy - r_xz * r_yz) / (np.sqrt(1 - r_xz**2) * np.sqrt(1 - r_yz**2))
+    n = len(x)
+    # partial-correlation t-test, df = n - 3 (one controlled variable)
+    from scipy.stats import t as tdist
+    tstat = pr * np.sqrt((n - 3) / (1 - pr**2))
+    p = 2 * tdist.sf(abs(tstat), df=n - 3)
+    return float(pr), float(p), r_xy
+
 
 def main():
-    files = sorted(MT_DIR.glob('multiturn_*.json'))
-    rows = []
-    for f in files:
-        d = json.load(f.open())
-        overall = d.get('overall', {})
-        # 시나리오 단위로 context_accuracy 모음
-        ctx_scs = []
-        for sc in d.get('scenarios', []):
-            ca = sc.get('context_accuracy')
-            if ca is not None:
-                ctx_scs.append(ca)
-        ctx_mean = sum(ctx_scs) / len(ctx_scs) if ctx_scs else None
-        rows.append({
-            'model': d['model'], 'model_id': d.get('model_id'),
-            'think': d.get('think'),
-            'ctx_acc_mean': round(ctx_mean, 4) if ctx_mean is not None else None,
-            'n_ctx_scenarios': len(ctx_scs),
-            'scenario_complete_rate': overall.get('scenario_complete_rate'),
-            'avg_score': overall.get('avg_score'),
-            'avg_tool_hit': overall.get('avg_tool_hit'),
-            'avg_param_accuracy': overall.get('avg_param_accuracy'),
-        })
+    # index multiturn by norm(model_id); single-turn h by norm(model)
+    mt = {}
+    for f in glob.glob(str(MT_DIR / "multiturn_*.json")):
+        d = json.load(open(f))
+        mt[norm(d.get("model_id") or d.get("model"))] = d
+    kr_h = {}
+    for f in glob.glob(str(KR_DIR / "eval_*.json")):
+        d = json.load(open(f))
+        ov = d.get("overall", {})
+        h = ov.get("primary_tool_hit_rate")
+        if h is None:
+            cats = d.get("by_category", {})
+            hs = [c["aggregated"]["primary_tool_hit_rate"] for c in cats.values() if "aggregated" in c]
+            h = sum(hs) / len(hs) if hs else None
+        kr_h[norm(d.get("model"))] = h
 
-    with (OUT_DIR / 'context_accuracy_per_model.csv').open('w', newline='') as f:
-        w = csv.DictWriter(f, fieldnames=rows[0].keys())
-        w.writeheader(); w.writerows(rows)
+    rows, missing = [], []
+    for m in COHORT:
+        k = norm(m)
+        md = mt.get(k)
+        h = kr_h.get(k)
+        if md is None or h is None:
+            missing.append((m, md is None, h is None))
+            continue
+        ov = md.get("overall", {})
+        ctx = ov.get("context_accuracy")
+        comp = ov.get("scenario_complete_rate")
+        hbar = ov.get("avg_tool_hit")
+        if ctx is None or comp is None:
+            missing.append((m, "no ctx/comp", False))
+            continue
+        rows.append({"model": m, "ctx_acc": ctx, "completion": comp,
+                     "single_h": h, "multi_hbar": hbar})
 
-    # 상관 분석 (ctx_acc가 None 아닌 모델만)
-    valid = [r for r in rows if r['ctx_acc_mean'] is not None]
-    try:
-        from scipy.stats import spearmanr, pearsonr
-        x = [r['ctx_acc_mean'] for r in valid]
-        y = [r['scenario_complete_rate'] for r in valid]
-        s_rho, s_p = spearmanr(x, y)
-        p_r, p_p = pearsonr(x, y)
-        # tool_hit과의 상관도 (싱글턴 성능 proxy)
-        z = [r['avg_tool_hit'] for r in valid]
-        s_rho2, s_p2 = spearmanr(x, z)
-        # 부분 상관 (ctx_acc → complete | tool_hit 통제)
-        # 간이: ctx_acc와 tool_hit의 잔차로부터 complete 상관
-        try:
-            import numpy as np
-            x_a = np.array(x); y_a = np.array(y); z_a = np.array(z)
-            # ctx_acc residual after tool_hit
-            zx = np.polyfit(z_a, x_a, 1); resid_x = x_a - np.polyval(zx, z_a)
-            zy = np.polyfit(z_a, y_a, 1); resid_y = y_a - np.polyval(zy, z_a)
-            partial_rho, partial_p = spearmanr(resid_x, resid_y)
-        except Exception:
-            partial_rho, partial_p = None, None
-    except Exception as e:
-        s_rho = s_p = p_r = p_p = s_rho2 = s_p2 = partial_rho = partial_p = None
-        print(f'scipy failed: {e}')
+    n = len(rows)
+    ctx = [r["ctx_acc"] for r in rows]
+    comp = [r["completion"] for r in rows]
+    sh = [r["single_h"] for r in rows]
+    hb = [r["multi_hbar"] for r in rows]
+
+    rho_cc, p_cc = spearmanr(ctx, comp)
+    rho_ch, p_ch = spearmanr(ctx, sh)          # ctx vs single-turn h
+    pr_sh, pp_sh, _ = partial_spearman(ctx, comp, sh)   # control single-turn h (paper's stated control)
+    pr_hb, pp_hb, _ = partial_spearman(ctx, comp, hb)   # control multi-turn h-bar (old file's control)
 
     summary = {
-        'n_models_total': len(rows),
-        'n_models_with_ctx': len(valid),
-        'avg_n_ctx_scenarios_per_model': round(sum(r['n_ctx_scenarios'] for r in valid) / max(len(valid), 1), 1),
-        'spearman_ctx_vs_complete': {'rho': round(s_rho, 4) if s_rho is not None else None, 'p': round(s_p, 4) if s_p is not None else None},
-        'pearson_ctx_vs_complete': {'r': round(p_r, 4) if p_r is not None else None, 'p': round(p_p, 4) if p_p is not None else None},
-        'spearman_ctx_vs_tool_hit': {'rho': round(s_rho2, 4) if s_rho2 is not None else None, 'p': round(s_p2, 4) if s_p2 is not None else None},
-        'partial_spearman_ctx_complete_given_tool_hit': {'rho': round(partial_rho, 4) if partial_rho is not None else None, 'p': round(partial_p, 4) if partial_p is not None else None},
-        'top_5_ctx_acc': sorted(valid, key=lambda x: x['ctx_acc_mean'] or 0, reverse=True)[:5],
-        'bottom_5_ctx_acc': sorted(valid, key=lambda x: x['ctx_acc_mean'] or 0)[:5],
+        "cohort": "canonical 28 (Table VI): incl. kanana-thinking-2601, excl. kanana-instruct-2601",
+        "n_models": n,
+        "spearman_ctx_vs_completion": {"rho": round(rho_cc, 4), "p": round(float(p_cc), 4)},
+        "spearman_ctx_vs_single_turn_h": {"rho": round(rho_ch, 4), "p": round(float(p_ch), 4)},
+        "partial_spearman_ctx_completion_given_SINGLE_turn_h": {
+            "rho": round(pr_sh, 4), "p": round(pp_sh, 4),
+            "note": "paper-stated control variable (single-turn tool hit h, Table VI column)"},
+        "partial_spearman_ctx_completion_given_MULTI_turn_hbar": {
+            "rho": round(pr_hb, 4), "p": round(pp_hb, 4),
+            "note": "control = multi-turn avg_tool_hit (reported for comparison; not the paper control)"},
+        "missing": missing,
     }
-    summary['top_5_ctx_acc'] = [{'model': r['model'], 'ctx_acc_mean': r['ctx_acc_mean'], 'complete': r['scenario_complete_rate']} for r in summary['top_5_ctx_acc']]
-    summary['bottom_5_ctx_acc'] = [{'model': r['model'], 'ctx_acc_mean': r['ctx_acc_mean'], 'complete': r['scenario_complete_rate']} for r in summary['bottom_5_ctx_acc']]
-    json.dump(summary, (OUT_DIR / 'context_accuracy_correlation.json').open('w'),
+
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    json.dump(summary, open(OUT_DIR / "context_accuracy_correlation.json", "w"),
               ensure_ascii=False, indent=2)
+    with open(OUT_DIR / "context_accuracy_per_model.csv", "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=["model", "ctx_acc", "completion", "single_h", "multi_hbar"])
+        w.writeheader()
+        w.writerows(rows)
 
-    try:
-        # Plot A: context vs completion — family color + selective labels
-        # Family inference (matches fig:size_efficiency palette)
-        FAMILY_COLORS = {
-            'Kanana': '#76B7B2', 'EXAONE': '#B07AA1', 'skt': '#9C755F',
-            'Qwen': '#4E79A7', 'Mistral': '#E15759', 'Llama': '#59A14F',
-            'xLAM': '#F28E2B', 'gpt-oss': '#FF9DA7', 'Gemma': '#F28E2B',
-            'Finance': '#59A14F', 'Phi': '#BAB0AC', 'Other': '#BAB0AC',
-        }
-        def fam(m):
-            ml = m.lower()
-            if 'kanana' in ml: return 'Kanana'
-            if 'exaone' in ml: return 'EXAONE'
-            if 'a.x-4.0' in ml or 'skt' in ml: return 'skt'
-            if 'qwen' in ml and 'xlam' not in ml:
-                if 'open-finance' in ml or 'dragonllm' in ml: return 'Finance'
-                return 'Qwen'
-            if 'mistral' in ml or 'ministral' in ml: return 'Mistral'
-            if 'xlam' in ml: return 'xLAM'
-            if 'llama' in ml:
-                if 'open-finance' in ml or 'dragonllm' in ml: return 'Finance'
-                return 'Llama'
-            if 'gpt-oss' in ml: return 'gpt-oss'
-            if 'gemma' in ml: return 'Gemma'
-            if 'phi' in ml: return 'Phi'
-            if 'hermes' in ml: return 'Llama'
-            return 'Other'
+    print(f"[RQ3-ctx] canonical cohort n={n} (missing {len(missing)})")
+    for m in missing:
+        print("   missing:", m)
+    print(f"  Spearman ctx~completion           = {rho_cc:.4f} (p={p_cc:.4f})")
+    print(f"  Spearman ctx~single_turn_h        = {rho_ch:.4f} (p={p_ch:.4f})")
+    print(f"  PARTIAL ctx~completion | single_h = {pr_sh:.4f} (p={pp_sh:.4f})   <- paper control; paper text says 0.197, p=0.304")
+    print(f"  PARTIAL ctx~completion | multi_hbar = {pr_hb:.4f} (p={pp_hb:.4f}) <- old file control; old json says 0.408, p=0.031")
 
-        # Narrative anchor models (본문 §4.4 거명 + 극단 사례)
-        ANCHOR_LABELS = {
-            'Salesforce/Llama-xLAM-2-70b-fc-r': 'xLAM-2-70B',
-            'DragonLLM/Llama-Open-Finance-8B':  'Open-Finance-8B',
-            'kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink': 'Kanana-2-Think',
-            'mistralai/Mistral-Small-3.2-24B-Instruct-2506': 'Mistral-Small-24B',
-            'mistralai/Ministral-3-3B-Instruct-2512':        'Ministral-3-3B',
-        }
 
-        fig, ax = plt.subplots(figsize=(5.5, 4.2))
-        seen_fam = set()
-        for r in valid:
-            f = fam(r['model'])
-            color = FAMILY_COLORS.get(f, FAMILY_COLORS['Other'])
-            label = f if f not in seen_fam else None
-            seen_fam.add(f)
-            ax.scatter(r['ctx_acc_mean'], r['scenario_complete_rate'],
-                       s=55, alpha=0.85, c=color, label=label,
-                       edgecolors='white', linewidths=0.5, zorder=3)
-            mid = r.get('model_id') or r['model']
-            if mid in ANCHOR_LABELS:
-                ax.annotate(ANCHOR_LABELS[mid],
-                            (r['ctx_acc_mean'], r['scenario_complete_rate']),
-                            fontsize=FS_ANNOT - 1, alpha=0.85,
-                            xytext=(4, 4), textcoords='offset points')
-        ax.set_xlabel(r'context\_accuracy (mean)', fontsize=FS_LABEL)
-        ax.set_ylabel(r'scenario\_complete\_rate $c$', fontsize=FS_LABEL)
-        style_axes(ax)
-        if s_rho is not None:
-            ax.text(0.04, 0.96, fr'Spearman $\rho$={s_rho:.3f} (p={s_p:.3f})',
-                    transform=ax.transAxes, va='top', fontsize=FS_LEGEND,
-                    bbox=dict(facecolor='white', alpha=0.85, edgecolor='none'))
-        ax.legend(fontsize=FS_LEGEND - 1, loc='lower right', frameon=True,
-                  framealpha=0.9, ncol=2, title='Family', title_fontsize=FS_LEGEND - 1)
-        plt.tight_layout()
-        plt.savefig(OUT_DIR / 'fig_context_vs_completion.pdf', dpi=300, bbox_inches='tight')
-        plt.savefig(OUT_DIR / 'fig_context_vs_completion.png', dpi=300, bbox_inches='tight')
-        plt.close()
-
-        # Plot B: singleturn vs context
-        fig, ax = plt.subplots(figsize=(5, 3.6))
-        for r in valid:
-            c = get_color(r['model'])
-            ax.scatter(r['avg_tool_hit'], r['ctx_acc_mean'],
-                       s=50, alpha=0.85, c=c,
-                       edgecolors='white', linewidths=0.5, zorder=3)
-        ax.set_xlabel(r'avg\_tool\_hit (singleturn $h$ proxy)', fontsize=FS_LABEL)
-        ax.set_ylabel(r'context\_accuracy', fontsize=FS_LABEL)
-        style_axes(ax)
-        if s_rho2 is not None:
-            ax.text(0.05, 0.95, fr'Spearman $\rho$={s_rho2:.3f} (p={s_p2:.3f})',
-                    transform=ax.transAxes, va='top', fontsize=FS_LEGEND,
-                    bbox=dict(facecolor='white', alpha=0.85, edgecolor='none'))
-        plt.tight_layout()
-        plt.savefig(OUT_DIR / 'fig_singleturn_vs_context.pdf', dpi=300, bbox_inches='tight')
-        plt.savefig(OUT_DIR / 'fig_singleturn_vs_context.png', dpi=300, bbox_inches='tight')
-        plt.close()
-    except Exception as e:
-        print(f'plot failed: {e}')
-
-    print(f'[RQ3-ctx] completed: {len(valid)}/{len(rows)} models with ctx_acc, '
-          f'spearman={summary["spearman_ctx_vs_complete"]}')
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

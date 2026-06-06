@@ -18,8 +18,18 @@ MT_DIR = Path('_experiments/results_mt/eval')
 OUT_DIR = Path('_experiments/results_RQ3')
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
+# Canonical 28-model cohort (= Table VI / Fig 5 turnwise): drop 8 non-cohort variants
+# and the redundant Kanana-2-Instruct-2601 (keep Kanana-2-Instruct + Kanana-2-Think).
+EXCLUDE = {
+    "Qwen_Qwen3-30B-A3B-Instruct-2507", "Qwen_Qwen3-4B-Instruct-2507", "Qwen_Qwen3-8B",
+    "Qwen_Qwen3_5-9B__nothink", "Qwen_Qwen3_5-9B__think",
+    "Salesforce_Llama-xLAM-2-8b-fc-r", "Salesforce_xLAM-2-1b-fc-r", "Salesforce_xLAM-2-32b-fc-r",
+    "kakaocorp_kanana-2-30b-a3b-instruct-2601",
+}
+
 def main():
-    files = sorted(MT_DIR.glob('multiturn_*.json'))
+    files = sorted(f for f in MT_DIR.glob('multiturn_*.json')
+                   if f.stem.replace('multiturn_', '') not in EXCLUDE)
     rows = []
     for f in files:
         d = json.load(f.open())

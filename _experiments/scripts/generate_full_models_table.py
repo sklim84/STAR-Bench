@@ -18,7 +18,6 @@ GROUPS = [
         ('LGAI-EXAONE/EXAONE-4.0-1.2B', 'EXAONE-4.0-1.2B'),
         ('LGAI-EXAONE/EXAONE-4.0-32B', 'EXAONE-4.0-32B'),
         ('kakaocorp/kanana-2-30b-a3b-instruct', 'Kanana-2-Instruct'),
-        ('kakaocorp/kanana-2-30b-a3b-instruct-2601', 'Kanana-2-Instruct-2601'),
         ('kakaocorp/kanana-2-30b-a3b-thinking-2601', 'Kanana-2-Think'),
     ]),
     ('finance', 'Finance SFT', [

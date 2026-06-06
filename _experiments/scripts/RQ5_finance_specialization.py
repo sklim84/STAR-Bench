@@ -79,6 +79,9 @@ def main():
     for f in files:
         d = json.load(f.open())
         m = d['model']
+        # drop the redundant Kanana-2-Instruct-2601 (excluded from the canonical cohort everywhere)
+        if 'kanana-2-30b-a3b-instruct-2601' in m:
+            continue
         m = safe_to_canonical.get(m, m)
         by_model[m] = per_subdomain_h(d.get('by_category', {}))
 
