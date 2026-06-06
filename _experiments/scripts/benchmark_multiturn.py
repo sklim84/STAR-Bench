@@ -484,6 +484,17 @@ def run_multiturn_scenario(
     return result
 
 
+def _tc_id(kind: str, turn: int, i: int) -> str:
+    """9-char alphanumeric tool_call_id.
+
+    Mistral's server validates tool_call_id against ``^[a-zA-Z0-9]{9}$`` (exactly nine
+    alphanumeric chars, no underscores); other providers accept arbitrary strings. We
+    encode kind ('S' scripted / 'R' real) + turn + call index and zero-pad to 9, which
+    is unique within a conversation per (kind, turn, i).
+    """
+    return f"{kind}{int(turn):02d}{int(i):02d}".ljust(9, "0")[:9]
+
+
 def _inject_scripted_response(
     messages: list[dict],
     turn: dict,
@@ -508,7 +519,7 @@ def _inject_scripted_response(
     # assistant tool_calls 메시지
     tc_list = []
     for i, exp_tc in enumerate(expected_calls):
-        tc_id = f"scripted_{turn['turn']}_{i:03d}"
+        tc_id = _tc_id("S", turn["turn"], i)
         tc_list.append({
             "id": tc_id,
             "type": "function",
@@ -527,7 +538,7 @@ def _inject_scripted_response(
     # tool result 메시지 (각 tool_call에 대해)
     result_str = json.dumps(tool_result, ensure_ascii=False)
     for i, _ in enumerate(expected_calls):
-        tc_id = f"scripted_{turn['turn']}_{i:03d}"
+        tc_id = _tc_id("S", turn["turn"], i)
         messages.append({
             "role": "tool",
             "tool_call_id": tc_id,
@@ -555,7 +566,7 @@ def _inject_real_response(
 
     tc_list = []
     for i, call in enumerate(actual_tool_calls):
-        tc_id = f"real_{turn['turn']}_{i:03d}"
+        tc_id = _tc_id("R", turn["turn"], i)
         tc_list.append({
             "id": tc_id,
             "type": "function",
@@ -567,7 +578,7 @@ def _inject_real_response(
     messages.append({"role": "assistant", "content": "", "tool_calls": tc_list})
 
     for i, call in enumerate(actual_tool_calls):
-        tc_id = f"real_{turn['turn']}_{i:03d}"
+        tc_id = _tc_id("R", turn["turn"], i)
         name = call.get("name", "")
         args = call.get("arguments", {}) or {}
         try:
