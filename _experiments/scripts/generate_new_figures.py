@@ -169,7 +169,7 @@ def fig_turnwise_line():
     (n=1 scenario) is excluded.
     """
     from collections import defaultdict
-    MT = _SB / "_experiments" / "results_mt" / "eval"
+    MT = _SB / "_experiments" / "results_mt_oracle" / "eval"
     MAX_TURN = 5
     EXCLUDE = {  # 28-model cohort: drop 8 non-cohort variants + redundant Kanana-2-Instruct-2601
         "Qwen_Qwen3-30B-A3B-Instruct-2507", "Qwen_Qwen3-4B-Instruct-2507",
