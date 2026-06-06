@@ -720,6 +720,10 @@ def main():
     parser.add_argument("--models", nargs="+", help="실행할 모델 이름 (MODELS 레지스트리 기준)")
     parser.add_argument("--output", type=str, default="_experiments/results_mt/",
                         help="결과 저장 디렉토리")
+    parser.add_argument("--cases-dir", type=str, default=None,
+                        help="멀티턴 케이스 디렉토리 오버라이드(cases_str_workflow.json 포함). "
+                             "한/영 ablation 예: --cases-dir benchmarks_multiturn_en "
+                             "(이 경우 --output _experiments/results_mt_en/ 권장)")
     parser.add_argument("--debug", action="store_true", help="턴별 상세 로그")
     parser.add_argument("--checkpoint", action="store_true",
                         help="시나리오 단위 checkpoint jsonl 저장 + 중단 시 재개")
@@ -729,6 +733,12 @@ def main():
                         help="--checkpoint 모드에서 이미 완료된 시나리오도 재실행. "
                              "--resume 모델 단위 skip도 우회.")
     args = parser.parse_args()
+
+    # --cases-dir: 멀티턴 케이스 디렉토리 오버라이드 (한/영 ablation). 싱글턴 benchmark.py와 동일 패턴.
+    if args.cases_dir:
+        global _MULTITURN_DIR
+        _MULTITURN_DIR = Path(args.cases_dir)
+        _ts_print(f"멀티턴 케이스 디렉토리 오버라이드: {_MULTITURN_DIR}")
 
     output_dir = Path(args.output)
 
