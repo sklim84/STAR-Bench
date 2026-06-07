@@ -201,11 +201,19 @@ def fig_turnwise_line():
                     label=r"$\pm$1 SD")
     ax.plot(turns, mean, color="#2A7F79", marker="o", markersize=4.5,
             linewidth=1.8, label="Mean")
-    # annotate the drop at the synthesis/validation turn
+    # per-turn value labels (1 decimal): rising turns above, drop turns below the marker
+    for i, tn in enumerate(turns):
+        above = i < 3
+        ax.annotate(f"{mean[i]:.1f}%", (tn, mean[i]),
+                    textcoords="offset points", xytext=(0, 7 if above else -8),
+                    ha="center", va="bottom" if above else "top",
+                    fontsize=6, color="#2A7F79",
+                    bbox=dict(boxstyle="round,pad=0.12", fc="white", ec="none", alpha=0.75))
+    # annotate the drop into the synthesis/validation turn in percentage points
     ax.annotate("", xy=(4, mean[3]), xytext=(3, mean[2]),
                 arrowprops=dict(arrowstyle="->", color="#555555", lw=1.2))
-    ax.text(3.62, (mean[2] + mean[3]) / 2 + 8,
-            f"{mean[2]:.0f}% $\\to$ {mean[3]:.0f}%", fontsize=6.5, color="#555555",
+    ax.text(3.58, (mean[2] + mean[3]) / 2 + 3,
+            f"$-${mean[2] - mean[3]:.1f} pp", fontsize=6.5, color="#555555",
             ha="left", va="center", fontstyle="italic")
 
     ax.set_xticks(turns)
