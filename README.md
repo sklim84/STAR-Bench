@@ -65,7 +65,7 @@ _experiments/
   results_mt_oracle/      — Multi-turn STR results: oracle tool-result injection (main setting)
   results_mt_real/        — Multi-turn STR results: end-to-end execution (errors propagate)
   results_RQ1 … results_RQ5/ — Per-research-question analysis outputs and figures
-  bfcl_results/           — BFCL runs for the general-vs-domain comparison (RQ5)
+  bfcl_results/           — BFCL runs for the general-vs-domain comparison
   figures/                — Generated figures
   MODELS.md               — Evaluated-model registry
 ```
@@ -121,33 +121,34 @@ bash _experiments/scripts/run_master.sh --server 1 --modes kr,en,mt
 tool-call parsers (with a custom plugin for Kanana); thinking models are split into
 `think` / `nothink` entries.
 
-## Research questions and headline findings
+## Headline findings
 
-The benchmark is organized around five research questions; full per-model tables,
-metrics, and statistics are in the paper and under `_experiments/results_*`.
+Full per-model tables, metrics, and statistics are in the paper and under
+`_experiments/results_*`; the analysis outputs behind each finding below are grouped
+under `results_RQ1`–`results_RQ5`.
 
-- **RQ1 — Tool discrimination.** Tool-hit accuracy does **not** scale monotonically
+- **Tool operation.** Tool-hit accuracy does **not** scale monotonically
   with model size: mid- and small-sized models (e.g., Mistral-Small-24B,
   Ministral-3-3B) outperform larger ones (e.g., Llama-3.3-70B). Wrong-tool errors are
   structured — concentrated on near-duplicate tools (e.g., account-profile vs
   receiving-account-profile) — rather than random.
-- **RQ2 — Regulatory reporting.** The Regulatory Reporting subdomain is the **weakest**
+- **Regulatory reportability gap.** The Regulatory Reporting subdomain is the **weakest**
   (mean tool hit ≈ 0.58 vs. 0.79–0.83 for the other subdomains; an average gap of about
   24.7 percentage points against ordinary analysis tools). Its failures stem from **not
   engaging the regulatory tool**: STR-field validation fails almost entirely by no-call,
   CTR-candidate detection by wrong-tool fallback to a generic transaction query, and FIU
   reference lookup by keyword-mapping errors (correct tool, wrong search keyword).
-- **RQ3 — Multi-turn STR.** Single-turn skill does not transfer to multi-turn STR
+- **Workflow readiness.** Single-turn skill does not transfer to multi-turn STR
   completion, and multi-turn rankings differ substantially from single-turn rankings.
   Even under the favorable **oracle** setting, the per-turn hit rate collapses by roughly
   27 percentage points at the STR-writing/reporting turn; **end-to-end** execution
   amplifies the errors further (mean scenario completion drops from .173 to .062).
   Multi-turn completion correlates with context carry-over accuracy (Spearman ρ = 0.73).
-- **RQ4 — Bilingual robustness.** With tool definitions fixed in Korean, Korean queries
+- **Bilingual robustness.** With tool definitions fixed in Korean, Korean queries
   are generally stronger than English queries, but the magnitude varies substantially
   across model families; switching tool definitions from Korean to English does not
   consistently close the gap.
-- **RQ5 — Generalization gap.** General function-calling rank does **not** predict AML
+- **Generalization gap.** General function-calling rank does **not** predict AML
   tool use: among the 10 overlapping (BFCL top-ranked) models, the rank correlation is
   weak and not significant (Spearman ρ = 0.333, p = 0.347). Model size and specialization
   labels are likewise unreliable predictors; finance-oriented fine-tuning helps most in
