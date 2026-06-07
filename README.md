@@ -1,4 +1,4 @@
-# STAR-Bench: A Benchmark for Anti-Money Laundering Agents Under Financial Regulation
+# STAR-Bench: Evaluating Anti-Money Laundering Agents for Regulatory Reporting Workflows
 
 ## Overview
 
@@ -177,14 +177,14 @@ penalized setting, a scenario without an STR scores zero on every quality axis.
 ## Citation
 
 ```bibtex
-@inproceedings{lim2026starbench,
-  title     = {STAR-Bench: A Benchmark for Anti-Money Laundering Agents Under Financial Regulation},
-  author    = {Lim, Seonkyu and Hong, Gwangui and Tae, Inwoo and Hwang, Inje and
-               Baek, Jonghyuk and Kim, Jingu and Choi, Jeongwhan and Lee, Jaehoon and
-               Yoo, Hangyeol and Cheong, Jaeyoung and Lee, Yongjae and Kim, Min-Soo and
-               Lim, KyungTae},
-  booktitle = {IEEE International Conference on Data Mining (ICDM)},
-  year      = {2026}
+@misc{lim2026starbench,
+  title  = {STAR-Bench: Evaluating Anti-Money Laundering Agents for Regulatory Reporting Workflows},
+  author = {Lim, Seonkyu and Hong, Gwangui and Tae, Inwoo and Hwang, Inje and
+            Baek, Jonghyuk and Kim, Jingu and Choi, Jeongwhan and Lee, Jaehoon and
+            Yoo, Hangyeol and Cheong, Jaeyoung and Lee, Yongjae and Kim, Min-Soo and
+            Lim, KyungTae},
+  year   = {2026},
+  note   = {Preprint}
 }
 ```
 
