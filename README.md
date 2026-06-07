@@ -15,11 +15,14 @@ single-turn tool calling.
 - **1,258 expert-authored, cross-validated single-turn cases** over 23 tools and 3
   difficulty levels (Easy 673 / Medium 412 / Hard 173).
 - **4 AML subdomains** derived from the reference platform (see below).
-- **50 multi-turn STR scenarios** for end-to-end report-writing evaluation.
+- **50 multi-turn STR scenarios**, evaluated under both an **oracle** setting
+  (ground-truth tool results injected each turn) and an **end-to-end (E2E)** setting
+  (the model's own tool outputs propagate across turns).
 - **Controlled bilingual evaluation**: query language (KR/EN) × tool-definition
   language (KR/EN), enabling a 2×2 decomposition of language effects.
-- **28 open-weight models** across families, evaluated with native function calling
-  (vLLM-served; OpenAI/Anthropic providers also supported).
+- **24 open-weight models (28 thinking/non-thinking configurations)** across families,
+  evaluated with native function calling, vLLM-served on 2× NVIDIA H100 80GB GPUs
+  (OpenAI/Anthropic providers also supported).
 - **Deterministic decoding** (temperature 0); case-level bootstrap (10,000 resamples)
   confirms stable rankings (Kendall τ = 0.936, 95% CI [0.900, 0.968]).
 
@@ -59,7 +62,8 @@ _experiments/
   results_en/             — Single-turn results: EN queries, KR tool definitions
   results_kr_tools_en/    — 2×2 ablation arm: KR queries, EN tool definitions
   results_en_tools_en/    — 2×2 ablation arm: EN queries, EN tool definitions
-  results_mt/             — Multi-turn STR results
+  results_mt_oracle/      — Multi-turn STR results: oracle tool-result injection (main setting)
+  results_mt_real/        — Multi-turn STR results: end-to-end execution (errors propagate)
   results_RQ1 … results_RQ5/ — Per-research-question analysis outputs and figures
   bfcl_results/           — BFCL runs for the general-vs-domain comparison (RQ5)
   figures/                — Generated figures
@@ -76,6 +80,16 @@ _experiments/
 [{"question": "...", "expected_tool_call": {"name": "...", "arguments": {...}}}]
 ```
 
+## Installation
+
+```bash
+pip install -r requirements.txt
+```
+
+Hosted-provider evaluation (OpenAI / Anthropic) needs only the analysis and client
+packages; reproducing the open-weight runs additionally requires the vLLM serving
+stack pinned in `requirements.txt`.
+
 ## Running
 
 Run from the repository root with `PYTHONPATH=.`:
@@ -90,9 +104,13 @@ PYTHONPATH=. python -m _experiments.scripts.benchmark \
   --models Qwen/Qwen3-8B --output _experiments/results_en/ \
   --cases-dir benchmarks_en/ --checkpoint --resume
 
-# Multi-turn STR
+# Multi-turn STR — oracle setting (main): ground-truth tool results injected each turn
 PYTHONPATH=. python -m _experiments.scripts.benchmark_multiturn \
-  --models Qwen/Qwen3-8B --output _experiments/results_mt/
+  --models Qwen/Qwen3-8B --setting oracle --output _experiments/results_mt_oracle/
+
+# Multi-turn STR — end-to-end setting: the model's own tool outputs propagate
+PYTHONPATH=. python -m _experiments.scripts.benchmark_multiturn \
+  --models Qwen/Qwen3-8B --setting real --output _experiments/results_mt_real/
 
 # Full automation across modes (vLLM)
 bash _experiments/scripts/run_master.sh --server 1 --modes kr,en,mt
@@ -110,43 +128,61 @@ metrics, and statistics are in the paper and under `_experiments/results_*`.
 
 - **RQ1 — Tool discrimination.** Tool-hit accuracy does **not** scale monotonically
   with model size: mid- and small-sized models (e.g., Mistral-Small-24B,
-  Ministral-3-3B) outperform larger ones (e.g., Llama-3.3-70B). Failures concentrate
-  on near-duplicate tools rather than being random.
+  Ministral-3-3B) outperform larger ones (e.g., Llama-3.3-70B). Wrong-tool errors are
+  structured — concentrated on near-duplicate tools (e.g., account-profile vs
+  receiving-account-profile) — rather than random.
 - **RQ2 — Regulatory reporting.** The Regulatory Reporting subdomain is the **weakest**
-  (mean tool hit ≈ 0.58 vs. 0.78–0.83 for the other subdomains) and the most variable
-  across models. Its failures stem from **not engaging the regulatory tool** — failing
-  to call it at all, or calling a generic query/analysis tool in its place — rather than
-  from wrong parameter values.
+  (mean tool hit ≈ 0.58 vs. 0.79–0.83 for the other subdomains; an average gap of about
+  24.7 percentage points against ordinary analysis tools). Its failures stem from **not
+  engaging the regulatory tool**: STR-field validation fails almost entirely by no-call,
+  CTR-candidate detection by wrong-tool fallback to a generic transaction query, and FIU
+  reference lookup by keyword-mapping errors (correct tool, wrong search keyword).
 - **RQ3 — Multi-turn STR.** Single-turn skill does not transfer to multi-turn STR
-  completion; multi-turn rankings differ substantially from single-turn rankings.
+  completion, and multi-turn rankings differ substantially from single-turn rankings.
+  Even under the favorable **oracle** setting, the per-turn hit rate collapses by roughly
+  27 percentage points at the STR-writing/reporting turn; **end-to-end** execution
+  amplifies the errors further (mean scenario completion drops from .173 to .062).
+  Multi-turn completion correlates with context carry-over accuracy (Spearman ρ = 0.73).
 - **RQ4 — Bilingual robustness.** With tool definitions fixed in Korean, Korean queries
-  are on average **+2.5pp** over English, but the direction flips for some families
-  (e.g., the Korean-specialized Kanana favors English). Query-language and
-  tool-definition-language effects are of similar magnitude with weak interaction.
-- **RQ5 — Generalization gap.** General function-calling benchmark rank (BFCL, on the
-  14 models common to both) and model size do **not** predict AML — especially
-  Regulatory Reporting — performance. Finance-oriented fine-tuning helps most in the
-  regulation- and detection-heavy subdomains.
+  are generally stronger than English queries, but the magnitude varies substantially
+  across model families; switching tool definitions from Korean to English does not
+  consistently close the gap. Query-language and tool-definition-language effects are of
+  similar magnitude with weak interaction.
+- **RQ5 — Generalization gap.** General function-calling rank does **not** predict AML
+  tool use: among the 10 overlapping (BFCL top-ranked) models, the rank correlation is
+  weak and not significant (Spearman ρ = 0.333, p = 0.347). Model size and specialization
+  labels are likewise unreliable predictors; finance-oriented fine-tuning helps most in
+  the regulation- and detection-heavy subdomains.
 
 ## Evaluation metrics
 
-**Single-turn.** Primary tool hit `h` (correct primary tool), required-tool recall `r`,
-precision `p` (false-positive control), parameter accuracy `a` (key–value match on
-correctly selected tools), and output-schema validity `o`. The composite score weights
-these as defined in the paper.
+**Single-turn.** Tool hit `h` (correct primary tool selected; the primary metric),
+required-tool recall `r`, precision `p` (false-positive control), parameter accuracy
+`a` (key–value constraints on correctly selected tools), and order score `o` (LCS-based
+call-order consistency for multi-tool cases). Parser failures score zero; a correct
+abstention on an irrelevant or underspecified query counts as a successful refusal.
 
-**Multi-turn STR.** Per-turn tool hit (`h̄`), context accuracy (consistency across
-turns), and scenario completion rate (fraction of scenarios whose required tool calls
-are all completed).
+**Multi-turn STR.** Per-turn tool hit `h̄` and parameter accuracy `ā` (scenario-level
+means), and scenario completion rate `c` (fraction of scenarios in which every turn
+achieves `h = 1`). Context carry-over accuracy is reported as a state-tracking
+diagnostic.
+
+**STR generation quality.** Over scenarios whose ground truth includes a `generate_STR`
+turn, we report the production rate (fraction that actually invoke `generate_STR`) and,
+for produced drafts, a deterministic evidence check over required-field completeness,
+evidence grounding (factual slots supported by prior tool outputs), regulatory
+terminology use, and unsupported-fact rate, combined into an overall score. Under the
+penalized setting, a scenario without an STR scores zero on every quality axis.
 
 ## Citation
 
 ```bibtex
 @inproceedings{lim2026starbench,
   title     = {STAR-Bench: A Benchmark for Anti-Money Laundering Agents Under Financial Regulation},
-  author    = {Lim, Seonkyu and Hong, Gwangui and Tae, Inwoo and Baek, Jonghyuk and
-               Kim, Jingu and Choi, Jeongwhan and Lee, Jaehoon and Yoo, Hangyeol and
-               Cheong, Jaeyoung and Lee, Yongjae and Kim, Min-Soo and Lim, KyungTae},
+  author    = {Lim, Seonkyu and Hong, Gwangui and Tae, Inwoo and Hwang, Inje and
+               Baek, Jonghyuk and Kim, Jingu and Choi, Jeongwhan and Lee, Jaehoon and
+               Yoo, Hangyeol and Cheong, Jaeyoung and Lee, Yongjae and Kim, Min-Soo and
+               Lim, KyungTae},
   booktitle = {IEEE International Conference on Data Mining (ICDM)},
   year      = {2026}
 }
