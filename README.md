@@ -39,11 +39,11 @@ single-turn tool calling.
 
 ### Case composition (single-turn, 1,258 cases)
 
-| Difficulty | Call type | Intent |
+| Difficulty | Call type | Category |
 |---|---|---|
-| Easy: 673 | Single-tool (22 tools): 1,133 | Tool-required: 1,099 |
-| Medium: 412 | Multi-tool (1): 100 | Abstain (irrelevant query): 159 |
-| Hard: 173 | Missing-parameter (1): 25 | |
+| Easy: 673 | Tool-required: 1,099 | Single-tool: 1,133 |
+| Medium: 412 | Abstain (irrelevant query): 159 | Multi-tool: 100 |
+| Hard: 173 | | Missing-parameter: 25 |
 
 Difficulty reflects two independent factors: semantic ambiguity between
 similar-function tools, and information completeness of the query (missing-parameter
@@ -146,8 +146,7 @@ metrics, and statistics are in the paper and under `_experiments/results_*`.
 - **RQ4 — Bilingual robustness.** With tool definitions fixed in Korean, Korean queries
   are generally stronger than English queries, but the magnitude varies substantially
   across model families; switching tool definitions from Korean to English does not
-  consistently close the gap. Query-language and tool-definition-language effects are of
-  similar magnitude with weak interaction.
+  consistently close the gap.
 - **RQ5 — Generalization gap.** General function-calling rank does **not** predict AML
   tool use: among the 10 overlapping (BFCL top-ranked) models, the rank correlation is
   weak and not significant (Spearman ρ = 0.333, p = 0.347). Model size and specialization
