@@ -204,9 +204,11 @@ def fig_turnwise_line():
     # per-turn value labels (1 decimal): rising turns above, drop turns below the marker
     for i, tn in enumerate(turns):
         above = i < 3
+        ha = "left" if i == 0 else "center"   # T1 left-align to clear the y-axis
+        xoff = 2 if i == 0 else 0
         ax.annotate(f"{mean[i]:.1f}%", (tn, mean[i]),
-                    textcoords="offset points", xytext=(0, 7 if above else -8),
-                    ha="center", va="bottom" if above else "top",
+                    textcoords="offset points", xytext=(xoff, 7 if above else -8),
+                    ha=ha, va="bottom" if above else "top",
                     fontsize=6, color="#2A7F79")
     # annotate the drop into the synthesis/validation turn in percentage points
     ax.annotate("", xy=(4, mean[3]), xytext=(3, mean[2]),
