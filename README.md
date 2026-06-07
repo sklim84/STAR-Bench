@@ -21,7 +21,7 @@ single-turn tool calling.
 - **Controlled bilingual evaluation**: query language (KR/EN) × tool-definition
   language (KR/EN), enabling a 2×2 decomposition of language effects.
 - **24 open-weight models (28 thinking/non-thinking configurations)** across families,
-  evaluated with native function calling, vLLM-served on 2× NVIDIA H100 80GB GPUs
+  evaluated with native function calling, vLLM-served on NVIDIA H100 80GB GPUs
   (OpenAI/Anthropic providers also supported).
 - **Deterministic decoding** (temperature 0); case-level bootstrap (10,000 resamples)
   confirms stable rankings (Kendall τ = 0.936, 95% CI [0.900, 0.968]).
