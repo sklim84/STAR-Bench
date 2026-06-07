@@ -207,8 +207,7 @@ def fig_turnwise_line():
         ax.annotate(f"{mean[i]:.1f}%", (tn, mean[i]),
                     textcoords="offset points", xytext=(0, 7 if above else -8),
                     ha="center", va="bottom" if above else "top",
-                    fontsize=6, color="#2A7F79",
-                    bbox=dict(boxstyle="round,pad=0.12", fc="white", ec="none", alpha=0.75))
+                    fontsize=6, color="#2A7F79")
     # annotate the drop into the synthesis/validation turn in percentage points
     ax.annotate("", xy=(4, mean[3]), xytext=(3, mean[2]),
                 arrowprops=dict(arrowstyle="->", color="#555555", lw=1.2))
