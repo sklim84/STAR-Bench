@@ -214,7 +214,7 @@ def fig_turnwise_line():
     ax.yaxis.set_major_formatter(mticker.PercentFormatter())
     ax.tick_params(axis="y", labelsize=7.5)
     ax.set_xlabel("Turn", fontsize=8.5)
-    ax.set_ylabel("Tool hit rate", fontsize=8.5)
+    ax.set_ylabel("Tool hit ($h$)", fontsize=8.5)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.legend(fontsize=6.5, loc="lower left", frameon=True, framealpha=0.9,
