@@ -127,6 +127,21 @@ Full per-model tables, metrics, and statistics are in the paper and under
 `_experiments/results_*`; the analysis outputs behind each finding below are grouped
 under `results_RQ1`–`results_RQ5`.
 
+| Model | Single-turn `h` | Multi-turn `h̄` | Completion `c` |
+|---|:---:|:---:|:---:|
+| Gemma-4-31B | .914 | .722 | .040 |
+| Qwen3.6-27B | .910 | .719 | .020 |
+| Mistral-Small-24B | .883 | .845 | .220 |
+| xLAM-2-70B | .828 | .812 | .160 |
+| Llama-3.3-70B | .808 | .798 | .060 |
+| Kanana-2-Think | .718 | .857 | .240 |
+
+Representative models — single-turn tool hit `h`, multi-turn mean tool hit `h̄`, and
+scenario completion `c` (the full 28-configuration table is in the paper). Single-turn
+leaders (Gemma-4-31B, Qwen3.6-27B) rank near the bottom on multi-turn completion, while
+Kanana-2-Think inverts this, illustrating that single-turn skill does not imply workflow
+readiness. Reproduce with `bash _experiments/scripts/run_master.sh --server 1 --modes kr,mt`.
+
 - **Tool operation.** Tool-hit accuracy does **not** scale monotonically
   with model size: mid- and small-sized models (e.g., Mistral-Small-24B,
   Ministral-3-3B) outperform larger ones (e.g., Llama-3.3-70B). Wrong-tool errors are
