@@ -27,6 +27,13 @@ FORCE_RERUN=""          # 1이면 --force-rerun 추가 (체크포인트 캐시 �
 HF_TOKEN="${HF_TOKEN:-}"
 PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 
+# 실행 가능한 AML 도구는 동반 저장소 STAR-Bench-Web에 있다. 리졸버가
+# $STAR_BENCH_WEB 또는 형제 디렉터리에서 찾는다 (_experiments/scripts/_platform.py).
+WEB_ROOT="$(cd "$PROJECT_ROOT" && python3 -m _experiments.scripts._platform 2>/dev/null)" || {
+    (cd "$PROJECT_ROOT" && python3 -m _experiments.scripts._platform >/dev/null)
+    exit 1
+}
+
 # 결과 디렉토리 (mode별)
 RESULT_KR="$PROJECT_ROOT/_experiments/results_kr"
 RESULT_EN="$PROJECT_ROOT/_experiments/results_en"
@@ -324,7 +331,7 @@ run_benchmark() {
     [ -n "$MAX_TOTAL" ] && extra_env="$extra_env BENCH_MAX_TOTAL=$MAX_TOTAL"
     [ "${BENCH_SKIP_THINK:-0}" = "1" ] && extra_env="$extra_env BENCH_SKIP_THINK=1"
     ts "  벤치마크: $extra_env PYTHONPATH=$PROJECT_ROOT python -m $BENCH_MODULE --models $model_names --output $OUTPUT_DIR $BENCH_EXTRA"
-    env $extra_env PYTHONPATH="$PROJECT_ROOT:${PYTHONPATH:-}" python -m "$BENCH_MODULE" --models $model_names --output "$OUTPUT_DIR" $BENCH_EXTRA
+    env $extra_env PYTHONPATH="$PROJECT_ROOT:${WEB_ROOT:-}:${PYTHONPATH:-}" python -m "$BENCH_MODULE" --models $model_names --output "$OUTPUT_DIR" $BENCH_EXTRA
 }
 
 # 메인 루프
