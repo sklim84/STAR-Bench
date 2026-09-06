@@ -116,7 +116,7 @@ def main():
                                    for k, v in mode_count.items()},
         'miscalled_tools_distribution': dict(sorted(miscall_dist.items(), key=lambda x: -x[1])),
         'per_model_breakdown': {k: dict(v) for k, v in per_model.items()},
-        'note': 'validate_str_fields = 3 cases × 29 models = 87 call units. '
+        'note': 'validate_str_fields = 3 cases × 28 models = 84 call units. '
                 'no_call: 모델이 어떤 도구도 호출하지 않음. '
                 'correct_only: validate_str_fields만 호출. '
                 'correct_with_extra: validate_str_fields + 추가 도구. '
