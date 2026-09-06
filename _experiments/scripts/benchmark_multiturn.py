@@ -46,6 +46,11 @@ from openai import OpenAI
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(_PROJECT_ROOT))
 
+# 실행 가능한 AML 도구(src.features.agent)는 동반 저장소 STAR-Bench-Web에 있다.
+from _experiments.scripts._platform import ensure_platform_on_path  # noqa: E402
+
+ensure_platform_on_path()
+
 from src.features.agent import (  # noqa: E402
     SYSTEM_PROMPT,
     TOOLS,

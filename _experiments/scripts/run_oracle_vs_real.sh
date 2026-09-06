@@ -19,8 +19,11 @@
 set -uo pipefail
 
 SB="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"          # star-bench root
-WS="$(cd "$SB/.." && pwd)"                                         # umbrella root
-WEB="$WS/star-bench-web"
+# 도구 계층 저장소는 리졸버가 찾는다 ($STAR_BENCH_WEB 또는 형제 디렉터리).
+WEB="$(cd "$SB" && python3 -m _experiments.scripts._platform 2>/dev/null)" || {
+    (cd "$SB" && python3 -m _experiments.scripts._platform >/dev/null)  # 안내를 stderr로
+    exit 1
+}
 PYPATH="$SB:$WEB:${PYTHONPATH:-}"                                  # APPEND (never replace)
 
 ORACLE_OUT="_experiments/results_mt_oracle/"

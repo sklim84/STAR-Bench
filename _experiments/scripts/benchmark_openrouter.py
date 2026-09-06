@@ -32,11 +32,11 @@ from pathlib import Path
 _THIS = Path(__file__).resolve()
 _STARBENCH_ROOT = _THIS.parent.parent.parent              # star-bench/
 sys.path.insert(0, str(_STARBENCH_ROOT))                  # PYTHONPATH 보강
-# benchmark.py는 웹 플랫폼 패키지(src.features.agent)에 의존한다(cross-repo).
-# 분리된 star-bench-web을 path에 추가해 자족적으로 import되게 한다.
-_WEB_ROOT = _STARBENCH_ROOT.parent / "star-bench-web"
-if (_WEB_ROOT / "src").is_dir():
-    sys.path.insert(0, str(_WEB_ROOT))
+# 이 스크립트는 웹 플랫폼 패키지(src.features.agent)에 의존한다(cross-repo).
+# 디렉터리명을 하드코딩하지 않고 리졸버로 찾는다 — _platform 참조.
+from _experiments.scripts._platform import ensure_platform_on_path  # noqa: E402
+
+ensure_platform_on_path()
 
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
