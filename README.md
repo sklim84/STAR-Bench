@@ -95,8 +95,8 @@ both live in the companion platform repository. Clone the two side by side:
 git clone <STAR-Bench URL>      STAR-Bench
 git clone <STAR-Bench-Web URL>  STAR-Bench-Web    # executable tools + data
 
-pip install -r STAR-Bench/requirements.txt          # evaluation engine
-pip install -r STAR-Bench-Web/requirements.txt      # tool layer (DuckDB, XGBoost, …)
+pip install -r STAR-Bench/requirements.txt                # evaluation engine
+pip install -r STAR-Bench-Web/requirements-tools.txt      # tool layer (DuckDB, XGBoost, …)
 ```
 
 The runners locate the platform automatically when the two repositories are
@@ -109,10 +109,12 @@ export STAR_BENCH_WEB=/path/to/STAR-Bench-Web
 Either way the resolution is handled by `_experiments/scripts/_platform.py`, which
 fails with setup instructions rather than a bare `ModuleNotFoundError`.
 
-One-time platform setup (see the platform README) builds the DuckDB view from the
-released Parquet on first run; the trained fraud detector used by `predict_fraud`
-ships with the platform and can be regenerated with
-`python -m scripts.train_detector`.
+`requirements-tools.txt` is the tool layer without the platform's Streamlit UI;
+use the platform's full `requirements.txt` only if you also want to run its app.
+
+No further setup is needed: the DuckDB view is built from the released Parquet on
+first run, and the trained fraud detector used by `predict_fraud` ships with the
+platform (regenerate it with `python -m scripts.train_detector` if you prefer).
 
 Hosted-provider evaluation (OpenAI / Anthropic) needs only the analysis and client
 packages; reproducing the open-weight runs additionally requires the vLLM serving
