@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """RQ2: 규제 출력 카테고리 vs 일반 분석 카테고리 평균 h 격차.
 
-규제 출력 그룹 (3): validate_str_fields, lookup_fiu_reference_types, detect_ctr_candidates
+규제 출력 그룹 (4): validate_str_fields, lookup_fiu_reference_types, detect_ctr_candidates,
+                     get_aml_glossary
 일반 분석 그룹: 그 외 모든 도구별 카테고리 (multi_tool/missing_parameters 제외)
+
+코호트는 본문과 같은 28-모델 세트다 (다른 분석 스크립트와 동일한 EXCLUDE_MODELS).
 
 본문 인용 포인트:
 - 두 그룹 평균 h 격차의 정량적 크기
@@ -21,10 +24,24 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Regulatory Reporting subdomain (single-turn tools; generate_str is multi-turn only)
 REGULATORY = {'detect_ctr_candidates', 'lookup_fiu_reference_types', 'validate_str_fields', 'get_aml_glossary'}
-EXCLUDE = {'multi_tool', 'missing_parameters'}  # 합성 카테고리 제외
+# 카테고리 제외: 단일 도구가 아닌 합성 케이스군.
+# (이름이 비슷한 EXCLUDE_MODELS와 혼동하지 말 것 — 아래는 카테고리, 그쪽은 모델이다.)
+EXCLUDE_CATEGORIES = {'multi_tool', 'missing_parameters'}
 
-# 본문 29-모델 세트 (regen_size_vs_performance.py와 동일)
-TARGET_MODELS = {
+# 28-모델 코호트: 구세대/중간크기 변형 8개 + 중복 Kanana 릴리스 제외.
+# generate_new_figures.py, bootstrap_ranking_stability.py, RQ3_error_propagation.py,
+# RQ_oracle_vs_real.py, RQ_str_generation_quality.py, generate_reg_vs_analysis.py,
+# generate_fig4_scatter_v2.py 와 동일한 집합이며, 본문의 "28 configurations"와 맞는다.
+EXCLUDE_MODELS = {
+    "Qwen_Qwen3-30B-A3B-Instruct-2507", "Qwen_Qwen3-4B-Instruct-2507",
+    "Qwen_Qwen3-8B", "Qwen_Qwen3_5-9B__nothink", "Qwen_Qwen3_5-9B__think",
+    "Salesforce_Llama-xLAM-2-8b-fc-r", "Salesforce_xLAM-2-1b-fc-r",
+    "Salesforce_xLAM-2-32b-fc-r",
+    "kakaocorp/kanana-2-30b-a3b-instruct-2601",
+}
+
+# 표기 정규화 전용 (safe 파일명 -> 논문 표기). 코호트 선택에는 쓰지 않는다.
+_CANONICAL_NAMES = {
     "skt/A.X-4.0-Light", "skt/A.X-4.0",
     "LGAI-EXAONE/EXAONE-4.0-1.2B", "LGAI-EXAONE/EXAONE-4.0-32B",
     "kakaocorp/kanana-2-30b-a3b-instruct",
@@ -45,7 +62,7 @@ TARGET_MODELS = {
     "NousResearch/Hermes-3-Llama-3.1-8B",
 }
 
-_SAFE_TO_CANONICAL = {m.replace('/', '_').replace('.', '_'): m for m in TARGET_MODELS}
+_SAFE_TO_CANONICAL = {m.replace('/', '_').replace('.', '_'): m for m in _CANONICAL_NAMES}
 
 
 def _canonicalize(m: str) -> str:
@@ -58,12 +75,15 @@ def main():
 
     for f in files:
         d = json.load(f.open())
-        model = _canonicalize(d['model'])
-        if model not in TARGET_MODELS:
+        raw = d['model']
+        if raw in EXCLUDE_MODELS:
+            continue
+        model = _canonicalize(raw)
+        if model in EXCLUDE_MODELS:
             continue
         reg_h = []; ana_h = []; per_cat = {}
         for cat_name, cat in d.get('by_category', {}).items():
-            if cat_name in EXCLUDE:
+            if cat_name in EXCLUDE_CATEGORIES:
                 continue
             agg = cat.get('aggregated', {})
             h = agg.get('primary_tool_hit_rate', 0.0)

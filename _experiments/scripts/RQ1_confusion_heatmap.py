@@ -23,7 +23,20 @@ EVAL_DIR = os.path.join(os.path.dirname(__file__), "../../_experiments/results_k
 OUT_DIR  = os.path.join(os.path.dirname(__file__), "../../_experiments/results_RQ1/")
 os.makedirs(OUT_DIR, exist_ok=True)
 
-TARGET_MODELS = {
+# 28-모델 코호트: 구세대/중간크기 변형 8개 + 중복 Kanana 릴리스 제외.
+# 다른 분석 스크립트(generate_new_figures, bootstrap_ranking_stability, RQ3,
+# RQ_oracle_vs_real, RQ_str_generation_quality, generate_reg_vs_analysis,
+# generate_fig4_scatter_v2)와 동일하며, 본문의 "28 configurations"와 맞는다.
+EXCLUDE_MODELS = {
+    "Qwen_Qwen3-30B-A3B-Instruct-2507", "Qwen_Qwen3-4B-Instruct-2507",
+    "Qwen_Qwen3-8B", "Qwen_Qwen3_5-9B__nothink", "Qwen_Qwen3_5-9B__think",
+    "Salesforce_Llama-xLAM-2-8b-fc-r", "Salesforce_xLAM-2-1b-fc-r",
+    "Salesforce_xLAM-2-32b-fc-r",
+    "kakaocorp/kanana-2-30b-a3b-instruct-2601",
+}
+
+# 표기 정규화 전용 (safe 파일명 -> 논문 표기). 코호트 선택에는 쓰지 않는다.
+_CANONICAL_NAMES = {
     "skt/A.X-4.0-Light", "skt/A.X-4.0",
     "LGAI-EXAONE/EXAONE-4.0-1.2B", "LGAI-EXAONE/EXAONE-4.0-32B",
     "kakaocorp/kanana-2-30b-a3b-instruct",
@@ -45,7 +58,7 @@ TARGET_MODELS = {
 }
 
 
-_SAFE_TO_CANONICAL = {m.replace('/', '_').replace('.', '_'): m for m in TARGET_MODELS}
+_SAFE_TO_CANONICAL = {m.replace('/', '_').replace('.', '_'): m for m in _CANONICAL_NAMES}
 def _canonicalize(m): return _SAFE_TO_CANONICAL.get(m, m)
 # ── 집계: expected_tool -> called_tool -> count ───────────────────────────────
 conf = defaultdict(lambda: defaultdict(int))
@@ -56,7 +69,7 @@ for fn in sorted(os.listdir(EVAL_DIR)):
         continue
     with open(os.path.join(EVAL_DIR, fn)) as f:
         d = json.load(f)
-    if _canonicalize(d["model"]) not in TARGET_MODELS:
+    if d["model"] in EXCLUDE_MODELS or _canonicalize(d["model"]) in EXCLUDE_MODELS:
         continue
     n_models_used += 1
     for cat, cat_data in d["by_category"].items():

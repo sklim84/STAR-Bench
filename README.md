@@ -178,9 +178,12 @@ readiness. Reproduce with `bash _experiments/scripts/run_master.sh --server 1 --
   structured — concentrated on near-duplicate tools (e.g., account-profile vs
   receiving-account-profile) — rather than random.
 - **Regulatory reportability gap.** The Regulatory Reporting subdomain is the **weakest**
-  (mean tool hit ≈ 0.58 vs. 0.79–0.83 for the other subdomains; an average gap of about
-  24.7 percentage points against ordinary analysis tools). Its failures stem from **not
-  engaging the regulatory tool**: STR-field validation fails almost entirely by no-call,
+  (mean tool hit ≈ 0.56 vs. 0.77–0.84 for the other subdomains; an average gap of about
+  24.7 percentage points against ordinary analysis tools). The subdomain is the four
+  reporting tools — CTR-candidate detection, STR-field validation, FIU reference-type
+  lookup, and the AML glossary — averaged per tool over the 28-configuration cohort.
+  Its failures stem from **not engaging the regulatory tool**: STR-field validation
+  fails almost entirely by no-call,
   CTR-candidate detection by wrong-tool fallback to a generic transaction query, and FIU
   reference lookup by keyword-mapping errors (correct tool, wrong search keyword).
 - **Workflow readiness.** Single-turn skill does not transfer to multi-turn STR
