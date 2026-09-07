@@ -92,7 +92,7 @@ KANANA_CHAT_TEMPLATE="$PROJECT_ROOT/_experiments/scripts/kanana_tool_calls/kanan
 # ===========================================================================
 
 # Server 1 GPU 0 (6 모델)
-# - Gemma-4-E4B-it: 공식 multimodal + gemma4 parser (vLLM 0.19 + transformers 5.7.0 필수)
+# - Gemma-4-E4B-it: 공식 multimodal + gemma4 parser (vLLM 0.20.1 + transformers 5.7.0 필요 — requirements.txt 핀)
 # - Phi-4-mini: phi4_mini_json + vLLM 공식 jinja chat template (functools[...] 형식 강제)
 # - DragonLLM/Llama-Open-Finance-8B: A안 swap (Llama-Fin-8b 0/5 대체, smoke 3/5 score 0.78)
 GROUP_S1_A=(
