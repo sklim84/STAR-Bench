@@ -236,6 +236,12 @@ GROUP_RERUN_KANANA_THINK=(
     "kanana-2-think|kakaocorp/kanana-2-30b-a3b-thinking-2601|functionary_v3_llama_31||kakaocorp/kanana-2-30b-a3b-thinking-2601"
 )
 
+# RQ5: 금융특화 비교의 base 모델. fig:rq5의 general_8b를 각 금융 모델의 자기
+# base로 바꾸기 위한 것으로, Llama-Open-Finance-8B와 같은 parser·옵션을 쓴다.
+GROUP_RQ5_LLAMA_BASE=(
+    "llama31-8b|meta-llama/Llama-3.1-8B-Instruct|llama3_json|--gpu-memory-utilization 0.85|meta-llama/Llama-3.1-8B-Instruct"
+)
+
 case "$GROUP" in
     # Server 1
     S1_A) MODELS=("${GROUP_S1_A[@]}") ;;
@@ -264,6 +270,7 @@ case "$GROUP" in
     RERUN_GPT_OSS_120B) MODELS=("${GROUP_RERUN_GPT_OSS_120B[@]}") ;;
     RERUN_KANANA_INST_2601) MODELS=("${GROUP_RERUN_KANANA_INST_2601[@]}") ;;
     RERUN_KANANA_THINK) MODELS=("${GROUP_RERUN_KANANA_THINK[@]}") ;;
+    RQ5_LLAMA_BASE) MODELS=("${GROUP_RQ5_LLAMA_BASE[@]}") ;;
     *)     echo "Unknown group: $GROUP"; exit 1 ;;
 esac
 
