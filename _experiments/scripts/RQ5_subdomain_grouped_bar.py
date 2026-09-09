@@ -1,5 +1,8 @@
-"""RQ5 신규 figure: Finance SFT / 한국어 특화 / 범용 8B 모델군의
+"""RQ5 figure: Finance SFT / 각자의 base / 한국어 특화 / 소형 범용 모델군의
 서브도메인별 h 비교 grouped bar chart.
+
+finance 바로 옆에 base_8b 를 두어 같은 base 에서 금융 SFT 가 무엇을 바꾸는지
+막대 두 개로 바로 읽히게 한다.
 
 출력: _experiments/results_RQ5/fig_subdomain_grouped_bar.{pdf,png}
 """
@@ -35,19 +38,19 @@ group_means = spec["group_means"]
 
 # ── 표시할 그룹 4개 ──────────────────────────────────────────────────────────
 # finance / specialized_kr / general_8b / small_general
-GROUP_ORDER  = ["finance", "specialized_kr", "general_8b", "small_general"]
+GROUP_ORDER  = ["finance", "base_8b", "specialized_kr", "small_general"]
 GROUP_LABELS = {
     "finance":       "Finance SFT (8B)",
+    "base_8b":       "Their base (8B)",
     "specialized_kr": "KR-specialized (small, ≤7B)",
-    "general_8b":    "General 8B",
     "small_general": "General (small, ≤3B)",
 }
 import matplotlib as _mpl  # viridis 계열(blue->green->yellow)로 통일 — 색감 통일 샘플
 _VIR = _mpl.colormaps["viridis"]
 GROUP_COLORS = {
     "finance":        _VIR(0.25),   # blue
-    "specialized_kr": _VIR(0.50),   # teal
-    "general_8b":     _VIR(0.72),   # green
+    "base_8b":        _VIR(0.50),   # teal — finance 바로 옆에 두어 짝 비교가 보이게 한다
+    "specialized_kr": _VIR(0.72),   # green
     "small_general":  _VIR(0.90),   # yellow-green
 }
 

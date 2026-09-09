@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
-"""RQ5: DragonLLM Finance vs 동급 8B 범용 모델 sub-domain별 비교.
+"""RQ5: DragonLLM Finance vs 각 모델의 base sub-domain별 비교.
 
-DragonLLM 2종(Llama-Open-Finance-8B, Qwen-Open-Finance-R-8B)과
-동급 크기의 범용 모델(Hermes-3-Llama-3.1-8B 등)의 5 sub-domain 평균 h 비교.
+DragonLLM 2종(Llama-Open-Finance-8B, Qwen-Open-Finance-R-8B)을 각자의 base
+모델과 비교한다. base 는 Llama-3.1-8B-Instruct 와 Qwen3-8B 이므로, 그룹 평균의
+차이가 곧 "금융 SFT 가 base 대비 무엇을 바꾸는가"가 된다.
+
+비교 대상을 임의의 동급 범용 모델로 두면 그 하나의 성질에 결론이 좌우된다.
+직전까지 쓰던 Hermes-3-8B 는 규제보고 h 가 .3517 로 다른 8B 모델(.58~.70)의
+절반 수준이라 금융 SFT 의 우위를 과대평가했다.
 
 본문 인용 포인트:
 - 금융 도메인 SFT가 AML FC에 우위인가, 또는 FC instruction tuning을 희생시키는가
@@ -45,8 +50,11 @@ TARGET_MODELS = {
         'DragonLLM/Llama-Open-Finance-8B',
         'DragonLLM/Qwen-Open-Finance-R-8B',
     ],
-    'general_8b': [
-        'NousResearch/Hermes-3-Llama-3.1-8B',  # Llama-3.1-8B base
+    # 각 finance 모델의 base. 짝: Llama-Open-Finance-8B <- Llama-3.1-8B-Instruct,
+    # Qwen-Open-Finance-R-8B <- Qwen3-8B.
+    'base_8b': [
+        'meta-llama/Llama-3.1-8B-Instruct',
+        'Qwen/Qwen3-8B',
     ],
     'small_general': [
         'meta-llama/Llama-3.2-3B-Instruct',
@@ -113,14 +121,14 @@ def main():
         'group_definitions': {k: v for k, v in TARGET_MODELS.items()},
         'per_model_subdomain_h': by_model,
         'group_means': grp_means,
-        'finance_vs_general_8b_diff': {
-            sd: round((grp_means['finance'][sd] or 0) - (grp_means['general_8b'][sd] or 0), 4)
+        'finance_vs_base_8b_diff': {
+            sd: round((grp_means['finance'][sd] or 0) - (grp_means['base_8b'][sd] or 0), 4)
             for sd in SUB_DOMAINS
             if grp_means.get('finance', {}).get(sd) is not None
-            and grp_means.get('general_8b', {}).get(sd) is not None
+            and grp_means.get('base_8b', {}).get(sd) is not None
         },
-        'note': '동급 8B 비교: DragonLLM Finance 2종 vs Hermes-3-8B (Llama-3.1-8B base 동일). '
-                'positive diff = Finance가 우위, negative = 일반 8B가 우위.',
+        'note': 'base 대비 비교: DragonLLM Finance 2종 vs 각자의 base(Llama-3.1-8B-Instruct, Qwen3-8B). '
+                'positive diff = 금융 SFT가 base보다 높음, negative = base가 높음.',
     }
     json.dump(summary, (OUT_DIR / 'finance_specialization.json').open('w'),
               ensure_ascii=False, indent=2)
@@ -130,10 +138,10 @@ def main():
         sds = list(SUB_DOMAINS.keys())
         fig, ax = plt.subplots(figsize=(8, 3.6))
         x = np.arange(len(sds))
-        groups = ['finance', 'general_8b', 'small_general', 'specialized_kr']
-        # main.tex 팔레트 일관 (Finance SFT=빨강, 8B 일반=파랑, 소형=회색, KR 특화=청록)
+        groups = ['finance', 'base_8b', 'small_general', 'specialized_kr']
+        # main.tex 팔레트 일관 (Finance SFT=빨강, base=파랑, 소형=회색, KR 특화=청록)
         colors = ['#E15759', '#4E79A7', '#BAB0AC', '#76B7B2']
-        labels = ['Finance SFT (8B)', 'General 8B', 'Small general (1-4B)', 'KR-specialized small']
+        labels = ['Finance SFT (8B)', 'Base (8B)', 'Small general (1-4B)', 'KR-specialized small']
         w = 0.2
         for i, (g, c, lab) in enumerate(zip(groups, colors, labels)):
             vals = [grp_means.get(g, {}).get(sd) or 0 for sd in sds]
@@ -152,8 +160,8 @@ def main():
         print(f'plot failed: {e}')
 
     print(f'[RQ5-finance] completed: {len(flat_targets)} target models')
-    if 'finance_vs_general_8b_diff' in summary:
-        print(f'  finance vs general_8b diff: {summary["finance_vs_general_8b_diff"]}')
+    if 'finance_vs_base_8b_diff' in summary:
+        print(f'  finance vs base_8b diff: {summary["finance_vs_base_8b_diff"]}')
 
 if __name__ == '__main__':
     main()
