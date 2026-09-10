@@ -98,7 +98,7 @@ KANANA_CHAT_TEMPLATE="$PROJECT_ROOT/_experiments/scripts/kanana_tool_calls/kanan
 GROUP_S1_A=(
     "qwen35-4b|Qwen/Qwen3.5-4B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-4B"
     "gemma-4-e4b|google/gemma-4-E4B-it|gemma4||google/gemma-4-E4B-it"
-    "phi-4-mini|microsoft/Phi-4-mini-instruct|phi4_mini_json|--chat-template $PROJECT_ROOT/_experiments/scripts/tool_chat_template_phi4_mini.jinja|microsoft/Phi-4-mini-instruct"
+    "phi-4-mini|microsoft/Phi-4-mini-instruct|phi4_mini_json|--chat-template $PROJECT_ROOT/_experiments/scripts/tool_chat_template_phi4_mini.jinja --max-model-len 12288|microsoft/Phi-4-mini-instruct"
     "xlam-3b|Salesforce/xLAM-2-3b-fc-r|xlam||Salesforce/xLAM-2-3b-fc-r"
     "exaone-1.2b|LGAI-EXAONE/EXAONE-4.0-1.2B|hermes|--trust-remote-code|LGAI-EXAONE/EXAONE-4.0-1.2B"
     "dragon-llama-fin|DragonLLM/Llama-Open-Finance-8B|llama3_json||DragonLLM/Llama-Open-Finance-8B"

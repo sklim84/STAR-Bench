@@ -78,7 +78,7 @@ SINGLE=(
   "exaone-1.2b|LGAI-EXAONE/EXAONE-4.0-1.2B|hermes|--trust-remote-code|0"
   "xlam-3b|Salesforce/xLAM-2-3b-fc-r|xlam||0"
   "ministral-3b|mistralai/Ministral-3-3B-Instruct-2512|mistral||0"
-  "phi-4-mini|microsoft/Phi-4-mini-instruct|phi4_mini_json|--chat-template @PHI@|0"
+  "phi-4-mini|microsoft/Phi-4-mini-instruct|phi4_mini_json|--chat-template @PHI@ --max-model-len 12288|0"
   "qwen35-4b|Qwen/Qwen3.5-4B|qwen3_coder|--reasoning-parser qwen3|0"
   "gemma-4-e4b|google/gemma-4-E4B-it|gemma4||0"
   "gpt-oss-20b|openai/gpt-oss-20b|openai|--reasoning-parser openai_gptoss|0"
