@@ -3,14 +3,14 @@
   "model_id": "google/gemma-4-31B-it",
   "provider": "vllm",
   "think": null,
-  "timestamp": "2026-06-06T23:25:17.737979",
+  "timestamp": "2026-09-10T07:47:30.702629",
   "total_scenarios": 50,
-  "total_elapsed_sec": 428.37,
+  "total_elapsed_sec": 363.65,
   "overall": {
-    "avg_score": 0.6529,
-    "avg_tool_hit": 0.7217,
-    "avg_param_accuracy": 0.5841,
-    "context_accuracy": 0.447,
+    "avg_score": 0.6567,
+    "avg_tool_hit": 0.725,
+    "avg_param_accuracy": 0.5884,
+    "context_accuracy": 0.4924,
     "scenario_complete_rate": 0.04
   },
   "by_sub_category": {
@@ -21,12 +21,12 @@
     },
     "missing_parameter": {
       "count": 14,
-      "avg_score": 0.5387,
+      "avg_score": 0.5369,
       "complete_rate": 0.0
     },
     "long_context": {
       "count": 22,
-      "avg_score": 0.6741,
+      "avg_score": 0.6839,
       "complete_rate": 0.0455
     }
   },
@@ -52,7 +52,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 78432 ORDER BY date DESC, time_slot DESC LIMIT 50"
               },
-              "_id": "chatcmpl-tool-96ebc01ecd4bb7df"
+              "_id": "chatcmpl-tool-91d0fc149638f740"
             }
           ]
         },
@@ -74,7 +74,7 @@
                 "sender_bank": 134,
                 "time_slot": 0
               },
-              "_id": "chatcmpl-tool-bce186f46eb94b63"
+              "_id": "chatcmpl-tool-ba8ddb23f268cd29"
             },
             {
               "name": "predict_fraud",
@@ -86,7 +86,7 @@
                 "sender_bank": 134,
                 "time_slot": 3
               },
-              "_id": "chatcmpl-tool-b1f50333ce0812fd"
+              "_id": "chatcmpl-tool-90018df6cf6c49ee"
             },
             {
               "name": "predict_fraud",
@@ -98,7 +98,7 @@
                 "sender_bank": 134,
                 "time_slot": 0
               },
-              "_id": "chatcmpl-tool-83d4a8f46b21e002"
+              "_id": "chatcmpl-tool-8e6464c7eff9ad74"
             }
           ]
         },
@@ -116,7 +116,7 @@
                 "account_id": 78432,
                 "hops": 2
               },
-              "_id": "chatcmpl-tool-a1b5da73ac94f349"
+              "_id": "chatcmpl-tool-87fec8f3bbac7763"
             }
           ]
         },
@@ -137,7 +137,7 @@
                 ],
                 "fraud_probability": 0.91,
                 "fraud_type": "갑작스러운 거래패턴의 변화",
-                "summary": "Account 78432 exhibited highly suspicious activity between 2024-10-01 and 2024-12-31. The account conducted 45 transactions totaling 892 million KRW, with a high fraud ratio of 26.67% (12 cases). Specifically, multiple high-value transfers (approx. 47-49 million KRW each) were made during late-night/early-morning hours (time_slot 0, 3) using mobile and bulk transfer channels. The XGBoost model predicted a fraud probability of 91%, citing transaction amount and time slot as primary risk factors. The network analysis shows connections to 8 different accounts, indicating a pattern of dispersing large sums of money, which is consistent with 'Sudden Change in Transaction Pattern' (Fraud Type 1).",
+                "summary": "Account 78432 exhibited highly suspicious activity between 2024-10-01 and 2024-12-31. The account conducted 45 transactions totaling 892 million KRW, with a high fraud ratio of 26.67% (12 cases). Specifically, multiple high-value transfers (approx. 47-49 million KRW each) were made during late-night/early-morning hours (time_slot 0, 3) using mobile and bulk transfer channels. The XGBoost model predicted a fraud probability of 91%, primarily driven by the transaction amount and time slot. The network analysis shows connections to 8 different accounts, indicating a pattern of dispersing large sums of money, which is consistent with 'Sudden Change in Transaction Pattern' (Fraud Type 1).",
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud",
@@ -182,7 +182,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-a34388b16661dc22"
+              "_id": "chatcmpl-tool-b2ec14a2ec59347c"
             }
           ]
         }
@@ -192,7 +192,7 @@
       "avg_param_accuracy": 0.65,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 21.58
+      "elapsed_sec": 17.96
     },
     {
       "id": "mt_str_002",
@@ -224,21 +224,21 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 55201 AND date LIKE '202412%' ORDER BY date, time_slot"
               },
-              "_id": "chatcmpl-tool-a28a612561274a52"
+              "_id": "chatcmpl-tool-90070aca15119d29"
             },
             {
               "name": "get_account_profile",
               "arguments": {
                 "account_id": 55201
               },
-              "_id": "chatcmpl-tool-a04fa788b55f86cf"
+              "_id": "chatcmpl-tool-a365269505e128e9"
             },
             {
               "name": "score_account_risk",
               "arguments": {
                 "account_id": 55201
               },
-              "_id": "chatcmpl-tool-91b0f7eb05009f93"
+              "_id": "chatcmpl-tool-98b293983e6bdd4a"
             },
             {
               "name": "detect_aml_patterns",
@@ -246,7 +246,7 @@
                 "account_id": 55201,
                 "pattern_type": "risk_score"
               },
-              "_id": "chatcmpl-tool-82d6c87318bd4916"
+              "_id": "chatcmpl-tool-8052b9550db75174"
             }
           ]
         },
@@ -268,7 +268,7 @@
                 "sender_bank": 128,
                 "time_slot": 12
               },
-              "_id": "chatcmpl-tool-8415f07f4cd8dcac"
+              "_id": "chatcmpl-tool-895ac7003edee4ec"
             },
             {
               "name": "predict_fraud",
@@ -280,7 +280,7 @@
                 "sender_bank": 128,
                 "time_slot": 15
               },
-              "_id": "chatcmpl-tool-80bac02a1364663d"
+              "_id": "chatcmpl-tool-a17e1964d6f67689"
             }
           ]
         },
@@ -299,7 +299,7 @@
                 "date_to": 20241231,
                 "mode": "structuring"
               },
-              "_id": "chatcmpl-tool-a98e7cedacffbcb7"
+              "_id": "chatcmpl-tool-92ba598d43ef1235"
             },
             {
               "name": "detect_ctr_candidates",
@@ -308,18 +308,26 @@
                 "date_to": 20241231,
                 "mode": "high_value"
               },
-              "_id": "chatcmpl-tool-83a3643b93463e89"
+              "_id": "chatcmpl-tool-962118533e743ca9"
             }
           ]
         },
         {
           "turn": 5,
           "tool_hit": 1.0,
-          "param_accuracy": 0.75,
-          "score": 0.875,
+          "param_accuracy": 0.5,
+          "score": 0.75,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "account_id": 55201,
+                "pattern_type": "risk_score"
+              },
+              "_id": "chatcmpl-tool-93b2574eebbf6eb4"
+            },
             {
               "name": "generate_str",
               "arguments": {
@@ -328,11 +336,12 @@
                 ],
                 "fraud_probability": 0.84,
                 "fraud_type": "다중거래의 동시요청",
-                "summary": "출금계좌 55201번은 2024년 12월 중 총 23건의 거래(총액 1.87억 원)를 수행하였으며, 그 중 6건이 이상거래로 탐지되었습니다. 특히 12월 3일(3,000만 원)과 12월 5일(2,800만 원)에 발생한 고액 거래는 '다중거래의 동시 요청(fraud_type 4)' 패턴을 보이며, 모델 예측 결과 이상거래 확률이 84%로 매우 높게 나타났습니다. 또한, 단일 거래 금액이 1,000만 원을 초과하는 고액 현금 거래(CTR 대상)가 반복적으로 발생하여 자금 세탁의 의심이 강하므로 보고합니다.",
+                "summary": "Account 55201 exhibited highly suspicious activity in December 2024, characterized by multiple high-value transfers (e.g., 30M KRW and 28M KRW) that were flagged as 'Concurrent Multiple Transactions' (Fraud Type 4). The XGBoost model predicts a high fraud probability of 84%. Additionally, the account triggered CTR high-value transaction alerts with single transfers exceeding 10M KRW. The pattern of rapid, high-amount transfers to different counterparties suggests potential layering or fund dispersion typical of money laundering.",
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud",
-                  "detect_ctr_candidates"
+                  "detect_ctr_candidates",
+                  "detect_aml_patterns"
                 ],
                 "transactions": [
                   {
@@ -361,17 +370,17 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-bcb5ed79f6eaebad"
+              "_id": "chatcmpl-tool-9cb2ce4bb914961d"
             }
           ]
         }
       ],
-      "avg_score": 0.775,
+      "avg_score": 0.75,
       "avg_tool_hit": 1.0,
-      "avg_param_accuracy": 0.55,
+      "avg_param_accuracy": 0.5,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 30.76
+      "elapsed_sec": 24.14
     },
     {
       "id": "mt_str_003",
@@ -394,7 +403,7 @@
               "arguments": {
                 "bank_id": 134
               },
-              "_id": "chatcmpl-tool-87c56654efb830a3"
+              "_id": "chatcmpl-tool-b2d28acb1c546099"
             }
           ]
         },
@@ -411,7 +420,7 @@
               "arguments": {
                 "account_id": 78432
               },
-              "_id": "chatcmpl-tool-82f6219911b14452"
+              "_id": "chatcmpl-tool-819f7b7eac70fc84"
             }
           ]
         },
@@ -428,7 +437,7 @@
               "arguments": {
                 "account_id": 78432
               },
-              "_id": "chatcmpl-tool-9242ad0fd00334f2"
+              "_id": "chatcmpl-tool-8f0c3b0b49ae89b5"
             }
           ]
         },
@@ -445,7 +454,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 78432 AND is_fraud = 1 AND fraud_type = 3"
               },
-              "_id": "chatcmpl-tool-b85f594fc8e444c0"
+              "_id": "chatcmpl-tool-9ca06c23427542a1"
             }
           ]
         }
@@ -455,7 +464,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 3.05
+      "elapsed_sec": 2.45
     },
     {
       "id": "mt_str_004",
@@ -478,7 +487,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 91205 OR receiver_acc = 91205 ORDER BY date, time_slot"
               },
-              "_id": "chatcmpl-tool-ba56472bfe79c3fe"
+              "_id": "chatcmpl-tool-8ded4cab749aab9d"
             }
           ]
         },
@@ -496,21 +505,21 @@
                 "account_id": 91205,
                 "direction": "outbound"
               },
-              "_id": "chatcmpl-tool-a826df555b937b2c"
+              "_id": "chatcmpl-tool-9d889646c7898692"
             },
             {
               "name": "get_account_profile",
               "arguments": {
                 "account_id": 91205
               },
-              "_id": "chatcmpl-tool-b4b94e9b8c411ae2"
+              "_id": "chatcmpl-tool-bab02cd564a3ff32"
             },
             {
               "name": "score_account_risk",
               "arguments": {
                 "account_id": 91205
               },
-              "_id": "chatcmpl-tool-972ffcf2ad8aea5d"
+              "_id": "chatcmpl-tool-a34c4e142b32df1a"
             }
           ]
         },
@@ -528,7 +537,7 @@
                 "account_id": 91205,
                 "hops": 2
               },
-              "_id": "chatcmpl-tool-af9dcd06e07715d6"
+              "_id": "chatcmpl-tool-860befa44d23ff60"
             }
           ]
         },
@@ -545,7 +554,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 91205 AND fraud_type = 3"
               },
-              "_id": "chatcmpl-tool-a37b0280da3afabe"
+              "_id": "chatcmpl-tool-8e15ebd1468d23af"
             },
             {
               "name": "predict_fraud",
@@ -557,7 +566,7 @@
                 "sender_bank": 147,
                 "time_slot": 21
               },
-              "_id": "chatcmpl-tool-9734a9dcfddbb304"
+              "_id": "chatcmpl-tool-99fc3d1d1fb85ff7"
             },
             {
               "name": "detect_aml_patterns",
@@ -565,7 +574,7 @@
                 "account_id": 91205,
                 "pattern_type": "risk_score"
               },
-              "_id": "chatcmpl-tool-baf6afb8d86c494a"
+              "_id": "chatcmpl-tool-841ca9a6e54bc1a1"
             }
           ]
         }
@@ -575,7 +584,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 7.01
+      "elapsed_sec": 5.75
     },
     {
       "id": "mt_str_005",
@@ -598,7 +607,7 @@
               "arguments": {
                 "fraud_type": 5
               },
-              "_id": "chatcmpl-tool-95adbacc2d704128"
+              "_id": "chatcmpl-tool-b9539db3affd5941"
             }
           ]
         },
@@ -615,7 +624,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_bank = 88 AND fraud_type = 5 LIMIT 100"
               },
-              "_id": "chatcmpl-tool-867db6626456eec6"
+              "_id": "chatcmpl-tool-8957cf596234cb8e"
             }
           ]
         },
@@ -637,7 +646,7 @@
                 "sender_bank": 128,
                 "time_slot": 0
               },
-              "_id": "chatcmpl-tool-9cf217daae335858"
+              "_id": "chatcmpl-tool-9178104d59471b62"
             }
           ]
         },
@@ -657,7 +666,7 @@
                 ],
                 "fraud_probability": 0.76,
                 "fraud_type": "거액 입금 후 당일/익일 인출",
-                "summary": "금융회사 88에서 발생한 '거액 입금 후 당일 인출' 패턴의 이상거래를 분석하였습니다. 특히 샘플 거래(계좌 12045)의 경우, 심야 시간대(time_slot 0)에 모바일 뱅킹을 통해 9,800,000원의 고액이 이체되었으며, 모델 예측 결과 이상거래 확률이 76%로 매우 높게 나타났습니다. 이는 전형적인 자금 세탁의 'Layering' 또는 'Integration' 단계에서 나타나는 급격한 자금 이동 패턴과 일치하며, 불법 도박 자금의 세탁 가능성이 농후하여 STR 보고를 수행합니다.",
+                "summary": "금융회사 88에서 발생한 '거액 입금 후 당일 인출' 패턴의 이상거래를 분석하였습니다. 분석 결과, 특정 계좌(예: 12045)에서 심야 시간대(time_slot 0)에 모바일 뱅킹을 통해 고액의 자금이 이동하는 패턴이 확인되었습니다. 특히 XGBoost 모델 예측 결과 76%의 높은 이상거래 확률이 도출되었으며, 이는 전형적인 자금 세탁의 'Layering' 또는 'Integration' 단계에서 나타나는 급격한 자금 이동 특성과 일치합니다. 해당 거래는 단기간 내에 자금을 분산시키거나 인출하려는 의도가 다분한 것으로 판단되어 STR을 보고합니다.",
                 "tools_used": [
                   "get_fraud_type_summary",
                   "query_transactions",
@@ -678,7 +687,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-b6d9b710543ce01f"
+              "_id": "chatcmpl-tool-86ee3ce3f03d187e"
             }
           ]
         }
@@ -688,7 +697,7 @@
       "avg_param_accuracy": 0.6875,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 11.26
+      "elapsed_sec": 9.35
     },
     {
       "id": "mt_str_006",
@@ -711,7 +720,7 @@
               "arguments": {
                 "keyword": "nighttime"
               },
-              "_id": "chatcmpl-tool-835fdfa8e6672f82"
+              "_id": "chatcmpl-tool-a90b4c317e90eb45"
             }
           ]
         },
@@ -728,7 +737,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 33201 OR receiver_acc = 33201 ORDER BY date DESC, time_slot DESC"
               },
-              "_id": "chatcmpl-tool-b291d5c28d2b97e8"
+              "_id": "chatcmpl-tool-8512ce56c4c05dc0"
             }
           ]
         },
@@ -745,7 +754,7 @@
               "arguments": {
                 "account_id": 33201
               },
-              "_id": "chatcmpl-tool-9ca14cde17889a17"
+              "_id": "chatcmpl-tool-9f0ee3cb59d7621c"
             }
           ]
         },
@@ -762,7 +771,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 33201 AND (time_slot = 0 OR time_slot = 3 OR time_slot = 6 OR time_slot = 21)"
               },
-              "_id": "chatcmpl-tool-85abcdb40495cae2"
+              "_id": "chatcmpl-tool-854796326face9fb"
             },
             {
               "name": "predict_fraud",
@@ -774,7 +783,7 @@
                 "sender_bank": 151,
                 "time_slot": 12
               },
-              "_id": "chatcmpl-tool-9fca07a97c6df701"
+              "_id": "chatcmpl-tool-8ffa3642e8d6fc28"
             },
             {
               "name": "detect_aml_patterns",
@@ -782,7 +791,7 @@
                 "account_id": 33201,
                 "pattern_type": "risk_score"
               },
-              "_id": "chatcmpl-tool-a26856b898007a57"
+              "_id": "chatcmpl-tool-97e151f20fe905e5"
             }
           ]
         }
@@ -792,7 +801,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 6.36
+      "elapsed_sec": 5.2
     },
     {
       "id": "mt_str_007",
@@ -813,7 +822,7 @@
             {
               "name": "analyze_channel_risk",
               "arguments": {},
-              "_id": "chatcmpl-tool-b69f8994687a8c5b"
+              "_id": "chatcmpl-tool-bba67ad5da831306"
             }
           ]
         },
@@ -830,7 +839,7 @@
               "arguments": {
                 "sql": "SELECT sender_acc, COUNT(*) as tx_count, SUM(amount) as total_amount \nFROM hofinet \nWHERE media_type = 1 AND time_slot = 0 AND is_fraud = 1 \nGROUP BY sender_acc \nORDER BY tx_count DESC, total_amount DESC \nLIMIT 10"
               },
-              "_id": "chatcmpl-tool-bc88da14df166be4"
+              "_id": "chatcmpl-tool-b2405f3676f5504e"
             }
           ]
         },
@@ -852,7 +861,7 @@
                 "sender_bank": 134,
                 "time_slot": 0
               },
-              "_id": "chatcmpl-tool-8e8a1175bdcdd565"
+              "_id": "chatcmpl-tool-84d63ca7fae4a679"
             }
           ]
         },
@@ -869,7 +878,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 44892"
               },
-              "_id": "chatcmpl-tool-bfcaf69a8289c55f"
+              "_id": "chatcmpl-tool-90d11ee32753517e"
             }
           ]
         }
@@ -879,7 +888,7 @@
       "avg_param_accuracy": 0.375,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 4.96
+      "elapsed_sec": 4.18
     },
     {
       "id": "mt_str_008",
@@ -900,7 +909,7 @@
             {
               "name": "get_statistics",
               "arguments": {},
-              "_id": "chatcmpl-tool-aa87f978f4f020b0"
+              "_id": "chatcmpl-tool-af2dbafcb64fc5da"
             }
           ]
         },
@@ -918,7 +927,7 @@
                 "sample_size": 1000,
                 "top_k": 20
               },
-              "_id": "chatcmpl-tool-a175b83cf6d6cb3a"
+              "_id": "chatcmpl-tool-a7abc091f0b6817b"
             }
           ]
         },
@@ -940,7 +949,7 @@
                 "sender_bank": 147,
                 "time_slot": 0
               },
-              "_id": "chatcmpl-tool-9958b1e76e0a5ec0"
+              "_id": "chatcmpl-tool-9817cc7d8cb66c55"
             }
           ]
         },
@@ -957,7 +966,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 88231 AND receiver_acc = 445012"
               },
-              "_id": "chatcmpl-tool-bb63bf407bada3f4"
+              "_id": "chatcmpl-tool-b5adc5046f9407ca"
             }
           ]
         }
@@ -967,7 +976,7 @@
       "avg_param_accuracy": 0.25,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 3.76
+      "elapsed_sec": 3.04
     },
     {
       "id": "mt_str_009",
@@ -991,7 +1000,7 @@
                 "limit": 20,
                 "min_transactions": 10
               },
-              "_id": "chatcmpl-tool-925a65bbea206db1"
+              "_id": "chatcmpl-tool-820157bfc28a3701"
             }
           ]
         },
@@ -1008,7 +1017,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_bank = 73 AND receiver_bank = 305 AND is_fraud = 1 LIMIT 100"
               },
-              "_id": "chatcmpl-tool-91a16df21b878aec"
+              "_id": "chatcmpl-tool-8f73ca4f1eef494f"
             }
           ]
         },
@@ -1025,7 +1034,7 @@
               "arguments": {
                 "pattern_type": "layering"
               },
-              "_id": "chatcmpl-tool-96ff36af0486c9ba"
+              "_id": "chatcmpl-tool-9d91b7606bdec2f0"
             }
           ]
         },
@@ -1042,7 +1051,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 55012 AND is_fraud = 1 AND fraud_type = 1"
               },
-              "_id": "chatcmpl-tool-a5a35c84f50c7794"
+              "_id": "chatcmpl-tool-874d74da021194d4"
             }
           ]
         }
@@ -1052,7 +1061,7 @@
       "avg_param_accuracy": 0.6667,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 3.85
+      "elapsed_sec": 3.12
     },
     {
       "id": "mt_str_010",
@@ -1077,7 +1086,7 @@
                 "limit": 20,
                 "min_reactivation_amount": 5000000
               },
-              "_id": "chatcmpl-tool-89f61ed634266b0c"
+              "_id": "chatcmpl-tool-966277f8bd53e76b"
             }
           ]
         },
@@ -1094,7 +1103,7 @@
               "arguments": {
                 "account_id": 77501
               },
-              "_id": "chatcmpl-tool-8a72f528dfce1655"
+              "_id": "chatcmpl-tool-a6e526b789dd5836"
             }
           ]
         },
@@ -1113,14 +1122,14 @@
                 "date_to": 20241228,
                 "mode": "structuring"
               },
-              "_id": "chatcmpl-tool-896529ce0f3335a6"
+              "_id": "chatcmpl-tool-9629a37118b92491"
             },
             {
               "name": "query_transactions",
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 77501 OR receiver_acc = 77501 ORDER BY date, time_slot"
               },
-              "_id": "chatcmpl-tool-b2ab9af9b7ac3695"
+              "_id": "chatcmpl-tool-a34b282692529247"
             }
           ]
         },
@@ -1137,7 +1146,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 77501 OR receiver_acc = 77501 ORDER BY date, time_slot"
               },
-              "_id": "chatcmpl-tool-82d89a5b701db430"
+              "_id": "chatcmpl-tool-82b0684f6d6dde09"
             }
           ]
         }
@@ -1147,7 +1156,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 5.45
+      "elapsed_sec": 4.44
     },
     {
       "id": "mt_str_011",
@@ -1170,7 +1179,7 @@
               "arguments": {
                 "rule_id": "all"
               },
-              "_id": "chatcmpl-tool-b54f3ba493f89b18"
+              "_id": "chatcmpl-tool-bcd1cc0d7823f4a6"
             }
           ]
         },
@@ -1187,7 +1196,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 22801 AND amount = 9900000 AND date BETWEEN '20241201' AND '20241228' ORDER BY date, time_slot"
               },
-              "_id": "chatcmpl-tool-a46ae28893e648c6"
+              "_id": "chatcmpl-tool-96325f0dff8c83ab"
             }
           ]
         },
@@ -1204,7 +1213,7 @@
               "arguments": {
                 "account_id": 22801
               },
-              "_id": "chatcmpl-tool-900bac4344d8a87a"
+              "_id": "chatcmpl-tool-989dc34fba46f723"
             }
           ]
         },
@@ -1221,7 +1230,27 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 22801 AND date BETWEEN '20241201' AND '20241228'"
               },
-              "_id": "chatcmpl-tool-b3f3643c5e8fc37e"
+              "_id": "chatcmpl-tool-ac978eabe12e22bf"
+            },
+            {
+              "name": "predict_fraud",
+              "arguments": {
+                "amount": 9900000,
+                "fund_type": 4,
+                "media_type": 4,
+                "receiver_bank": 134,
+                "sender_bank": 147,
+                "time_slot": 21
+              },
+              "_id": "chatcmpl-tool-b340f683c8079da1"
+            },
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "account_id": 22801,
+                "pattern_type": "risk_score"
+              },
+              "_id": "chatcmpl-tool-94c8d26faf282aa9"
             }
           ]
         }
@@ -1231,7 +1260,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 4.59
+      "elapsed_sec": 5.48
     },
     {
       "id": "mt_str_012",
@@ -1254,7 +1283,7 @@
               "arguments": {
                 "unit": "quarterly"
               },
-              "_id": "chatcmpl-tool-853ff1995562847c"
+              "_id": "chatcmpl-tool-83721e3304bafacc"
             }
           ]
         },
@@ -1274,7 +1303,7 @@
                 "period2_end": 20241231,
                 "period2_start": 20241001
               },
-              "_id": "chatcmpl-tool-aa18384fda5ce58c"
+              "_id": "chatcmpl-tool-94e7734ea3054ce0"
             }
           ]
         },
@@ -1291,7 +1320,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE date >= '20241001' AND date <= '20241231' AND is_fraud = 1 LIMIT 100"
               },
-              "_id": "chatcmpl-tool-ab85a5efad466f0c"
+              "_id": "chatcmpl-tool-be274d11004443a8"
             }
           ]
         },
@@ -1308,7 +1337,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE date >= 20241001 AND date <= 20241231 AND is_fraud = 1 AND fraud_type = 7 LIMIT 10"
               },
-              "_id": "chatcmpl-tool-abdc721f54a860af"
+              "_id": "chatcmpl-tool-b93a4b8c7cc846f3"
             }
           ]
         }
@@ -1318,7 +1347,7 @@
       "avg_param_accuracy": 0.6667,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 5.46
+      "elapsed_sec": 4.47
     },
     {
       "id": "mt_str_013",
@@ -1341,7 +1370,7 @@
               "arguments": {
                 "account_id": 445012
               },
-              "_id": "chatcmpl-tool-9ce136190c293fa8"
+              "_id": "chatcmpl-tool-b35a622d4ddc14d5"
             }
           ]
         },
@@ -1359,22 +1388,22 @@
                 "account_id": 445012,
                 "direction": "inbound"
               },
-              "_id": "chatcmpl-tool-bb2aff0e77ab97da"
+              "_id": "chatcmpl-tool-abc1bd771a0f3f9d"
             },
             {
               "name": "detect_aml_patterns",
               "arguments": {
                 "account_id": 445012,
-                "pattern_type": "funnel"
+                "pattern_type": "risk_score"
               },
-              "_id": "chatcmpl-tool-940bd140df5f3e39"
+              "_id": "chatcmpl-tool-a63dee23238d73d7"
             },
             {
-              "name": "score_account_risk",
+              "name": "query_transactions",
               "arguments": {
-                "account_id": 445012
+                "sql": "SELECT * FROM hofinet WHERE receiver_acc = 445012 ORDER BY date DESC, time_slot DESC"
               },
-              "_id": "chatcmpl-tool-9d2e37c70a819e4e"
+              "_id": "chatcmpl-tool-9e0a331358c74e0c"
             }
           ]
         },
@@ -1392,7 +1421,7 @@
                 "account_id": 445012,
                 "pattern_type": "ring"
               },
-              "_id": "chatcmpl-tool-be20744712469874"
+              "_id": "chatcmpl-tool-9e102b20c040d7cc"
             }
           ]
         },
@@ -1409,7 +1438,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 445012 OR receiver_acc = 445012 ORDER BY date DESC, time_slot DESC LIMIT 100"
               },
-              "_id": "chatcmpl-tool-b6c7ed02c593ad48"
+              "_id": "chatcmpl-tool-b686190f8affae67"
             }
           ]
         }
@@ -1419,7 +1448,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 5.24
+      "elapsed_sec": 4.65
     },
     {
       "id": "mt_str_014",
@@ -1442,7 +1471,7 @@
               "arguments": {
                 "fraud_type": 1
               },
-              "_id": "chatcmpl-tool-92d58f3d1af97591"
+              "_id": "chatcmpl-tool-a30db00c43c3cd13"
             }
           ]
         },
@@ -1459,21 +1488,21 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 67301 AND date >= '20241001' AND date <= '20241231' ORDER BY date, time_slot"
               },
-              "_id": "chatcmpl-tool-8a0f3e2e9df31515"
+              "_id": "chatcmpl-tool-98b6ee8f2b1a5cc9"
             },
             {
               "name": "get_account_profile",
               "arguments": {
                 "account_id": 67301
               },
-              "_id": "chatcmpl-tool-9cabcb767a3595af"
+              "_id": "chatcmpl-tool-99bf8e26bc1b08d7"
             },
             {
               "name": "score_account_risk",
               "arguments": {
                 "account_id": 67301
               },
-              "_id": "chatcmpl-tool-954a5236c929c0a9"
+              "_id": "chatcmpl-tool-aa86a26875e458e0"
             }
           ]
         },
@@ -1495,7 +1524,7 @@
                 "sender_bank": 151,
                 "time_slot": 3
               },
-              "_id": "chatcmpl-tool-bd029b6d5d575646"
+              "_id": "chatcmpl-tool-ac60fbe4d6a392ae"
             }
           ]
         },
@@ -1512,7 +1541,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 67301 AND date >= '20241001' AND date <= '20241231'"
               },
-              "_id": "chatcmpl-tool-89518a0094d754dc"
+              "_id": "chatcmpl-tool-818047334013e592"
             },
             {
               "name": "detect_aml_patterns",
@@ -1520,7 +1549,7 @@
                 "account_id": 67301,
                 "pattern_type": "risk_score"
               },
-              "_id": "chatcmpl-tool-a8a65e0e4a1c08e3"
+              "_id": "chatcmpl-tool-ab158858773fefa5"
             }
           ]
         }
@@ -1530,7 +1559,7 @@
       "avg_param_accuracy": 0.25,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 6.97
+      "elapsed_sec": 5.77
     },
     {
       "id": "mt_str_015",
@@ -1553,28 +1582,28 @@
               "arguments": {
                 "account_id": 42105
               },
-              "_id": "chatcmpl-tool-a0f3ecdc76160974"
+              "_id": "chatcmpl-tool-8b5e47b345d84c96"
             },
             {
               "name": "get_receiving_account_profile",
               "arguments": {
                 "account_id": 42105
               },
-              "_id": "chatcmpl-tool-bf4ec712bfc84070"
+              "_id": "chatcmpl-tool-836078e3ef5039a0"
             },
             {
               "name": "score_account_risk",
               "arguments": {
                 "account_id": 42105
               },
-              "_id": "chatcmpl-tool-a867956e1386043b"
+              "_id": "chatcmpl-tool-8ccce587daacba10"
             },
             {
               "name": "analyze_network",
               "arguments": {
                 "account_id": 42105
               },
-              "_id": "chatcmpl-tool-93882f1bf9d3a836"
+              "_id": "chatcmpl-tool-829f29fb14a0ab7a"
             }
           ]
         },
@@ -1591,7 +1620,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 42105 OR receiver_acc = 42105 ORDER BY date DESC, time_slot DESC"
               },
-              "_id": "chatcmpl-tool-b0a28342c293ba34"
+              "_id": "chatcmpl-tool-9ba955091d321b43"
             }
           ]
         },
@@ -1613,7 +1642,7 @@
                 "sender_bank": 134,
                 "time_slot": 12
               },
-              "_id": "chatcmpl-tool-9e76882fcbcdbf45"
+              "_id": "chatcmpl-tool-854e7d5a6eb399bb"
             }
           ]
         },
@@ -1630,7 +1659,7 @@
               "arguments": {
                 "keyword": "다중거래"
               },
-              "_id": "chatcmpl-tool-812c5be241d806b2"
+              "_id": "chatcmpl-tool-99f8b46644e56623"
             },
             {
               "name": "detect_aml_patterns",
@@ -1638,14 +1667,14 @@
                 "account_id": 42105,
                 "pattern_type": "risk_score"
               },
-              "_id": "chatcmpl-tool-868f12e77d785a30"
+              "_id": "chatcmpl-tool-aade41bff9547b83"
             },
             {
               "name": "query_transactions",
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 42105"
               },
-              "_id": "chatcmpl-tool-914214e5047db36e"
+              "_id": "chatcmpl-tool-8213f15faed835b6"
             }
           ]
         },
@@ -1666,7 +1695,7 @@
                 ],
                 "fraud_probability": 0.92,
                 "fraud_type": "다중거래의 동시요청",
-                "summary": "계좌 42105에서 단기간 내에 고액의 자금이 특정 계좌(771089)로 집중적으로 이체되는 패턴이 발견되었습니다. 특히 매체구분이 '건별이체(5)'이며, 동일한 시간대에 다중 거래가 요청된 점, 그리고 AI 모델 예측 결과 사기 확률이 92%로 매우 높게 나타난 점으로 보아 보이스피싱 등 전화 사기에 의한 자금 유출로 강력히 의심됩니다. FIU 참고유형 B-08(전화·문자를 이용한 사기 관련 자금 이동) 및 B-11(피해자 계좌에서 급격한 자금 유출) 패턴과 일치합니다.",
+                "summary": "계좌 42105에서 단기간 내에 고액의 자금이 특정 계좌(771089)로 집중적으로 이체되는 패턴이 발견되었습니다. 특히 매체구분이 'Per-transaction Transfer(5)'이며, XGBoost 모델 예측 결과 사기 확률이 92%로 매우 높게 나타났습니다. 이는 FIU 참고유형 B-08(전화·문자를 이용한 사기 관련 자금 이동) 및 B-11(피해자 계좌에서 급격한 자금 유출)과 일치하는 전형적인 보이스피싱 및 다중거래 동시 요청 패턴으로 판단되어 STR을 보고합니다.",
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud",
@@ -1699,7 +1728,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-b19e6e1fffb57bcc"
+              "_id": "chatcmpl-tool-b921127a7b4248a4"
             }
           ]
         }
@@ -1709,7 +1738,7 @@
       "avg_param_accuracy": 0.35,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 17.62
+      "elapsed_sec": 14.2
     },
     {
       "id": "mt_str_016",
@@ -1732,7 +1761,7 @@
               "arguments": {
                 "bank_id": 205
               },
-              "_id": "chatcmpl-tool-af80b172fbd643e8"
+              "_id": "chatcmpl-tool-ac50ac98cbf74174"
             }
           ]
         },
@@ -1750,7 +1779,7 @@
                 "bank_id": 205,
                 "fraud_type": 2
               },
-              "_id": "chatcmpl-tool-806a6becf901153e"
+              "_id": "chatcmpl-tool-b8d93f780ec3d642"
             }
           ]
         },
@@ -1767,7 +1796,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_bank = 205 AND fraud_type = 2 AND date >= '20241001' AND date <= '20241231' LIMIT 100"
               },
-              "_id": "chatcmpl-tool-813fb040e97bbe4f"
+              "_id": "chatcmpl-tool-9612ffed190412e0"
             }
           ]
         },
@@ -1784,21 +1813,21 @@
               "arguments": {
                 "account_id": 44201
               },
-              "_id": "chatcmpl-tool-98aab3db0f0ef795"
+              "_id": "chatcmpl-tool-a8da6856827f033c"
             },
             {
               "name": "get_account_profile",
               "arguments": {
                 "account_id": 44201
               },
-              "_id": "chatcmpl-tool-8b995f8f9691e9fe"
+              "_id": "chatcmpl-tool-acab81c029e607d1"
             },
             {
               "name": "analyze_network",
               "arguments": {
                 "account_id": 44201
               },
-              "_id": "chatcmpl-tool-b7b561dff6ffc6c4"
+              "_id": "chatcmpl-tool-b2150a9d42be1f37"
             }
           ]
         },
@@ -1813,9 +1842,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_acc = 44201 AND date BETWEEN '20241001' AND '20241231'"
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 44201 AND date >= '20241001' AND date <= '20241231'"
               },
-              "_id": "chatcmpl-tool-9f4a08af3f142133"
+              "_id": "chatcmpl-tool-b4fe47714f5c0c39"
             },
             {
               "name": "predict_fraud",
@@ -1827,7 +1856,7 @@
                 "sender_bank": 151,
                 "time_slot": 9
               },
-              "_id": "chatcmpl-tool-812abc7b0c6e1524"
+              "_id": "chatcmpl-tool-8e349ca597984229"
             },
             {
               "name": "detect_aml_patterns",
@@ -1835,7 +1864,7 @@
                 "account_id": 44201,
                 "pattern_type": "risk_score"
               },
-              "_id": "chatcmpl-tool-9684cf3722e659db"
+              "_id": "chatcmpl-tool-8b4b63feedadebc0"
             }
           ]
         }
@@ -1845,7 +1874,7 @@
       "avg_param_accuracy": 0.55,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 8.24
+      "elapsed_sec": 6.78
     },
     {
       "id": "mt_str_017",
@@ -1869,7 +1898,7 @@
                 "account_id": 55089,
                 "direction": "inbound"
               },
-              "_id": "chatcmpl-tool-a9536c4c96d9c935"
+              "_id": "chatcmpl-tool-b1d1a2fc75363a7d"
             },
             {
               "name": "detect_smurfing_network",
@@ -1877,14 +1906,14 @@
                 "account_id": 55089,
                 "direction": "outbound"
               },
-              "_id": "chatcmpl-tool-a7ebfef61b75c295"
+              "_id": "chatcmpl-tool-8621bfa9c4c86ae0"
             },
             {
               "name": "get_account_profile",
               "arguments": {
                 "account_id": 55089
               },
-              "_id": "chatcmpl-tool-98e912253af82e2c"
+              "_id": "chatcmpl-tool-9721c6caa1f9127e"
             }
           ]
         },
@@ -1902,7 +1931,7 @@
                 "account_id": 55089,
                 "direction": "inbound"
               },
-              "_id": "chatcmpl-tool-9a315e45661bd587"
+              "_id": "chatcmpl-tool-8091020c45a1f88a"
             }
           ]
         },
@@ -1920,7 +1949,7 @@
                 "account_id": 55089,
                 "pattern_type": "funnel"
               },
-              "_id": "chatcmpl-tool-821d331240fba72a"
+              "_id": "chatcmpl-tool-ac45317dd179ffff"
             }
           ]
         },
@@ -1937,7 +1966,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE receiver_acc = 55089 OR sender_acc = 55089 ORDER BY date, time_slot"
               },
-              "_id": "chatcmpl-tool-ab58f61786e17d4a"
+              "_id": "chatcmpl-tool-811110d566b70c47"
             }
           ]
         }
@@ -1947,7 +1976,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 5.06
+      "elapsed_sec": 4.12
     },
     {
       "id": "mt_str_018",
@@ -1971,7 +2000,7 @@
                 "limit": 20,
                 "min_transactions": 10
               },
-              "_id": "chatcmpl-tool-a1d719fdac265301"
+              "_id": "chatcmpl-tool-a09c879410289d3c"
             }
           ]
         },
@@ -1991,14 +2020,14 @@
                 "limit": 20,
                 "min_transactions": 1
               },
-              "_id": "chatcmpl-tool-9699030f7a5f1a04"
+              "_id": "chatcmpl-tool-85846f94e9656076"
             },
             {
               "name": "query_transactions",
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_bank = 73 AND receiver_bank = 305 ORDER BY amount DESC LIMIT 100"
               },
-              "_id": "chatcmpl-tool-8260eac7bdc7450f"
+              "_id": "chatcmpl-tool-a1a8e46ed8277e72"
             }
           ]
         },
@@ -2015,7 +2044,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_bank = 73 AND receiver_bank = 305 AND is_fraud = 1 LIMIT 100"
               },
-              "_id": "chatcmpl-tool-8acff3c5bac6f27d"
+              "_id": "chatcmpl-tool-b3eb651e635fae62"
             }
           ]
         },
@@ -2032,7 +2061,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_bank = 73 AND receiver_bank = 305 AND is_fraud = 1 AND fraud_type = 1"
               },
-              "_id": "chatcmpl-tool-a10b0aad51707d14"
+              "_id": "chatcmpl-tool-99806afcf92ceceb"
             }
           ]
         }
@@ -2042,7 +2071,7 @@
       "avg_param_accuracy": 0.4167,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 5.81
+      "elapsed_sec": 4.73
     },
     {
       "id": "mt_str_019",
@@ -2065,7 +2094,7 @@
               "arguments": {
                 "rule_id": "all"
               },
-              "_id": "chatcmpl-tool-b8c818983b801111"
+              "_id": "chatcmpl-tool-913f27e876fd7afb"
             }
           ]
         },
@@ -2082,14 +2111,14 @@
               "arguments": {
                 "account_id": 88923
               },
-              "_id": "chatcmpl-tool-b2fdbe2f3dfa35a0"
+              "_id": "chatcmpl-tool-a05588c5be2173b2"
             },
             {
               "name": "query_transactions",
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 88923 OR receiver_acc = 88923 ORDER BY date DESC, time_slot DESC"
               },
-              "_id": "chatcmpl-tool-9da835afa2f30078"
+              "_id": "chatcmpl-tool-8674883b8eb4f699"
             }
           ]
         },
@@ -2106,21 +2135,14 @@
               "arguments": {
                 "account_id": 88923
               },
-              "_id": "chatcmpl-tool-9785068cfd67ebe5"
-            },
-            {
-              "name": "score_account_risk",
-              "arguments": {
-                "account_id": 88923
-              },
-              "_id": "chatcmpl-tool-a649465607555941"
+              "_id": "chatcmpl-tool-8a7311c71ad0d766"
             },
             {
               "name": "query_transactions",
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 88923 OR receiver_acc = 88923 ORDER BY date DESC, time_slot DESC"
               },
-              "_id": "chatcmpl-tool-a8eaba76f1a8071b"
+              "_id": "chatcmpl-tool-b2a9f4693523aaf5"
             }
           ]
         },
@@ -2142,7 +2164,7 @@
                 "sender_bank": 128,
                 "time_slot": 0
               },
-              "_id": "chatcmpl-tool-9b55c9b06076c203"
+              "_id": "chatcmpl-tool-863eaf595000e967"
             },
             {
               "name": "detect_aml_patterns",
@@ -2150,14 +2172,7 @@
                 "account_id": 88923,
                 "pattern_type": "risk_score"
               },
-              "_id": "chatcmpl-tool-96cb31162eb68b3c"
-            },
-            {
-              "name": "query_transactions",
-              "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_acc = 88923"
-              },
-              "_id": "chatcmpl-tool-99502e2341abee1a"
+              "_id": "chatcmpl-tool-ae115f953a330d55"
             }
           ]
         },
@@ -2177,7 +2192,7 @@
                 ],
                 "fraud_probability": 0.93,
                 "fraud_type": "다중거래의 동시요청",
-                "summary": "Account 88923 exhibited highly suspicious activity, specifically a large-scale transaction of 75,000,000 KRW occurring during the late-night/early-morning time slot (time_slot 0). This transaction was flagged by monitoring rule R001 (Nighttime Bulk Transaction) and categorized as fraud type 4 (Concurrent Multiple Transactions). The XGBoost fraud prediction model indicates a very high probability of fraud (93%), with the transaction amount and time slot being the primary risk drivers. The pattern of high-value transfers during non-business hours is consistent with money laundering layering or rapid fund movement typical of mule accounts.",
+                "summary": "Account 88923 exhibited highly suspicious activity, triggering a monitoring alert (R001: Nighttime Bulk Transaction). A significant transaction of 75,000,000 KRW was executed during the midnight time slot (time_slot 0) on 2024-12-18. The fraud prediction model indicates a very high probability of fraud (93%), with the transaction amount and time slot being the primary risk drivers. The pattern of large-sum transfers during non-business hours suggests a high risk of money laundering or unauthorized fund movement.",
                 "tools_used": [
                   "detect_monitoring_alerts",
                   "query_transactions",
@@ -2198,7 +2213,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-a0de8c58153c911f"
+              "_id": "chatcmpl-tool-88960d8aed9e8427"
             }
           ]
         }
@@ -2208,7 +2223,7 @@
       "avg_param_accuracy": 0.55,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 15.25
+      "elapsed_sec": 11.23
     },
     {
       "id": "mt_str_020",
@@ -2238,7 +2253,7 @@
             {
               "name": "get_statistics",
               "arguments": {},
-              "_id": "chatcmpl-tool-8985aa670fca5deb"
+              "_id": "chatcmpl-tool-92c0061341a0873f"
             }
           ]
         },
@@ -2255,7 +2270,7 @@
               "arguments": {
                 "pattern_type": "layering"
               },
-              "_id": "chatcmpl-tool-852eed3b5c5ba067"
+              "_id": "chatcmpl-tool-87e07d64eff2f12f"
             }
           ]
         },
@@ -2272,7 +2287,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 33045 OR receiver_acc = 33045 ORDER BY date, time_slot"
               },
-              "_id": "chatcmpl-tool-b4fb91a587d553cd"
+              "_id": "chatcmpl-tool-880c3dea064b3fde"
             }
           ]
         },
@@ -2289,7 +2304,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 33045 OR receiver_acc = 33045 ORDER BY date, time_slot"
               },
-              "_id": "chatcmpl-tool-a7b5474b906513c6"
+              "_id": "chatcmpl-tool-958edde14535b36a"
             },
             {
               "name": "predict_fraud",
@@ -2301,7 +2316,7 @@
                 "sender_bank": 134,
                 "time_slot": 18
               },
-              "_id": "chatcmpl-tool-8ca0938b97a6524a"
+              "_id": "chatcmpl-tool-b7bfffbd1bebf496"
             }
           ]
         }
@@ -2311,7 +2326,7 @@
       "avg_param_accuracy": 0.4,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 19.61
+      "elapsed_sec": 16.07
     },
     {
       "id": "mt_str_021",
@@ -2334,14 +2349,14 @@
               "arguments": {
                 "mode": "high_value"
               },
-              "_id": "chatcmpl-tool-83a59f13aaa05a6f"
+              "_id": "chatcmpl-tool-a2da64c6e3e5b770"
             },
             {
               "name": "detect_ctr_candidates",
               "arguments": {
                 "mode": "structuring"
               },
-              "_id": "chatcmpl-tool-8d625c0a2172dad3"
+              "_id": "chatcmpl-tool-8a90f3f46f8b086a"
             }
           ]
         },
@@ -2358,7 +2373,7 @@
               "arguments": {
                 "mode": "structuring"
               },
-              "_id": "chatcmpl-tool-9a430b5daca03c3b"
+              "_id": "chatcmpl-tool-82aef9783cdbb9fb"
             }
           ]
         },
@@ -2375,21 +2390,21 @@
               "arguments": {
                 "account_id": 66801
               },
-              "_id": "chatcmpl-tool-af2c3ff4bbece47b"
+              "_id": "chatcmpl-tool-9b44dd6b8dda60ee"
             },
             {
               "name": "get_account_profile",
               "arguments": {
                 "account_id": 66801
               },
-              "_id": "chatcmpl-tool-b170b2fe1924745d"
+              "_id": "chatcmpl-tool-9959b32e609f439a"
             },
             {
               "name": "analyze_network",
               "arguments": {
                 "account_id": 66801
               },
-              "_id": "chatcmpl-tool-932a22871bdb4282"
+              "_id": "chatcmpl-tool-ac2c7b4616977de6"
             }
           ]
         },
@@ -2404,9 +2419,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_acc = 66801 OR receiver_acc = 66801 ORDER BY date DESC, time_slot DESC"
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 66801 OR receiver_acc = 66801 ORDER BY date DESC, time_slot DESC LIMIT 100"
               },
-              "_id": "chatcmpl-tool-8b70104eff60d896"
+              "_id": "chatcmpl-tool-852ae6fcb8554dde"
             },
             {
               "name": "predict_fraud",
@@ -2416,9 +2431,17 @@
                 "media_type": 4,
                 "receiver_bank": 1,
                 "sender_bank": 1,
-                "time_slot": 0
+                "time_slot": 12
               },
-              "_id": "chatcmpl-tool-b232d1c02af7e8fd"
+              "_id": "chatcmpl-tool-bbaa068fb95849c5"
+            },
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "account_id": 66801,
+                "pattern_type": "risk_score"
+              },
+              "_id": "chatcmpl-tool-a030a204edf62ff1"
             }
           ]
         }
@@ -2428,7 +2451,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 5.68
+      "elapsed_sec": 5.37
     },
     {
       "id": "mt_str_022",
@@ -2449,14 +2472,14 @@
             {
               "name": "get_statistics",
               "arguments": {},
-              "_id": "chatcmpl-tool-8e211edd9de97885"
+              "_id": "chatcmpl-tool-8f5678bdad4f89b3"
             },
             {
               "name": "get_trend_analysis",
               "arguments": {
                 "unit": "monthly"
               },
-              "_id": "chatcmpl-tool-b4166cfaa55a4b90"
+              "_id": "chatcmpl-tool-83242bb2e7fa7b20"
             }
           ]
         },
@@ -2476,7 +2499,7 @@
                 "period2_end": 20241231,
                 "period2_start": 20240701
               },
-              "_id": "chatcmpl-tool-9039581afa6c6b1a"
+              "_id": "chatcmpl-tool-8c634d125de15ab8"
             }
           ]
         },
@@ -2493,7 +2516,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE date >= 20240701 AND date <= 20241231 AND is_fraud = 1 LIMIT 100"
               },
-              "_id": "chatcmpl-tool-a8011801b6e45802"
+              "_id": "chatcmpl-tool-a4f07b248bf87fdf"
             }
           ]
         },
@@ -2508,9 +2531,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE date >= 20240701 AND date <= 20241231 AND is_fraud = 1 AND fraud_type = 2 LIMIT 10"
+                "sql": "SELECT * FROM hofinet WHERE date >= 20240701 AND date <= 20241231 AND is_fraud = 1 AND fraud_type = 2 LIMIT 100"
               },
-              "_id": "chatcmpl-tool-ad5064540bcb2e84"
+              "_id": "chatcmpl-tool-87e729081951e5ce"
             }
           ]
         }
@@ -2520,7 +2543,7 @@
       "avg_param_accuracy": 0.4167,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 5.57
+      "elapsed_sec": 4.55
     },
     {
       "id": "mt_str_023",
@@ -2543,7 +2566,7 @@
               "arguments": {
                 "keyword": "structuring"
               },
-              "_id": "chatcmpl-tool-a49037d4c49a5cee"
+              "_id": "chatcmpl-tool-8721bbcf78cb35d0"
             }
           ]
         },
@@ -2560,7 +2583,7 @@
               "arguments": {
                 "keyword": "거액 입금 후 당일 인출"
               },
-              "_id": "chatcmpl-tool-9f378ea1353094ef"
+              "_id": "chatcmpl-tool-ac72890943d6659b"
             }
           ]
         },
@@ -2577,7 +2600,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 77234 OR receiver_acc = 77234 ORDER BY date DESC, time_slot DESC"
               },
-              "_id": "chatcmpl-tool-a3e287b097bb9d10"
+              "_id": "chatcmpl-tool-927de0d69b0c56d1"
             }
           ]
         },
@@ -2599,25 +2622,23 @@
           "clarification_hit": null,
           "actual_tool_calls": [
             {
-              "name": "get_account_profile",
-              "arguments": {
-                "account_id": 77234
-              },
-              "_id": "chatcmpl-tool-8e2c14be567c4923"
-            },
-            {
               "name": "query_transactions",
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 77234 AND fraud_type = 5"
               },
-              "_id": "chatcmpl-tool-b9abaa64155b2462"
+              "_id": "chatcmpl-tool-99938a2c4d966514"
             },
             {
-              "name": "score_account_risk",
+              "name": "predict_fraud",
               "arguments": {
-                "account_id": 77234
+                "amount": 5000000,
+                "fund_type": 4,
+                "media_type": 4,
+                "receiver_bank": 122,
+                "sender_bank": 147,
+                "time_slot": 21
               },
-              "_id": "chatcmpl-tool-95fa7b539c776234"
+              "_id": "chatcmpl-tool-9b14e7fe10953998"
             },
             {
               "name": "detect_aml_patterns",
@@ -2625,7 +2646,7 @@
                 "account_id": 77234,
                 "pattern_type": "risk_score"
               },
-              "_id": "chatcmpl-tool-be9861b36c475ffd"
+              "_id": "chatcmpl-tool-9aba282b07db4b4b"
             }
           ]
         }
@@ -2635,7 +2656,7 @@
       "avg_param_accuracy": 0.2,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 11.83
+      "elapsed_sec": 9.96
     },
     {
       "id": "mt_str_024",
@@ -2667,21 +2688,21 @@
               "arguments": {
                 "account_id": 44290
               },
-              "_id": "chatcmpl-tool-9adc48f6cccd032f"
+              "_id": "chatcmpl-tool-90f120202517aea5"
             },
             {
               "name": "score_account_risk",
               "arguments": {
                 "account_id": 44290
               },
-              "_id": "chatcmpl-tool-992b852bf7425779"
+              "_id": "chatcmpl-tool-b30a5e21e3d16c92"
             },
             {
               "name": "analyze_network",
               "arguments": {
                 "account_id": 44290
               },
-              "_id": "chatcmpl-tool-b337fdcca678ba4e"
+              "_id": "chatcmpl-tool-a257ca139e679ff4"
             }
           ]
         },
@@ -2698,7 +2719,7 @@
               "arguments": {
                 "account_id": 44290
               },
-              "_id": "chatcmpl-tool-ae7070b86cb3d594"
+              "_id": "chatcmpl-tool-95ca3a627c7790a2"
             }
           ]
         },
@@ -2716,7 +2737,7 @@
                 "account_id": 44290,
                 "hops": 2
               },
-              "_id": "chatcmpl-tool-b409fce192dedf9c"
+              "_id": "chatcmpl-tool-a3e3b9a198ad1a38"
             }
           ]
         },
@@ -2733,7 +2754,22 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE (sender_acc = 44290 OR receiver_acc = 44290) AND fraud_type = 3"
               },
-              "_id": "chatcmpl-tool-810e5406c3de63c4"
+              "_id": "chatcmpl-tool-8c3284a4a6b40cb5"
+            },
+            {
+              "name": "score_account_risk",
+              "arguments": {
+                "account_id": 44290
+              },
+              "_id": "chatcmpl-tool-b77f3ddc83917730"
+            },
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "account_id": 44290,
+                "pattern_type": "risk_score"
+              },
+              "_id": "chatcmpl-tool-887992da808de358"
             }
           ]
         }
@@ -2743,7 +2779,7 @@
       "avg_param_accuracy": 0.8,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 11.81
+      "elapsed_sec": 10.7
     },
     {
       "id": "mt_str_025",
@@ -2766,28 +2802,28 @@
               "arguments": {
                 "account_id": 11045
               },
-              "_id": "chatcmpl-tool-971bbec5c4d3dda3"
+              "_id": "chatcmpl-tool-a6c2c1632b8fa7c5"
             },
             {
               "name": "get_receiving_account_profile",
               "arguments": {
                 "account_id": 11045
               },
-              "_id": "chatcmpl-tool-a5eabb462683eceb"
+              "_id": "chatcmpl-tool-85a00936af61ac08"
             },
             {
               "name": "score_account_risk",
               "arguments": {
                 "account_id": 11045
               },
-              "_id": "chatcmpl-tool-a7034096c771a5fd"
+              "_id": "chatcmpl-tool-9587523446ac3c47"
             },
             {
               "name": "analyze_network",
               "arguments": {
                 "account_id": 11045
               },
-              "_id": "chatcmpl-tool-86ba1ed8a0c9f155"
+              "_id": "chatcmpl-tool-888629f91e822e5f"
             }
           ]
         },
@@ -2804,7 +2840,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 11045 OR receiver_acc = 11045 ORDER BY date DESC, time_slot DESC"
               },
-              "_id": "chatcmpl-tool-bad087df3557f081"
+              "_id": "chatcmpl-tool-9fbb6d17945987bf"
             }
           ]
         },
@@ -2826,7 +2862,7 @@
                 "sender_bank": 151,
                 "time_slot": 9
               },
-              "_id": "chatcmpl-tool-8fd03a96c3c661a6"
+              "_id": "chatcmpl-tool-9b580c011712d0e9"
             }
           ]
         },
@@ -2844,7 +2880,7 @@
                 "account_id": 11045,
                 "rule_id": "all"
               },
-              "_id": "chatcmpl-tool-9fd52ce4b2f56fc5"
+              "_id": "chatcmpl-tool-8e21cca1c90fc349"
             }
           ]
         },
@@ -2863,7 +2899,7 @@
       "avg_param_accuracy": 0.6,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 15.22
+      "elapsed_sec": 12.17
     },
     {
       "id": "mt_str_026",
@@ -2891,7 +2927,7 @@
                 "sender_bank": 134,
                 "time_slot": 12
               },
-              "_id": "chatcmpl-tool-b244fd897fcb88e1"
+              "_id": "chatcmpl-tool-8efc48eb4b2b4fd0"
             }
           ]
         },
@@ -2913,7 +2949,7 @@
                 "sender_bank": 134,
                 "time_slot": 15
               },
-              "_id": "chatcmpl-tool-976f36de319329da"
+              "_id": "chatcmpl-tool-a716fd57e1898ffd"
             }
           ]
         },
@@ -2928,9 +2964,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_bank = 134 AND amount BETWEEN 80000000 AND 90000000 ORDER BY date DESC, time_slot DESC LIMIT 20"
+                "sql": "SELECT * FROM hofinet WHERE sender_bank = 134 AND amount BETWEEN 80000000 AND 90000000 ORDER BY date DESC LIMIT 20"
               },
-              "_id": "chatcmpl-tool-9ff077c5c57613b8"
+              "_id": "chatcmpl-tool-b21d099b7b23a282"
             }
           ]
         },
@@ -2947,7 +2983,7 @@
               "arguments": {
                 "account_id": 99801
               },
-              "_id": "chatcmpl-tool-8c536127891358aa"
+              "_id": "chatcmpl-tool-a01e30832f664e4f"
             }
           ]
         },
@@ -2964,7 +3000,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 99801"
               },
-              "_id": "chatcmpl-tool-8182f97908c7bac4"
+              "_id": "chatcmpl-tool-97757b6b4a20b0dd"
             }
           ]
         }
@@ -2974,7 +3010,7 @@
       "avg_param_accuracy": 0.3,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 6.06
+      "elapsed_sec": 4.8
     },
     {
       "id": "mt_str_027",
@@ -2997,7 +3033,7 @@
               "arguments": {
                 "bank_id": 88
               },
-              "_id": "chatcmpl-tool-87f4285a52830d21"
+              "_id": "chatcmpl-tool-9b94d7c573843e50"
             }
           ]
         },
@@ -3014,7 +3050,7 @@
               "arguments": {
                 "account_id": 62018
               },
-              "_id": "chatcmpl-tool-85c2f218ae889962"
+              "_id": "chatcmpl-tool-b0553f4c15222d85"
             }
           ]
         },
@@ -3031,7 +3067,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 62018 AND is_fraud = 1 LIMIT 1"
               },
-              "_id": "chatcmpl-tool-b957d6e90b40cd3c"
+              "_id": "chatcmpl-tool-8f6d83a90dfb2719"
             }
           ]
         },
@@ -3048,7 +3084,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 62018 AND is_fraud = 1 LIMIT 10"
               },
-              "_id": "chatcmpl-tool-af993d2fc863fadf"
+              "_id": "chatcmpl-tool-93385acf8cc115d1"
             }
           ]
         }
@@ -3058,7 +3094,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": 0.5,
       "scenario_complete": false,
-      "elapsed_sec": 3.4
+      "elapsed_sec": 2.74
     },
     {
       "id": "mt_str_028",
@@ -3081,7 +3117,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 82301"
               },
-              "_id": "chatcmpl-tool-8287642de6d54020"
+              "_id": "chatcmpl-tool-b767c67ea1fcf9ff"
             }
           ]
         },
@@ -3098,7 +3134,7 @@
               "arguments": {
                 "account_id": 661023
               },
-              "_id": "chatcmpl-tool-93590fa0ba1c5da7"
+              "_id": "chatcmpl-tool-b3f3d36853462b43"
             }
           ]
         },
@@ -3116,7 +3152,7 @@
                 "account_id": 661023,
                 "direction": "inbound"
               },
-              "_id": "chatcmpl-tool-8ae998249c83af3e"
+              "_id": "chatcmpl-tool-91b3b08451dd7668"
             }
           ]
         },
@@ -3133,7 +3169,27 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 82301 AND receiver_acc = 661023 AND fraud_type = 3"
               },
-              "_id": "chatcmpl-tool-a031d32812942c7e"
+              "_id": "chatcmpl-tool-b829191825c1aee8"
+            },
+            {
+              "name": "predict_fraud",
+              "arguments": {
+                "amount": 47000000,
+                "fund_type": 4,
+                "media_type": 4,
+                "receiver_bank": 117,
+                "sender_bank": 151,
+                "time_slot": 21
+              },
+              "_id": "chatcmpl-tool-a67885dbc7ac4d5e"
+            },
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "account_id": 661023,
+                "pattern_type": "risk_score"
+              },
+              "_id": "chatcmpl-tool-8ea7307c6abae6e7"
             }
           ]
         }
@@ -3143,7 +3199,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 3.77
+      "elapsed_sec": 4.81
     },
     {
       "id": "mt_str_029",
@@ -3166,7 +3222,7 @@
               "arguments": {
                 "rule_id": "R005"
               },
-              "_id": "chatcmpl-tool-b4ff91e8b239ea01"
+              "_id": "chatcmpl-tool-b6a1f8f31b93fdad"
             }
           ]
         },
@@ -3183,7 +3239,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 33567 AND date BETWEEN '20241201' AND '20241231' ORDER BY date, time_slot"
               },
-              "_id": "chatcmpl-tool-b5727e4eb9ded07e"
+              "_id": "chatcmpl-tool-be9088fd3ceefec5"
             }
           ]
         },
@@ -3203,7 +3259,7 @@
                 "period2_end": 20241231,
                 "period2_start": 20241201
               },
-              "_id": "chatcmpl-tool-8d169564f53c1170"
+              "_id": "chatcmpl-tool-b44edf88826cf5ef"
             }
           ]
         },
@@ -3220,7 +3276,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 33567 AND date >= '20241201' AND date <= '20241231'"
               },
-              "_id": "chatcmpl-tool-beda7cef45c07200"
+              "_id": "chatcmpl-tool-8226f5cd72420725"
             },
             {
               "name": "predict_fraud",
@@ -3232,7 +3288,7 @@
                 "sender_bank": 134,
                 "time_slot": 12
               },
-              "_id": "chatcmpl-tool-9c833a760e368c3d"
+              "_id": "chatcmpl-tool-b7dc50a980b7d427"
             },
             {
               "name": "detect_aml_patterns",
@@ -3240,7 +3296,7 @@
                 "account_id": 33567,
                 "pattern_type": "risk_score"
               },
-              "_id": "chatcmpl-tool-9387274a9a86d802"
+              "_id": "chatcmpl-tool-84bce18d07c6e225"
             }
           ]
         }
@@ -3250,7 +3306,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 7.65
+      "elapsed_sec": 6.25
     },
     {
       "id": "mt_str_030",
@@ -3273,7 +3329,7 @@
               "arguments": {
                 "top_k": 5
               },
-              "_id": "chatcmpl-tool-944a2510e9fff9d1"
+              "_id": "chatcmpl-tool-bc32cd3892114310"
             }
           ]
         },
@@ -3290,7 +3346,7 @@
               "arguments": {
                 "account_id": 45201
               },
-              "_id": "chatcmpl-tool-9af3640f0196e86c"
+              "_id": "chatcmpl-tool-8a783eb705f6d265"
             }
           ]
         },
@@ -3308,7 +3364,7 @@
                 "account_id": 45201,
                 "pattern_type": "ring"
               },
-              "_id": "chatcmpl-tool-862ecc2a1513528d"
+              "_id": "chatcmpl-tool-9288ac9649248a8a"
             }
           ]
         },
@@ -3323,9 +3379,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_acc = 45201 OR receiver_acc = 45201 OR sender_acc = 780123 OR receiver_acc = 780123 OR sender_acc = 902345 OR receiver_acc = 902345 ORDER BY date DESC, time_slot DESC LIMIT 100"
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 45201 OR receiver_acc = 45201 OR sender_acc = 780123 OR receiver_acc = 780123 OR sender_acc = 902345 OR receiver_acc = 902345"
               },
-              "_id": "chatcmpl-tool-b8d794627d8c7afd"
+              "_id": "chatcmpl-tool-af3c9b6602d0f070"
             }
           ]
         }
@@ -3335,7 +3391,7 @@
       "avg_param_accuracy": 0.625,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 4.65
+      "elapsed_sec": 3.5
     },
     {
       "id": "mt_str_031",
@@ -3358,7 +3414,7 @@
               "arguments": {
                 "fraud_type": 4
               },
-              "_id": "chatcmpl-tool-9bb8a423c068f1b1"
+              "_id": "chatcmpl-tool-b2d6dff7cae465a0"
             }
           ]
         },
@@ -3375,7 +3431,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 55801 OR receiver_acc = 55801 ORDER BY date DESC, time_slot DESC"
               },
-              "_id": "chatcmpl-tool-8696fa764d2a8474"
+              "_id": "chatcmpl-tool-ab552db646804374"
             }
           ]
         },
@@ -3392,7 +3448,7 @@
               "arguments": {
                 "account_id": 55801
               },
-              "_id": "chatcmpl-tool-bb1c5f24804e1bf2"
+              "_id": "chatcmpl-tool-99f4a1e0d7058f86"
             }
           ]
         },
@@ -3409,27 +3465,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 55801 AND fraud_type = 4"
               },
-              "_id": "chatcmpl-tool-a0331573e5561af0"
-            },
-            {
-              "name": "predict_fraud",
-              "arguments": {
-                "amount": 55000000,
-                "fund_type": 4,
-                "media_type": 5,
-                "receiver_bank": 143,
-                "sender_bank": 134,
-                "time_slot": 12
-              },
-              "_id": "chatcmpl-tool-8e25ccd3d9b26630"
-            },
-            {
-              "name": "detect_aml_patterns",
-              "arguments": {
-                "account_id": 55801,
-                "pattern_type": "risk_score"
-              },
-              "_id": "chatcmpl-tool-ba4020ddd5694c7a"
+              "_id": "chatcmpl-tool-a4536861280f30d4"
             }
           ]
         }
@@ -3439,7 +3475,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": 0.3333,
       "scenario_complete": false,
-      "elapsed_sec": 5.7
+      "elapsed_sec": 2.9
     },
     {
       "id": "mt_str_032",
@@ -3462,7 +3498,7 @@
               "arguments": {
                 "unit": "monthly"
               },
-              "_id": "chatcmpl-tool-911e5a4203247f0b"
+              "_id": "chatcmpl-tool-973e85e761e99790"
             }
           ]
         },
@@ -3479,7 +3515,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE date LIKE '202412%' AND is_fraud = 1 LIMIT 100"
               },
-              "_id": "chatcmpl-tool-a1ae2e94a3c32913"
+              "_id": "chatcmpl-tool-a21c80959f778c8c"
             }
           ]
         },
@@ -3497,7 +3533,7 @@
                 "date_from": 20241201,
                 "date_to": 20241231
               },
-              "_id": "chatcmpl-tool-a953b57fd6a13ba5"
+              "_id": "chatcmpl-tool-9c766160fb469c81"
             }
           ]
         },
@@ -3514,7 +3550,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE date LIKE '202412%' AND media_type = 7 AND is_fraud = 1 LIMIT 1"
               },
-              "_id": "chatcmpl-tool-9eb9e61d391b361c"
+              "_id": "chatcmpl-tool-9b3ccf73fe382c23"
             }
           ]
         },
@@ -3534,7 +3570,7 @@
                 ],
                 "fraud_probability": 0.93,
                 "fraud_type": "갑작스러운 거래패턴의 변화",
-                "summary": "2024년 12월, 텔레뱅킹(매체구분 7) 채널을 통해 평소와 다른 고액 거래가 발생하였습니다. 특히 심야 시간대(time_slot 0)에 49,000,000원의 거액이 이체되었으며, 이는 해당 계좌의 일반적인 거래 패턴을 크게 벗어난 것으로 분석됩니다. XGBoost 모델 예측 결과 이상거래 확률이 93%로 매우 높게 나타났으며, 텔레뱅킹 채널의 전반적인 이상거래 비율(1.12%) 또한 타 채널 대비 높게 나타나 자금세탁 및 부정 거래의 의심이 매우 강합니다.",
+                "summary": "2024년 12월, 텔레뱅킹(매체구분 7) 채널을 통해 평소와 다른 고액 거래가 발생하였습니다. 특히 심야 시간대(time_slot 0)에 49,000,000원의 거액이 이체되었으며, 이는 해당 계좌의 일반적인 거래 패턴을 크게 벗어난 것으로 분석됩니다. XGBoost 모델 예측 결과 이상거래 확률이 93%로 매우 높게 나타났으며, 텔레뱅킹 채널의 전반적인 이상거래 비율(1.12%) 또한 타 채널 대비 높게 나타나 자금세탁 및 부정 거래의 위험이 매우 높은 것으로 판단되어 보고합니다.",
                 "tools_used": [
                   "get_trend_analysis",
                   "query_transactions",
@@ -3556,7 +3592,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-888635467a4862f0"
+              "_id": "chatcmpl-tool-93ad4a291676037d"
             }
           ]
         }
@@ -3566,7 +3602,7 @@
       "avg_param_accuracy": 0.6833,
       "context_accuracy": 0.5,
       "scenario_complete": false,
-      "elapsed_sec": 12.25
+      "elapsed_sec": 10.13
     },
     {
       "id": "mt_str_033",
@@ -3587,7 +3623,7 @@
             {
               "name": "get_statistics",
               "arguments": {},
-              "_id": "chatcmpl-tool-902ebc2d12c897d0"
+              "_id": "chatcmpl-tool-8df315f142dbb766"
             }
           ]
         },
@@ -3604,7 +3640,7 @@
               "arguments": {
                 "fraud_type": 3
               },
-              "_id": "chatcmpl-tool-a86d56551a7cab9a"
+              "_id": "chatcmpl-tool-a739dc41631bf7d1"
             }
           ]
         },
@@ -3622,7 +3658,7 @@
                 "account_id": 88712,
                 "pattern_type": "funnel"
               },
-              "_id": "chatcmpl-tool-860f4df30d855dbb"
+              "_id": "chatcmpl-tool-ac392192f288002e"
             }
           ]
         },
@@ -3639,7 +3675,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 88712 OR receiver_acc = 88712 ORDER BY date DESC, time_slot DESC LIMIT 100"
               },
-              "_id": "chatcmpl-tool-8d473cd7dac5d1f9"
+              "_id": "chatcmpl-tool-97e2ad4b64ed2802"
             }
           ]
         }
@@ -3649,7 +3685,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 3.23
+      "elapsed_sec": 2.61
     },
     {
       "id": "mt_str_034",
@@ -3672,7 +3708,7 @@
               "arguments": {
                 "dormant_days": 300
               },
-              "_id": "chatcmpl-tool-b519480d7af29648"
+              "_id": "chatcmpl-tool-a8442e6e689f13d8"
             }
           ]
         },
@@ -3689,7 +3725,7 @@
               "arguments": {
                 "account_id": 11290
               },
-              "_id": "chatcmpl-tool-a37972460eae0f5e"
+              "_id": "chatcmpl-tool-bb900ab6e8d34825"
             }
           ]
         },
@@ -3706,7 +3742,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 11290 ORDER BY date, time_slot"
               },
-              "_id": "chatcmpl-tool-ba5ac621da022ead"
+              "_id": "chatcmpl-tool-b2027dfe159d8afc"
             }
           ]
         },
@@ -3723,7 +3759,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 11290 OR receiver_acc = 11290 ORDER BY date, time_slot"
               },
-              "_id": "chatcmpl-tool-8da320b016f6920c"
+              "_id": "chatcmpl-tool-b3d57ea3efdee786"
             }
           ]
         }
@@ -3733,7 +3769,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 3.61
+      "elapsed_sec": 2.9
     },
     {
       "id": "mt_str_035",
@@ -3756,7 +3792,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 33801 OR receiver_acc = 33801"
               },
-              "_id": "chatcmpl-tool-946484e45245d80d"
+              "_id": "chatcmpl-tool-b42c87796ef25ffe"
             }
           ]
         },
@@ -3778,7 +3814,7 @@
                 "sender_bank": 151,
                 "time_slot": 9
               },
-              "_id": "chatcmpl-tool-857a2b2b793556ec"
+              "_id": "chatcmpl-tool-883a9110d25e29e3"
             }
           ]
         },
@@ -3795,7 +3831,7 @@
               "arguments": {
                 "account_id": 33801
               },
-              "_id": "chatcmpl-tool-a1c74423c2d92005"
+              "_id": "chatcmpl-tool-b8905f3bb5c7ddc3"
             }
           ]
         },
@@ -3814,7 +3850,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 9.69
+      "elapsed_sec": 10.0
     },
     {
       "id": "mt_str_036",
@@ -3837,7 +3873,7 @@
               "arguments": {
                 "bank_id": 73
               },
-              "_id": "chatcmpl-tool-928022302694bd64"
+              "_id": "chatcmpl-tool-b294a92d23a93942"
             }
           ]
         },
@@ -3855,7 +3891,7 @@
                 "limit": 20,
                 "min_transactions": 10
               },
-              "_id": "chatcmpl-tool-aeea6062109bbae0"
+              "_id": "chatcmpl-tool-aeea84a7aebfc723"
             }
           ]
         },
@@ -3873,7 +3909,7 @@
                 "account_id": 55012,
                 "pattern_type": "layering"
               },
-              "_id": "chatcmpl-tool-8e816bd94acc4574"
+              "_id": "chatcmpl-tool-85ab7489f85be72a"
             }
           ]
         },
@@ -3890,7 +3926,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 55012 OR receiver_acc = 55012 ORDER BY date DESC, time_slot DESC LIMIT 100"
               },
-              "_id": "chatcmpl-tool-9256bcf921b68b7b"
+              "_id": "chatcmpl-tool-99ca10a2b7ff5a7a"
             }
           ]
         }
@@ -3900,7 +3936,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 3.59
+      "elapsed_sec": 2.92
     },
     {
       "id": "mt_str_037",
@@ -3924,7 +3960,7 @@
                 "date_from": 20241001,
                 "date_to": 20241231
               },
-              "_id": "chatcmpl-tool-8475b1dd06aa4d64"
+              "_id": "chatcmpl-tool-b14b429460a7277c"
             }
           ]
         },
@@ -3941,7 +3977,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 72301 AND media_type = 4 AND time_slot = 0 AND date >= '20241001' AND date <= '20241231'"
               },
-              "_id": "chatcmpl-tool-8b17d505484a6361"
+              "_id": "chatcmpl-tool-84ea70ed13c66127"
             }
           ]
         },
@@ -3958,7 +3994,7 @@
               "arguments": {
                 "account_id": 72301
               },
-              "_id": "chatcmpl-tool-9cf3b7f7583c54c5"
+              "_id": "chatcmpl-tool-86697ce389517898"
             }
           ]
         },
@@ -3976,7 +4012,7 @@
                 "account_id": 72301,
                 "hops": 2
               },
-              "_id": "chatcmpl-tool-b7ad6a01d8071163"
+              "_id": "chatcmpl-tool-b7d0bc03ba173dfb"
             }
           ]
         },
@@ -3993,7 +4029,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 72301 AND fraud_type = 3"
               },
-              "_id": "chatcmpl-tool-bee21c14ba6a9aea"
+              "_id": "chatcmpl-tool-9bb1686b38bef716"
             },
             {
               "name": "predict_fraud",
@@ -4005,7 +4041,7 @@
                 "sender_bank": 128,
                 "time_slot": 0
               },
-              "_id": "chatcmpl-tool-b3a307d544cbe426"
+              "_id": "chatcmpl-tool-8ed6ef4d494e3e01"
             },
             {
               "name": "detect_aml_patterns",
@@ -4013,7 +4049,7 @@
                 "account_id": 72301,
                 "pattern_type": "risk_score"
               },
-              "_id": "chatcmpl-tool-ae0d69cf78ce626f"
+              "_id": "chatcmpl-tool-98d2c103c86099d2"
             }
           ]
         }
@@ -4023,7 +4059,7 @@
       "avg_param_accuracy": 0.8,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 7.31
+      "elapsed_sec": 5.98
     },
     {
       "id": "mt_str_038",
@@ -4046,7 +4082,7 @@
               "arguments": {
                 "bank_id": 305
               },
-              "_id": "chatcmpl-tool-a8c45cfa57cd642a"
+              "_id": "chatcmpl-tool-82506f3ff73813f1"
             }
           ]
         },
@@ -4063,7 +4099,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 88901"
               },
-              "_id": "chatcmpl-tool-8ac582205cdf8d3e"
+              "_id": "chatcmpl-tool-beb07e74b6a60b6a"
             }
           ]
         },
@@ -4080,7 +4116,7 @@
               "arguments": {
                 "account_id": 88901
               },
-              "_id": "chatcmpl-tool-adf7d3ba5fb14300"
+              "_id": "chatcmpl-tool-969752ddece74ce7"
             }
           ]
         },
@@ -4099,7 +4135,7 @@
       "avg_param_accuracy": 1.0,
       "context_accuracy": 0.5,
       "scenario_complete": true,
-      "elapsed_sec": 9.91
+      "elapsed_sec": 8.53
     },
     {
       "id": "mt_str_039",
@@ -4122,7 +4158,7 @@
               "arguments": {
                 "rule_id": "R002"
               },
-              "_id": "chatcmpl-tool-934d68e50f866cc8"
+              "_id": "chatcmpl-tool-871b3a5055629054"
             }
           ]
         },
@@ -4139,7 +4175,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 77401 AND date = 20241220 ORDER BY time_slot ASC"
               },
-              "_id": "chatcmpl-tool-a0b0225890430e3a"
+              "_id": "chatcmpl-tool-b686b8df922ebefc"
             }
           ]
         },
@@ -4159,7 +4195,7 @@
                 "mode": "structuring",
                 "threshold": 10000000
               },
-              "_id": "chatcmpl-tool-a9d90dad01930b3d"
+              "_id": "chatcmpl-tool-80626be005084589"
             }
           ]
         },
@@ -4176,7 +4212,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 77401 AND date = 20241220"
               },
-              "_id": "chatcmpl-tool-9448b6536d8935f8"
+              "_id": "chatcmpl-tool-bf1c0bdafbf8aeff"
             },
             {
               "name": "predict_fraud",
@@ -4188,7 +4224,7 @@
                 "sender_bank": 147,
                 "time_slot": 9
               },
-              "_id": "chatcmpl-tool-80ecb7da4c54532a"
+              "_id": "chatcmpl-tool-a7eef2262896f57b"
             },
             {
               "name": "detect_aml_patterns",
@@ -4196,7 +4232,7 @@
                 "account_id": 77401,
                 "pattern_type": "risk_score"
               },
-              "_id": "chatcmpl-tool-b2404768a8b24c07"
+              "_id": "chatcmpl-tool-818d5b514220dafa"
             }
           ]
         }
@@ -4206,7 +4242,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 6.69
+      "elapsed_sec": 5.48
     },
     {
       "id": "mt_str_040",
@@ -4227,7 +4263,7 @@
             {
               "name": "get_statistics",
               "arguments": {},
-              "_id": "chatcmpl-tool-a3673b4774acb759"
+              "_id": "chatcmpl-tool-96dd4ebbee172085"
             }
           ]
         },
@@ -4244,7 +4280,7 @@
               "arguments": {
                 "fraud_type": 5
               },
-              "_id": "chatcmpl-tool-92fd03c1f23168fa"
+              "_id": "chatcmpl-tool-9c22607241ad9df9"
             }
           ]
         },
@@ -4261,7 +4297,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 66501 OR receiver_acc = 66501 ORDER BY date DESC, time_slot DESC"
               },
-              "_id": "chatcmpl-tool-a2eb24a34c8c6bdb"
+              "_id": "chatcmpl-tool-8919374744dd39ff"
             }
           ]
         },
@@ -4278,7 +4314,7 @@
               "arguments": {
                 "keyword": "거액 입금 후 당일 인출"
               },
-              "_id": "chatcmpl-tool-980afb7c6e87a7f1"
+              "_id": "chatcmpl-tool-a8084fe3b123cba5"
             }
           ]
         },
@@ -4295,7 +4331,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 66501 AND is_fraud = 1 AND fraud_type = 5"
               },
-              "_id": "chatcmpl-tool-b17a292edd586d8b"
+              "_id": "chatcmpl-tool-9ec08b9a242418d2"
             },
             {
               "name": "predict_fraud",
@@ -4307,7 +4343,7 @@
                 "sender_bank": 128,
                 "time_slot": 21
               },
-              "_id": "chatcmpl-tool-91d31b13c7398b75"
+              "_id": "chatcmpl-tool-a5f3bd040f9b09ec"
             },
             {
               "name": "detect_aml_patterns",
@@ -4315,7 +4351,7 @@
                 "account_id": 66501,
                 "pattern_type": "risk_score"
               },
-              "_id": "chatcmpl-tool-b295d31c23172f3b"
+              "_id": "chatcmpl-tool-ac32637fec319217"
             }
           ]
         }
@@ -4325,7 +4361,7 @@
       "avg_param_accuracy": 0.6,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 6.36
+      "elapsed_sec": 5.19
     },
     {
       "id": "mt_str_041",
@@ -4348,7 +4384,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 41205 AND fraud_type = 4"
               },
-              "_id": "chatcmpl-tool-a006d2889d5aa366"
+              "_id": "chatcmpl-tool-9dece1c958794a56"
             }
           ]
         },
@@ -4370,7 +4406,7 @@
                 "sender_bank": 134,
                 "time_slot": 12
               },
-              "_id": "chatcmpl-tool-abbb0717b256f2dc"
+              "_id": "chatcmpl-tool-b42fd268fc0cd6e6"
             }
           ]
         },
@@ -4387,7 +4423,7 @@
               "arguments": {
                 "account_id": 661234
               },
-              "_id": "chatcmpl-tool-b5a7a38430b496b2"
+              "_id": "chatcmpl-tool-ad2fa32732a7a74d"
             }
           ]
         },
@@ -4405,7 +4441,7 @@
                 "account_id": 661234,
                 "direction": "inbound"
               },
-              "_id": "chatcmpl-tool-94def8e2c15d58fc"
+              "_id": "chatcmpl-tool-8b56b1141165e5b7"
             }
           ]
         },
@@ -4422,7 +4458,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 41205 AND fraud_type = 4"
               },
-              "_id": "chatcmpl-tool-838ad6937455f628"
+              "_id": "chatcmpl-tool-ac592f11569b7b0b"
             }
           ]
         }
@@ -4432,7 +4468,7 @@
       "avg_param_accuracy": 0.5333,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 5.14
+      "elapsed_sec": 4.18
     },
     {
       "id": "mt_str_042",
@@ -4455,7 +4491,7 @@
               "arguments": {
                 "rule_id": "R004"
               },
-              "_id": "chatcmpl-tool-9a30fc574fe8cb0a"
+              "_id": "chatcmpl-tool-8ab7654736e317e5"
             }
           ]
         },
@@ -4473,31 +4509,31 @@
                 "limit": 20,
                 "min_transactions": 10
               },
-              "_id": "chatcmpl-tool-b10c4fe67ba8adb1"
+              "_id": "chatcmpl-tool-9602ceaaacd65e7b"
             },
             {
               "name": "query_transactions",
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_bank = 205 AND receiver_bank = 88 LIMIT 100"
               },
-              "_id": "chatcmpl-tool-b313f63c0eb46871"
+              "_id": "chatcmpl-tool-a961ca4fde16301c"
             }
           ]
         },
         {
           "turn": 3,
           "tool_hit": 1.0,
-          "param_accuracy": 0.3333,
-          "score": 0.6667,
+          "param_accuracy": 1.0,
+          "score": 1.0,
           "context_hit": false,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_acc = 44201 ORDER BY date DESC, time_slot DESC"
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 44201 AND sender_bank = 205 AND receiver_bank = 88 ORDER BY date DESC, time_slot DESC"
               },
-              "_id": "chatcmpl-tool-9a2464449941e713"
+              "_id": "chatcmpl-tool-9a1bdd3c3e0f2a34"
             }
           ]
         },
@@ -4519,7 +4555,7 @@
                 "sender_bank": 151,
                 "time_slot": 15
               },
-              "_id": "chatcmpl-tool-aceb3c0b56617b38"
+              "_id": "chatcmpl-tool-8ad0549d16e181d4"
             },
             {
               "name": "detect_aml_patterns",
@@ -4527,24 +4563,24 @@
                 "account_id": 44201,
                 "pattern_type": "risk_score"
               },
-              "_id": "chatcmpl-tool-9148778c5e3bdcb7"
+              "_id": "chatcmpl-tool-a2a16f3e9d175aaf"
             },
             {
               "name": "query_transactions",
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 44201 AND is_fraud = 1"
               },
-              "_id": "chatcmpl-tool-862fcc6cca856e91"
+              "_id": "chatcmpl-tool-85d223716be3a89a"
             }
           ]
         }
       ],
-      "avg_score": 0.6667,
+      "avg_score": 0.75,
       "avg_tool_hit": 0.75,
-      "avg_param_accuracy": 0.5833,
+      "avg_param_accuracy": 0.75,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 6.59
+      "elapsed_sec": 5.74
     },
     {
       "id": "mt_str_043",
@@ -4567,14 +4603,14 @@
               "arguments": {
                 "account_id": 29501
               },
-              "_id": "chatcmpl-tool-9d479b13acee6a7d"
+              "_id": "chatcmpl-tool-a8998b60984bc839"
             },
             {
               "name": "query_transactions",
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE (sender_acc = 29501 AND receiver_acc = 99801) OR (sender_acc = 99801 AND receiver_acc = 29501) ORDER BY date DESC, time_slot DESC"
               },
-              "_id": "chatcmpl-tool-beb5ba8975fea1df"
+              "_id": "chatcmpl-tool-8224c47dffeead0d"
             }
           ]
         },
@@ -4596,7 +4632,7 @@
                 "sender_bank": 134,
                 "time_slot": 3
               },
-              "_id": "chatcmpl-tool-9e4468fed4ddca5b"
+              "_id": "chatcmpl-tool-a4b8d65281b5c8d1"
             }
           ]
         },
@@ -4614,7 +4650,7 @@
                 "account_id": 29501,
                 "hops": 2
               },
-              "_id": "chatcmpl-tool-9d0a31cf64a9881c"
+              "_id": "chatcmpl-tool-b690153e000f3c32"
             }
           ]
         },
@@ -4633,7 +4669,7 @@
                 "account_b": 99801,
                 "pattern_type": "shortest_path"
               },
-              "_id": "chatcmpl-tool-8e48fd2424cf774a"
+              "_id": "chatcmpl-tool-b22ed76c78dc1301"
             }
           ]
         },
@@ -4650,7 +4686,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 29501 OR receiver_acc = 29501 OR sender_acc = 551023 OR receiver_acc = 551023 OR sender_acc = 773245 OR receiver_acc = 773245 OR sender_acc = 99801 OR receiver_acc = 99801 ORDER BY date, time_slot"
               },
-              "_id": "chatcmpl-tool-af0da8561c7afc72"
+              "_id": "chatcmpl-tool-945dc3f3a4d4df10"
             }
           ]
         }
@@ -4660,7 +4696,7 @@
       "avg_param_accuracy": 0.6,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 8.84
+      "elapsed_sec": 7.2
     },
     {
       "id": "mt_str_044",
@@ -4683,7 +4719,7 @@
               "arguments": {
                 "account_id": 55901
               },
-              "_id": "chatcmpl-tool-94b289ad8dfebbca"
+              "_id": "chatcmpl-tool-b56e8c0ca0f41a4d"
             }
           ]
         },
@@ -4700,7 +4736,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 55901 LIMIT 1"
               },
-              "_id": "chatcmpl-tool-ad7761a913e0e094"
+              "_id": "chatcmpl-tool-b015fad5087c887b"
             }
           ]
         },
@@ -4718,7 +4754,7 @@
                 "account_id": 55901,
                 "direction": "inbound"
               },
-              "_id": "chatcmpl-tool-b1e5e84bddabca87"
+              "_id": "chatcmpl-tool-a831087ca1c40492"
             }
           ]
         },
@@ -4737,7 +4773,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 10.56
+      "elapsed_sec": 8.57
     },
     {
       "id": "mt_str_045",
@@ -4760,7 +4796,7 @@
               "arguments": {
                 "rule_id": "R001"
               },
-              "_id": "chatcmpl-tool-98205dac95217099"
+              "_id": "chatcmpl-tool-a7ca5732fea35e4d"
             }
           ]
         },
@@ -4777,7 +4813,7 @@
               "arguments": {
                 "account_id": 34901
               },
-              "_id": "chatcmpl-tool-8a0ae2a838e0ce8d"
+              "_id": "chatcmpl-tool-99ee622ccb5bd5ed"
             }
           ]
         },
@@ -4794,7 +4830,7 @@
               "arguments": {
                 "account_id": 34901
               },
-              "_id": "chatcmpl-tool-a92be090e7acb47f"
+              "_id": "chatcmpl-tool-9d909259d2c3a01f"
             }
           ]
         },
@@ -4811,7 +4847,7 @@
               "arguments": {
                 "sql": "SELECT sender_bank FROM hofinet WHERE sender_acc = 34901 LIMIT 1"
               },
-              "_id": "chatcmpl-tool-b247d5b3f3ce069b"
+              "_id": "chatcmpl-tool-88377e8930c48318"
             }
           ]
         },
@@ -4828,7 +4864,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 34901"
               },
-              "_id": "chatcmpl-tool-814a6733dc5b7ddf"
+              "_id": "chatcmpl-tool-a1f451d3edc740d5"
             }
           ]
         }
@@ -4838,7 +4874,7 @@
       "avg_param_accuracy": 0.6,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 3.85
+      "elapsed_sec": 2.97
     },
     {
       "id": "mt_str_046",
@@ -4861,7 +4897,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 81402 OR receiver_acc = 81402"
               },
-              "_id": "chatcmpl-tool-b56a8d8861d6334b"
+              "_id": "chatcmpl-tool-810fbda41ad457bb"
             }
           ]
         },
@@ -4883,7 +4919,7 @@
                 "sender_bank": 128,
                 "time_slot": 21
               },
-              "_id": "chatcmpl-tool-9a6da329957c6c63"
+              "_id": "chatcmpl-tool-83da6f131802d005"
             }
           ]
         },
@@ -4909,7 +4945,22 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 81402 OR receiver_acc = 81402 ORDER BY date, time_slot"
               },
-              "_id": "chatcmpl-tool-a1ee2d7e29cc6628"
+              "_id": "chatcmpl-tool-bcfb2cc768b0c261"
+            },
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "pattern_type": "risk_score"
+              },
+              "_id": "chatcmpl-tool-9f699539354094d7"
+            },
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "account_id": 81402,
+                "pattern_type": "risk_score"
+              },
+              "_id": "chatcmpl-tool-877248d4e4834c86"
             }
           ]
         }
@@ -4919,7 +4970,7 @@
       "avg_param_accuracy": 0.25,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 11.63
+      "elapsed_sec": 11.34
     },
     {
       "id": "mt_str_047",
@@ -4942,7 +4993,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 22901 OR receiver_acc = 22901 ORDER BY date DESC, time_slot DESC"
               },
-              "_id": "chatcmpl-tool-b968c5066972c25b"
+              "_id": "chatcmpl-tool-a7baebf48e3a0a0c"
             }
           ]
         },
@@ -4959,7 +5010,7 @@
               "arguments": {
                 "account_id": 22901
               },
-              "_id": "chatcmpl-tool-b8ff220f5b91d2ea"
+              "_id": "chatcmpl-tool-b03d57f174170229"
             }
           ]
         },
@@ -4977,7 +5028,7 @@
                 "account_id": 22901,
                 "hops": 1
               },
-              "_id": "chatcmpl-tool-b8c43a90505bac8e"
+              "_id": "chatcmpl-tool-9efb168a7bf345e5"
             }
           ]
         },
@@ -4996,7 +5047,7 @@
       "avg_param_accuracy": 1.0,
       "context_accuracy": null,
       "scenario_complete": true,
-      "elapsed_sec": 11.09
+      "elapsed_sec": 8.7
     },
     {
       "id": "mt_str_048",
@@ -5019,7 +5070,7 @@
               "arguments": {
                 "keyword": "nighttime"
               },
-              "_id": "chatcmpl-tool-b663390ee8db2506"
+              "_id": "chatcmpl-tool-9af6638703d1cd82"
             }
           ]
         },
@@ -5036,21 +5087,21 @@
               "arguments": {
                 "account_id": 88234
               },
-              "_id": "chatcmpl-tool-86f08ad44fb43d0b"
+              "_id": "chatcmpl-tool-89be9462e3572ca1"
             },
             {
               "name": "get_account_profile",
               "arguments": {
                 "account_id": 88234
               },
-              "_id": "chatcmpl-tool-a0da2d7f8bf99508"
+              "_id": "chatcmpl-tool-b1801b9bf7c9278d"
             },
             {
               "name": "query_transactions",
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE receiver_acc = 88234 OR sender_acc = 88234 ORDER BY date DESC, time_slot DESC"
               },
-              "_id": "chatcmpl-tool-90bdd02b22d25969"
+              "_id": "chatcmpl-tool-b5716698fb541642"
             }
           ]
         },
@@ -5067,7 +5118,7 @@
               "arguments": {
                 "account_id": 88234
               },
-              "_id": "chatcmpl-tool-b1fc455b5226ae70"
+              "_id": "chatcmpl-tool-8fa0e88cd3936494"
             }
           ]
         },
@@ -5084,7 +5135,7 @@
               "arguments": {
                 "account_id": 88234
               },
-              "_id": "chatcmpl-tool-8f90cb6577168b8e"
+              "_id": "chatcmpl-tool-b8e2d4e579e8d57d"
             }
           ]
         },
@@ -5101,7 +5152,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 88234 OR receiver_acc = 88234 ORDER BY date DESC, time_slot DESC LIMIT 100"
               },
-              "_id": "chatcmpl-tool-8edae52d561b463f"
+              "_id": "chatcmpl-tool-b8e845f9cff09bb9"
             },
             {
               "name": "detect_aml_patterns",
@@ -5109,7 +5160,7 @@
                 "account_id": 88234,
                 "pattern_type": "risk_score"
               },
-              "_id": "chatcmpl-tool-bee4becb28e39cb2"
+              "_id": "chatcmpl-tool-98a6686e5d7845ee"
             },
             {
               "name": "predict_fraud",
@@ -5121,7 +5172,7 @@
                 "sender_bank": 147,
                 "time_slot": 15
               },
-              "_id": "chatcmpl-tool-8e013485c14fcb4f"
+              "_id": "chatcmpl-tool-9825fb6cb2f779be"
             }
           ]
         }
@@ -5131,7 +5182,7 @@
       "avg_param_accuracy": 0.6,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 7.96
+      "elapsed_sec": 6.5
     },
     {
       "id": "mt_str_049",
@@ -5154,7 +5205,7 @@
               "arguments": {
                 "rule_id": "R003"
               },
-              "_id": "chatcmpl-tool-a5799328bedcff23"
+              "_id": "chatcmpl-tool-bddd094d78c7263b"
             }
           ]
         },
@@ -5171,7 +5222,7 @@
               "arguments": {
                 "account_id": 55601
               },
-              "_id": "chatcmpl-tool-84b6deccfed3bc58"
+              "_id": "chatcmpl-tool-8a790dc35da8effe"
             }
           ]
         },
@@ -5188,7 +5239,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 55601 AND fraud_type = 3 ORDER BY date, time_slot"
               },
-              "_id": "chatcmpl-tool-be8e36f845a9115f"
+              "_id": "chatcmpl-tool-aaae0acd9bf78421"
             }
           ]
         },
@@ -5214,7 +5265,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 55601 ORDER BY date, time_slot"
               },
-              "_id": "chatcmpl-tool-93db6370d7bf97d7"
+              "_id": "chatcmpl-tool-b8cd767b5a491aab"
             },
             {
               "name": "predict_fraud",
@@ -5226,7 +5277,7 @@
                 "sender_bank": 1,
                 "time_slot": 0
               },
-              "_id": "chatcmpl-tool-a393757a55b3da91"
+              "_id": "chatcmpl-tool-a43491cedf9f3e43"
             },
             {
               "name": "detect_aml_patterns",
@@ -5234,7 +5285,7 @@
                 "account_id": 55601,
                 "pattern_type": "risk_score"
               },
-              "_id": "chatcmpl-tool-b992a0d1f0579fe9"
+              "_id": "chatcmpl-tool-aea8a828e3ae49b9"
             }
           ]
         }
@@ -5244,7 +5295,7 @@
       "avg_param_accuracy": 0.4,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 19.05
+      "elapsed_sec": 16.06
     },
     {
       "id": "mt_str_050",
@@ -5267,7 +5318,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 99301 OR receiver_acc = 99301 ORDER BY date DESC, time_slot DESC"
               },
-              "_id": "chatcmpl-tool-a83029777c7230ed"
+              "_id": "chatcmpl-tool-9fa9bd839f48b792"
             }
           ]
         },
@@ -5289,7 +5340,7 @@
                 "sender_bank": 128,
                 "time_slot": 0
               },
-              "_id": "chatcmpl-tool-8b569611cb03d4dd"
+              "_id": "chatcmpl-tool-807961fa13025c50"
             }
           ]
         },
@@ -5307,7 +5358,7 @@
                 "account_id": 99301,
                 "hops": 2
               },
-              "_id": "chatcmpl-tool-8d9b6de90998c3db"
+              "_id": "chatcmpl-tool-8ead6d47984c717c"
             }
           ]
         },
@@ -5324,7 +5375,7 @@
               "arguments": {
                 "account_id": 99301
               },
-              "_id": "chatcmpl-tool-971a52f12289b8a5"
+              "_id": "chatcmpl-tool-bd31f64da157cf16"
             }
           ]
         },
@@ -5341,41 +5392,76 @@
               "arguments": {
                 "keyword": "갑작스러운 거래패턴의 변화"
               },
-              "_id": "chatcmpl-tool-9380d239ce33ac16"
+              "_id": "chatcmpl-tool-85af6d8b495fd542"
+            },
+            {
+              "name": "detect_aml_patterns",
+              "arguments": {
+                "account_id": 99301,
+                "pattern_type": "risk_score"
+              },
+              "_id": "chatcmpl-tool-a41af322fdd32d94"
             },
             {
               "name": "query_transactions",
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 99301 OR receiver_acc = 99301 ORDER BY date DESC, time_slot DESC LIMIT 100"
               },
-              "_id": "chatcmpl-tool-83ce6b3ea7423c28"
+              "_id": "chatcmpl-tool-abf3444c55017f53"
             }
           ]
         },
         {
           "turn": 6,
-          "tool_hit": 0.0,
-          "param_accuracy": 0.0,
-          "score": 0.0,
-          "context_hit": false,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.6,
+          "score": 0.8,
+          "context_hit": true,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
-              "name": "query_transactions",
+              "name": "generate_str",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_acc = 99301 OR receiver_acc = 99301 ORDER BY date DESC, time_slot DESC LIMIT 100"
+                "aml_patterns": [
+                  "Sudden Change in Transaction Pattern",
+                  "Nighttime Bulk Transactions"
+                ],
+                "fraud_probability": 0.95,
+                "fraud_type": "갑작스러운 거래패턴의 변화",
+                "summary": "계좌 99301은 최근 거래 패턴이 급격히 변화하며 고위험 징후를 보이고 있습니다. 분석 결과, 총 78건의 거래 중 25건(약 32%)이 이상거래로 분류되었으며, 총 거래 금액은 21.2억 원에 달합니다. 특히 심야 시간대(time_slot 0)에 모바일 뱅킹을 이용한 고액 이체(예: 4,950만 원)가 빈번하게 발생하고 있으며, 위험도 평가 결과 91점(고위험)으로 산출되었습니다. 이는 FIU 참고유형 B-05(심야/새벽 시간대 비정상 거래) 및 B-03(자금 분산/집중) 패턴과 일치하며, 자금세탁을 위한 계좌 이용 가능성이 매우 높다고 판단됩니다.",
+                "tools_used": [
+                  "query_transactions",
+                  "predict_fraud",
+                  "analyze_network",
+                  "score_account_risk",
+                  "lookup_fiu_reference_types"
+                ],
+                "transactions": [
+                  {
+                    "amount": 49500000,
+                    "date": 20241115,
+                    "fraud_type": 1,
+                    "fund_type": 4,
+                    "media_type": 4,
+                    "receiver_acc": 110234,
+                    "receiver_bank": 117,
+                    "sender_acc": 99301,
+                    "sender_bank": 128,
+                    "time_slot": 0
+                  }
+                ]
               },
-              "_id": "chatcmpl-tool-ba78d42bba65cf5d"
+              "_id": "chatcmpl-tool-97b4c65796ee8862"
             }
           ]
         }
       ],
-      "avg_score": 0.6667,
-      "avg_tool_hit": 0.8333,
-      "avg_param_accuracy": 0.5,
-      "context_accuracy": 0.0,
+      "avg_score": 0.8,
+      "avg_tool_hit": 1.0,
+      "avg_param_accuracy": 0.6,
+      "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 7.77
+      "elapsed_sec": 13.75
     }
   ]
 }

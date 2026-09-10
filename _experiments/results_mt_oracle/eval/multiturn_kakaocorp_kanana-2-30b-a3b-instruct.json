@@ -3,31 +3,31 @@
   "model_id": "kakaocorp/kanana-2-30b-a3b-instruct",
   "provider": "vllm",
   "think": null,
-  "timestamp": "2026-06-06T23:30:02.124548",
+  "timestamp": "2026-09-10T01:33:59.105174",
   "total_scenarios": 50,
-  "total_elapsed_sec": 170.6,
+  "total_elapsed_sec": 196.82,
   "overall": {
-    "avg_score": 0.6677,
-    "avg_tool_hit": 0.8097,
-    "avg_param_accuracy": 0.5408,
-    "context_accuracy": 0.6061,
-    "scenario_complete_rate": 0.18
+    "avg_score": 0.6482,
+    "avg_tool_hit": 0.798,
+    "avg_param_accuracy": 0.5134,
+    "context_accuracy": 0.5455,
+    "scenario_complete_rate": 0.12
   },
   "by_sub_category": {
     "base": {
       "count": 14,
-      "avg_score": 0.6711,
-      "complete_rate": 0.2857
+      "avg_score": 0.6667,
+      "complete_rate": 0.2143
     },
     "missing_parameter": {
       "count": 14,
-      "avg_score": 0.5597,
+      "avg_score": 0.5271,
       "complete_rate": 0.0
     },
     "long_context": {
       "count": 22,
-      "avg_score": 0.7343,
-      "complete_rate": 0.2273
+      "avg_score": 0.7135,
+      "complete_rate": 0.1364
     }
   },
   "scenarios": [
@@ -52,7 +52,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 78432 ORDER BY date DESC, time_slot DESC LIMIT 20"
               },
-              "_id": "08f84da2-8170-40d4-bbc0-8f3279f493bc"
+              "_id": "bb351d69-48f6-41ad-a2c7-f4426f18fcec"
             }
           ]
         },
@@ -74,7 +74,7 @@
                 "media_type": 4,
                 "amount": 49500000
               },
-              "_id": "a9c99c68-24c2-420c-9544-af01017cf3a4"
+              "_id": "cd3c262c-4bb8-41d1-a2cd-0f60f589ed73"
             }
           ]
         },
@@ -92,7 +92,7 @@
                 "account_id": 78432,
                 "hops": 2
               },
-              "_id": "66ff2f25-ec1f-42ff-a4a2-bd5701de9af2"
+              "_id": "d83c728d-56e9-4dde-94c7-b75af4350def"
             }
           ]
         },
@@ -107,7 +107,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "출금계좌 78432에서 최근 3개월간(2024-10-01 ~ 2024-12-31) 총 45건의 거래가 발생하였으며, 이 중 12건(26.67%)이 이상거래로 분류됨. 특히 2024-10-15, 2024-10-16, 2024-10-18에 4억7천8백만원~4억9천5백만원의 거액이 심야(0시~3시) 시간대에 ATM 및 기타매체를 통해 분산 출금됨. 동일 계좌에서 3일 연속 거액 출금이 발생하였으며, 수신처가 모두 신규 계좌(330021, 550078, 112345)로 확인됨. 거래 패턴, 금액, 시간, 수신처 모두에서 급격한 변화가 관찰되어 자금세탁 의심. 계좌 연결 네트워크 분석 결과 8개 계좌와 연결되어 있으며, 이 중 3개 계좌(330021, 550078, 112345)가 주요 수신처로 확인됨. 해당 계좌들은 모두 최근 3개월 내 최초 거래 발생 계좌로, 거래 패턴의 급격한 변화가 명확함.",
+                "summary": "출금계좌 78432에서 최근 3개월(2024-10-01 ~ 2024-12-31) 동안 총 45건의 거래가 발생했으며, 이 중 12건(26.67%)이 이상거래로 분류됨. 특히 2024-10-15, 2024-10-16, 2024-10-18에 3회에 걸쳐 4억7천8백만원~4억9천5백만원의 대규모 자금이 분산 이체되었으며, 모두 심야시간대(00:00~03:00)에 발생. 해당 계좌는 기존에 거래가 거의 없던 신규 수신처(330021, 550078, 112345 등)로 반복 송금되는 패턴을 보임. 거래 네트워크 분석 결과 8개의 연결계좌와 26.67%의 이상거래 비율을 기록하며, 자금세탁 위험이 높은 구조로 판단됨. XGBoost 모델 예측 결과 해당 거래들의 사기 확률은 91%로 매우 높게 산출됨.",
                 "fraud_type": "갑작스러운 거래패턴의 변화",
                 "transactions": [
                   {
@@ -150,6 +150,7 @@
                 "fraud_probability": 0.91,
                 "aml_patterns": [
                   "Sudden Pattern Change",
+                  "Large Amount Transfer",
                   "New Counterparty"
                 ],
                 "tools_used": [
@@ -158,7 +159,7 @@
                   "analyze_network"
                 ]
               },
-              "_id": "c42c214b-c600-4562-8c1c-5181eca28566"
+              "_id": "1fb675ed-9f43-4a0f-9a00-204a77fdb5f9"
             }
           ]
         }
@@ -168,7 +169,7 @@
       "avg_param_accuracy": 0.65,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 5.55
+      "elapsed_sec": 5.43
     },
     {
       "id": "mt_str_002",
@@ -180,12 +181,20 @@
       "turns": [
         {
           "turn": 1,
-          "tool_hit": 1.0,
-          "param_accuracy": 1.0,
-          "score": 1.0,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
           "context_hit": null,
-          "clarification_hit": true,
-          "actual_tool_calls": []
+          "clarification_hit": false,
+          "actual_tool_calls": [
+            {
+              "name": "query_transactions",
+              "arguments": {
+                "sql": "SELECT * FROM hofinet WHERE date >= 20240601 AND amount > 10000000"
+              },
+              "_id": "parsed_000"
+            }
+          ]
         },
         {
           "turn": 2,
@@ -200,7 +209,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 55201 AND date BETWEEN 20241201 AND 20241231"
               },
-              "_id": "b253ac20-e401-4e72-ad7b-60f4658d712e"
+              "_id": "f30db56e-41f8-4b85-9264-c7c3e7ba34ae"
             }
           ]
         },
@@ -222,43 +231,44 @@
                 "media_type": 5,
                 "amount": 30000000
               },
-              "_id": "16b70ad9-59a0-4883-9bd8-96553dc2f0d4"
+              "_id": "e9309353-6e38-417f-95aa-ed544036b906"
             }
           ]
         },
         {
           "turn": 4,
           "tool_hit": 1.0,
-          "param_accuracy": 0.0,
-          "score": 0.5,
+          "param_accuracy": 0.5,
+          "score": 0.75,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
               "name": "detect_ctr_candidates",
               "arguments": {
-                "mode": "structuring",
+                "mode": "high_value",
                 "date_from": 20241201,
                 "date_to": 20241228,
+                "threshold": 10000000,
                 "limit": 10
               },
-              "_id": "745c3b74-5c97-4161-b54c-f81d71be1888"
+              "_id": "edf9cd81-405b-457d-bf46-e65ec692840b"
             }
           ]
         },
         {
           "turn": 5,
           "tool_hit": 1.0,
-          "param_accuracy": 0.75,
-          "score": 0.875,
+          "param_accuracy": 0.5,
+          "score": 0.75,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "2024년 12월 55201 계좌에서 2건(3억, 2.8억) 동시 다중거래가 발생. 모두 이상거래(prob 0.84)로 분류. 동일 계좌에서 23건 중 6건이 이상거래로 집계되어 다중거래 동시 요청 패턴 확인. 자금유형은 이체(4), 매체는 개별이체(5)로 반복. CTR 대상(2건) 확인됨.",
-                "fraud_type": "다중거래의 동시요청",
+                "summary": "2024년 12월 55201 계좌에서 3억 원, 2.8억 원 등 거액 동시 다중거래가 2건 발생. 두 거래 모두 이상거래로 분류(이상거래유형 4: 동시 다중거래). 거래금액, 거래매체(5: 개별이체), 거래시간대(12, 15시) 등 이상패턴 확인. 동일 계좌에서 단기간 내 반복적 거액 이체 발생으로 자금세탁 의심. STR §VI-4 code 16(Concurrent Multiple Transactions) 적용.",
+                "fraud_type": "다중거래의 동시 요청",
                 "transactions": [
                   {
                     "date": 20241203,
@@ -287,8 +297,7 @@
                 ],
                 "fraud_probability": 0.84,
                 "aml_patterns": [
-                  "Layering",
-                  "Ring"
+                  "Concurrent Multiple Transactions"
                 ],
                 "tools_used": [
                   "query_transactions",
@@ -296,17 +305,17 @@
                   "detect_ctr_candidates"
                 ]
               },
-              "_id": "23c0c332-b9a3-4cb6-ab08-79edff14c716"
+              "_id": "b79db2ca-618a-43a1-9a42-bbfc5f9fc934"
             }
           ]
         }
       ],
-      "avg_score": 0.775,
-      "avg_tool_hit": 1.0,
-      "avg_param_accuracy": 0.55,
+      "avg_score": 0.6,
+      "avg_tool_hit": 0.8,
+      "avg_param_accuracy": 0.4,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 4.17
+      "elapsed_sec": 7.55
     },
     {
       "id": "mt_str_003",
@@ -329,7 +338,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_bank = 134 LIMIT 1000"
               },
-              "_id": "600296d4-d51d-4a7f-b5b9-c0768a30108c"
+              "_id": "75df4862-f120-46c3-9c24-e3f49da684a0"
             }
           ]
         },
@@ -346,7 +355,7 @@
               "arguments": {
                 "account_id": 78432
               },
-              "_id": "e8c7ddf5-6b5b-4691-afdc-6e08783f8b50"
+              "_id": "8d4e8590-2a60-43a2-b640-9b325197ec93"
             }
           ]
         },
@@ -363,7 +372,7 @@
               "arguments": {
                 "account_id": 78432
               },
-              "_id": "ea983990-a898-4552-ae36-ffb2651d56ca"
+              "_id": "a5673389-f027-41b6-8a6a-7aea9c4ead66"
             }
           ]
         },
@@ -378,7 +387,7 @@
             {
               "name": "generate_str",
               "arguments": {},
-              "_id": "be18ba2a-b498-42e8-a316-7a4b8d7e54bd"
+              "_id": "b0939c1d-7fe3-4b66-8edb-c62e0b476f6b"
             }
           ]
         }
@@ -388,7 +397,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 7.89
+      "elapsed_sec": 8.4
     },
     {
       "id": "mt_str_004",
@@ -411,7 +420,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 91205 OR receiver_acc = 91205 AND fraud_type = 3"
               },
-              "_id": "45a1e753-7155-4d3d-b57e-c9630e06af0d"
+              "_id": "bab7dde7-fd4c-4de0-8ae5-6bdd3190baea"
             }
           ]
         },
@@ -429,7 +438,7 @@
                 "account_id": 91205,
                 "hops": 2
               },
-              "_id": "ea6424d5-bf1a-4965-8982-312b76fae17f"
+              "_id": "bd412bc7-4087-4e12-aea5-42183d035a1c"
             }
           ]
         },
@@ -447,7 +456,7 @@
                 "account_id": 91205,
                 "hops": 2
               },
-              "_id": "9a465439-5c16-4fc8-997c-cad1a78ae4eb"
+              "_id": "bcdddcc4-c347-43a2-820b-9bf552b788f7"
             }
           ]
         },
@@ -462,7 +471,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "계좌 91205는 2024년 8월 15일 및 16일 4.8억원, 4.75억원 등 거액 분할 거래가 반복적으로 발생하였으며, 총 67건 중 18건이 이상거래로 분류됨. 동일 계좌에서 여러 수신처로 분산 송금되는 outbound smurfing 패턴이 확인되었고, 연결 계좌 수 12개, 이상거래 비율 26.87%로 고위험군임. 분할거래(fund_type=4, media_type=4/7) 및 신규 수신처(220134, 330256 등)와의 반복적 거래가 관찰됨.",
+                "summary": "계좌 91205는 2024년 8월부터 11월까지 총 67건의 거래 중 18건(26.87%)이 분할 거래로 확인됨. 총 거래금액 14.5억 원 중 4.8억 원 및 4.75억 원 등 거액 거래가 여러 계좌로 분산되어 이체됨. 주요 수신처(220134, 330256 등)로 반복적 자금 분산 패턴이 관찰됨. 분할 거래 유형(fraud_type=3)이 다수 포함되어 있으며, 거래 시간대는 심야(21시, 0시)에 집중됨. 자금세탁 위험성이 높은 구조로 판단됨.",
                 "fraud_type": "분할거래",
                 "transactions": [
                   {
@@ -492,8 +501,8 @@
                 ],
                 "fraud_probability": 0.92,
                 "aml_patterns": [
-                  "Smurfing",
-                  "Split Transaction"
+                  "Split Transaction",
+                  "Funnel Pattern"
                 ],
                 "tools_used": [
                   "query_transactions",
@@ -501,7 +510,7 @@
                   "analyze_network"
                 ]
               },
-              "_id": "85528d12-b536-4c26-9d1c-3f2c27dedf94"
+              "_id": "503ccf22-c6af-4e13-b206-687f5025036f"
             }
           ]
         }
@@ -511,7 +520,7 @@
       "avg_param_accuracy": 0.6,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 3.07
+      "elapsed_sec": 3.31
     },
     {
       "id": "mt_str_005",
@@ -532,9 +541,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, is_fraud, fraud_type, fraud_description FROM hofinet WHERE fraud_type = 5 OR (fraud_type = 7 AND time_slot IN (21, 0, 3)) AND amount > 10000000 ORDER BY date DESC, time_slot DESC LIMIT 50"
+                "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, is_fraud, fraud_type, fraud_description FROM hofinet WHERE fraud_type = 5 OR (fraud_type = 1 AND fraud_description LIKE '%large deposit%') ORDER BY date DESC, amount DESC LIMIT 100"
               },
-              "_id": "4e887611-f261-422f-982f-2b5c42d37012"
+              "_id": "4f0bb74f-38a9-4550-83f0-db1359f377ad"
             }
           ]
         },
@@ -551,7 +560,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE date BETWEEN 20230101 AND 20231231 AND sender_bank = 88 AND fund_type = 0 AND media_type IN (1,2,3,4,5,6,7) AND amount > 10000000 AND is_fraud = 1"
               },
-              "_id": "2e81ef69-58ef-4e21-a5fe-83f7fb5d80c1"
+              "_id": "804ff753-c77f-435d-bb59-2fc69fa904bc"
             }
           ]
         },
@@ -567,13 +576,13 @@
               "name": "predict_fraud",
               "arguments": {
                 "time_slot": 0,
-                "sender_bank": 122,
+                "sender_bank": 88,
                 "receiver_bank": 128,
                 "fund_type": 4,
                 "media_type": 4,
                 "amount": 9800000
               },
-              "_id": "08f83d42-144f-4f05-91e9-8eac771650b2"
+              "_id": "e922d2c4-28f9-4a8c-9fc7-cd427d46840e"
             }
           ]
         },
@@ -588,7 +597,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "금융회사 88에서 발생한 거액 입금 후 당일 인출 이상거래(거래금액 9,800만원, 거래시간대 00시, 매체구분 모바일폰)는 당일 동일 계좌에서 반복 인출되는 패턴으로, 총 187건 98억원의 거래가 확인됨. 이는 '거액 입금 후 당일/익일 인출' 유형의 전형적인 자금세탁 수법에 해당함. 주요 출금계좌(12045, 12078, 12301)에서 집중 발생하였으며, 거래 시간대와 금액이 이상거래 탐지 모델의 주요 피처(거래시간대 31%, 거래금액 27%)로 작용함.",
+                "summary": "금융회사 88에서 발생한 거액 입금 후 당일 인출(이상거래 유형 5) 187건, 총 98억 원 규모. 대표 거래(2024-11-05, 9,800만 원)는 심야(00:00) 모바일 이체, 자금구분 4(자동이체), 거래금액 9,800만 원, fraud_probability 0.76(High Risk). 동일 계좌(12045)에서 반복 인출, 자금 흐름 집중. FIU 이상거래 유형 5(거액 입금 후 당일/익일 인출) 및 심야 대량 거래 패턴 확인. 계좌 12045, 12078, 12301에서 동일 패턴 반복, 자금 세탁 및 불법 자금 이동 의심.",
                 "fraud_type": "거액 입금 후 당일/익일 인출",
                 "transactions": [
                   {
@@ -607,14 +616,14 @@
                 "fraud_probability": 0.76,
                 "aml_patterns": [
                   "Layering",
-                  "Structuring"
+                  "Ring"
                 ],
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud"
                 ]
               },
-              "_id": "ccb3c593-952d-48b8-8767-76456b2434f8"
+              "_id": "b4851796-aefe-42fc-948c-b434c668809d"
             }
           ]
         }
@@ -624,7 +633,7 @@
       "avg_param_accuracy": 0.375,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 3.5
+      "elapsed_sec": 3.82
     },
     {
       "id": "mt_str_006",
@@ -648,7 +657,7 @@
                 "keyword": "nighttime",
                 "industry": "banking"
               },
-              "_id": "7b5fecf7-dfa8-4200-9fcc-4306e556b24b"
+              "_id": "d5a06f71-6759-46c0-96d7-81d622aa411d"
             }
           ]
         },
@@ -665,7 +674,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 33201 OR receiver_acc = 33201 ORDER BY date, time_slot"
               },
-              "_id": "22f8de26-b61e-46cc-a53f-6d3d09fe4b31"
+              "_id": "aa82facf-472e-4755-aaaf-4c0e9f54bfe5"
             }
           ]
         },
@@ -682,23 +691,23 @@
               "arguments": {
                 "account_id": 33201
               },
-              "_id": "f388e5c0-7594-4603-85b0-9f36182c0f95"
+              "_id": "ac082869-fcac-4ca1-b229-7f96226b7703"
             }
           ]
         },
         {
           "turn": 4,
           "tool_hit": 1.0,
-          "param_accuracy": 0.25,
-          "score": 0.625,
+          "param_accuracy": 0.0,
+          "score": 0.5,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "계좌 33201은 2024년 4월 1일부터 12월 31일까지 심야(시간대 21, 0, 3, 6) 및 새벽(시간대 9, 12) 구간에 대량 거래가 집중되어 있으며, 총 134건 중 22건이 이상거래로 분류됨. 심야 시간대 거래비율은 18%로 고위험군(5.4점)에 해당하며, 금액이상도(0.72), 거래상대다양성(0.91), 거래속도변화(0.55), 이상거래이력(0.68) 등 모든 위험요소가 고위험 기준을 초과함. 특히 2024년 5월 20일 12시(시간대 12)에 35,000,000원 거래가 발생했으며, 이는 심야/새벽 대량 거래 패턴에 해당함. 해당 계좌는 고위험 등급으로 분류되어 STR 작성이 필요함.",
-                "fraud_type": "Late-Night/Early-Morning Bulk Transactions (심야/새벽 대량 거래)",
+                "summary": "계좌 33201은 2024년 4월 1일부터 12월 31일까지 심야(22:00~06:00) 시간대에 총 134건, 2,870,000,000원 규모의 거래가 발생하였으며, 이 중 18%가 심야 시간대에 집중되어 있습니다. 특히 2024년 5월 20일 12:00(심야 시간대)에 35,000,000원 규모의 거래가 발생하였고, 동일 계좌에서 심야 시간대 대량 거래가 반복적으로 관찰되었습니다. 심야 시간대 거래의 72%가 비정상적으로 큰 금액(평균 214,925,370원)으로 이루어져 있으며, 이는 일반적인 거래 패턴과 현저히 다릅니다. 또한 심야 시간대 거래의 68%에서 이상거래 유형 6(심야/새벽 대량 거래)이 확인되어 자금세탁 위험이 매우 높은 것으로 판단됩니다.",
+                "fraud_type": "Late-Night/Early-Morning Bulk Transactions",
                 "transactions": [
                   {
                     "date": 20240520,
@@ -713,27 +722,28 @@
                     "fraud_type": 7
                   }
                 ],
-                "fraud_probability": 0.72,
+                "fraud_probability": 0.82,
                 "aml_patterns": [
                   "Ring",
                   "Layering"
                 ],
                 "tools_used": [
                   "query_transactions",
-                  "score_account_risk"
+                  "score_account_risk",
+                  "detect_aml_patterns"
                 ]
               },
-              "_id": "aaead0b5-b221-4389-b16e-ac51a46ccded"
+              "_id": "37c16325-b561-45c1-9c2d-beaf8a1c1f57"
             }
           ]
         }
       ],
-      "avg_score": 0.7812,
+      "avg_score": 0.75,
       "avg_tool_hit": 1.0,
-      "avg_param_accuracy": 0.5625,
+      "avg_param_accuracy": 0.5,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 2.99
+      "elapsed_sec": 3.07
     },
     {
       "id": "mt_str_007",
@@ -754,7 +764,7 @@
             {
               "name": "analyze_channel_risk",
               "arguments": {},
-              "_id": "5ccb8438-bec7-4136-9dfb-1313fec57a92"
+              "_id": "629771c3-e60a-4d36-803e-d4fd4f76462b"
             }
           ]
         },
@@ -774,7 +784,7 @@
                 "date_to": 20240630,
                 "limit": 20
               },
-              "_id": "bca829e4-9278-4e3a-b1c9-66c4ad36b74b"
+              "_id": "4d30b051-1f08-495d-87c7-b9b0a93c7566"
             }
           ]
         },
@@ -796,7 +806,7 @@
                 "media_type": 1,
                 "amount": 9900000
               },
-              "_id": "e915273a-dc4d-4cf6-b769-8965e3407103"
+              "_id": "101d6c6e-badd-44d8-893a-d39e2ec3fb63"
             }
           ]
         },
@@ -811,7 +821,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "ATM 심야(0~3시) 대량 출금 거래에서 계좌 44892가 12회 이상거래 발생. 거래금액 총 11.88억원(회당 9900만원), 심야 ATM 집중, 기존 패턴과 상이. 이상거래 확률 88%로 높음. 동일 계좌에서 최근 1개월 내 심야 ATM 거래 전무, 12월 1일 첫 심야 거래에서 대량 인출 발생. 자금흐름: 134은행 → 143은행, 자금구분 급여(1).",
+                "summary": "ATM 심야(0~3시) 대량 출금 거래에서 계좌 44892가 12회, 계좌 55103이 8회 이상거래 발생. 심야 ATM 거래의 이상거래비율이 2.34%로 평상시(0.51%) 대비 4.6배 높음. 거래금액 9,900만원 단일 거래 포함, 총 8.9억원 규모. 거래패턴의 급격한 변화와 심야시간 집중, 대량 인출 패턴이 Sudden Pattern Change(코드 15)에 해당.",
                 "fraud_type": "갑작스러운 거래패턴의 변화",
                 "transactions": [
                   {
@@ -825,19 +835,151 @@
                     "media_type": 1,
                     "amount": 9900000,
                     "fraud_type": 1
+                  },
+                  {
+                    "date": 20241201,
+                    "time_slot": 0,
+                    "sender_bank": 134,
+                    "sender_acc": 44892,
+                    "receiver_bank": 143,
+                    "receiver_acc": 662011,
+                    "fund_type": 1,
+                    "media_type": 1,
+                    "amount": 1200000,
+                    "fraud_type": 1
+                  },
+                  {
+                    "date": 20241201,
+                    "time_slot": 0,
+                    "sender_bank": 134,
+                    "sender_acc": 44892,
+                    "receiver_bank": 143,
+                    "receiver_acc": 662011,
+                    "fund_type": 1,
+                    "media_type": 1,
+                    "amount": 1500000,
+                    "fraud_type": 1
+                  },
+                  {
+                    "date": 20241201,
+                    "time_slot": 0,
+                    "sender_bank": 134,
+                    "sender_acc": 44892,
+                    "receiver_bank": 143,
+                    "receiver_acc": 662011,
+                    "fund_type": 1,
+                    "media_type": 1,
+                    "amount": 1800000,
+                    "fraud_type": 1
+                  },
+                  {
+                    "date": 20241201,
+                    "time_slot": 0,
+                    "sender_bank": 134,
+                    "sender_acc": 44892,
+                    "receiver_bank": 143,
+                    "receiver_acc": 662011,
+                    "fund_type": 1,
+                    "media_type": 1,
+                    "amount": 2100000,
+                    "fraud_type": 1
+                  },
+                  {
+                    "date": 20241201,
+                    "time_slot": 0,
+                    "sender_bank": 134,
+                    "sender_acc": 44892,
+                    "receiver_bank": 143,
+                    "receiver_acc": 662011,
+                    "fund_type": 1,
+                    "media_type": 1,
+                    "amount": 2400000,
+                    "fraud_type": 1
+                  },
+                  {
+                    "date": 20241201,
+                    "time_slot": 0,
+                    "sender_bank": 134,
+                    "sender_acc": 44892,
+                    "receiver_bank": 143,
+                    "receiver_acc": 662011,
+                    "fund_type": 1,
+                    "media_type": 1,
+                    "amount": 2700000,
+                    "fraud_type": 1
+                  },
+                  {
+                    "date": 20241201,
+                    "time_slot": 0,
+                    "sender_bank": 134,
+                    "sender_acc": 44892,
+                    "receiver_bank": 143,
+                    "receiver_acc": 662011,
+                    "fund_type": 1,
+                    "media_type": 1,
+                    "amount": 3000000,
+                    "fraud_type": 1
+                  },
+                  {
+                    "date": 20241201,
+                    "time_slot": 0,
+                    "sender_bank": 134,
+                    "sender_acc": 44892,
+                    "receiver_bank": 143,
+                    "receiver_acc": 662011,
+                    "fund_type": 1,
+                    "media_type": 1,
+                    "amount": 3300000,
+                    "fraud_type": 1
+                  },
+                  {
+                    "date": 20241201,
+                    "time_slot": 0,
+                    "sender_bank": 134,
+                    "sender_acc": 44892,
+                    "receiver_bank": 143,
+                    "receiver_acc": 662011,
+                    "fund_type": 1,
+                    "media_type": 1,
+                    "amount": 3600000,
+                    "fraud_type": 1
+                  },
+                  {
+                    "date": 20241201,
+                    "time_slot": 0,
+                    "sender_bank": 134,
+                    "sender_acc": 44892,
+                    "receiver_bank": 143,
+                    "receiver_acc": 662011,
+                    "fund_type": 1,
+                    "media_type": 1,
+                    "amount": 3900000,
+                    "fraud_type": 1
+                  },
+                  {
+                    "date": 20241201,
+                    "time_slot": 0,
+                    "sender_bank": 134,
+                    "sender_acc": 44892,
+                    "receiver_bank": 143,
+                    "receiver_acc": 662011,
+                    "fund_type": 1,
+                    "media_type": 1,
+                    "amount": 4200000,
+                    "fraud_type": 1
                   }
                 ],
                 "fraud_probability": 0.88,
                 "aml_patterns": [
-                  "ATM 심야 대량 인출",
-                  "패턴 변화"
+                  "Sudden Pattern Change",
+                  "Nighttime Bulk"
                 ],
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud"
                 ]
               },
-              "_id": "d5e66443-3c21-4667-a8c1-667270d849f9"
+              "_id": "6f8aefac-5e7d-4e8c-b619-971da3a25319"
             }
           ]
         }
@@ -847,7 +989,7 @@
       "avg_param_accuracy": 0.35,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 2.58
+      "elapsed_sec": 8.67
     },
     {
       "id": "mt_str_008",
@@ -868,9 +1010,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT COUNT(*) AS total_transactions, SUM(amount) AS total_amount, COUNT(CASE WHEN is_fraud = 1 THEN 1 END) AS fraud_count, AVG(amount) AS avg_amount, SUM(CASE WHEN is_fraud = 1 THEN amount END) AS fraud_amount, COUNT(DISTINCT sender_bank) AS bank_count, COUNT(DISTINCT sender_acc) AS account_count FROM hofinet"
+                "sql": "SELECT COUNT(*) AS total_transactions, SUM(amount) AS total_amount, COUNT(CASE WHEN is_fraud = 1 THEN 1 END) AS fraud_count, AVG(amount) AS avg_amount, SUM(CASE WHEN is_fraud = 1 THEN amount END) AS fraud_amount, COUNT(DISTINCT sender_bank) AS bank_count, COUNT(DISTINCT receiver_bank) AS receiver_bank_count FROM hofinet"
               },
-              "_id": "71fa2aef-cf7a-4ed9-8257-8f2157716aa5"
+              "_id": "6e9514e8-db27-48d9-89c1-e48c4c158410"
             }
           ]
         },
@@ -885,10 +1027,10 @@
             {
               "name": "rank_risky_transactions",
               "arguments": {
-                "sample_size": 5000,
+                "sample_size": 1000,
                 "top_k": 20
               },
-              "_id": "c8abf618-fc96-47e9-9a80-dc7b04180fa9"
+              "_id": "b1bf24f6-ecfc-4f95-8a40-a2f756b63cae"
             }
           ]
         },
@@ -910,7 +1052,7 @@
                 "media_type": 4,
                 "amount": 49900000
               },
-              "_id": "16d6647d-86db-47b5-97f8-6b3d7afa5ea7"
+              "_id": "e9f3373f-a83e-4dbb-b298-fac6982eb5bf"
             }
           ]
         },
@@ -925,7 +1067,7 @@
             {
               "name": "query_transactions",
               "arguments": {},
-              "_id": "e90851c6-04df-454c-892c-0804f9ce9f49"
+              "_id": "1db810e6-f4d4-4e18-aa17-447c374a64aa"
             }
           ]
         }
@@ -935,7 +1077,7 @@
       "avg_param_accuracy": 0.0,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.58
+      "elapsed_sec": 1.73
     },
     {
       "id": "mt_str_009",
@@ -959,7 +1101,7 @@
                 "date_from": 20230101,
                 "date_to": 20231231
               },
-              "_id": "2ddfcdc6-038b-4559-870d-4342adc8c4f8"
+              "_id": "c27aa6d0-06ba-416d-82fe-0b11e4f87fa4"
             }
           ]
         },
@@ -974,9 +1116,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_bank = 73 AND receiver_bank = 305 ORDER BY date DESC, time_slot DESC LIMIT 20"
+                "sql": "SELECT * FROM hofinet WHERE sender_bank = 73 AND receiver_bank = 305 ORDER BY date DESC, time_slot DESC LIMIT 50"
               },
-              "_id": "7f42d506-693f-4366-b101-f3fdce3c2718"
+              "_id": "8c0cc397-ba85-46c3-a918-7da458cbe848"
             }
           ]
         },
@@ -997,7 +1139,7 @@
                 "min_layers": 3,
                 "limit": 10
               },
-              "_id": "aeb81667-1406-47b6-a4ca-9732e8fda5d4"
+              "_id": "26e7c3c4-3e9c-4a1a-bbea-0bbea95eac2d"
             }
           ]
         },
@@ -1012,7 +1154,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "73→305 구간에서 layering 패턴(3단계 이상 자금 이동) 및 sudden change in transaction pattern(이상거래비율 1.9%)이 확인됨. 주요 계좌(55012, 55234, 55890)에서 4.9억 원 이상 거액 거래가 심야(21시) 모바일 채널로 집중 발생. layering depth 3 이상, 총 14.7억 원 규모 자금 흐름 탐지. layering 패턴은 자금세탁의 전형적 특징.",
+                "summary": "73→305 구간에서 layering 패턴(3단계 이상 자금 이동) 및 sudden change in transaction pattern(이상거래비율 1.9%)이 확인됨. 주요 계좌(55012, 55234, 55890)에서 4.9억 원 이상 거액 거래가 반복적으로 발생. layering depth 3 이상, 총 layering 금액 2.42억 원 이상. 심야(21시) 및 인터넷뱅킹(media_type 2) 이용 다수. 신규 수신처 및 분할거래(fund_type 3, media_type 5) 패턴 동반.",
                 "fraud_type": "갑작스러운 거래패턴의 변화",
                 "transactions": [
                   {
@@ -1023,21 +1165,35 @@
                     "receiver_bank": 305,
                     "receiver_acc": 770123,
                     "fund_type": 4,
-                    "media_type": 4,
+                    "media_type": 2,
                     "amount": 49000000,
+                    "fraud_type": 1
+                  },
+                  {
+                    "date": 20241110,
+                    "time_slot": 21,
+                    "sender_bank": 73,
+                    "sender_acc": 55234,
+                    "receiver_bank": 305,
+                    "receiver_acc": 770456,
+                    "fund_type": 3,
+                    "media_type": 5,
+                    "amount": 95000000,
                     "fraud_type": 1
                   }
                 ],
                 "fraud_probability": 0.92,
                 "aml_patterns": [
-                  "Layering"
+                  "Layering",
+                  "Sudden Pattern Change"
                 ],
                 "tools_used": [
                   "query_transactions",
-                  "detect_aml_patterns"
+                  "detect_aml_patterns",
+                  "predict_fraud"
                 ]
               },
-              "_id": "31749577-76e5-4fa9-a37f-5c0124c7c609"
+              "_id": "3dc570b7-802c-4f75-8c64-6f38f5b31266"
             }
           ]
         }
@@ -1047,7 +1203,7 @@
       "avg_param_accuracy": 0.7167,
       "context_accuracy": null,
       "scenario_complete": true,
-      "elapsed_sec": 2.56
+      "elapsed_sec": 3.48
     },
     {
       "id": "mt_str_010",
@@ -1068,7 +1224,7 @@
             {
               "name": "detect_dormant_reactivation",
               "arguments": {},
-              "_id": "055c9221-f936-4fbc-a2c3-ae836d0e6c79"
+              "_id": "f432c5bc-d753-4ca7-9ca7-d3ee7a94a1d6"
             }
           ]
         },
@@ -1085,7 +1241,7 @@
               "arguments": {
                 "account_id": 77501
               },
-              "_id": "31cfeabe-42a6-4db2-be82-c5a61bde7b5c"
+              "_id": "a18a58d1-0eb4-4dc1-8d3f-5f14f305a26d"
             }
           ]
         },
@@ -1103,9 +1259,9 @@
                 "mode": "high_value",
                 "date_from": 20241201,
                 "date_to": 20241228,
-                "threshold": 10000000
+                "limit": 10
               },
-              "_id": "2434afe5-2e27-41a8-be1a-11470fc0abce"
+              "_id": "fd13833f-16d2-49ce-ba46-96997015c2d8"
             }
           ]
         },
@@ -1120,7 +1276,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "77501 계좌는 245일 휴면 후 20241201 85,000,000원, 20241205 72,000,000원 등 거액 재활성화 거래가 발생. 심야(52%) 및 인터넷뱅킹 집중, 이상거래비율 34.78%로 분할거래(코드 3) 및 구조화 의심. 2회 합산 157,000,000원 CTR 대상.",
+                "summary": "77501 계좌는 245일 휴면 후 2024-12-01 85,000,000원, 2024-12-05 72,000,000원 등 거액 재활성화 거래가 발생. 심야(52%) 및 인터넷뱅킹 집중, 이상거래비율 34.78%로 분할거래 의심. 2건 합산 157,000,000원 CTR 대상. 휴면계좌 재활성화 패턴 및 반복 거액 이체 구조로 자금세탁 가능성 높음.",
                 "fraud_type": "분할거래",
                 "transactions": [
                   {
@@ -1137,7 +1293,7 @@
                   },
                   {
                     "date": 20241205,
-                    "time_slot": 22,
+                    "time_slot": 20,
                     "sender_bank": 10,
                     "sender_acc": 77501,
                     "receiver_bank": 25,
@@ -1150,8 +1306,8 @@
                 ],
                 "fraud_probability": 0.82,
                 "aml_patterns": [
-                  "Layering",
-                  "Structuring"
+                  "Dormant Reactivation",
+                  "Split Transaction"
                 ],
                 "tools_used": [
                   "detect_dormant_reactivation",
@@ -1159,7 +1315,7 @@
                   "get_account_profile"
                 ]
               },
-              "_id": "d3e0eef0-0d35-4009-bbc5-98ec4318be42"
+              "_id": "5be0236c-fc94-4718-8e8e-bf3077871962"
             }
           ]
         }
@@ -1169,7 +1325,7 @@
       "avg_param_accuracy": 0.875,
       "context_accuracy": null,
       "scenario_complete": true,
-      "elapsed_sec": 2.74
+      "elapsed_sec": 3.06
     },
     {
       "id": "mt_str_011",
@@ -1192,7 +1348,7 @@
               "arguments": {
                 "rule_id": "all"
               },
-              "_id": "d9a3d8c4-7434-4fb5-b45f-475d1a8d094a"
+              "_id": "d88dd586-eff6-4e50-b8ea-15d36fac8426"
             }
           ]
         },
@@ -1209,7 +1365,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 22801 OR receiver_acc = 22801 AND date BETWEEN 20241201 AND 20241228 ORDER BY date, time_slot"
               },
-              "_id": "08f44841-82e9-48c8-b217-3153e389b564"
+              "_id": "30770e46-6130-434c-8503-fab23e240323"
             }
           ]
         },
@@ -1226,7 +1382,7 @@
               "arguments": {
                 "account_id": 22801
               },
-              "_id": "3c3bda0d-2c43-4dc2-8ca0-4c6ac7c99bb6"
+              "_id": "4bf38088-6875-404a-89c6-ad064e72fae1"
             }
           ]
         },
@@ -1241,7 +1397,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "22801 계좌는 2024년 12월 1일부터 12월 28일까지 총 38건의 거래가 발생하였으며, 이 중 15건이 정액거래(9,900,000원)로 확인됨. 심야시간대(21시) 거래가 전체의 55%를 차지하며, 거래금액 이상도(0.78), 거래속도 변화(0.72), 이상거래 이력(0.65) 등 위험요소가 복합적으로 작용하여 위험점수 81점(고위험)으로 평가됨. 특히 동일 정액금액 반복거래와 심야시간 집중거래 패턴이 관찰되어 자금세탁 의심거래로 판단됨.",
+                "summary": "22801 계좌는 2024년 12월 1일부터 12월 28일까지 총 38건의 거래가 발생하였으며, 이 중 15건이 정액거래(9,900,000원)로 확인됨. 심야시간대(21시) 거래가 전체의 55%를 차지하며, 거래금액 이상도(0.78)와 거래속도 변화(0.72)가 매우 높게 평가되어 위험도가 81점(고위험)으로 산정됨. 동일 기간 내 15건의 정액거래가 반복적으로 발생하여 자금세탁 구조화(Structuring) 의심거래로 판단됨.",
                 "fraud_type": "갑작스러운 거래패턴의 변화",
                 "transactions": [
                   {
@@ -1259,16 +1415,15 @@
                 ],
                 "fraud_probability": 0.81,
                 "aml_patterns": [
-                  "R001",
-                  "R003"
+                  "Structuring"
                 ],
                 "tools_used": [
-                  "detect_monitoring_alerts",
+                  "query_transactions",
                   "score_account_risk",
-                  "query_transactions"
+                  "detect_monitoring_alerts"
                 ]
               },
-              "_id": "ab8d16aa-efe9-47eb-946e-8bab40918bd1"
+              "_id": "6d288009-0012-4fbf-96e7-7a2995697591"
             }
           ]
         }
@@ -1278,7 +1433,7 @@
       "avg_param_accuracy": 0.85,
       "context_accuracy": null,
       "scenario_complete": true,
-      "elapsed_sec": 2.66
+      "elapsed_sec": 2.73
     },
     {
       "id": "mt_str_012",
@@ -1301,15 +1456,15 @@
               "arguments": {
                 "unit": "quarterly"
               },
-              "_id": "4262f030-18d2-4feb-9146-3ded151d92dc"
+              "_id": "e24ba054-3e01-4334-912e-b6ced1b21425"
             }
           ]
         },
         {
           "turn": 2,
           "tool_hit": 1.0,
-          "param_accuracy": 0.25,
-          "score": 0.625,
+          "param_accuracy": 0.0,
+          "score": 0.5,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
@@ -1318,10 +1473,10 @@
               "arguments": {
                 "period1_start": 20240901,
                 "period1_end": 20241231,
-                "period2_start": 20240901,
-                "period2_end": 20241231
+                "period2_start": 20240101,
+                "period2_end": 20240331
               },
-              "_id": "4ec596a9-01c7-4252-a5b2-eeda9e3c4cd5"
+              "_id": "b6ed4500-8d66-43d2-81b3-5b3f2d371b34"
             }
           ]
         },
@@ -1338,7 +1493,7 @@
               "arguments": {
                 "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, is_fraud, fraud_type, fraud_description FROM hofinet WHERE date BETWEEN 20241001 AND 20241231 AND is_fraud = 1 ORDER BY date DESC LIMIT 20"
               },
-              "_id": "214cd537-fd34-4389-9b05-bb8037a92b2c"
+              "_id": "ef0da9c1-51e4-4a67-9ee6-9c45dedb8950"
             }
           ]
         },
@@ -1353,7 +1508,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "2024년 4분기(2024-10-01~2024-12-31) 동안 전체 이상거래 건수는 1,890건으로, 3분기(1,234건) 대비 53.2% 급증하였으며, 이 중 '기타' 유형이 245건으로 전체 이상거래의 12.9%를 차지함. '기타' 유형은 명확한 분류 기준에 해당하지 않는 다양한 비정상 거래 패턴을 포함하며, 심야·비정상 시간대 대량 거래, 동일 계좌의 반복적 소액 분산 거래, 신규 수신처와의 연계 거래 등이 다수 확인됨. 특히 2024-11-15 18:00경 출금금융회사 151번, 출금계좌 99012에서 입금금융회사 117번, 입금계좌 881234로 15,000,000 KRW가 이체된 거래가 '기타' 유형으로 분류되었으며, 해당 거래는 심야·비정상 시간대 대량 거래 및 신규 수신처와의 연계 거래 특성을 동시에 보임. 이와 같은 거래 패턴은 자금세탁 및 대포통장 등 불법 자금 이동에 악용될 가능성이 높아 강력한 모니터링이 필요함.",
+                "summary": "2024년 4분기(2024-10-01~2024-12-31) 동안 전체 거래건수 398,000건 중 이상거래 1,890건(이상거래비율 0.47%)이 발생하였으며, 이 중 기타 유형(245건, 12.9%)이 전년 동기 대비 89.1% 급증하였습니다. 기타 유형은 명확한 이상거래 분류에 해당하지 않으나, 심야·비정상적 대량거래 및 신규 수신처와의 반복적 분할입금이 다수 확인되어 자금세탁 등 불법자금 이동 가능성이 높습니다. 특히 2024-11-15 18:00경 15,000,000원 거래가 심야 대량거래(이상거래유형 7)로 분류되었으며, 동일 패턴의 거래가 다수 반복되고 있습니다. 거래 주체 및 수신처 계좌의 익명성, 거래 빈도, 금액 규모 등을 종합적으로 고려할 때 자금세탁 및 대포통장 연계 가능성이 높아 STR 작성이 필요합니다.",
                 "fraud_type": "기타(자유기술)",
                 "transactions": [
                   {
@@ -1371,25 +1526,26 @@
                 ],
                 "fraud_probability": 0.82,
                 "aml_patterns": [
-                  "Late-Night/Early-Morning Bulk Transactions",
-                  "New Counterparty"
+                  "Layering",
+                  "Ring"
                 ],
                 "tools_used": [
                   "query_transactions",
-                  "predict_fraud"
+                  "predict_fraud",
+                  "detect_aml_patterns"
                 ]
               },
-              "_id": "3c1112bf-351f-4d6d-ac16-61b9221e0341"
+              "_id": "fa2e49a9-e2d1-4327-a793-c164d0c71659"
             }
           ]
         }
       ],
-      "avg_score": 0.7812,
+      "avg_score": 0.75,
       "avg_tool_hit": 1.0,
-      "avg_param_accuracy": 0.5625,
+      "avg_param_accuracy": 0.5,
       "context_accuracy": null,
-      "scenario_complete": true,
-      "elapsed_sec": 3.62
+      "scenario_complete": false,
+      "elapsed_sec": 3.63
     },
     {
       "id": "mt_str_013",
@@ -1410,9 +1566,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, is_fraud, fraud_type, fraud_description FROM hofinet WHERE receiver_acc = 445012 ORDER BY date, time_slot"
+                "sql": "SELECT date, time_slot, receiver_bank, receiver_acc, sender_bank, sender_acc, fund_type, media_type, amount, is_fraud, fraud_type, fraud_description FROM hofinet WHERE receiver_acc = 445012 ORDER BY date, time_slot"
               },
-              "_id": "a11d4e76-cfd5-4249-9191-2a08d3394b20"
+              "_id": "5ac978a0-403f-47f1-9cac-572587bcc525"
             }
           ]
         },
@@ -1427,13 +1583,13 @@
             {
               "name": "detect_smurfing_network",
               "arguments": {
-                "account_id": 445012,
                 "direction": "inbound",
+                "account_id": 445012,
                 "min_counterparts": 5,
                 "date_from": 20240901,
                 "date_to": 20241231
               },
-              "_id": "0dc0a98b-c4c0-4ef4-8b7d-ec5eaccf629c"
+              "_id": "56c71b08-f04e-451b-8049-2de28aea38fe"
             }
           ]
         },
@@ -1453,7 +1609,7 @@
                 "max_len": 6,
                 "limit": 10
               },
-              "_id": "515716de-b2a5-49e8-ab0b-3399cf7114da"
+              "_id": "db960add-ad54-4cfb-8552-ad41f6bbf7d8"
             }
           ]
         },
@@ -1468,9 +1624,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_acc = 445012 OR receiver_acc = 445012 AND date BETWEEN 20240901 AND 20241231"
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 445012 AND date BETWEEN 20240901 AND 20241231"
               },
-              "_id": "6545d4fc-2475-4eca-bdc6-8914d4c297aa"
+              "_id": "8fa14679-6f41-4361-a6bc-5883b258f7ab"
             }
           ]
         }
@@ -1480,7 +1636,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.57
+      "elapsed_sec": 1.64
     },
     {
       "id": "mt_str_014",
@@ -1503,7 +1659,7 @@
               "arguments": {
                 "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, is_fraud, fraud_type, fraud_description FROM hofinet WHERE fraud_type = 1 AND date BETWEEN 20230101 AND 20231231 ORDER BY date DESC LIMIT 20"
               },
-              "_id": "bc0bc554-aee4-41b7-82d1-49dc21fafcb9"
+              "_id": "8a29f43e-e3ab-436d-9c90-c64d8e114308"
             }
           ]
         },
@@ -1520,7 +1676,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 67301 AND date BETWEEN 20241001 AND 20241231"
               },
-              "_id": "f0cb06aa-bb93-4642-99d9-52f16d3d5678"
+              "_id": "63280a8e-f4da-4305-b358-06c72cd6cd9e"
             }
           ]
         },
@@ -1542,7 +1698,7 @@
                 "media_type": 7,
                 "amount": 47000000
               },
-              "_id": "5a70c8d3-abdb-4b34-aa2d-cc4acf09be62"
+              "_id": "f98dcbeb-5497-4797-8a99-f9fda4a0805f"
             }
           ]
         },
@@ -1557,7 +1713,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "2024년 4분기(20241001~20241231) 출금계좌 67301에서 평소와 달리 거액(4.7억원) 단일거래가 심야(03:00) 대량매체(7: Bulk Transfer)로 발생. 해당 계좌는 2024년 3분기까지 소액·빈번 거래가 주였으나 4분기부터 거액·비정기적 패턴으로 변화. 총 52건 중 14건(27%)이 이상거래로 분류, 이 중 1건은 XGBoost 모델에서 89% 확률로 이상거래로 예측됨. 거래패턴의 급격한 변화가 관찰되어 자금세탁 의심.",
+                "summary": "2024년 4분기(2024-10-01 ~ 2024-12-31) 출금계좌 67301에서 ‘갑작스러운 거래패턴의 변화’(fraud_type=1) 의심거래가 다수 발생. 총 52건 중 14건이 이상거래로 분류되었으며, 특히 2024-10-12 03:00에 47,000,000 KRW가 Bulk Transfer(매체구분 7)로 신규 수신처(입금계좌 882011)에 이체된 건은 거래금액(47M), 심야시간(03:00), 대량전송(매체 7) 등 이상패턴이 복합적으로 나타남. 해당 계좌는 평상시 소액·주간 거래가 대부분이었으나, 4분기 들어 거액·심야·비정상적 패턴으로 급격히 변화. 이상거래 확률 예측 결과 0.89로 고위험군. 관련 거래 14건 중 3건은 동일일자에 3,000만원 이상 분할 이체도 확인됨.",
                 "fraud_type": "갑작스러운 거래패턴의 변화",
                 "transactions": [
                   {
@@ -1571,18 +1727,44 @@
                     "media_type": 7,
                     "amount": 47000000,
                     "fraud_type": 1
+                  },
+                  {
+                    "date": 20241012,
+                    "time_slot": 3,
+                    "sender_bank": 151,
+                    "sender_acc": 67301,
+                    "receiver_bank": 134,
+                    "receiver_acc": 882012,
+                    "fund_type": 4,
+                    "media_type": 7,
+                    "amount": 33000000,
+                    "fraud_type": 1
+                  },
+                  {
+                    "date": 20241012,
+                    "time_slot": 3,
+                    "sender_bank": 151,
+                    "sender_acc": 67301,
+                    "receiver_bank": 134,
+                    "receiver_acc": 882013,
+                    "fund_type": 4,
+                    "media_type": 7,
+                    "amount": 31000000,
+                    "fraud_type": 1
                   }
                 ],
                 "fraud_probability": 0.89,
                 "aml_patterns": [
-                  "Sudden Pattern Change"
+                  "Sudden Pattern Change",
+                  "Bulk Transfer",
+                  "Large Amount at Night"
                 ],
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud"
                 ]
               },
-              "_id": "6e3ce6d1-f38d-4814-a42c-55de47ea7e66"
+              "_id": "f22ba836-e79a-4586-baef-cccab6bc58b7"
             }
           ]
         }
@@ -1592,7 +1774,7 @@
       "avg_param_accuracy": 0.4375,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 3.14
+      "elapsed_sec": 5.1
     },
     {
       "id": "mt_str_015",
@@ -1615,7 +1797,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 42105 OR receiver_acc = 42105 ORDER BY date, time_slot"
               },
-              "_id": "9713dafa-eb1e-4e15-8d2a-4371b6595e78"
+              "_id": "5bb223fa-148a-42f7-aad3-772cfc837ada"
             }
           ]
         },
@@ -1630,9 +1812,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_acc = 42105 LIMIT 50"
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 42105 AND media_type = 3 AND fraud_type = 4 ORDER BY date, time_slot"
               },
-              "_id": "383421c3-9d50-43b4-8565-4cd8adb3ecb3"
+              "_id": "afaa106f-203b-433c-b223-237e25d6d719"
             }
           ]
         },
@@ -1654,7 +1836,7 @@
                 "media_type": 5,
                 "amount": 50000000
               },
-              "_id": "734881f8-bc4b-4868-913a-0a26e9a22709"
+              "_id": "2df01130-7420-4c9d-9367-ef4077601beb"
             }
           ]
         },
@@ -1672,23 +1854,23 @@
                 "keyword": "non-face-to-face",
                 "industry": "banking"
               },
-              "_id": "c49c5ffa-96fa-458c-90d8-5efcf394e110"
+              "_id": "88ab25ad-3e97-42a8-9ffe-2af66cf57d24"
             }
           ]
         },
         {
           "turn": 5,
           "tool_hit": 1.0,
-          "param_accuracy": 0.75,
-          "score": 0.875,
+          "param_accuracy": 0.5,
+          "score": 0.75,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "2024년 12월 10~11일 피해자 계좌(42105)에서 2회에 걸쳐 총 9.8억 원 규모의 동시 다중거래가 발생. 모두 전화(매체 5)로 송금된 자금이며, FIU 참고유형 B-08(전화·문자를 이용한 사기 관련 자금 이동), B-11(피해자 계좌에서 급격한 자금 유출)에 해당. 거래 패턴상 보이스피싱 등 금융사기에 의한 자금세탁 의심. 2건 모두 이상거래로 탐지됨.",
-                "fraud_type": "다중거래의 동시요청",
+                "summary": "2024년 12월 10~11일 피해자 계좌(42105)에서 2회에 걸쳐 9.8억 원(각 5억, 4.8억)이 동일 수취인(122-771089)으로 동시 이체됨. 전화(매체 5) 및 ATM을 통한 비정상적 대량 송금이었으며, FIU 참고유형 B-08·B-11에 해당. 다중거래 동시 요청(이상거래유형 4) 및 심야·비대면 채널 집중 사용 패턴 확인. 최근 1개월 내 동일 계좌에서 5건 이상 이상거래 발생, 모두 동일 수취인 집중. 자금세탁 위험 높음.",
+                "fraud_type": "다중거래의 동시 요청",
                 "transactions": [
                   {
                     "date": 20241210,
@@ -1726,17 +1908,17 @@
                   "lookup_fiu_reference_types"
                 ]
               },
-              "_id": "10e2e6b3-9aab-464e-85d8-95c2eac54234"
+              "_id": "c791195c-ba61-470c-bece-57278978d38d"
             }
           ]
         }
       ],
-      "avg_score": 0.575,
+      "avg_score": 0.55,
       "avg_tool_hit": 0.8,
-      "avg_param_accuracy": 0.35,
+      "avg_param_accuracy": 0.3,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 3.48
+      "elapsed_sec": 3.99
     },
     {
       "id": "mt_str_016",
@@ -1757,57 +1939,238 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "205번 금융회사(은행)에서 최근 7일 동안 심야(21-24시) 대량거래(media_type=7, bulk transfer) 및 동일 수신처(receiver_acc)에 대한 반복적 분할송금(fund_type=0, amount=4,500,000 KRW x 3건)이 확인됨. 심야시간 bulk transfer는 §VI-4 code 25(의심스러운 담보대출/보험약관대출) 및 §VI-5 code 31(기타)에 해당. 분할송금은 §VI-4 code 18(분할거래)에 해당. 총 3건의 거래에서 13,500,000 KRW가 이동하였으며, 수신처는 동일 계좌임. 심야시간 bulk transfer는 자금세탁의 배치(placement) 또는 구조화(structuring) 단계로 의심됨.",
-                "fraud_type": "의심스러운 담보대출/보험약관대출",
+                "summary": "205번 금융회사(은행 ID: 205)에서 최근 30일 동안 심야(22-01시) 대량거래(media_type=7, bulk transfer) 및 동일 수신처(account_id=987654321)에 대한 반복적 분할송금(fund_type=3, amount=4,500,000 KRW)이 다수 탐지됨. 총 17건, 합계 76.5M KRW 규모. 수신처는 3개 은행(205, 101, 303)과 연결되어 있으며, 이 중 101번 은행 계좌는 최근 6개월 내 신규 개설된 계좌로 확인됨. 심야시간 bulk transfer는 FIU §VI-4 code 15(갑작스러운 거래패턴의 변화) 및 §VI-5 code 31(기타)에 해당.",
+                "fraud_type": "갑작스러운 거래패턴의 변화",
                 "transactions": [
                   {
                     "date": 20240601,
                     "time_slot": 21,
                     "sender_bank": 205,
-                    "sender_acc": 100205001,
+                    "sender_acc": 123456789,
                     "receiver_bank": 205,
-                    "receiver_acc": 78901234,
-                    "fund_type": 0,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
                     "media_type": 7,
                     "amount": 4500000,
-                    "fraud_type": 3
+                    "fraud_type": 7
+                  },
+                  {
+                    "date": 20240602,
+                    "time_slot": 21,
+                    "sender_bank": 205,
+                    "sender_acc": 123456790,
+                    "receiver_bank": 205,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
+                    "media_type": 7,
+                    "amount": 4500000,
+                    "fraud_type": 7
                   },
                   {
                     "date": 20240603,
                     "time_slot": 21,
                     "sender_bank": 205,
-                    "sender_acc": 100205002,
-                    "receiver_bank": 205,
-                    "receiver_acc": 78901234,
-                    "fund_type": 0,
+                    "sender_acc": 123456791,
+                    "receiver_bank": 101,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
                     "media_type": 7,
                     "amount": 4500000,
-                    "fraud_type": 3
+                    "fraud_type": 7
+                  },
+                  {
+                    "date": 20240604,
+                    "time_slot": 21,
+                    "sender_bank": 205,
+                    "sender_acc": 123456792,
+                    "receiver_bank": 303,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
+                    "media_type": 7,
+                    "amount": 4500000,
+                    "fraud_type": 7
                   },
                   {
                     "date": 20240605,
                     "time_slot": 21,
                     "sender_bank": 205,
-                    "sender_acc": 100205003,
+                    "sender_acc": 123456793,
                     "receiver_bank": 205,
-                    "receiver_acc": 78901234,
-                    "fund_type": 0,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
                     "media_type": 7,
                     "amount": 4500000,
-                    "fraud_type": 3
+                    "fraud_type": 7
+                  },
+                  {
+                    "date": 20240606,
+                    "time_slot": 21,
+                    "sender_bank": 205,
+                    "sender_acc": 123456794,
+                    "receiver_bank": 205,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
+                    "media_type": 7,
+                    "amount": 4500000,
+                    "fraud_type": 7
+                  },
+                  {
+                    "date": 20240607,
+                    "time_slot": 21,
+                    "sender_bank": 205,
+                    "sender_acc": 123456795,
+                    "receiver_bank": 101,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
+                    "media_type": 7,
+                    "amount": 4500000,
+                    "fraud_type": 7
+                  },
+                  {
+                    "date": 20240608,
+                    "time_slot": 21,
+                    "sender_bank": 205,
+                    "sender_acc": 123456796,
+                    "receiver_bank": 303,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
+                    "media_type": 7,
+                    "amount": 4500000,
+                    "fraud_type": 7
+                  },
+                  {
+                    "date": 20240609,
+                    "time_slot": 21,
+                    "sender_bank": 205,
+                    "sender_acc": 123456797,
+                    "receiver_bank": 205,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
+                    "media_type": 7,
+                    "amount": 4500000,
+                    "fraud_type": 7
+                  },
+                  {
+                    "date": 20240610,
+                    "time_slot": 21,
+                    "sender_bank": 205,
+                    "sender_acc": 123456798,
+                    "receiver_bank": 205,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
+                    "media_type": 7,
+                    "amount": 4500000,
+                    "fraud_type": 7
+                  },
+                  {
+                    "date": 20240611,
+                    "time_slot": 21,
+                    "sender_bank": 205,
+                    "sender_acc": 123456799,
+                    "receiver_bank": 101,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
+                    "media_type": 7,
+                    "amount": 4500000,
+                    "fraud_type": 7
+                  },
+                  {
+                    "date": 20240612,
+                    "time_slot": 21,
+                    "sender_bank": 205,
+                    "sender_acc": 123456800,
+                    "receiver_bank": 303,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
+                    "media_type": 7,
+                    "amount": 4500000,
+                    "fraud_type": 7
+                  },
+                  {
+                    "date": 20240613,
+                    "time_slot": 21,
+                    "sender_bank": 205,
+                    "sender_acc": 123456801,
+                    "receiver_bank": 205,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
+                    "media_type": 7,
+                    "amount": 4500000,
+                    "fraud_type": 7
+                  },
+                  {
+                    "date": 20240614,
+                    "time_slot": 21,
+                    "sender_bank": 205,
+                    "sender_acc": 123456802,
+                    "receiver_bank": 205,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
+                    "media_type": 7,
+                    "amount": 4500000,
+                    "fraud_type": 7
+                  },
+                  {
+                    "date": 20240615,
+                    "time_slot": 21,
+                    "sender_bank": 205,
+                    "sender_acc": 123456803,
+                    "receiver_bank": 101,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
+                    "media_type": 7,
+                    "amount": 4500000,
+                    "fraud_type": 7
+                  },
+                  {
+                    "date": 20240616,
+                    "time_slot": 21,
+                    "sender_bank": 205,
+                    "sender_acc": 123456804,
+                    "receiver_bank": 303,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
+                    "media_type": 7,
+                    "amount": 4500000,
+                    "fraud_type": 7
+                  },
+                  {
+                    "date": 20240617,
+                    "time_slot": 21,
+                    "sender_bank": 205,
+                    "sender_acc": 123456805,
+                    "receiver_bank": 205,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
+                    "media_type": 7,
+                    "amount": 4500000,
+                    "fraud_type": 7
+                  },
+                  {
+                    "date": 20240618,
+                    "time_slot": 21,
+                    "sender_bank": 205,
+                    "sender_acc": 123456806,
+                    "receiver_bank": 205,
+                    "receiver_acc": 987654321,
+                    "fund_type": 3,
+                    "media_type": 7,
+                    "amount": 4500000,
+                    "fraud_type": 7
                   }
                 ],
-                "fraud_probability": 0.82,
+                "fraud_probability": 0.92,
                 "aml_patterns": [
                   "Layering",
-                  "Structuring"
+                  "Ring"
                 ],
                 "tools_used": [
                   "query_transactions",
-                  "predict_fraud"
+                  "predict_fraud",
+                  "detect_aml_patterns"
                 ]
               },
-              "_id": "57b0fc01-d2f7-41c5-b171-691eac8d4dac"
+              "_id": "1197b048-1c34-40fd-8fbc-1269afada06f"
             }
           ]
         },
@@ -1825,7 +2188,7 @@
                 "fraud_type": 2,
                 "bank_id": 205
               },
-              "_id": "daabf3e3-7301-401c-89fc-85de3e548474"
+              "_id": "6b706f22-754d-489b-afa3-4deb33978753"
             }
           ]
         },
@@ -1842,7 +2205,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE date BETWEEN 20241001 AND 20241231 AND sender_bank = 205 AND fraud_type = 2"
               },
-              "_id": "7995a324-eed2-4db0-95d1-59384fe487ca"
+              "_id": "178cb68b-1b4a-4216-8346-8928037f541b"
             }
           ]
         },
@@ -1859,39 +2222,58 @@
               "arguments": {
                 "account_id": 44201
               },
-              "_id": "929019bf-c5de-4a0d-99bd-25b8a2866794"
+              "_id": "37459699-904b-47df-93a2-8b5e245ccfd6"
             }
           ]
         },
         {
           "turn": 5,
-          "tool_hit": 0.0,
-          "param_accuracy": 0.0,
-          "score": 0.0,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.25,
+          "score": 0.625,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
-              "name": "predict_fraud",
+              "name": "generate_str",
               "arguments": {
-                "time_slot": 9,
-                "sender_bank": 205,
-                "receiver_bank": 117,
-                "fund_type": 4,
-                "media_type": 4,
-                "amount": 25000000
+                "summary": "2024년 4분기 205 금융회사 계좌 44201에서 신규 수신처(117, 990123)로 2억 5천만 원 이상거래가 다수 발생. 심야거래비율 12%, 금액이상도 0.58, 거래상대다양성 0.88, 거래속도변화 0.62 등 위험요인 다수. 이상거래유형 2(New Counterparty) 및 심야 대량거래 패턴 확인. 계좌 위험도 65점(중위험)으로 의심거래로 판단.",
+                "fraud_type": "원격지거래",
+                "transactions": [
+                  {
+                    "date": 20241105,
+                    "time_slot": 9,
+                    "sender_bank": 205,
+                    "sender_acc": 44201,
+                    "receiver_bank": 117,
+                    "receiver_acc": 990123,
+                    "fund_type": 4,
+                    "media_type": 4,
+                    "amount": 25000000,
+                    "fraud_type": 2
+                  }
+                ],
+                "fraud_probability": 0.65,
+                "aml_patterns": [
+                  "New Counterparty",
+                  "Nighttime Bulk"
+                ],
+                "tools_used": [
+                  "query_transactions",
+                  "score_account_risk"
+                ]
               },
-              "_id": "595009cf-9536-4398-9613-759e19ba055d"
+              "_id": "d74ad76f-b4b2-4b4a-bca0-273ec5d12c35"
             }
           ]
         }
       ],
-      "avg_score": 0.375,
-      "avg_tool_hit": 0.4,
-      "avg_param_accuracy": 0.35,
+      "avg_score": 0.5,
+      "avg_tool_hit": 0.6,
+      "avg_param_accuracy": 0.4,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 3.88
+      "elapsed_sec": 11.77
     },
     {
       "id": "mt_str_017",
@@ -1917,7 +2299,7 @@
                 "min_counterparts": 5,
                 "limit": 20
               },
-              "_id": "1e7c0a87-98dd-43ca-8606-56bc92a04951"
+              "_id": "8137f950-4f5e-4e87-a586-5aad286cdc82"
             }
           ]
         },
@@ -1937,7 +2319,7 @@
                 "min_counterparts": 5,
                 "limit": 20
               },
-              "_id": "76040585-6d0b-4d25-9a45-206abf947585"
+              "_id": "fb453e91-72ac-468c-b477-d8a3aa887466"
             }
           ]
         },
@@ -1957,7 +2339,7 @@
                 "min_inflow": 10,
                 "limit": 20
               },
-              "_id": "a38448bd-cf7b-40c3-b9de-45785a86f7b1"
+              "_id": "b79d0962-0492-448e-b4fd-aa9e9577c50c"
             }
           ]
         },
@@ -1972,7 +2354,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "계좌 55089로 2024년 6월 1일부터 6월 30일까지 18개 다수 계좌에서 총 289억 원이 집중 유입됨. 각 계좌별 1.5~2.5억 원씩 분할 입금되어 총 18회 반복. 동일 계좌에서 2개 계좌로 1회씩 분산 출금 발생. 스머핑(분할입금) 및 펀드레이어링 의심. 총 유입금액 대비 단일 거래금액 1.5억 원 미만 유지, 반복적 소액 분할입금 패턴 확인.",
+                "summary": "계좌 55089로 2024년 6월 1일부터 6월 30일까지 18개 다수 계좌에서 총 289억 원이 집중 유입됨. 1회 평균 1.6억 원, 최소 5천만 원~최대 5.2억 원. 동일일 반복 입금 및 분산 입금 패턴 확인. 분할거래(funnel) 및 스머핑 의심. 자금세탁 위험 높음.",
                 "fraud_type": "분할거래",
                 "transactions": [
                   {
@@ -1984,11 +2366,11 @@
                     "receiver_acc": 55089,
                     "fund_type": 0,
                     "media_type": 2,
-                    "amount": 150000000,
+                    "amount": 520000000,
                     "fraud_type": 3
                   },
                   {
-                    "date": 20240603,
+                    "date": 20240601,
                     "time_slot": 12,
                     "sender_bank": 22034,
                     "sender_acc": 220340002,
@@ -1996,11 +2378,11 @@
                     "receiver_acc": 55089,
                     "fund_type": 0,
                     "media_type": 3,
-                    "amount": 200000000,
+                    "amount": 450000000,
                     "fraud_type": 3
                   },
                   {
-                    "date": 20240605,
+                    "date": 20240602,
                     "time_slot": 15,
                     "sender_bank": 33045,
                     "sender_acc": 330450003,
@@ -2008,11 +2390,11 @@
                     "receiver_acc": 55089,
                     "fund_type": 0,
                     "media_type": 4,
-                    "amount": 180000000,
+                    "amount": 500000000,
                     "fraud_type": 3
                   },
                   {
-                    "date": 20240607,
+                    "date": 20240602,
                     "time_slot": 18,
                     "sender_bank": 44056,
                     "sender_acc": 440560004,
@@ -2020,33 +2402,33 @@
                     "receiver_acc": 55089,
                     "fund_type": 0,
                     "media_type": 5,
-                    "amount": 170000000,
+                    "amount": 350000000,
                     "fraud_type": 3
                   },
                   {
-                    "date": 20240610,
+                    "date": 20240603,
                     "time_slot": 21,
                     "sender_bank": 55067,
                     "sender_acc": 550670005,
                     "receiver_bank": 11023,
                     "receiver_acc": 55089,
                     "fund_type": 0,
-                    "media_type": 6,
-                    "amount": 160000000,
+                    "media_type": 1,
+                    "amount": 480000000,
                     "fraud_type": 3
                   }
                 ],
                 "fraud_probability": 0.92,
                 "aml_patterns": [
                   "Funnel",
-                  "Layering"
+                  "Smurfing"
                 ],
                 "tools_used": [
                   "detect_smurfing_network",
                   "detect_aml_patterns"
                 ]
               },
-              "_id": "cae94f11-c772-47a9-a872-98d85e1d4a0a"
+              "_id": "b167f8e6-3344-48b6-851f-1545f420e5d7"
             }
           ]
         }
@@ -2056,7 +2438,7 @@
       "avg_param_accuracy": 0.6,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 4.75
+      "elapsed_sec": 4.92
     },
     {
       "id": "mt_str_018",
@@ -2080,7 +2462,7 @@
                 "date_from": 20230101,
                 "date_to": 20231231
               },
-              "_id": "ac521f3e-9b68-4f2d-86fe-fe859e6f2330"
+              "_id": "6d60c234-be2a-4dda-80a1-6b502a5cea00"
             }
           ]
         },
@@ -2096,11 +2478,9 @@
               "name": "analyze_cross_institution_flow",
               "arguments": {
                 "date_from": 20230101,
-                "date_to": 20231231,
-                "min_transactions": 10,
-                "limit": 20
+                "date_to": 20231231
               },
-              "_id": "f15a9eab-8f90-4923-bd90-b54bc918f85c"
+              "_id": "972faba2-e870-4244-b083-5995751dc3b0"
             }
           ]
         },
@@ -2117,7 +2497,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_bank = 73 AND receiver_bank = 305 AND is_fraud = 1"
               },
-              "_id": "c5557b2e-113d-40a3-98d8-362cfa2f6c11"
+              "_id": "47c66875-9e5b-4f55-a8ae-e9c4eb23f602"
             }
           ]
         },
@@ -2132,7 +2512,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "73-305 구간에서 2024년 11월 15일 21시 490,000,000 KRW 거래가 발생했습니다. 해당 거래는 출금기관 73의 계좌 55012에서 입금기관 305의 계좌 770123으로 이체되었으며, 이상거래유형 1(갑작스러운 거래패턴의 변화)에 해당합니다. 최근 3개월 동안 동일 계좌에서 23건의 이상거래가 발생했으며, 평균 거래금액 대비 4.2배 높은 금액이 단기간에 집중되었습니다. 또한 심야시간(21시) 대량거래로 추가적인 위험요소가 확인되었습니다.",
+                "summary": "73번 기관에서 305번 기관으로 2024년 11월 15일 21시 49,000,000원 이체 발생. 해당 기관은 최근 1년간 동일 패턴의 거래가 없었으며, 심야 시간대(21시) 고액 이체 및 신규 수신처로의 자금 이동으로 이상거래로 판단됨. 거래 패턴의 급격한 변화가 감지되어 STR 제출 필요.",
                 "fraud_type": "갑작스러운 거래패턴의 변화",
                 "transactions": [
                   {
@@ -2148,17 +2528,16 @@
                     "fraud_type": 1
                   }
                 ],
-                "fraud_probability": 0.87,
+                "fraud_probability": 0.92,
                 "aml_patterns": [
-                  "Sudden Change in Transaction Pattern",
-                  "Nighttime Bulk"
+                  "Sudden Change in Transaction Pattern"
                 ],
                 "tools_used": [
                   "query_transactions",
-                  "analyze_cross_institution_flow"
+                  "predict_fraud"
                 ]
               },
-              "_id": "ebd06ee0-0545-413e-987e-79ec1a50cf64"
+              "_id": "7d92cd2d-2a41-4a7f-bc14-f44fa2fe197a"
             }
           ]
         }
@@ -2168,7 +2547,7 @@
       "avg_param_accuracy": 0.4792,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 2.71
+      "elapsed_sec": 2.48
     },
     {
       "id": "mt_str_019",
@@ -2194,7 +2573,7 @@
                 "date_to": 20240630,
                 "limit": 20
               },
-              "_id": "d8620921-96b9-498f-928a-32bbb3933305"
+              "_id": "7e1d7376-d67b-46ca-ace0-a6e0d1302cda"
             }
           ]
         },
@@ -2209,9 +2588,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_acc = 88923 OR receiver_acc = 88923 AND date = 20241218 ORDER BY amount DESC LIMIT 10"
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 88923 OR receiver_acc = 88923 AND date = 20241218"
               },
-              "_id": "898cf925-960b-4de7-acb8-a98c21388b6f"
+              "_id": "6404f55b-ea4e-48e8-81ee-7120c2fc6adf"
             }
           ]
         },
@@ -2224,11 +2603,12 @@
           "clarification_hit": null,
           "actual_tool_calls": [
             {
-              "name": "analyze_network",
+              "name": "detect_monitoring_alerts",
               "arguments": {
+                "rule_id": "R001",
                 "account_id": 88923
               },
-              "_id": "2897295f-a240-4f96-ba07-048db42bb9af"
+              "_id": "e28ef073-44f7-4bc3-a6c8-dae02dd4b0e5"
             }
           ]
         },
@@ -2250,7 +2630,7 @@
                 "media_type": 5,
                 "amount": 75000000
               },
-              "_id": "f6d6f856-e73e-41d1-81a4-c1740b247a2b"
+              "_id": "494c4bbb-945f-40f6-b829-0bad6aee2b99"
             }
           ]
         },
@@ -2265,8 +2645,8 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "88923 계좌에서 2024-12-18 00:00~03:00 심야시간대에 7.5억원 단일 대량거래가 발생. 해당 계좌는 최근 14일간 18건, 총 4.23억원 거래 중 7건이 이상거래로 분류됨. 심야시간(0,3,6시) 집중 거래와 대량 ATM 이체 패턴이 확인됨. 동일 계좌에서 R001 심야대량거래 모니터링 규칙에 11회 이상 경고가 발생했으며, 최근 3일간 동일 패턴 반복. 거래 매체(매체구분 5: Per-transaction Transfer)는 비정상적 심야 대량거래에 자주 활용되는 채널임. 계좌 프로필 분석 결과 야간 거래 비율 68%, 평균 거래금액 23.5억원으로 정상 계좌 대비 4.2배 높음. 거래 패턴 급변 및 심야 집중 거래로 인한 자금세탁 위험 매우 높음.",
-                "fraud_type": "거액 입금 후 당일/익일 인출",
+                "summary": "88923 계좌에서 2024-12-18 00:00~03:00 심야시간대에 7.5억원 단일 대량거래가 발생. 해당 계좌는 최근 14일간 18건, 총 4.23억원 거래 중 7건이 이상거래로 분류됨. 심야시간(0,3시) 집중, ATM/모바일 등 비대면 채널 이용, 거액 분할 송금 패턴 확인. 동일 계좌에서 R001 심야대량거래 모니터링 규칙에 11회, R002 동일일다건거래 규칙에 8회 동시 탐지됨. 최근 3개월간 거래패턴 급변(기존 1~2천만원 수준 → 7.5억원), 신규 수신처(112301)로 반복 송금. 자금세탁 의심 정황 다수 포착.",
+                "fraud_type": "분할거래",
                 "transactions": [
                   {
                     "date": 20241218,
@@ -2283,15 +2663,15 @@
                 ],
                 "fraud_probability": 0.93,
                 "aml_patterns": [
-                  "Ring",
-                  "Layering"
+                  "Layering",
+                  "Ring"
                 ],
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud"
                 ]
               },
-              "_id": "adeeffcd-7316-4bb4-9a0d-3cec61d7f490"
+              "_id": "44a96bf3-876a-4021-bb21-bfd3be934eb5"
             }
           ]
         }
@@ -2301,7 +2681,7 @@
       "avg_param_accuracy": 0.25,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 3.45
+      "elapsed_sec": 3.52
     },
     {
       "id": "mt_str_020",
@@ -2324,7 +2704,7 @@
               "arguments": {
                 "term": "layering"
               },
-              "_id": "e76be39a-b540-49fc-ad29-9cf68efba7f1"
+              "_id": "51d3fbe4-1b5e-49e6-b94d-1041cf4aca5b"
             }
           ]
         },
@@ -2341,7 +2721,7 @@
               "arguments": {
                 "pattern_type": "layering"
               },
-              "_id": "a3886491-e405-4191-9f04-f1338ce5785f"
+              "_id": "c614b2df-57d2-4f06-9d15-44ea1fcf9408"
             }
           ]
         },
@@ -2358,7 +2738,7 @@
               "arguments": {
                 "pattern_type": "layering"
               },
-              "_id": "bd5857ce-e728-4386-a1d1-b7ccc47497c6"
+              "_id": "705cdcd0-5ae0-4f18-a348-cc2083520b57"
             }
           ]
         },
@@ -2376,7 +2756,7 @@
                 "account_id": 33045,
                 "hops": 2
               },
-              "_id": "cf5635ff-d0fd-444e-a490-d54f8135545f"
+              "_id": "27d9ef1f-b38b-4ab7-89f3-6a93b3fac1b5"
             }
           ]
         },
@@ -2391,7 +2771,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "2024년 10월 20일 18시 33045 계좌에서 48,500,000원 거래가 발생했으며, 이는 layering 패턴(4단계) 탐지 결과와 일치합니다. 해당 계좌는 최근 3개월간 22건의 이상거래(28%)를 기록했으며, layering depth 4의 복잡한 자금 이동 경로가 확인되었습니다. layering 패턴은 자금의 출처를 은폐하기 위한 전형적인 자금세탁 수법으로, FIU 공식 분류 §VI-4 code 18(분할거래)에 해당합니다.",
+                "summary": "2024년 10월 20일 18시 33045 계좌에서 48,500,000원 거래가 발생했으며, 이는 layering 패턴(4단계) 탐지 결과와 일치합니다. 해당 계좌는 2024년 6월~12월 기간 동안 총 78건의 거래가 발생했으며, 이 중 22건이 이상거래로 분류되었습니다. layering 패턴은 자금의 출처를 은폐하기 위해 여러 계좌와 금융기관을 경유하는 전형적인 자금세탁 수법입니다. 특히 4단계의 복잡한 경로를 통해 자금의 흐름을 추적하기 어렵게 만든 점이 확인되었습니다. layering 패턴은 자금세탁의 2단계에 해당하며, 이는 FIU 공식 분류 §VI-4 code 18(분할거래) 및 §VI-5 code 31(기타)로 매핑됩니다.",
                 "fraud_type": "분할거래",
                 "transactions": [
                   {
@@ -2416,7 +2796,7 @@
                   "query_transactions"
                 ]
               },
-              "_id": "965a0b23-e535-424a-9586-f6933f072bad"
+              "_id": "5193bc41-4aa9-40b1-9402-ae6c659d85aa"
             }
           ]
         }
@@ -2426,7 +2806,7 @@
       "avg_param_accuracy": 0.2,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 2.38
+      "elapsed_sec": 2.95
     },
     {
       "id": "mt_str_021",
@@ -2453,7 +2833,7 @@
                 "threshold": 10000000,
                 "limit": 20
               },
-              "_id": "eb228f58-02c7-4997-ad07-6f099c339bab"
+              "_id": "37a5a87d-4ab2-4cfe-9ab6-2f6501ccd4df"
             }
           ]
         },
@@ -2474,7 +2854,7 @@
                 "threshold": 10000000,
                 "limit": 20
               },
-              "_id": "32190566-0c78-4e4d-800b-fe280393fa41"
+              "_id": "d4cd1bbc-ca2d-47a0-b8ee-e10ce344ed4f"
             }
           ]
         },
@@ -2491,94 +2871,34 @@
               "arguments": {
                 "account_id": 66801
               },
-              "_id": "ee0fdb06-a07e-4f83-ad7f-2ee66a6b8526"
+              "_id": "1cb74a06-8fdf-4adc-a703-a4c33c154d2b"
             }
           ]
         },
         {
           "turn": 4,
-          "tool_hit": 1.0,
-          "param_accuracy": 0.4,
-          "score": 0.7,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
-              "name": "generate_str",
+              "name": "query_transactions",
               "arguments": {
-                "summary": "66801 계좌는 분할거래(structuring) 의심으로 2024-12-15에 4건 합계 38,000,000 KRW가 발생하였으며, 각 건당 9,800,000 KRW 이하로 분산 송금되었습니다. 위험도 평가 결과 74점(고위험)으로 산정되었습니다. 심야거래비율 35%, 금액이상도 0.82, 거래속도 변화 0.68 등 이상 패턴이 확인되었습니다. 분할거래는 자금세탁의 전형적 수법으로, FIU §VI-4 code 15(갑작스러운 거래패턴의 변화)에 해당합니다.",
-                "fraud_type": "갑작스러운 거래패턴의 변화",
-                "transactions": [
-                  {
-                    "date": 20241215,
-                    "time_slot": 21,
-                    "sender_bank": 10,
-                    "sender_acc": 66801,
-                    "receiver_bank": 20,
-                    "receiver_acc": 12345,
-                    "fund_type": 0,
-                    "media_type": 2,
-                    "amount": 9800000,
-                    "fraud_type": 3
-                  },
-                  {
-                    "date": 20241215,
-                    "time_slot": 21,
-                    "sender_bank": 10,
-                    "sender_acc": 66801,
-                    "receiver_bank": 25,
-                    "receiver_acc": 67890,
-                    "fund_type": 0,
-                    "media_type": 2,
-                    "amount": 9000000,
-                    "fraud_type": 3
-                  },
-                  {
-                    "date": 20241215,
-                    "time_slot": 21,
-                    "sender_bank": 10,
-                    "sender_acc": 66801,
-                    "receiver_bank": 30,
-                    "receiver_acc": 54321,
-                    "fund_type": 0,
-                    "media_type": 2,
-                    "amount": 8000000,
-                    "fraud_type": 3
-                  },
-                  {
-                    "date": 20241215,
-                    "time_slot": 21,
-                    "sender_bank": 10,
-                    "sender_acc": 66801,
-                    "receiver_bank": 35,
-                    "receiver_acc": 98765,
-                    "fund_type": 0,
-                    "media_type": 2,
-                    "amount": 1000000,
-                    "fraud_type": 3
-                  }
-                ],
-                "fraud_probability": 0.82,
-                "aml_patterns": [
-                  "Structuring",
-                  "Sudden Pattern Change"
-                ],
-                "tools_used": [
-                  "detect_ctr_candidates",
-                  "score_account_risk"
-                ]
+                "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, is_fraud, fraud_type, fraud_description FROM hofinet WHERE sender_acc = 66801 AND date BETWEEN 20241201 AND 20241231"
               },
-              "_id": "d4362b5d-32c0-4e65-880b-00fbde6a5d86"
+              "_id": "80fe6031-a9de-49d4-b166-7089ee00f2ba"
             }
           ]
         }
       ],
-      "avg_score": 0.675,
-      "avg_tool_hit": 0.75,
-      "avg_param_accuracy": 0.6,
+      "avg_score": 0.5,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.5,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 4.25
+      "elapsed_sec": 1.59
     },
     {
       "id": "mt_str_022",
@@ -2604,27 +2924,27 @@
                 "period2_start": 20240701,
                 "period2_end": 20240731
               },
-              "_id": "ab3027b1-52fb-4825-8a0d-31e682e9e042"
+              "_id": "119fd49a-6066-4c97-8ab4-f8de7ab09b76"
             }
           ]
         },
         {
           "turn": 2,
           "tool_hit": 1.0,
-          "param_accuracy": 0.75,
-          "score": 0.875,
+          "param_accuracy": 0.5,
+          "score": 0.75,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
               "name": "compare_periods",
               "arguments": {
-                "period1_start": 20240101,
+                "period1_start": 20240601,
                 "period1_end": 20240630,
-                "period2_start": 20240901,
+                "period2_start": 20241201,
                 "period2_end": 20241231
               },
-              "_id": "880cab67-d8fe-428b-a46b-ca15899fa373"
+              "_id": "e5781cce-e871-48ed-8b62-1174cb3262c3"
             }
           ]
         },
@@ -2641,82 +2961,39 @@
               "arguments": {
                 "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, is_fraud, fraud_type, fraud_description FROM hofinet WHERE date BETWEEN 20240701 AND 20241231 AND is_fraud = 1 ORDER BY amount DESC LIMIT 20"
               },
-              "_id": "83e5f81e-07cf-4542-a5d3-d117e07e2c51"
+              "_id": "b2e29dae-71e2-42d1-8f36-370887c2a73d"
             }
           ]
         },
         {
           "turn": 4,
-          "tool_hit": 1.0,
+          "tool_hit": 0.0,
           "param_accuracy": 0.0,
-          "score": 0.5,
+          "score": 0.0,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
-              "name": "generate_str",
+              "name": "predict_fraud",
               "arguments": {
-                "summary": "2024년 7~12월 기간 동안 전체 이상거래 3,560건 중 2,134건(60.0%)이 신규 수신처(New Counterparty) 거래로 확인됨. 이는 기존 패턴과 달리 미등록 계좌로의 대규모 자금 이동이 집중적으로 발생했으며, 평균 거래금액은 28,900,000원으로 평소보다 32.6% 증가. 특히 10월~12월 사이에 신규 수신처 거래가 급증하여 자금세탁 및 대포통장 의심 정황이 다수 포착됨. 거래 패턴 분석 결과, 동일인이 여러 금융회사를 통해 분산 송금하는 구조도 확인됨.",
-                "fraud_type": "원격지거래",
-                "transactions": [
-                  {
-                    "date": 20241001,
-                    "time_slot": 15,
-                    "sender_bank": 147,
-                    "sender_acc": 55201,
-                    "receiver_bank": 117,
-                    "receiver_acc": 880123,
-                    "fund_type": 4,
-                    "media_type": 4,
-                    "amount": 18000000,
-                    "fraud_type": 2
-                  },
-                  {
-                    "date": 20241115,
-                    "time_slot": 18,
-                    "sender_bank": 123,
-                    "sender_acc": 77122,
-                    "receiver_bank": 145,
-                    "receiver_acc": 990456,
-                    "fund_type": 3,
-                    "media_type": 5,
-                    "amount": 25000000,
-                    "fraud_type": 2
-                  },
-                  {
-                    "date": 20241205,
-                    "time_slot": 21,
-                    "sender_bank": 156,
-                    "sender_acc": 88433,
-                    "receiver_bank": 132,
-                    "receiver_acc": 770890,
-                    "fund_type": 1,
-                    "media_type": 2,
-                    "amount": 12000000,
-                    "fraud_type": 2
-                  }
-                ],
-                "fraud_probability": 0.87,
-                "aml_patterns": [
-                  "Layering",
-                  "Ring"
-                ],
-                "tools_used": [
-                  "query_transactions",
-                  "predict_fraud"
-                ]
+                "time_slot": 15,
+                "sender_bank": 147,
+                "receiver_bank": 117,
+                "fund_type": 4,
+                "media_type": 4,
+                "amount": 18000000
               },
-              "_id": "74712c8e-21a7-4ec5-ac60-c2482efb2a93"
+              "_id": "7c101191-f152-486b-8340-d3c73d9a1095"
             }
           ]
         }
       ],
-      "avg_score": 0.5521,
-      "avg_tool_hit": 0.75,
-      "avg_param_accuracy": 0.3542,
+      "avg_score": 0.3958,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.2917,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 4.12
+      "elapsed_sec": 1.88
     },
     {
       "id": "mt_str_023",
@@ -2739,7 +3016,7 @@
               "arguments": {
                 "keyword": "structuring"
               },
-              "_id": "68a5c8c0-0e11-4bb3-ba65-9ce703ac3d80"
+              "_id": "cf158db3-411a-4998-b873-f8e2b7de01ee"
             }
           ]
         },
@@ -2754,9 +3031,9 @@
             {
               "name": "lookup_fiu_reference_types",
               "arguments": {
-                "keyword": "large deposit withdrawal"
+                "keyword": "same-day withdrawal after large deposit"
               },
-              "_id": "6032f4b2-9eaf-4145-894b-6b9fa1d31425"
+              "_id": "f6484725-ff7c-4708-9949-aca9695510be"
             }
           ]
         },
@@ -2773,7 +3050,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 77234 OR receiver_acc = 77234 ORDER BY date, time_slot"
               },
-              "_id": "9a33d5f7-ce37-443d-957b-1dcfe67c24b2"
+              "_id": "418b4101-f366-4161-a8a9-ed24bba54aee"
             }
           ]
         },
@@ -2787,8 +3064,70 @@
           "actual_tool_calls": [
             {
               "name": "validate_str_fields",
-              "arguments": {},
-              "_id": "a410ebd1-8a0a-42db-9a09-982804c4c71b"
+              "arguments": {
+                "str_draft": {
+                  "I_ReportingInstitution": {
+                    "name": "서울은행",
+                    "branch": "강남지점",
+                    "report_date": 20250110
+                  },
+                  "II_Transactor": {
+                    "name": "홍길동",
+                    "position": "대리",
+                    "contact": "010-1234-5678"
+                  },
+                  "III_TransactionDetails": {
+                    "account": 77234,
+                    "date": 20241105,
+                    "amount": 5000000,
+                    "media": 4,
+                    "fraud_probability": 0.82,
+                    "fraud_type": "거액 입금 후 당일 인출",
+                    "transactions": [
+                      {
+                        "date": 20241105,
+                        "time_slot": 21,
+                        "sender_bank": 147,
+                        "sender_acc": 77234,
+                        "receiver_bank": 122,
+                        "receiver_acc": 990456,
+                        "fund_type": 4,
+                        "media_type": 4,
+                        "amount": 5000000,
+                        "fraud_type": 5
+                      }
+                    ],
+                    "IV_AnalysisSummary": {
+                      "summary": "77234 계좌에서 2024-11-05 21:00에 500만원을 타행으로 이체. 동일 계좌에서 최근 30일 내 3회 이상 1천만원 이상 입금 후 당일 인출 반복. 심야 시간대(21-24시) 집중 발생. media_type=4(모바일폰) 사용. 이상거래유형 5(거액 입금 후 당일/익일 인출) 해당.",
+                      "aml_patterns": [
+                        "Layering",
+                        "Rapid Fire"
+                      ],
+                      "tools_used": [
+                        "query_transactions",
+                        "predict_fraud"
+                      ]
+                    },
+                    "V_AdditionalInfo": {
+                      "related_accounts": [
+                        990456
+                      ],
+                      "risk_score": 87,
+                      "risk_level": "High"
+                    },
+                    "VI_FraudClassification": {
+                      "fraud_type": "거액 입금 후 당일 인출",
+                      "code": "VI-4 code 25",
+                      "description": "Large deposit followed by same-day withdrawal exceeding 10M KRW"
+                    },
+                    "VII_OtherInfo": {
+                      "reporting_officer": "이영희",
+                      "reference": "FIU B-25, B-27"
+                    }
+                  }
+                }
+              },
+              "_id": "fa9ee7fa-b75d-480b-9d7f-4eeadc425dfb"
             }
           ]
         },
@@ -2803,7 +3142,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "계좌 77234에서 2024년 11월 5일 21:00에 5,000,000 KRW가 입금된 후 동일 계좌에서 5,000,000 KRW가 즉시 인출되는 등, 거액 입금 후 당일 인출 패턴이 반복적으로 관찰됨. 총 34건의 이상거래 중 5건은 동일 유형의 거래로, 자금 세탁 및 불법 자금 이동 의심. 거래 채널은 모바일 폰(매체구분 4)으로 확인됨.",
+                "summary": "계좌 77234에서 2024년 11월 5일 21:00에 5,000,000 KRW가 입금된 후 동일 계좌에서 5,000,000 KRW가 즉시 인출되는 등, 거액 입금 후 당일 인출 패턴이 반복적으로 관찰됨. 총 34건의 이상거래 중 5건은 동일 유형의 거래로, 자금 세탁 및 불법 자금 이동의 가능성이 높음. 특히, 자금 이동 경로가 불분명하며, 관련 계좌와의 거래가 빈번하게 발생함.",
                 "fraud_type": "거액 입금 후 당일 인출",
                 "transactions": [
                   {
@@ -2819,7 +3158,7 @@
                     "fraud_type": 5
                   }
                 ],
-                "fraud_probability": 0.82,
+                "fraud_probability": 0.85,
                 "aml_patterns": [
                   "Layering"
                 ],
@@ -2828,7 +3167,7 @@
                   "predict_fraud"
                 ]
               },
-              "_id": "f77aa724-46b3-4028-8172-711b297f4c00"
+              "_id": "9a9ef6bc-2acf-4acb-b453-a56810c2a136"
             }
           ]
         }
@@ -2838,7 +3177,7 @@
       "avg_param_accuracy": 0.2,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 4.32
+      "elapsed_sec": 5.67
     },
     {
       "id": "mt_str_024",
@@ -2868,9 +3207,10 @@
             {
               "name": "analyze_network",
               "arguments": {
-                "account_id": 44290
+                "account_id": 44290,
+                "hops": 1
               },
-              "_id": "9acb8940-4cb2-4b9d-b01e-2e2feada236e"
+              "_id": "187200fd-5bc7-4db7-85f8-a24146968aa6"
             }
           ]
         },
@@ -2887,7 +3227,7 @@
               "arguments": {
                 "account_id": 44290
               },
-              "_id": "1774fd47-ccd7-4482-931f-c720a31e4500"
+              "_id": "0bbe361d-eadf-4688-b447-fa9275491bb7"
             }
           ]
         },
@@ -2905,7 +3245,7 @@
                 "account_id": 44290,
                 "hops": 2
               },
-              "_id": "707e3470-dbca-43ad-87af-a7a2f5ef52f5"
+              "_id": "44907951-aae8-40bf-bf29-df3b1dae01bb"
             }
           ]
         },
@@ -2922,7 +3262,7 @@
               "arguments": {
                 "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, is_fraud, fraud_type, fraud_description FROM hofinet WHERE sender_acc = 44290 AND fraud_type = 3"
               },
-              "_id": "085ea33b-2e33-4d3f-a889-f188c75c5ee7"
+              "_id": "c0156b34-8170-47b3-85f7-8bd9e278518f"
             }
           ]
         }
@@ -2932,7 +3272,7 @@
       "avg_param_accuracy": 0.6,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.46
+      "elapsed_sec": 1.97
     },
     {
       "id": "mt_str_025",
@@ -2955,7 +3295,7 @@
               "arguments": {
                 "account_id": 11045
               },
-              "_id": "9d4f534c-2693-4389-ba14-409117e613cb"
+              "_id": "24a3c8cf-ca6d-4e75-bade-6e6ed446fb53"
             }
           ]
         },
@@ -2970,9 +3310,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, is_fraud, fraud_type, fraud_description FROM hofinet WHERE sender_acc = 11045 OR receiver_acc = 11045 ORDER BY date DESC, time_slot DESC LIMIT 50"
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 11045 OR receiver_acc = 11045 ORDER BY date, time_slot"
               },
-              "_id": "6e9aa10f-8862-4bad-9d63-c5a9cfedb489"
+              "_id": "b2401352-ae0c-4946-bcd9-15d4377a3667"
             }
           ]
         },
@@ -2994,7 +3334,7 @@
                 "media_type": 4,
                 "amount": 1200000
               },
-              "_id": "24efa1bf-d1bf-4ee5-8706-ad8f44b8c2e0"
+              "_id": "5cceb193-3f86-4ecb-9ebc-1e8820097f32"
             }
           ]
         },
@@ -3014,7 +3354,7 @@
                 "date_to": 20241231,
                 "account_id": 11045
               },
-              "_id": "9de8eedb-2e2e-4229-8e0f-4b7c86e711ea"
+              "_id": "5cc5f52f-4171-4961-b589-157bff0c74de"
             }
           ]
         },
@@ -3033,7 +3373,7 @@
       "avg_param_accuracy": 0.6,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 3.15
+      "elapsed_sec": 3.33
     },
     {
       "id": "mt_str_026",
@@ -3054,14 +3394,14 @@
             {
               "name": "predict_fraud",
               "arguments": {
-                "time_slot": 21,
+                "time_slot": 9,
                 "sender_bank": 134,
                 "receiver_bank": 88,
                 "fund_type": 4,
                 "media_type": 5,
                 "amount": 85000000
               },
-              "_id": "5e0b9433-1655-41c9-ac76-bfa0ca0f3cef"
+              "_id": "2e7bf1c1-d498-4eeb-bae7-99d638ddac1c"
             }
           ]
         },
@@ -3083,7 +3423,7 @@
                 "media_type": 5,
                 "amount": 85000000
               },
-              "_id": "10265a6d-51b1-4894-931e-b593dca2036b"
+              "_id": "cc00c73a-7ab4-49f6-bbe9-c92630b0049a"
             }
           ]
         },
@@ -3098,7 +3438,7 @@
             {
               "name": "query_transactions",
               "arguments": {},
-              "_id": "1fdac041-0675-4329-864e-98994204cec5"
+              "_id": "cd8ca89e-b859-49d0-b43b-2c6e623dbb53"
             }
           ]
         },
@@ -3115,23 +3455,23 @@
               "arguments": {
                 "출금계좌일련번호": 99801
               },
-              "_id": "e3cdcc08-e778-477b-b812-c222a47ca1ec"
+              "_id": "0a617796-74cf-4cf8-a8b8-22866fb8ca91"
             }
           ]
         },
         {
           "turn": 5,
           "tool_hit": 1.0,
-          "param_accuracy": 0.75,
-          "score": 0.875,
+          "param_accuracy": 0.25,
+          "score": 0.625,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "134기관 99801 계좌에서 8,500만원 단일거래 발생. 동일 계좌 최근 7일간 8건, 3.2억원 거래, 3건 이상거래(이상거래비율 37.5%). 주요매체 전화, 거래상대 3명. 심야거래 없음. 단일 고액거래 및 반복적 거래패턴으로 다중거래의 동시 요청(§VI-4 code 16) 의심.",
-                "fraud_type": "다중거래의 동시요청",
+                "summary": "134기관 99801 계좌에서 2024-12-20 15:00 85,000,000원 거래 발생. 동일 계좌는 최근 7일간 8건, 3.2억원 거래, 3건 이상거래(37.5%) 기록. 주요매체는 전화(매체구분 3), 거래상대 3명 한정. 심야거래 없음. 다중거래 동시 요청 패턴 및 고액 반복 이체 의심. 자금흐름 추적 필요.",
+                "fraud_type": "Concurrent Multiple Transactions",
                 "transactions": [
                   {
                     "date": 20241220,
@@ -3152,22 +3492,22 @@
                   "Ring"
                 ],
                 "tools_used": [
-                  "predict_fraud",
                   "query_transactions",
+                  "predict_fraud",
                   "get_account_profile"
                 ]
               },
-              "_id": "8b268016-d742-4dd0-a397-edacbb7e8578"
+              "_id": "b4f52ebb-6546-429d-bcf3-d25fdeed7d3b"
             }
           ]
         }
       ],
-      "avg_score": 0.475,
+      "avg_score": 0.425,
       "avg_tool_hit": 0.8,
-      "avg_param_accuracy": 0.15,
+      "avg_param_accuracy": 0.05,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 3.19
+      "elapsed_sec": 3.48
     },
     {
       "id": "mt_str_027",
@@ -3190,7 +3530,7 @@
               "arguments": {
                 "bank_id": 88
               },
-              "_id": "821032d8-b8d3-416a-a440-5ebc909a6c37"
+              "_id": "714c3751-7ec3-4a41-890d-939872288882"
             }
           ]
         },
@@ -3207,7 +3547,7 @@
               "arguments": {
                 "account_id": 62018
               },
-              "_id": "fd7e7609-5a47-4dfc-9ab6-b9058d4eb91d"
+              "_id": "bd3c3a14-4d22-405d-928d-b537c247344e"
             }
           ]
         },
@@ -3229,7 +3569,7 @@
                 "media_type": 2,
                 "amount": 15000000
               },
-              "_id": "43878bb5-50bb-4eda-8e63-d0244b6c29aa"
+              "_id": "4ccc29a7-2452-4e92-ac79-1cbb3d528d91"
             }
           ]
         },
@@ -3244,7 +3584,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "88번 금융회사 계좌 62018에서 심야(00:00-03:00) 인터넷뱅킹을 통한 거액(48,000,000원) 거래가 발생하였으며, 해당 계좌는 최근 1년간 총 89건 중 18건이 이상거래로 분류되어 이상거래 비율이 20.22%에 달함. 심야거래 비율이 48%로 매우 높고, 평균 거래금액도 1.5억원으로 일반 계좌 대비 현저히 높음. 동일 계좌에서 다수의 신규 수신처(15개)와 반복 거래가 확인되어 자금세탁 및 대포통장 의심.",
+                "summary": "88번 금융회사 계좌 62018에서 심야(00:00-03:00) 인터넷뱅킹을 통한 거액(48,000,000원) 거래가 발생하였으며, 해당 계좌는 총 89건 중 18건이 이상거래로 분류되어 이상거래 비율이 20.22%에 달함. 심야거래 비율이 48%로 매우 높고, 평균 거래금액도 1.5억원으로 일반 계좌 대비 현저히 높음. 최근 8개월간 동일 패턴의 반복적 거래가 확인되어 자금세탁 의심.",
                 "fraud_type": "갑작스러운 거래패턴의 변화",
                 "transactions": [
                   {
@@ -3262,15 +3602,15 @@
                 ],
                 "fraud_probability": 0.91,
                 "aml_patterns": [
-                  "Ring",
-                  "Layering"
+                  "Sudden Pattern Change",
+                  "Nighttime Bulk"
                 ],
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud"
                 ]
               },
-              "_id": "1cbb4c12-a169-443f-bf28-9ac0bc10ebc4"
+              "_id": "f0a1c816-6b89-426a-a918-0906b2cdfa50"
             }
           ]
         }
@@ -3280,7 +3620,7 @@
       "avg_param_accuracy": 0.625,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 2.47
+      "elapsed_sec": 2.62
     },
     {
       "id": "mt_str_028",
@@ -3303,7 +3643,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 82301"
               },
-              "_id": "7fe9c6f6-09d6-4785-80b9-5cb75917bb5a"
+              "_id": "1bcaaaff-8965-4942-a95a-e419fa7d44a6"
             }
           ]
         },
@@ -3320,7 +3660,7 @@
               "arguments": {
                 "account_id": 661023
               },
-              "_id": "fb03e0a3-ee04-4221-857d-c31113623a8f"
+              "_id": "00231c14-dde9-4964-8ba9-1c2ecc2f6d90"
             }
           ]
         },
@@ -3341,22 +3681,22 @@
                 "date_from": 20240901,
                 "date_to": 20241231
               },
-              "_id": "f0f38cb0-d9cf-4692-a4ef-939d1f6ba9e8"
+              "_id": "0c1ac48e-8bad-4e26-b45a-f9fb8a7e90ed"
             }
           ]
         },
         {
           "turn": 4,
           "tool_hit": 1.0,
-          "param_accuracy": 0.4,
-          "score": 0.7,
-          "context_hit": true,
+          "param_accuracy": 0.2,
+          "score": 0.6,
+          "context_hit": false,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "분석 결과, 출금계좌 82301에서 수신계좌 661023으로 분할 거래가 다수 발생하였습니다. 2024년 10월 15일 21시 47,000,000원 거래 등 총 15건의 이상거래가 확인되었으며, 수신계좌 661023은 45개 계좌로부터 총 4,560,000,000원의 입금을 받았습니다. 심야입금비율이 52%로 높고, 자금 수집 패턴에서 스머핑 점수 0.94로 매우 높은 위험도를 보이고 있습니다. 분할거래 및 자금 집중 현상이 지속적으로 발생하여 자금세탁 의심거래로 판단됩니다.",
+                "summary": "분석 결과, 계좌 661023은 45개 다수 계좌로부터 자금을 집중적으로 수취하고 있으며, 심야입금비율이 52%에 달하고, 1회 평균 입금액이 1억 원을 초과하는 등 자금 수집(smurfing) 패턴이 뚜렷하게 확인되었습니다. 특히, 주요 출금 계좌 중 82301(출금계좌)과의 반복적 거래가 다수 포착되어 구조화(Structuring) 의심거래로 판단됩니다. 분할거래 및 심야 대량 입금이 지속적으로 발생하고 있어 자금세탁 위험이 매우 높습니다.",
                 "fraud_type": "분할거래",
                 "transactions": [
                   {
@@ -3370,9 +3710,57 @@
                     "media_type": 4,
                     "amount": 47000000,
                     "fraud_type": 3
+                  },
+                  {
+                    "date": 20241016,
+                    "time_slot": 21,
+                    "sender_bank": 151,
+                    "sender_acc": 82301,
+                    "receiver_bank": 117,
+                    "receiver_acc": 661023,
+                    "fund_type": 4,
+                    "media_type": 4,
+                    "amount": 47000000,
+                    "fraud_type": 3
+                  },
+                  {
+                    "date": 20241017,
+                    "time_slot": 21,
+                    "sender_bank": 151,
+                    "sender_acc": 82301,
+                    "receiver_bank": 117,
+                    "receiver_acc": 661023,
+                    "fund_type": 4,
+                    "media_type": 4,
+                    "amount": 47000000,
+                    "fraud_type": 3
+                  },
+                  {
+                    "date": 20241018,
+                    "time_slot": 21,
+                    "sender_bank": 151,
+                    "sender_acc": 82301,
+                    "receiver_bank": 117,
+                    "receiver_acc": 661023,
+                    "fund_type": 4,
+                    "media_type": 4,
+                    "amount": 47000000,
+                    "fraud_type": 3
+                  },
+                  {
+                    "date": 20241019,
+                    "time_slot": 21,
+                    "sender_bank": 151,
+                    "sender_acc": 82301,
+                    "receiver_bank": 117,
+                    "receiver_acc": 661023,
+                    "fund_type": 4,
+                    "media_type": 4,
+                    "amount": 47000000,
+                    "fraud_type": 3
                   }
                 ],
-                "fraud_probability": 0.94,
+                "fraud_probability": 0.92,
                 "aml_patterns": [
                   "Smurfing",
                   "Layering"
@@ -3382,17 +3770,17 @@
                   "detect_smurfing_network"
                 ]
               },
-              "_id": "bbf1db99-7477-4695-bb0b-7654308437b0"
+              "_id": "f31572dd-0215-4ac2-a7fd-a6d1d35a5a01"
             }
           ]
         }
       ],
-      "avg_score": 0.925,
+      "avg_score": 0.9,
       "avg_tool_hit": 1.0,
-      "avg_param_accuracy": 0.85,
-      "context_accuracy": 1.0,
+      "avg_param_accuracy": 0.8,
+      "context_accuracy": 0.6667,
       "scenario_complete": true,
-      "elapsed_sec": 2.59
+      "elapsed_sec": 4.82
     },
     {
       "id": "mt_str_029",
@@ -3417,7 +3805,7 @@
                 "date_from": 20230101,
                 "date_to": 20231231
               },
-              "_id": "644ba04f-55c1-4f6e-8801-f067720b0933"
+              "_id": "d7fdd729-d7c0-4736-a416-c48ee94c5f57"
             }
           ]
         },
@@ -3434,7 +3822,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 33567 OR receiver_acc = 33567 AND date BETWEEN 20241201 AND 20241231 ORDER BY date, time_slot"
               },
-              "_id": "cc3d7b3c-16b5-46e3-b2ec-81148c188cef"
+              "_id": "b191505b-9133-4eac-aa15-938a218ecf0f"
             }
           ]
         },
@@ -3454,23 +3842,23 @@
                 "period2_start": 20241201,
                 "period2_end": 20241231
               },
-              "_id": "8b9e7737-bd18-4423-ac59-b7b180f0865f"
+              "_id": "0dad9cc4-e9bf-40c1-b2c2-245d5960788a"
             }
           ]
         },
         {
           "turn": 4,
           "tool_hit": 1.0,
-          "param_accuracy": 0.3333,
-          "score": 0.6667,
+          "param_accuracy": 0.0,
+          "score": 0.5,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "계좌 33567은 2024년 12월 한 달 동안 거래패턴이 급격히 변화하여 R005 모니터링 규칙에 의해 탐지되었습니다. 11월(거래건수 3건, 평균금액 1,200,000원)에 비해 12월(거래건수 31건, 평균금액 14,709,677원)에는 933.3% 증가하였으며, 이 중 9건이 이상거래로 분류되었습니다. 특히 신규 수신처(881023, 992034, 103045)로의 대규모 입금이 집중적으로 발생하였고, 동일 계좌에서 동일 매체를 통한 반복적 거래가 관찰되었습니다. 거래금액 또한 1,200만원에서 1억 4,700만원으로 1,125.8배 급증하여 자금세탁 등 비정상적 거래 가능성이 높습니다.",
-                "fraud_type": "Pattern Change in Transaction Pattern",
+                "summary": "2024년 12월 한 달 동안 계좌 33567에서 거래패턴 급변(R005) 모니터링 알림이 발생하였으며, 11월(거래건수 3건, 평균금액 1,200,000원)에 비해 12월(거래건수 31건, 평균금액 14,709,677원)로 933.3% 급증함. 특히 12월 5일 15,000,000원 거래에서 신규 수신처(881023)로 자금이 이체되었으며, 해당 계좌는 11월에는 전혀 거래가 없었던 신규 수신처임. 12월 전체 거래의 29.0%(9건)가 이상거래로 분류됨. 거래금액 및 빈도의 급격한 증가, 신규 수신처와의 반복 거래, 이상거래 비중 확대 등 자금세탁 의심 정황이 다수 포착됨.",
+                "fraud_type": "원격지거래",
                 "transactions": [
                   {
                     "date": 20241205,
@@ -3483,30 +3871,6 @@
                     "media_type": 4,
                     "amount": 15000000,
                     "fraud_type": 2
-                  },
-                  {
-                    "date": 20241210,
-                    "time_slot": 15,
-                    "sender_bank": 134,
-                    "sender_acc": 33567,
-                    "receiver_bank": 117,
-                    "receiver_acc": 992034,
-                    "fund_type": 4,
-                    "media_type": 4,
-                    "amount": 20000000,
-                    "fraud_type": 2
-                  },
-                  {
-                    "date": 20241220,
-                    "time_slot": 18,
-                    "sender_bank": 134,
-                    "sender_acc": 33567,
-                    "receiver_bank": 117,
-                    "receiver_acc": 103045,
-                    "fund_type": 4,
-                    "media_type": 4,
-                    "amount": 25000000,
-                    "fraud_type": 2
                   }
                 ],
                 "fraud_probability": 0.92,
@@ -3517,20 +3881,20 @@
                 "tools_used": [
                   "detect_monitoring_alerts",
                   "query_transactions",
-                  "compare_periods"
+                  "predict_fraud"
                 ]
               },
-              "_id": "a8c31488-c7d9-43b4-ad12-e3665332640c"
+              "_id": "f82f7ec5-215b-414b-89bc-09a7701d4579"
             }
           ]
         }
       ],
-      "avg_score": 0.9167,
+      "avg_score": 0.875,
       "avg_tool_hit": 1.0,
-      "avg_param_accuracy": 0.8333,
+      "avg_param_accuracy": 0.75,
       "context_accuracy": 0.0,
-      "scenario_complete": true,
-      "elapsed_sec": 4.17
+      "scenario_complete": false,
+      "elapsed_sec": 3.39
     },
     {
       "id": "mt_str_030",
@@ -3553,7 +3917,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet ORDER BY amount DESC LIMIT 5"
               },
-              "_id": "bdfe8d5d-c421-4d0c-bbed-d23034633f45"
+              "_id": "588113fd-1233-4ac3-b3eb-21fca5eb2d40"
             }
           ]
         },
@@ -3570,7 +3934,7 @@
               "arguments": {
                 "account_id": 45201
               },
-              "_id": "ab9b207c-503e-4e14-aead-2d9ad87dba83"
+              "_id": "1d3c7d7b-a68e-4f8e-befc-9aa4cb353569"
             }
           ]
         },
@@ -3590,30 +3954,30 @@
                 "max_len": 6,
                 "limit": 10
               },
-              "_id": "5e5bdd1c-444f-4862-9118-8df6a09a0a16"
+              "_id": "5458a7e7-08f3-4921-bd38-dbbe9a68bc46"
             }
           ]
         },
         {
           "turn": 4,
           "tool_hit": 1.0,
-          "param_accuracy": 0.4,
-          "score": 0.7,
+          "param_accuracy": 0.6,
+          "score": 0.8,
           "context_hit": true,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "1순위 위험 계좌(45201)는 18개 연결계좌와 67건의 거래를 수행했으며, 이 중 22건(32.84%)이 이상거래로 분류됨. 특히 3단계 순환거래(45201→780123→902345→45201) 패턴이 탐지되어 자금세탁 위험이 높음. 최근 3일간 동일 수신처(780123)로 4.98억원 집중 송금, 심야시간대(0시) 대량거래 발생. 계좌 프로필 분석 결과 야간거래 비율 41%, 평균거래금액 34.7백만원으로 정상계좌 대비 3.2배 높음. STR §VI-4 code 15(갑작스러운 거래패턴의 변화) 적용.",
+                "summary": "1순위 위험 계좌(45201)는 18개 연결계좌와 67건의 거래를 수행했으며, 이 중 22건(32.84%)이 이상거래로 분류됨. 특히 3단계 순환거래(45201→780123→902345→45201) 패턴에서 1억 4,800만원 규모의 자금이 반복적으로 이동한 것이 확인됨. 해당 계좌는 심야시간대(0시, 3시) 대량거래 집중, 동일 수신처 반복 이용, 단기간 내 거래금액 2,340억원 달성 등 급격한 거래패턴 변화가 관찰됨. 특히 순환거래 구조는 자금세탁의 전형적 특징인 Layering 및 Integration 단계에 해당함.",
                 "fraud_type": "갑작스러운 거래패턴의 변화",
                 "transactions": [
                   {
                     "date": 20240601,
                     "time_slot": 0,
-                    "sender_bank": 45201,
+                    "sender_bank": 101,
                     "sender_acc": 45201,
-                    "receiver_bank": 780123,
+                    "receiver_bank": 102,
                     "receiver_acc": 780123,
                     "fund_type": 0,
                     "media_type": 7,
@@ -3621,53 +3985,53 @@
                     "fraud_type": 1
                   },
                   {
-                    "date": 20240602,
-                    "time_slot": 0,
-                    "sender_bank": 45201,
-                    "sender_acc": 45201,
-                    "receiver_bank": 780123,
-                    "receiver_acc": 780123,
+                    "date": 20240601,
+                    "time_slot": 3,
+                    "sender_bank": 102,
+                    "sender_acc": 780123,
+                    "receiver_bank": 103,
+                    "receiver_acc": 902345,
                     "fund_type": 0,
-                    "media_type": 7,
+                    "media_type": 5,
                     "amount": 49500000,
                     "fraud_type": 1
                   },
                   {
-                    "date": 20240603,
-                    "time_slot": 0,
-                    "sender_bank": 45201,
-                    "sender_acc": 45201,
-                    "receiver_bank": 902345,
-                    "receiver_acc": 902345,
+                    "date": 20240601,
+                    "time_slot": 6,
+                    "sender_bank": 103,
+                    "sender_acc": 902345,
+                    "receiver_bank": 101,
+                    "receiver_acc": 45201,
                     "fund_type": 0,
                     "media_type": 7,
-                    "amount": 148000000,
+                    "amount": 49800000,
                     "fraud_type": 1
                   }
                 ],
                 "fraud_probability": 0.98,
                 "aml_patterns": [
-                  "Ring",
-                  "Layering"
+                  "Layering",
+                  "Integration",
+                  "Ring"
                 ],
                 "tools_used": [
-                  "query_transactions",
-                  "predict_fraud",
+                  "rank_risky_transactions",
                   "analyze_network",
                   "detect_aml_patterns"
                 ]
               },
-              "_id": "1d73a5d8-2859-4648-a7c1-dd4d46a3f731"
+              "_id": "d9dc69e0-1bdd-4af2-930d-9cb764261fdc"
             }
           ]
         }
       ],
-      "avg_score": 0.55,
+      "avg_score": 0.575,
       "avg_tool_hit": 0.75,
-      "avg_param_accuracy": 0.35,
+      "avg_param_accuracy": 0.4,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 3.78
+      "elapsed_sec": 3.92
     },
     {
       "id": "mt_str_031",
@@ -3688,9 +4052,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT COUNT(*) AS total_transactions, SUM(amount) AS total_amount, COUNT(DISTINCT sender_acc) AS unique_senders, COUNT(DISTINCT receiver_acc) AS unique_receivers, AVG(amount) AS avg_amount, MAX(amount) AS max_amount, MIN(amount) AS min_amount, SUM(CASE WHEN is_fraud = 1 THEN 1 ELSE 0 END) AS fraud_count, SUM(CASE WHEN is_fraud = 1 THEN amount ELSE 0 END) AS fraud_amount, COUNT(*) * 1.0 / COUNT(DISTINCT date) AS daily_avg FROM hofinet WHERE fraud_type = 4;"
+                "sql": "SELECT fraud_type, COUNT(*) AS count, SUM(amount) AS total_amount, AVG(amount) AS avg_amount, SUM(CASE WHEN is_fraud=1 THEN amount ELSE 0 END) AS fraud_amount, SUM(CASE WHEN is_fraud=1 THEN 1 ELSE 0 END) AS fraud_count FROM hofinet WHERE fraud_type=4 GROUP BY fraud_type ORDER BY count DESC;"
               },
-              "_id": "16ae0f7f-e310-4d43-82e1-bafe44896deb"
+              "_id": "9fb41c0d-d398-4685-bc5e-779adb66559a"
             }
           ]
         },
@@ -3707,7 +4071,7 @@
               "arguments": {
                 "account_id": 55801
               },
-              "_id": "55dde0f6-4799-4a0f-8522-db71af2d5c61"
+              "_id": "be2c2ddd-ee44-496e-a33f-3359d8a5a0ed"
             }
           ]
         },
@@ -3724,7 +4088,7 @@
               "arguments": {
                 "account_id": 55801
               },
-              "_id": "cd05164b-b76f-4d09-9d2a-d4c3b57d043b"
+              "_id": "f6c63f60-9461-4c03-8152-2956389469ac"
             }
           ]
         },
@@ -3739,8 +4103,8 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "다중거래의 동시 요청(Concurrent Multiple Transactions, fraud_type=4) 유형이 집중적으로 발생한 계좌(55801)에서 위험도 85점(고위험)으로 평가됨. 2024년 11월 1일부터 12월 25일까지 총 28건의 거래가 발생했으며, 이 중 14건이 이상거래로 분류됨. 특히 심야시간대(12시, 15시, 18시, 21시) 거래가 15% 이상 차지하며, 동일 계좌에서 단기간 내 대규모 금액(최대 55,000,000원)이 반복적으로 이체됨. 거래상대방 다양성과 거래속도 변화도 매우 높아 자금세탁 위험이 매우 높음. 총 거래금액은 756,000,000원이며, 이 중 이상거래 금액은 623,000,000원(82.4%)에 달함. 상위 금융회사(134, 73번)와의 거래가 전체의 64%를 차지하며, 동일 패턴의 거래가 여러 금융기관에서 동시다발적으로 발생함.",
-                "fraud_type": "보이스피싱",
+                "summary": "다중거래의 동시 요청(Concurrent Multiple Transactions, fraud_type=4) 유형이 집중적으로 발생한 계좌(55801)에서 위험도 85점(고위험)으로 평가됨. 2024년 11월~12월 총 28건, 7.56억원 거래 중 14건(50%)이 이상거래로 분류됨. 심야거래비율 15%, 금액이상도 0.88, 거래속도변화 0.82 등 주요 위험지표 모두 고위험 기준 초과. 동일 기간 내 동일 수취인(223456)으로 반복 송금 패턴 확인됨.",
+                "fraud_type": "Concurrent Multiple Transactions",
                 "transactions": [
                   {
                     "date": 20241105,
@@ -3757,11 +4121,11 @@
                   {
                     "date": 20241106,
                     "time_slot": 15,
-                    "sender_bank": 73,
+                    "sender_bank": 134,
                     "sender_acc": 55801,
-                    "receiver_bank": 88,
-                    "receiver_acc": 987654,
-                    "fund_type": 3,
+                    "receiver_bank": 143,
+                    "receiver_acc": 223456,
+                    "fund_type": 4,
                     "media_type": 5,
                     "amount": 48000000,
                     "fraud_type": 4
@@ -3780,18 +4144,30 @@
                   },
                   {
                     "date": 20241108,
-                    "time_slot": 21,
-                    "sender_bank": 73,
+                    "time_slot": 9,
+                    "sender_bank": 134,
                     "sender_acc": 55801,
-                    "receiver_bank": 88,
-                    "receiver_acc": 987654,
-                    "fund_type": 3,
+                    "receiver_bank": 143,
+                    "receiver_acc": 223456,
+                    "fund_type": 4,
                     "media_type": 5,
                     "amount": 49000000,
                     "fraud_type": 4
                   },
                   {
                     "date": 20241109,
+                    "time_slot": 21,
+                    "sender_bank": 134,
+                    "sender_acc": 55801,
+                    "receiver_bank": 143,
+                    "receiver_acc": 223456,
+                    "fund_type": 4,
+                    "media_type": 5,
+                    "amount": 53000000,
+                    "fraud_type": 4
+                  },
+                  {
+                    "date": 20241110,
                     "time_slot": 12,
                     "sender_bank": 134,
                     "sender_acc": 55801,
@@ -3803,67 +4179,19 @@
                     "fraud_type": 4
                   },
                   {
-                    "date": 20241110,
-                    "time_slot": 15,
-                    "sender_bank": 73,
-                    "sender_acc": 55801,
-                    "receiver_bank": 88,
-                    "receiver_acc": 987654,
-                    "fund_type": 3,
-                    "media_type": 5,
-                    "amount": 45000000,
-                    "fraud_type": 4
-                  },
-                  {
                     "date": 20241111,
-                    "time_slot": 18,
+                    "time_slot": 15,
                     "sender_bank": 134,
                     "sender_acc": 55801,
                     "receiver_bank": 143,
                     "receiver_acc": 223456,
                     "fund_type": 4,
                     "media_type": 5,
-                    "amount": 50000000,
+                    "amount": 60000000,
                     "fraud_type": 4
                   },
                   {
                     "date": 20241112,
-                    "time_slot": 21,
-                    "sender_bank": 73,
-                    "sender_acc": 55801,
-                    "receiver_bank": 88,
-                    "receiver_acc": 987654,
-                    "fund_type": 3,
-                    "media_type": 5,
-                    "amount": 47000000,
-                    "fraud_type": 4
-                  },
-                  {
-                    "date": 20241113,
-                    "time_slot": 12,
-                    "sender_bank": 134,
-                    "sender_acc": 55801,
-                    "receiver_bank": 143,
-                    "receiver_acc": 223456,
-                    "fund_type": 4,
-                    "media_type": 5,
-                    "amount": 58000000,
-                    "fraud_type": 4
-                  },
-                  {
-                    "date": 20241114,
-                    "time_slot": 15,
-                    "sender_bank": 73,
-                    "sender_acc": 55801,
-                    "receiver_bank": 88,
-                    "receiver_acc": 987654,
-                    "fund_type": 3,
-                    "media_type": 5,
-                    "amount": 44000000,
-                    "fraud_type": 4
-                  },
-                  {
-                    "date": 20241115,
                     "time_slot": 18,
                     "sender_bank": 134,
                     "sender_acc": 55801,
@@ -3871,23 +4199,35 @@
                     "receiver_acc": 223456,
                     "fund_type": 4,
                     "media_type": 5,
-                    "amount": 51000000,
+                    "amount": 62000000,
                     "fraud_type": 4
                   },
                   {
-                    "date": 20241116,
-                    "time_slot": 21,
-                    "sender_bank": 73,
+                    "date": 20241113,
+                    "time_slot": 9,
+                    "sender_bank": 134,
                     "sender_acc": 55801,
-                    "receiver_bank": 88,
-                    "receiver_acc": 987654,
-                    "fund_type": 3,
+                    "receiver_bank": 143,
+                    "receiver_acc": 223456,
+                    "fund_type": 4,
                     "media_type": 5,
-                    "amount": 46000000,
+                    "amount": 65000000,
                     "fraud_type": 4
                   },
                   {
-                    "date": 20241117,
+                    "date": 20241114,
+                    "time_slot": 21,
+                    "sender_bank": 134,
+                    "sender_acc": 55801,
+                    "receiver_bank": 143,
+                    "receiver_acc": 223456,
+                    "fund_type": 4,
+                    "media_type": 5,
+                    "amount": 68000000,
+                    "fraud_type": 4
+                  },
+                  {
+                    "date": 20241115,
                     "time_slot": 12,
                     "sender_bank": 134,
                     "sender_acc": 55801,
@@ -3895,34 +4235,58 @@
                     "receiver_acc": 223456,
                     "fund_type": 4,
                     "media_type": 5,
-                    "amount": 59000000,
+                    "amount": 71000000,
+                    "fraud_type": 4
+                  },
+                  {
+                    "date": 20241116,
+                    "time_slot": 15,
+                    "sender_bank": 134,
+                    "sender_acc": 55801,
+                    "receiver_bank": 143,
+                    "receiver_acc": 223456,
+                    "fund_type": 4,
+                    "media_type": 5,
+                    "amount": 74000000,
+                    "fraud_type": 4
+                  },
+                  {
+                    "date": 20241117,
+                    "time_slot": 18,
+                    "sender_bank": 134,
+                    "sender_acc": 55801,
+                    "receiver_bank": 143,
+                    "receiver_acc": 223456,
+                    "fund_type": 4,
+                    "media_type": 5,
+                    "amount": 77000000,
                     "fraud_type": 4
                   },
                   {
                     "date": 20241118,
-                    "time_slot": 15,
-                    "sender_bank": 73,
+                    "time_slot": 9,
+                    "sender_bank": 134,
                     "sender_acc": 55801,
-                    "receiver_bank": 88,
-                    "receiver_acc": 987654,
-                    "fund_type": 3,
+                    "receiver_bank": 143,
+                    "receiver_acc": 223456,
+                    "fund_type": 4,
                     "media_type": 5,
-                    "amount": 43000000,
+                    "amount": 80000000,
                     "fraud_type": 4
                   }
                 ],
                 "fraud_probability": 0.92,
                 "aml_patterns": [
-                  "Ring",
-                  "Layering"
+                  "Concurrent Multiple Transactions",
+                  "Rapid Amount Increase"
                 ],
                 "tools_used": [
                   "query_transactions",
                   "score_account_risk",
-                  "detect_aml_patterns"
+                  "predict_fraud"
                 ]
               },
-              "_id": "8c74da44-c160-48a3-ac79-9846f143055a"
+              "_id": "a832e687-62ac-428e-b040-6c0da3cac9fc"
             }
           ]
         }
@@ -3932,7 +4296,7 @@
       "avg_param_accuracy": 0.25,
       "context_accuracy": 0.3333,
       "scenario_complete": false,
-      "elapsed_sec": 10.46
+      "elapsed_sec": 10.06
     },
     {
       "id": "mt_str_032",
@@ -3955,7 +4319,7 @@
               "arguments": {
                 "unit": "monthly"
               },
-              "_id": "ce1d2002-ff3c-437b-99dc-80e6f4dd7745"
+              "_id": "3bd355f5-f71b-481e-9271-9beedf89ddc1"
             }
           ]
         },
@@ -3972,25 +4336,22 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE date BETWEEN 20241201 AND 20241231 AND is_fraud = 1"
               },
-              "_id": "577592a0-51f9-4347-a8a9-c45b01797d11"
+              "_id": "fe3eed52-30c7-46af-8f3e-58a4a9c571ff"
             }
           ]
         },
         {
           "turn": 3,
           "tool_hit": 1.0,
-          "param_accuracy": 1.0,
-          "score": 1.0,
+          "param_accuracy": 0.0,
+          "score": 0.5,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
               "name": "analyze_channel_risk",
-              "arguments": {
-                "date_from": 20241201,
-                "date_to": 20241231
-              },
-              "_id": "fab151e9-b499-41da-88a4-38d7d6e85f2b"
+              "arguments": {},
+              "_id": "a0b8d08d-3589-4e09-8f97-977646e23691"
             }
           ]
         },
@@ -4012,7 +4373,7 @@
                 "media_type": 7,
                 "amount": 49000000
               },
-              "_id": "f7c886ad-585c-446a-83a0-59e721aa47ac"
+              "_id": "cf46ec85-a974-4e18-a311-50ebdaae82be"
             }
           ]
         },
@@ -4027,7 +4388,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "2024년 12월 텔레뱅킹을 통한 대규모 이상거래 집중 발생. 12월 한 달간 총 1,567건의 이상거래 중 756건(48.2%)이 신규 거래처와 연관되어 있으며, 텔레뱅킹(매체구분 7) 이용 거래의 이상거래 비율이 1.12%로 전체 평균(0.28%) 대비 4배 이상 높게 나타남. 특히 12월 10일 49,000,000원 거래(출금계좌 45201 → 입금계좌 880123)는 텔레뱅킹을 통한 대규모 송금으로, 거래금액(49백만원), 심야시간대(0시), 신규 수신처 등 여러 이상패턴이 복합적으로 작용. 최근 3개월 내 동일 계좌에서 텔레뱅킹을 통한 1억원 이상 거래가 3회 이상 발생했으며, 기존 거래 패턴과 상이한 대규모 자금이체가 반복적으로 발생. 계좌 45201은 2024년 11월까지 정상 거래만 존재하다가 12월에 갑자기 대규모 이상거래가 집중 발생해 '갑작스러운 거래패턴의 변화'(fraud_type 1)에 해당함.",
+                "summary": "2024년 12월 텔레뱅킹을 통한 대규모 이상거래 집중 발생. 12월 한 달간 총 1,567건의 이상거래 중 1,234건(78.6%)이 텔레뱅킹(매체구분 7)에서 발생. 특히 49,000,000원 단일 거래가 텔레뱅킹을 통해 발생했으며, XGBoost 모델 예측 결과 93%의 높은 사기 확률로 탐지됨. 해당 계좌(45201)는 최근 6개월간 미사용 계좌였다가 12월 10일 대규모 입금 후 당일 대규모 출금 발생. 동일 계좌에서 3시간 간격으로 4회에 걸쳐 총 2억 원 이상 출금 시도 확인. 거래 패턴의 급격한 변화와 신규 수신처, 심야 시간대 거래 집중 등 복합적 이상 징후 포착.",
                 "fraud_type": "갑작스러운 거래패턴의 변화",
                 "transactions": [
                   {
@@ -4046,26 +4407,25 @@
                 "fraud_probability": 0.93,
                 "aml_patterns": [
                   "Sudden Pattern Change",
-                  "New Counterparty",
-                  "Large Outflow"
+                  "Large Outflow After Inactivity",
+                  "Multiple Consecutive Transactions"
                 ],
                 "tools_used": [
                   "query_transactions",
-                  "predict_fraud",
-                  "analyze_channel_risk"
+                  "predict_fraud"
                 ]
               },
-              "_id": "168e705c-1c5e-4d31-841b-2c6f0aff2912"
+              "_id": "229c86da-781c-49da-a13e-2f75d22908de"
             }
           ]
         }
       ],
-      "avg_score": 0.8167,
+      "avg_score": 0.7167,
       "avg_tool_hit": 1.0,
-      "avg_param_accuracy": 0.6333,
+      "avg_param_accuracy": 0.4333,
       "context_accuracy": 0.5,
       "scenario_complete": false,
-      "elapsed_sec": 3.74
+      "elapsed_sec": 3.41
     },
     {
       "id": "mt_str_033",
@@ -4086,9 +4446,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT COUNT(*) AS total_transactions, SUM(is_fraud) AS fraud_count, AVG(is_fraud) AS fraud_ratio, SUM(CASE WHEN is_fraud=1 THEN amount ELSE 0 END) AS fraud_amount, SUM(amount) AS total_amount FROM hofinet"
+                "sql": "SELECT COUNT(*) AS total_transactions, SUM(amount) AS total_amount, COUNT(CASE WHEN is_fraud = 1 THEN 1 END) AS fraud_count, AVG(amount) AS avg_amount, SUM(CASE WHEN is_fraud = 1 THEN amount END) AS fraud_amount, SUM(CASE WHEN is_fraud = 1 THEN amount END)/NULLIF(SUM(CASE WHEN is_fraud = 0 THEN amount END),0) AS fraud_ratio FROM hofinet"
               },
-              "_id": "aae993d2-3d19-4100-b1c9-6c10e5e589a3"
+              "_id": "54f08705-a022-43b1-8e3f-4b131fe7e38f"
             }
           ]
         },
@@ -4105,7 +4465,7 @@
               "arguments": {
                 "fraud_type": 3
               },
-              "_id": "19cd1923-4308-44fa-a69d-821c478c4e5f"
+              "_id": "da26c98a-8658-4055-b190-a38f68d83497"
             }
           ]
         },
@@ -4124,58 +4484,82 @@
                 "min_inflow": 10,
                 "limit": 5
               },
-              "_id": "ba8a5457-cc83-4ba2-9dda-331ec2c02d65"
+              "_id": "13ef6ccf-3a71-4b1e-9ca2-8307912cf7dd"
             }
           ]
         },
         {
           "turn": 4,
           "tool_hit": 1.0,
-          "param_accuracy": 0.0,
-          "score": 0.5,
+          "param_accuracy": 0.2,
+          "score": 0.6,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "대포통장 의심 계좌(88712)에서 28개 계좌로부터 5,670,000,000 KRW가 집중 유입되는 funnel 패턴이 탐지되었습니다. 분할 거래(코드 3)로 분류된 이상거래 1,456건 중 상위 2개 금융회사(73, 134)가 전체 867건(59.4%)을 차지하며, 해당 계좌는 동일 은행 내 다수 계좌와 반복 거래 이력이 확인되었습니다. 유입된 자금은 3개 하위 계좌로 분산되어 자금세탁 가능성이 높습니다.",
-                "fraud_type": "기타(자유기술)",
+                "summary": "대포통장 의심 계좌(88712)에서 28개 계좌로부터 5.67억 원 유입이 확인됨. funnel 패턴으로 분할 입금 후 소액이체가 반복되어 자금세탁 가능성이 높음. 2024-12-01~2025-01-15 기간 내 23회 이상 거래 발생.",
+                "fraud_type": "분할거래",
                 "transactions": [
                   {
-                    "date": 20240615,
+                    "date": 20241205,
                     "time_slot": 21,
                     "sender_bank": 73,
-                    "sender_acc": 10123456,
-                    "receiver_bank": 73,
+                    "sender_acc": 10123,
+                    "receiver_bank": 134,
                     "receiver_acc": 88712,
                     "fund_type": 3,
                     "media_type": 5,
-                    "amount": 200000000,
+                    "amount": 2000000,
                     "fraud_type": 3
                   },
                   {
-                    "date": 20240616,
+                    "date": 20241206,
                     "time_slot": 0,
-                    "sender_bank": 134,
-                    "sender_acc": 20123456,
-                    "receiver_bank": 73,
+                    "sender_bank": 73,
+                    "sender_acc": 10124,
+                    "receiver_bank": 134,
                     "receiver_acc": 88712,
                     "fund_type": 3,
                     "media_type": 5,
-                    "amount": 150000000,
+                    "amount": 1500000,
                     "fraud_type": 3
                   },
                   {
-                    "date": 20240617,
+                    "date": 20241207,
                     "time_slot": 3,
                     "sender_bank": 73,
-                    "sender_acc": 30123456,
-                    "receiver_bank": 73,
+                    "sender_acc": 10125,
+                    "receiver_bank": 134,
                     "receiver_acc": 88712,
                     "fund_type": 3,
                     "media_type": 5,
-                    "amount": 180000000,
+                    "amount": 1800000,
+                    "fraud_type": 3
+                  },
+                  {
+                    "date": 20241208,
+                    "time_slot": 6,
+                    "sender_bank": 73,
+                    "sender_acc": 10126,
+                    "receiver_bank": 134,
+                    "receiver_acc": 88712,
+                    "fund_type": 3,
+                    "media_type": 5,
+                    "amount": 1700000,
+                    "fraud_type": 3
+                  },
+                  {
+                    "date": 20241209,
+                    "time_slot": 9,
+                    "sender_bank": 73,
+                    "sender_acc": 10127,
+                    "receiver_bank": 134,
+                    "receiver_acc": 88712,
+                    "fund_type": 3,
+                    "media_type": 5,
+                    "amount": 1900000,
                     "fraud_type": 3
                   }
                 ],
@@ -4189,17 +4573,17 @@
                   "get_fraud_type_summary"
                 ]
               },
-              "_id": "2a226a45-58a9-4d92-9add-7f38491fa117"
+              "_id": "f32730e6-5c00-44b6-9824-80d91fadef3d"
             }
           ]
         }
       ],
-      "avg_score": 0.5625,
+      "avg_score": 0.5875,
       "avg_tool_hit": 0.75,
-      "avg_param_accuracy": 0.375,
+      "avg_param_accuracy": 0.425,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 3.69
+      "elapsed_sec": 4.94
     },
     {
       "id": "mt_str_034",
@@ -4224,7 +4608,7 @@
                 "min_reactivation_amount": 5000000,
                 "limit": 20
               },
-              "_id": "dc6225da-d2b7-4039-a187-f43a4f33fb2d"
+              "_id": "b998e4fb-3633-4eb8-bf36-34e700856ca7"
             }
           ]
         },
@@ -4241,7 +4625,7 @@
               "arguments": {
                 "account_id": 11290
               },
-              "_id": "8e79b635-2ea3-41ce-8581-58e79caf356c"
+              "_id": "8ccd562c-8f96-46c9-a0e5-10d52fe12ae9"
             }
           ]
         },
@@ -4258,34 +4642,119 @@
               "arguments": {
                 "fraud_type": 3
               },
-              "_id": "9c8fea21-b79e-4eb1-abc1-33a4b0cb2eda"
+              "_id": "db6e481b-1da9-46d7-919b-2c0732d5cc82"
             }
           ]
         },
         {
           "turn": 4,
-          "tool_hit": 0.0,
+          "tool_hit": 1.0,
           "param_accuracy": 0.0,
-          "score": 0.0,
+          "score": 0.5,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
-              "name": "query_transactions",
+              "name": "generate_str",
               "arguments": {
-                "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, is_fraud, fraud_type, fraud_description FROM hofinet WHERE sender_acc = 11290 AND date BETWEEN 20241201 AND 20241228"
+                "summary": "11290 계좌는 300일 이상 휴면 후 2024-12-01 95,000,000 KRW로 재활성화되었으며, 2024-12-05에는 5건의 분할거래(합계 47,000,000 KRW)가 확인됨. 심야거래 비율 67%, 인터넷뱅킹을 통한 집중적 거래 발생. 이상거래 비율 53.33%로 고위험군. 분할거래 및 심야거래 패턴은 자금세탁 구조화(Structuring) 및 심야거래 의심 정황.",
+                "fraud_type": "분할거래",
+                "transactions": [
+                  {
+                    "date": 20241201,
+                    "time_slot": 21,
+                    "sender_bank": 10,
+                    "sender_acc": 11290,
+                    "receiver_bank": 20,
+                    "receiver_acc": 22401,
+                    "fund_type": 0,
+                    "media_type": 2,
+                    "amount": 95000000,
+                    "fraud_type": 3
+                  },
+                  {
+                    "date": 20241205,
+                    "time_slot": 0,
+                    "sender_bank": 10,
+                    "sender_acc": 11290,
+                    "receiver_bank": 30,
+                    "receiver_acc": 3301,
+                    "fund_type": 0,
+                    "media_type": 2,
+                    "amount": 9800000,
+                    "fraud_type": 3
+                  },
+                  {
+                    "date": 20241205,
+                    "time_slot": 0,
+                    "sender_bank": 10,
+                    "sender_acc": 11290,
+                    "receiver_bank": 30,
+                    "receiver_acc": 3302,
+                    "fund_type": 0,
+                    "media_type": 2,
+                    "amount": 9800000,
+                    "fraud_type": 3
+                  },
+                  {
+                    "date": 20241205,
+                    "time_slot": 0,
+                    "sender_bank": 10,
+                    "sender_acc": 11290,
+                    "receiver_bank": 30,
+                    "receiver_acc": 3303,
+                    "fund_type": 0,
+                    "media_type": 2,
+                    "amount": 9800000,
+                    "fraud_type": 3
+                  },
+                  {
+                    "date": 20241205,
+                    "time_slot": 0,
+                    "sender_bank": 10,
+                    "sender_acc": 11290,
+                    "receiver_bank": 30,
+                    "receiver_acc": 3304,
+                    "fund_type": 0,
+                    "media_type": 2,
+                    "amount": 9800000,
+                    "fraud_type": 3
+                  },
+                  {
+                    "date": 20241205,
+                    "time_slot": 0,
+                    "sender_bank": 10,
+                    "sender_acc": 11290,
+                    "receiver_bank": 30,
+                    "receiver_acc": 3305,
+                    "fund_type": 0,
+                    "media_type": 2,
+                    "amount": 9800000,
+                    "fraud_type": 3
+                  }
+                ],
+                "fraud_probability": 0.82,
+                "aml_patterns": [
+                  "Structuring",
+                  "Layering"
+                ],
+                "tools_used": [
+                  "detect_dormant_reactivation",
+                  "detect_ctr_candidates",
+                  "get_account_profile"
+                ]
               },
-              "_id": "47790585-4a0f-439a-a465-caba352bbadc"
+              "_id": "99256617-351b-4edf-a1cf-ebf99a206d6b"
             }
           ]
         }
       ],
-      "avg_score": 0.5,
-      "avg_tool_hit": 0.5,
+      "avg_score": 0.625,
+      "avg_tool_hit": 0.75,
       "avg_param_accuracy": 0.5,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 1.26
+      "elapsed_sec": 5.24
     },
     {
       "id": "mt_str_035",
@@ -4308,7 +4777,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 33801 OR receiver_acc = 33801 ORDER BY date, time_slot"
               },
-              "_id": "aec0d4cd-7432-423d-8336-22a1b5d027c2"
+              "_id": "0385723b-01b9-473d-8990-55262e7afe75"
             }
           ]
         },
@@ -4330,7 +4799,7 @@
                 "media_type": 4,
                 "amount": 2000000
               },
-              "_id": "9d010ab7-e241-4d6e-b0a2-a46e67a8f6c0"
+              "_id": "f88a7458-0d2c-4f15-a76a-cb1debcec9dc"
             }
           ]
         },
@@ -4347,7 +4816,7 @@
               "arguments": {
                 "account_id": 33801
               },
-              "_id": "39016952-e196-475d-8931-0d46bf498e40"
+              "_id": "5ff0da81-becb-437f-90a8-775429b8e337"
             }
           ]
         },
@@ -4366,7 +4835,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 2.26
+      "elapsed_sec": 3.68
     },
     {
       "id": "mt_str_036",
@@ -4378,18 +4847,18 @@
       "turns": [
         {
           "turn": 1,
-          "tool_hit": 1.0,
-          "param_accuracy": 1.0,
-          "score": 1.0,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
-              "name": "get_institution_report",
+              "name": "query_transactions",
               "arguments": {
-                "bank_id": 73
+                "sql": "SELECT * FROM hofinet WHERE sender_bank = 73 LIMIT 1"
               },
-              "_id": "045a49c4-3890-4ab9-b7bf-f2882fcd0556"
+              "_id": "8f21cdee-1a2a-4e38-bae1-ad1b20ce7f54"
             }
           ]
         },
@@ -4409,7 +4878,7 @@
                 "min_transactions": 10,
                 "limit": 20
               },
-              "_id": "93c0af95-8313-41ba-9dd3-6bb445dd75d6"
+              "_id": "b4a8a83a-102b-4948-844e-f3c54217821d"
             }
           ]
         },
@@ -4430,7 +4899,7 @@
                 "max_len": 6,
                 "limit": 20
               },
-              "_id": "0335da41-f99c-472b-a327-40281d7672bd"
+              "_id": "9ddee797-0925-46d1-809a-b2f827123bf5"
             }
           ]
         },
@@ -4445,12 +4914,12 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "73번 금융회사 출금계좌 55012에서 305번 상대기관으로 집중된 이상거래 흐름에서 레이어링 패턴 2건이 탐지됨. 3~4단계 자금세탁 경로를 통해 총 348백만원 규모의 비정상적 자금 이동이 확인됨. 특히 심야시간(21~24시) 및 동일일 내 반복 분할입금이 다수 발생. 계좌 프로필상 최근 3개월 동안 거래패턴이 급격히 변화하였으며, 기존 거래처와 무관한 신규 수신처와의 거래가 70% 이상 차지함. 305번 상대기관과의 거래비중이 전체 거래의 41%로 과도하게 집중되어 있음.",
+                "summary": "73번 금융회사와 305번 상대기관 간 이상거래비율이 1.9%로 매우 높고, 55012번 계좌에서 2건의 레이어링 패턴(3~4단계 자금세탁 경로)이 탐지됨. 147억원 및 201억원 규모의 다단계 자금 이동으로 자금 출처 및 최종 수취인 추적이 필요함. 계좌의 이상거래비율이 0.41%로 전체 평균 대비 현저히 높음.",
                 "fraud_type": "갑작스러운 거래패턴의 변화",
                 "transactions": [
                   {
                     "date": 20240601,
-                    "time_slot": 21,
+                    "time_slot": 18,
                     "sender_bank": 73,
                     "sender_acc": 55012,
                     "receiver_bank": 305,
@@ -4461,8 +4930,8 @@
                     "fraud_type": 1
                   },
                   {
-                    "date": 20240602,
-                    "time_slot": 22,
+                    "date": 20240605,
+                    "time_slot": 21,
                     "sender_bank": 73,
                     "sender_acc": 55012,
                     "receiver_bank": 305,
@@ -4475,25 +4944,24 @@
                 ],
                 "fraud_probability": 0.92,
                 "aml_patterns": [
-                  "Layering",
-                  "Ring"
+                  "Layering"
                 ],
                 "tools_used": [
                   "detect_aml_patterns",
                   "analyze_cross_institution_flow"
                 ]
               },
-              "_id": "ba81f0b2-b25a-4ac1-b4cf-0ca98c09186a"
+              "_id": "4270992a-6743-44c2-b362-1e2588d4b57d"
             }
           ]
         }
       ],
-      "avg_score": 0.8625,
-      "avg_tool_hit": 1.0,
-      "avg_param_accuracy": 0.725,
+      "avg_score": 0.6125,
+      "avg_tool_hit": 0.75,
+      "avg_param_accuracy": 0.475,
       "context_accuracy": 0.0,
-      "scenario_complete": true,
-      "elapsed_sec": 3.17
+      "scenario_complete": false,
+      "elapsed_sec": 3.25
     },
     {
       "id": "mt_str_037",
@@ -4514,7 +4982,7 @@
             {
               "name": "analyze_channel_risk",
               "arguments": {},
-              "_id": "b447d9fd-d018-49aa-8e94-3b977bff3488"
+              "_id": "7dfd09b5-60f5-4fbf-bfa2-eeca57887dbb"
             }
           ]
         },
@@ -4531,7 +4999,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE date BETWEEN 20241001 AND 20241231 AND media_type = 2 AND time_slot BETWEEN 0 AND 3 AND sender_acc = 72301"
               },
-              "_id": "61487115-91aa-4d91-b104-ec1c92ecdb7a"
+              "_id": "6226b4c0-cf1a-4322-8948-5dc818a8614a"
             }
           ]
         },
@@ -4548,7 +5016,7 @@
               "arguments": {
                 "account_id": 72301
               },
-              "_id": "078a8036-249c-4307-96bd-d00e6684daa0"
+              "_id": "9c556d73-5ebc-4745-a360-5f231970d716"
             }
           ]
         },
@@ -4566,7 +5034,7 @@
                 "account_id": 72301,
                 "hops": 2
               },
-              "_id": "880a5918-0c70-4451-a31b-adb6f99fbbcf"
+              "_id": "84932405-8499-4a9b-8de4-5003870cbe37"
             }
           ]
         },
@@ -4581,7 +5049,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "2024년 4분기 심야 인터넷뱅킹(매체 4)에서 72301 계좌의 분할거래(이상거래유형 3)가 다수 발생. 심야(0~3시) 집중, 평균 2.1억 원 규모, 총 24건 1,890백만 원. 동일 계좌에서 22개 상대와 반복 거래, 이상거래비율 26.97%로 고위험. 심야 인터넷뱅킹 이상거래비율 1.89배 증가, 주요 상대 계좌 550789 등 다수 포함. 분할거래 및 심야 집중 패턴으로 자금세탁 의심.",
+                "summary": "2024년 4분기 심야 인터넷뱅킹(매체 4)에서 72301 계좌의 분할거래(이상거래유형 3)가 다수 발생. 심야(0~3시) 집중, 평균 2.1억 원 규모, 총 24건 189억 원. 동일 계좌에서 22개 상대 계좌와 반복 거래, 이상거래비율 26.97%로 고위험. 심야 인터넷뱅킹 이상거래비율 1.89배 증가, 주요 상대 계좌 550789 등 다수 포함. 분할거래 및 심야 집중 패턴으로 자금세탁 의심.",
                 "fraud_type": "분할거래",
                 "transactions": [
                   {
@@ -4652,12 +5120,11 @@
                 ],
                 "tools_used": [
                   "query_transactions",
-                  "analyze_channel_risk",
-                  "get_account_profile",
+                  "predict_fraud",
                   "analyze_network"
                 ]
               },
-              "_id": "fdc2ec6b-f111-4c8d-9cfc-dd2e6b797038"
+              "_id": "10b5ad27-bc4f-426b-89a0-807ab241fba5"
             }
           ]
         }
@@ -4667,7 +5134,7 @@
       "avg_param_accuracy": 0.65,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 4.75
+      "elapsed_sec": 5.08
     },
     {
       "id": "mt_str_038",
@@ -4679,18 +5146,18 @@
       "turns": [
         {
           "turn": 1,
-          "tool_hit": 1.0,
-          "param_accuracy": 1.0,
-          "score": 1.0,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
-              "name": "get_institution_report",
+              "name": "query_transactions",
               "arguments": {
-                "bank_id": 305
+                "sql": "SELECT * FROM hofinet WHERE sender_bank = 305 LIMIT 10"
               },
-              "_id": "8cd6dbbf-8b7c-42ea-b63a-2ef6f505acdc"
+              "_id": "e47944a0-63db-4faf-a1ee-f03516185fdd"
             }
           ]
         },
@@ -4705,9 +5172,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_acc = 88901"
+                "sql": "SELECT * FROM hofinet WHERE sender_bank = 305 AND sender_acc = 88901 LIMIT 50"
               },
-              "_id": "91ea59f5-f2f2-49a2-bd1c-2c1d3f726d73"
+              "_id": "ce39c059-fdd3-4494-b493-a917a8228188"
             }
           ]
         },
@@ -4724,7 +5191,7 @@
               "arguments": {
                 "account_id": 88901
               },
-              "_id": "a3923944-8dd8-40a8-a237-29c6e55954cc"
+              "_id": "4bf7a84a-e550-4493-a450-bd4c28f65c07"
             }
           ]
         },
@@ -4742,17 +5209,17 @@
                 "account_id": 88901,
                 "hops": 2
               },
-              "_id": "53dcfd53-1302-4722-b674-d0b7c195920c"
+              "_id": "7913ce66-2ab4-49ce-8d57-6c4a3f09d32c"
             }
           ]
         }
       ],
-      "avg_score": 0.75,
-      "avg_tool_hit": 0.75,
-      "avg_param_accuracy": 1.0,
+      "avg_score": 0.5,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.75,
       "context_accuracy": 0.5,
       "scenario_complete": false,
-      "elapsed_sec": 0.8
+      "elapsed_sec": 1.06
     },
     {
       "id": "mt_str_039",
@@ -4774,10 +5241,11 @@
               "name": "detect_monitoring_alerts",
               "arguments": {
                 "rule_id": "R002",
-                "date_from": 20230101,
-                "date_to": 20231231
+                "date_from": 20240601,
+                "date_to": 20240630,
+                "limit": 20
               },
-              "_id": "35d8052e-f6a7-4d5f-8a4b-911b38ecc554"
+              "_id": "1cab0e04-51e5-497e-8837-2d8cbf759504"
             }
           ]
         },
@@ -4794,7 +5262,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 77401 AND date = 20241220 ORDER BY time_slot"
               },
-              "_id": "ef26c218-bdd1-485d-96f9-08f494df8717"
+              "_id": "e570ac90-608e-4920-ab0c-8e9911a76a9a"
             }
           ]
         },
@@ -4814,7 +5282,7 @@
                 "date_to": 20241220,
                 "limit": 20
               },
-              "_id": "2164e1a9-50f6-4062-99e3-cce1c3c60eb6"
+              "_id": "daf3fa4a-5da0-454d-8034-0bd0f91030e8"
             }
           ]
         },
@@ -4829,7 +5297,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "2024-12-20 77401 계좌에서 동일일 18건, 총 172,000,000원 거래 발생. R002(급속다건거래) 모니터링에 의해 포착. 9시 시간대 집중, 1천만원 미만 분할거래로 구조화 의심. 이상거래유형 1(갑작스러운 거래패턴의 변화) 및 구조화 정황. 계좌는 최근 6개월 내 동일 패턴 미발생, 신규 수신처 다수 포함.",
+                "summary": "2024-12-20 77401 계좌에서 동일일 18건, 총 172,000,000원 거래 발생. R002(급속다건) 모니터링에 포착. 9시 시간대 집중, 1천만원 미만 분할거래로 구조화 의심. 이상거래유형 1(갑작스러운 거래패턴 변화) 및 구조화 정황. 계좌는 최근 6개월 내 동일 패턴 미발생, 신규 수신처 다수 포함. 자금출처 불명확, 자금세탁 위험 높음.",
                 "fraud_type": "갑작스러운 거래패턴의 변화",
                 "transactions": [
                   {
@@ -4868,7 +5336,7 @@
                   "detect_ctr_candidates"
                 ]
               },
-              "_id": "fd1702ff-0c64-4f6c-85c5-cd6ed058f399"
+              "_id": "be129a4d-19e7-4969-a763-5451d27e33b3"
             }
           ]
         }
@@ -4878,7 +5346,7 @@
       "avg_param_accuracy": 0.85,
       "context_accuracy": 0.0,
       "scenario_complete": true,
-      "elapsed_sec": 3.14
+      "elapsed_sec": 3.46
     },
     {
       "id": "mt_str_040",
@@ -4899,9 +5367,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT fraud_type, COUNT(*) AS count, SUM(amount) AS total_amount, COUNT(CASE WHEN is_fraud = 1 THEN 1 END) AS fraud_count, ROUND(AVG(amount), 2) AS avg_amount, COUNT(DISTINCT sender_acc) AS unique_senders, COUNT(DISTINCT receiver_acc) AS unique_receivers FROM hofinet GROUP BY fraud_type ORDER BY count DESC"
+                "sql": "SELECT fraud_type, COUNT(*) AS count, SUM(amount) AS total_amount, COUNT(CASE WHEN is_fraud=1 THEN 1 END) AS fraud_count, ROUND(AVG(amount), 2) AS avg_amount, COUNT(DISTINCT sender_acc) AS unique_senders, COUNT(DISTINCT receiver_acc) AS unique_receivers FROM hofinet GROUP BY fraud_type ORDER BY count DESC"
               },
-              "_id": "2ab8756a-0849-47c5-8fc1-389d011433d7"
+              "_id": "82a07b96-d830-4156-bdbe-748b053e6bde"
             }
           ]
         },
@@ -4918,7 +5386,7 @@
               "arguments": {
                 "fraud_type": 5
               },
-              "_id": "8ab47479-fd1f-402e-8a1c-27c94bba7a90"
+              "_id": "e501ce48-b856-45b8-b3e6-0e1a683f5e27"
             }
           ]
         },
@@ -4933,7 +5401,7 @@
             {
               "name": "query_transactions",
               "arguments": {},
-              "_id": "ffc449d4-73a9-43b7-8abc-95f5d4bfb271"
+              "_id": "ba62ce10-9b8f-48b2-af3a-78537baf455d"
             }
           ]
         },
@@ -4951,7 +5419,7 @@
                 "keyword": "structuring",
                 "industry": "banking"
               },
-              "_id": "fa345eee-59e4-4307-9616-180423f24005"
+              "_id": "2630e54a-e493-4656-b702-98ce7dd0e435"
             }
           ]
         },
@@ -4966,7 +5434,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "66501 계좌에서 2024년 1월 1일부터 12월 31일까지 총 156건의 거래가 발생하였으며, 이 중 19건이 이상거래로 분류됨. 특히 2024년 11월 10일 21시 3000만원 입금 후 당일 990567 계좌로 3000만원 인출 등 거액 입금 후 당일 인출 패턴이 반복적으로 확인됨. 총 거래금액은 4억7800만원으로, 불법도박(B-25, B-27) 관련 FIU 참고유형과 일치함. 동일 금융회사(128→122) 간 반복 거래 및 심야 시간대(21시) 거래 집중 등 자금세탁 의심 정황 다수 포착.",
+                "summary": "66501 계좌에서 2024년 1월 1일부터 12월 31일까지 총 156건의 거래가 발생하였으며, 이 중 19건이 이상거래로 분류됨. 특히 2024년 11월 10일 21시 3000만원 입금 후 당일 990567 계좌로 3000만원 인출 등 거액 입금 후 당일 인출 패턴이 반복적으로 확인됨. 총 거래금액은 47억 8천만원이며, 이 중 이상거래 금액은 19억 2천만원에 달함. 해당 계좌는 불법도박 관련 FIU 참고유형(B-25, B-27)에 해당하는 자금 흐름이 지속적으로 포착됨.",
                 "fraud_type": "거액 입금 후 당일/익일 인출",
                 "transactions": [
                   {
@@ -4993,7 +5461,7 @@
                   "lookup_fiu_reference_types"
                 ]
               },
-              "_id": "fa12ffed-a5c1-454c-9c18-175be6f8c1fa"
+              "_id": "0b20e304-9465-4af4-98dd-146c39e4951d"
             }
           ]
         }
@@ -5003,7 +5471,7 @@
       "avg_param_accuracy": 0.2667,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 3.33
+      "elapsed_sec": 3.52
     },
     {
       "id": "mt_str_041",
@@ -5024,9 +5492,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_acc = 41205 AND fraud_type = 4"
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 41205 AND fraud_type = 4;"
               },
-              "_id": "def5830f-81d6-41fd-a89a-abf90a22b764"
+              "_id": "a726812f-018d-4f7c-a23c-1f6bd2e77529"
             }
           ]
         },
@@ -5048,7 +5516,7 @@
                 "media_type": 5,
                 "amount": 48000000
               },
-              "_id": "1d096820-fa3a-42ff-bdde-09b824f04998"
+              "_id": "2d53e627-db06-471b-b756-d72e0fe5f446"
             }
           ]
         },
@@ -5065,7 +5533,7 @@
               "arguments": {
                 "account_id": 661234
               },
-              "_id": "0a05993f-2cc7-4aaa-abee-9708f489d651"
+              "_id": "c5a7a1f2-27fb-4688-82bc-4303da5b7aaa"
             }
           ]
         },
@@ -5085,7 +5553,7 @@
                 "min_counterparts": 5,
                 "limit": 10
               },
-              "_id": "43f5be78-30b6-47e6-9bae-9596244b82dd"
+              "_id": "3d9cb9b2-26a0-4b13-b0d3-d25934f3c14f"
             }
           ]
         },
@@ -5100,7 +5568,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "2024년 12월 18일부터 25일까지 계좌 41205에서 다중거래의 동시 요청이 감지되었습니다. 총 12건의 이상거래가 발생했으며, 총 거래금액은 534,000,000 KRW입니다. 대표 거래의 사기 확률은 0.94로 매우 높으며, 주요 입금계좌(661234)로 자금이 집중되는 현상이 확인되었습니다. 32개의 출금계좌에서 3,450,000,000 KRW가 입금되었으며, 이는 자금 수집(smurfing) 패턴으로 판단됩니다. 심야 입금 비율도 12%로 높아 추가 조사가 필요합니다.",
+                "summary": "2024년 12월 18일부터 25일까지 계좌 41205에서 다중거래의 동시 요청(이상거래유형 4)이 12건 발생하였으며, 총 534,000,000원의 자금이 이체되었습니다. 특히 대표 거래(2024-12-18, 12:00)는 48,000,000원의 고액 이체이며, 예측 결과 사기 확률이 94%로 매우 높게 나타났습니다. 수신 계좌 661234는 32개 계좌로부터 345,000,0000원을 수취한 자금 수집 패턴(smurfing score 0.89)이 확인되었습니다. 심야 입금 비율 12% 및 평균 입금액 44,230,769원으로 비정상적 자금 집중 현상이 관찰됩니다.",
                 "fraud_type": "Concurrent Multiple Transactions",
                 "transactions": [
                   {
@@ -5127,7 +5595,7 @@
                   "detect_smurfing_network"
                 ]
               },
-              "_id": "b719ab41-995e-40de-8803-9d8d7ece66a3"
+              "_id": "806bce71-c924-4ba6-9986-c24e9dfe4b21"
             }
           ]
         }
@@ -5137,7 +5605,7 @@
       "avg_param_accuracy": 0.5733,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 3.0
+      "elapsed_sec": 3.42
     },
     {
       "id": "mt_str_042",
@@ -5162,7 +5630,7 @@
                 "date_from": 20230101,
                 "date_to": 20231231
               },
-              "_id": "f8d26679-5869-43ea-88db-7de0173fd692"
+              "_id": "4ae8c1b2-e6a2-47e0-8fc4-2dc96941cba2"
             }
           ]
         },
@@ -5182,7 +5650,7 @@
                 "min_transactions": 10,
                 "limit": 20
               },
-              "_id": "defc981f-ae96-437b-af58-d2864def578a"
+              "_id": "fb3f0b8d-ac05-4d31-baf9-3f33d2681856"
             }
           ]
         },
@@ -5197,9 +5665,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_bank = 205 AND sender_acc IN (44201, 55302, 66403) ORDER BY date, time_slot LIMIT 20"
+                "sql": "SELECT * FROM hofinet WHERE sender_bank = 205 AND sender_acc IN (44201, 55302, 66403) ORDER BY date, time_slot"
               },
-              "_id": "45da2a1c-9647-490e-88e1-d47b31a8d31d"
+              "_id": "37ebfb19-cf6b-4823-899f-01b1c094d2df"
             }
           ]
         },
@@ -5214,7 +5682,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "44201 계좌에서 2024년 12월 1일 15시, 205 → 88 기관간 1,200만원 거래가 발생. 해당 수신처(88)는 신규로 확인되며, R004 기관집중거래(이상거래비율 0.9) 및 이상거래유형 2(New Counterparty) 발생. 최근 3개월간 12건, 8.9억원 거래 중 12건이 이상거래로 분류됨. 집중된 기관쌍(205-88) 내 반복적 신규 수신처 거래 및 대량 자금 이동 패턴 확인.",
+                "summary": "2024년 9월~12월 기간 동안 출금기관 205와 입금기관 88 간 집중된 거래가 다수 발생하였으며, 출금계좌 44201에서 신규 수신처(입금기관 143, 계좌 991234)로 거액 거래가 반복적으로 발생. 해당 계좌는 최근 3개월 동안 12건의 이상거래(이상거래비율 15.4%)가 확인되었고, 이 중 1건은 신규 수신처와의 거래로 R004(기관집중) 모니터링 규칙에 의해 탐지됨. 거래금액은 총 890,000,000원(이상거래 120,000,000원 포함)으로, 자금세탁 의심 정황이 다수 포착됨.",
                 "fraud_type": "원격지거래",
                 "transactions": [
                   {
@@ -5222,7 +5690,7 @@
                     "time_slot": 15,
                     "sender_bank": 205,
                     "sender_acc": 44201,
-                    "receiver_bank": 88,
+                    "receiver_bank": 143,
                     "receiver_acc": 991234,
                     "fund_type": 4,
                     "media_type": 4,
@@ -5232,8 +5700,8 @@
                 ],
                 "fraud_probability": 0.92,
                 "aml_patterns": [
-                  "New Counterparty",
-                  "Ring"
+                  "R004_기관집중",
+                  "신규수신처"
                 ],
                 "tools_used": [
                   "detect_monitoring_alerts",
@@ -5241,7 +5709,7 @@
                   "query_transactions"
                 ]
               },
-              "_id": "e322a0ca-110b-4c54-badd-80513261e239"
+              "_id": "0b8cb5b7-0dec-4762-9a0c-40aedab6383d"
             }
           ]
         }
@@ -5251,7 +5719,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": 0.0,
       "scenario_complete": true,
-      "elapsed_sec": 2.85
+      "elapsed_sec": 3.19
     },
     {
       "id": "mt_str_043",
@@ -5274,7 +5742,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 29501 OR receiver_acc = 29501 ORDER BY date, time_slot"
               },
-              "_id": "33b6d50b-d3ca-490c-8bde-8b515230733f"
+              "_id": "a552a88d-8693-45a9-b7ee-2474d68af1ad"
             }
           ]
         },
@@ -5296,7 +5764,7 @@
                 "media_type": 4,
                 "amount": 49000000
               },
-              "_id": "04518766-163c-4fdc-8aba-45620aa49efa"
+              "_id": "0cfa2c2b-525d-4411-912c-e6d97077bac5"
             }
           ]
         },
@@ -5314,7 +5782,7 @@
                 "account_id": 29501,
                 "hops": 2
               },
-              "_id": "7275b51e-7005-4606-8fd5-31a98ea1381e"
+              "_id": "2a68e320-35bd-496a-9b7e-fb5bdb051b6b"
             }
           ]
         },
@@ -5334,7 +5802,7 @@
                 "account_b": 99801,
                 "limit": 5
               },
-              "_id": "bdef5732-5eaa-4015-8097-355a36bfdf34"
+              "_id": "e6c311af-ffcd-4119-bb15-c897aaf753f0"
             }
           ]
         },
@@ -5349,7 +5817,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "29501 계좌에서 2024년 11월 10일 03:00에 49,000,000 KRW가 551023 계좌로 이체됨. 해당 계좌는 최근 6개월 동안 총 45건의 거래 중 11건이 이상거래로 분류됨. 99801 계좌와의 최단 경로가 3단계로 확인되어 자금 세탁 가능성이 높음. 29501 계좌의 이상거래 비율이 24.44%로 평균(5% 미만)보다 현저히 높음. 2024년 11월 10일 03:00 거래는 심야 시간대(3시)로, ATM 및 모바일 채널을 통한 대량 거래가 집중됨. 2024년 11월 10일 49,000,000 KRW 거래는 최근 6개월 평균 일일 거래액(15,000,000 KRW)보다 3.3배 높음. 29501 계좌는 2024년 11월 1일부터 11월 10일까지 10건의 신규 입금처(551023, 662134, 773245 등)와 거래 발생. 2024년 11월 10일 49,000,000 KRW 거래는 2024년 11월 1일 30,000,000 KRW 입금 후 당일 인출되는 패턴으로, '거액 입금 후 당일/익일 인출' 유형의 이상거래에 해당함. 29501 계좌는 2024년 11월 1일부터 11월 10일까지 10건의 신규 입금처(551023, 662134, 773245 등)와 거래 발생. 2024년 11월 10일 49,000,000 KRW 거래는 2024년 11월 1일 30,000,000 KRW 입금 후 당일 인출되는 패턴으로, '거액 입금 후 당일/익일 인출' 유형의 이상거래에 해당함. 29501 계좌는 2024년 11월 1일부터 11월 10일까지 10건의 신규 입금처(551023, 662134, 773245 등)와 거래 발생. 2024년 11월 10일 49,000,000 KRW 거래는 2024년 11월 1일 30,000,000 KRW 입금 후 당일 인출되는 패턴으로, '거액 입금 후 당일/익일 인출' 유형의 이상거래에 해당함.",
+                "summary": "29501 계좌에서 2024년 11월 10일 03:00에 49,000,000 KRW가 551023 계좌로 이체됨. 해당 계좌는 최근 3개월 동안 45건의 거래 중 11건이 이상거래로 분류됨. 99801 계좌와의 최단 경로가 3단계로 확인되어 자금 세탁 가능성이 높음. 29501 계좌의 이상거래 비율이 24.44%로 높게 나타남.",
                 "fraud_type": "갑작스러운 거래패턴의 변화",
                 "transactions": [
                   {
@@ -5377,7 +5845,7 @@
                   "detect_aml_patterns"
                 ]
               },
-              "_id": "6228edee-e0dd-4278-9a05-c08b0b60ebc4"
+              "_id": "3831232d-2fb1-4e22-9bd2-be025bb81ada"
             }
           ]
         }
@@ -5387,7 +5855,7 @@
       "avg_param_accuracy": 0.72,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 5.48
+      "elapsed_sec": 3.15
     },
     {
       "id": "mt_str_044",
@@ -5410,7 +5878,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 55901 OR receiver_acc = 55901 ORDER BY date, time_slot"
               },
-              "_id": "22a458df-3c5d-44a5-9998-594e722b276c"
+              "_id": "f3921e0e-f2c5-424c-ab28-e2301e6a4098"
             }
           ]
         },
@@ -5430,9 +5898,9 @@
                 "receiver_bank": 20,
                 "fund_type": 0,
                 "media_type": 2,
-                "amount": 5000000
+                "amount": 2000000
               },
-              "_id": "b54112e8-cfda-4fd4-b121-79133eb19b40"
+              "_id": "8bca3b85-2bad-468c-87c7-640cac8bd251"
             }
           ]
         },
@@ -5453,7 +5921,7 @@
                 "date_from": 20240901,
                 "date_to": 20241231
               },
-              "_id": "a13f27c6-952b-4e51-8d5c-49af23bb3a32"
+              "_id": "f13c933d-8967-47cd-a773-f58988129a41"
             }
           ]
         },
@@ -5473,7 +5941,7 @@
                 "date_to": 20241231,
                 "limit": 20
               },
-              "_id": "0a355d19-ce27-42ba-b98e-416a2dd84b7f"
+              "_id": "551cab65-6398-4d2c-bc94-cd48f47712ac"
             }
           ]
         }
@@ -5483,7 +5951,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.47
+      "elapsed_sec": 1.58
     },
     {
       "id": "mt_str_045",
@@ -5509,7 +5977,7 @@
                 "date_to": 20240630,
                 "limit": 20
               },
-              "_id": "716f3b9c-2e6c-4996-b129-08a175541d30"
+              "_id": "5f8f93cf-e6c6-4c17-9473-4f46f77927c7"
             }
           ]
         },
@@ -5526,7 +5994,7 @@
               "arguments": {
                 "account_id": 34901
               },
-              "_id": "12ef2190-3670-4a65-a8d8-2cfcae0b2614"
+              "_id": "2ce9912f-5e27-4e9c-bf25-d470238815b7"
             }
           ]
         },
@@ -5543,7 +6011,7 @@
               "arguments": {
                 "account_id": 34901
               },
-              "_id": "46c98062-d512-4ebb-b658-198cc7e80afa"
+              "_id": "d64a0bf0-53ca-4d0a-a8da-f3c7c26fe3f2"
             }
           ]
         },
@@ -5560,7 +6028,7 @@
               "arguments": {
                 "bank_id": 101
               },
-              "_id": "57a559a6-0f5a-4605-a5c7-35493be815da"
+              "_id": "537b6d97-1230-4975-b743-962f9ea132a4"
             }
           ]
         },
@@ -5575,7 +6043,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "34901 계좌는 2024년 12월 25일 심야(0시)에 9,800만원 단일 거래 발생. 해당 계좌는 총 34건 중 12건이 이상거래(35.29%)로 심야거래비율이 71%에 달함. 위험도 평가 결과 89점(고위험)으로 심야대량거래(R001) 및 금액이상도(0.85)가 주요 위험요인으로 분석됨. 동일 금융기관(134) 전체 이상거래비율 0.39%로 업계 평균 대비 높음. 심야시간 인터넷뱅킹을 통한 거액거래 집중 및 거래상대 다양성 부족(8명)이 확인됨.",
+                "summary": "34901 계좌는 2024년 12월 25일 심야(0시)에 9,800만원, 2024년 12월 26일 심야(3시)에 7,500만원 등 심야시간대에 대량거래가 집중 발생. 해당 계좌의 심야거래비율은 71%로 매우 높으며, 위험도 평가 결과 89점(고위험)으로 산정됨. 동일 금융회사(134번) 전체 이상거래비율도 0.39%로 업계 평균 대비 높음. 심야 대량거래는 자금세탁의 전형적 수법으로 STR 대상임.",
                 "fraud_type": "갑작스러운 거래패턴의 변화",
                 "transactions": [
                   {
@@ -5584,10 +6052,22 @@
                     "sender_bank": 134,
                     "sender_acc": 34901,
                     "receiver_bank": 789,
-                    "receiver_acc": 1024,
+                    "receiver_acc": 1023,
                     "fund_type": 0,
                     "media_type": 2,
                     "amount": 98000000,
+                    "fraud_type": 1
+                  },
+                  {
+                    "date": 20241226,
+                    "time_slot": 3,
+                    "sender_bank": 134,
+                    "sender_acc": 34901,
+                    "receiver_bank": 789,
+                    "receiver_acc": 1023,
+                    "fund_type": 0,
+                    "media_type": 2,
+                    "amount": 75000000,
                     "fraud_type": 1
                   }
                 ],
@@ -5603,7 +6083,7 @@
                   "get_institution_report"
                 ]
               },
-              "_id": "7d787e08-1512-4542-928c-95200f46b09d"
+              "_id": "8285582f-16b7-4519-b60d-ab291feab9d3"
             }
           ]
         }
@@ -5613,7 +6093,7 @@
       "avg_param_accuracy": 0.7,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 2.79
+      "elapsed_sec": 3.45
     },
     {
       "id": "mt_str_046",
@@ -5636,7 +6116,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 81402 OR receiver_acc = 81402 ORDER BY date, time_slot"
               },
-              "_id": "18f5f159-546e-4449-a127-3e053d5b33c7"
+              "_id": "022070a7-a56d-4fe6-a1de-977d322eaab8"
             }
           ]
         },
@@ -5658,7 +6138,7 @@
                 "media_type": 4,
                 "amount": 47500000
               },
-              "_id": "0854e0ff-3c1b-4a44-9ef4-a0c6ab90e7d7"
+              "_id": "d7c8f271-7c3a-47a1-bf05-b194a82994ec"
             }
           ]
         },
@@ -5673,7 +6153,7 @@
             {
               "name": "validate_str_fields",
               "arguments": {},
-              "_id": "7509801a-a5cf-4ad5-b3e7-2288bc83606d"
+              "_id": "ee1b760a-b900-4b24-946c-235394c42816"
             }
           ]
         },
@@ -5688,7 +6168,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "계좌 81402에서 2024년 11월 15일 21:00에 47,500,000원 거래가 발생하였으며, 해당 계좌는 최근 6개월 동안 67건의 거래가 발생하였고, 총 거래 금액은 1,560,000,000원에 달합니다. 이 중 19건이 이상거래로 분류되었으며, 특히 2024년 11월 15일의 거래는 심야 시간대(21:00)에 모바일 폰(매체구분 4)을 통해 거액이 이체된 사례로, 분할 거래(이상거래유형 3) 및 심야 대량 거래(이상거래유형 7)의 특성을 동시에 보이고 있습니다. 또한, 동일 계좌에서 반복적으로 거액 이체가 이루어지고 있어 자금 세탁의 가능성이 높습니다.",
+                "summary": "계좌 81402에서 2024년 11월 15일 21:00에 47,500,000원 거래가 발생하였으며, 해당 계좌는 최근 6개월 동안 67건의 거래가 발생하였고, 이 중 19건이 이상거래로 분류되었습니다. 특히, 2024년 11월 15일의 거래는 심야 시간대(21:00)에 모바일 폰을 통한 거래로, 거래 금액이 47,500,000원으로 상당히 큰 금액이며, 이전 거래 내역과 비교해 급격한 금액 증가가 관찰되었습니다. 또한, 동일 계좌에서 다수의 거래가 짧은 기간 내에 집중적으로 발생하여 분할 거래의 패턴이 의심됩니다.",
                 "fraud_type": "분할거래",
                 "transactions": [
                   {
@@ -5706,15 +6186,14 @@
                 ],
                 "fraud_probability": 0.86,
                 "aml_patterns": [
-                  "Split Transaction",
-                  "Late-Night Bulk Transaction"
+                  "Split Transaction"
                 ],
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud"
                 ]
               },
-              "_id": "4c5214ac-c03b-4788-8203-bf290b0528fb"
+              "_id": "a20a59d1-9d2e-4cdf-9afe-1c533b7d46bd"
             }
           ]
         }
@@ -5724,7 +6203,7 @@
       "avg_param_accuracy": 0.375,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 6.14
+      "elapsed_sec": 4.65
     },
     {
       "id": "mt_str_047",
@@ -5745,9 +6224,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_acc = 22901 AND fraud_type = 4"
+                "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, is_fraud, fraud_type, fraud_description FROM hofinet WHERE sender_acc = 22901 ORDER BY date, time_slot"
               },
-              "_id": "4b5b4194-5c97-40b8-976e-52a2aab2be07"
+              "_id": "1986c901-ac6d-4852-bfc2-1fbe1d94e66a"
             }
           ]
         },
@@ -5769,7 +6248,7 @@
                 "media_type": 4,
                 "amount": 2000000
               },
-              "_id": "95b7994c-4241-41a9-9197-9e78a730eca3"
+              "_id": "b376ad76-4f1d-4492-b3f9-75e1839ea938"
             }
           ]
         },
@@ -5787,7 +6266,7 @@
                 "account_id": 22901,
                 "hops": 2
               },
-              "_id": "30ac5f5e-f3be-4d61-8da9-6ed78a978502"
+              "_id": "cc73ec13-dada-4732-9a04-8cc0a5e103b6"
             }
           ]
         },
@@ -5807,7 +6286,7 @@
                 "date_to": 20241231,
                 "account_id": 22901
               },
-              "_id": "66a731b3-f2ef-4e4e-9649-6dce767f115c"
+              "_id": "a2a1cc46-7692-4613-9b07-5301f6205272"
             }
           ]
         }
@@ -5817,7 +6296,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.26
+      "elapsed_sec": 1.58
     },
     {
       "id": "mt_str_048",
@@ -5841,7 +6320,7 @@
                 "keyword": "nighttime",
                 "industry": "banking"
               },
-              "_id": "b8eba17a-c407-469b-8ceb-13f7468ed7b6"
+              "_id": "aafbc10f-68f1-410f-bd54-43f39886b4dc"
             }
           ]
         },
@@ -5858,7 +6337,7 @@
               "arguments": {
                 "account_id": 88234
               },
-              "_id": "4aada45a-e02d-432d-bce3-cccd62a90c1d"
+              "_id": "65c1fd8a-1421-44c2-a99d-cab9a5bf0314"
             }
           ]
         },
@@ -5875,7 +6354,7 @@
               "arguments": {
                 "account_id": 88234
               },
-              "_id": "6b6fb548-6cd1-4237-899d-506fbc141bbe"
+              "_id": "b0d1b187-8140-44ac-9a41-fb933570e9ec"
             }
           ]
         },
@@ -5892,23 +6371,23 @@
               "arguments": {
                 "account_id": 88234
               },
-              "_id": "ba93844f-a253-4aea-97b3-40d6dab2e842"
+              "_id": "8fa9c8d1-57dc-4b15-806e-7acda251562f"
             }
           ]
         },
         {
           "turn": 5,
           "tool_hit": 1.0,
-          "param_accuracy": 0.5,
-          "score": 0.75,
-          "context_hit": true,
+          "param_accuracy": 0.0,
+          "score": 0.5,
+          "context_hit": false,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "계좌 88234는 2024년 3월 1일부터 12월 31일까지 총 312건의 입금(수취) 거래가 발생하였으며, 총 거래금액은 567억 원에 달함. 이 중 심야(21~03시) 거래비율이 8%로 확인되었으며, 평균 입금액은 1.8억 원, 상위 5개 출금계좌에서 전체 입금의 62%가 집중됨. 심야시간대 대량 입금이 반복적으로 발생하였고, 거래상대 계좌의 다양성이 매우 높아 자금세탁 위험이 높음. 특히 심야시간대(21~03시)에 집중적으로 발생한 대량 입금은 FIU 참고유형 B-15(불특정 다수로부터 자금 수취 후 특정 계좌로 송금) 및 B-22(무등록 금융업 관련 자금 이동)와 유사한 패턴을 보임. 계좌 위험도 평가 결과 위험점수 76점(고위험)으로 산정됨.",
-                "fraud_type": "기타(자유기술)",
+                "summary": "계좌 88234는 2024년 3월 1일부터 12월 31일까지 총 312건의 입금(수취) 거래가 발생하였으며, 총 거래금액은 567억 원에 달함. 이 중 심야(21~03시) 거래비율이 8%로 확인되었으며, 평균 입금액은 1.8억 원, 상위 5개 출금계좌에서 전체 입금의 62%가 집중됨. 심야시간대 대량 입금이 반복적으로 발생하였고, 거래상대 계좌의 다양성이 매우 높아 자금세탁 위험이 높음. 특히 심야시간대(21~03시)에 집중적으로 발생한 대량 입금은 자금세탁의 '레이어링' 또는 '배치' 단계에 활용될 가능성이 높음. 계좌 88234는 위험도 평가 결과 76점(고위험)으로 분류되었으며, 이상거래 유형 6(심야/새벽 대량 거래)에 해당함.",
+                "fraud_type": "Late-Night/Early-Morning Bulk Transactions",
                 "transactions": [
                   {
                     "date": 20241010,
@@ -5920,31 +6399,31 @@
                     "fund_type": 4,
                     "media_type": 4,
                     "amount": 25000000,
-                    "fraud_type": 6
+                    "fraud_type": 7
                   }
                 ],
-                "fraud_probability": 0.76,
+                "fraud_probability": 0.82,
                 "aml_patterns": [
-                  "Ring",
-                  "Layering"
+                  "Layering",
+                  "Ring"
                 ],
                 "tools_used": [
                   "query_transactions",
-                  "predict_fraud",
-                  "score_account_risk"
+                  "score_account_risk",
+                  "get_receiving_account_profile"
                 ]
               },
-              "_id": "028b500d-7511-4950-9186-3739db58e555"
+              "_id": "289f9e2d-a9ad-462b-9a85-0c89da717f6c"
             }
           ]
         }
       ],
-      "avg_score": 0.65,
+      "avg_score": 0.6,
       "avg_tool_hit": 0.8,
-      "avg_param_accuracy": 0.5,
-      "context_accuracy": 1.0,
+      "avg_param_accuracy": 0.4,
+      "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 2.91
+      "elapsed_sec": 3.2
     },
     {
       "id": "mt_str_049",
@@ -5969,7 +6448,7 @@
                 "date_from": 20230101,
                 "date_to": 20231231
               },
-              "_id": "ffd2d24b-2e4c-42cf-90aa-aea52f0baba7"
+              "_id": "5ae8b8e9-382e-4fdf-8915-650092f00898"
             }
           ]
         },
@@ -5986,7 +6465,7 @@
               "arguments": {
                 "account_id": 55601
               },
-              "_id": "7fe0c747-09b0-49b4-b161-4ba74b32d646"
+              "_id": "2aba9fe3-32af-4a89-97ae-c3c3a6bcc8b9"
             }
           ]
         },
@@ -6003,7 +6482,7 @@
               "arguments": {
                 "fraud_type": 3
               },
-              "_id": "291ff16f-9217-4c45-adeb-d2f720c084b0"
+              "_id": "4590d847-6bc0-40c2-a0d7-c9b96ed0def1"
             }
           ]
         },
@@ -6020,7 +6499,7 @@
               "arguments": {
                 "term": "structuring"
               },
-              "_id": "0894ec0c-72c9-4158-a1d9-9003ee4b2f7c"
+              "_id": "2876a786-bf2d-40e7-9059-446170cc311c"
             }
           ]
         },
@@ -6035,9 +6514,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_acc = 55601 AND date BETWEEN 20241201 AND 20241228"
+                "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, is_fraud, fraud_type, fraud_description FROM hofinet WHERE sender_acc = 55601 AND date BETWEEN 20241201 AND 20241228"
               },
-              "_id": "01fa37f2-25ff-4189-a1be-1e66c4360482"
+              "_id": "aadc2c82-0754-4131-8835-08bddc5acfdc"
             }
           ]
         }
@@ -6047,7 +6526,7 @@
       "avg_param_accuracy": 0.4,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 1.15
+      "elapsed_sec": 1.47
     },
     {
       "id": "mt_str_050",
@@ -6070,7 +6549,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 99301 OR receiver_acc = 99301 ORDER BY date, time_slot"
               },
-              "_id": "db98aa40-3606-49a3-b978-4da3e1685da8"
+              "_id": "99562739-2dce-4ceb-8d04-8b9a0f439f1a"
             }
           ]
         },
@@ -6092,7 +6571,7 @@
                 "media_type": 4,
                 "amount": 49500000
               },
-              "_id": "f78170aa-95f9-4b81-bddb-697264bf78fe"
+              "_id": "27dd7f1d-7903-4d95-81e6-360dbdbd2f6a"
             }
           ]
         },
@@ -6110,7 +6589,7 @@
                 "account_id": 99301,
                 "hops": 2
               },
-              "_id": "2167dd4a-495d-4209-a5a9-85e59609e047"
+              "_id": "239f0124-32e0-4555-b38b-0106c62df2c9"
             }
           ]
         },
@@ -6127,50 +6606,25 @@
               "arguments": {
                 "account_id": 99301
               },
-              "_id": "f278560a-c537-4ef8-bd45-d645d6127254"
+              "_id": "78fd3db5-d46b-4fdc-8224-100c4d99862d"
             }
           ]
         },
         {
           "turn": 5,
-          "tool_hit": 0.0,
+          "tool_hit": 1.0,
           "param_accuracy": 0.0,
-          "score": 0.0,
+          "score": 0.5,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
-              "name": "generate_str",
+              "name": "lookup_fiu_reference_types",
               "arguments": {
-                "summary": "계좌 99301은 최근 6개월 동안 심야(00:00-03:00) 대량거래(49,500,000원)가 25건 발생했으며, 총 78건의 거래 중 32.05%가 이상거래로 분류됨. 위험도 평가 결과 91점(고위험)으로 산정됨. 심야거래비율 68%, 금액이상도 0.9, 거래속도변화 0.82 등 주요 위험지표에서 심각한 이상징후 확인. 동일 계좌에서 2024년 11월 15일 00:00에 49,500,000원 거래가 발생했으며, 이는 sudden pattern change(이상거래유형 1)에 해당함. 해당 계좌는 22개 계좌와 연결되어 있으며, 연결된 계좌 중 7개 계좌에서 이상거래 이력 확인됨.",
-                "fraud_type": "갑작스러운 거래패턴의 변화",
-                "transactions": [
-                  {
-                    "date": 20241115,
-                    "time_slot": 0,
-                    "sender_bank": 128,
-                    "sender_acc": 99301,
-                    "receiver_bank": 117,
-                    "receiver_acc": 110234,
-                    "fund_type": 4,
-                    "media_type": 4,
-                    "amount": 49500000,
-                    "fraud_type": 1
-                  }
-                ],
-                "fraud_probability": 0.95,
-                "aml_patterns": [
-                  "Sudden Pattern Change",
-                  "Nighttime Bulk"
-                ],
-                "tools_used": [
-                  "query_transactions",
-                  "predict_fraud",
-                  "analyze_network",
-                  "score_account_risk"
-                ]
+                "keyword": "pattern change",
+                "industry": "banking"
               },
-              "_id": "8dec6dfa-8705-4cbc-9463-e8a86a5937c9"
+              "_id": "92d0cb7b-36bd-46f4-82eb-02659b3cc94c"
             }
           ]
         },
@@ -6185,7 +6639,7 @@
             {
               "name": "generate_str",
               "arguments": {
-                "summary": "계좌 99301은 최근 6개월 동안 심야(0-3시) 대량거래(49,500,000원), 동일계좌 다수 입금처(22개)와의 반복거래, 이상거래비율 32.05%, 위험점수 91점(고위험)으로 ‘갑작스러운 거래패턴의 변화’(fraud_type=1)에 해당. FIU 참고유형 B-01, B-03, B-05, B-07과 일치. 78건 중 25건(32.05%)이 이상거래로 분류됨.",
+                "summary": "계좌 99301은 최근 6개월 동안 심야(00-03시) 대량거래(49,500,000원) 및 동일 계좌에서 22개 연결계좌와 78건 거래 발생, 이 중 25건(32.05%)이 이상거래로 분류됨. 위험도 점수 91점(고위험), 거래패턴 변화, 심야거래비율 68%, 금액이상도 0.9, 거래속도 변화 0.82 등 이상징후 다수. FIU 참고유형 B-01, B-03, B-05, B-07과 일치.",
                 "fraud_type": "갑작스러운 거래패턴의 변화",
                 "transactions": [
                   {
@@ -6214,17 +6668,17 @@
                   "lookup_fiu_reference_types"
                 ]
               },
-              "_id": "7c6c4d87-9033-4935-b7cf-fba7b7395aa1"
+              "_id": "3440f96b-8dd1-4a79-ab16-a1e8aebd5de4"
             }
           ]
         }
       ],
-      "avg_score": 0.7167,
-      "avg_tool_hit": 0.8333,
+      "avg_score": 0.8,
+      "avg_tool_hit": 1.0,
       "avg_param_accuracy": 0.6,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 5.12
+      "elapsed_sec": 3.52
     }
   ]
 }

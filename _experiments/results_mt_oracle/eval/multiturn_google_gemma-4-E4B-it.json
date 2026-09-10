@@ -3,30 +3,30 @@
   "model_id": "google/gemma-4-E4B-it",
   "provider": "vllm",
   "think": null,
-  "timestamp": "2026-06-06T23:55:45.673769",
+  "timestamp": "2026-09-09T20:38:52.925404",
   "total_scenarios": 50,
-  "total_elapsed_sec": 206.51,
+  "total_elapsed_sec": 204.88,
   "overall": {
-    "avg_score": 0.6364,
-    "avg_tool_hit": 0.7297,
-    "avg_param_accuracy": 0.5431,
-    "context_accuracy": 0.5909,
+    "avg_score": 0.6393,
+    "avg_tool_hit": 0.7337,
+    "avg_param_accuracy": 0.5449,
+    "context_accuracy": 0.5682,
     "scenario_complete_rate": 0.1
   },
   "by_sub_category": {
     "base": {
       "count": 14,
-      "avg_score": 0.6848,
+      "avg_score": 0.6982,
       "complete_rate": 0.2143
     },
     "missing_parameter": {
       "count": 14,
-      "avg_score": 0.5347,
+      "avg_score": 0.5204,
       "complete_rate": 0.0
     },
     "long_context": {
       "count": 22,
-      "avg_score": 0.6703,
+      "avg_score": 0.6774,
       "complete_rate": 0.0909
     }
   },
@@ -52,7 +52,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 78432 ORDER BY date DESC LIMIT 100;"
               },
-              "_id": "chatcmpl-tool-9e2091102d528bc7"
+              "_id": "chatcmpl-tool-8dc9e655a8e499db"
             }
           ]
         },
@@ -79,7 +79,7 @@
                 "account_id": 78432,
                 "hops": 3
               },
-              "_id": "chatcmpl-tool-819060ec3fc3a57a"
+              "_id": "chatcmpl-tool-ab36070b4a6ff365"
             }
           ]
         },
@@ -99,7 +99,7 @@
                 ],
                 "fraud_probability": 0.91,
                 "fraud_type": "갑작스러운 거래패턴의 변화",
-                "summary": "계좌 78432는 최근 3개월간 총 45건의 거래가 발생했으며, 이 중 12건(26.67%)이 이상거래로 분류되었습니다. 특히, 거래 패턴 분석 결과, 해당 계좌는 8개의 다른 계좌와 연결되어 있으며, 주요 거래는 4천만 원에서 5천만 원 사이의 금액으로 이루어졌습니다. 예측 모델은 이 거래에 대해 0.91의 높은 이상거래 확률을 제시했습니다. 이는 계좌의 거래 패턴에 갑작스러운 변화가 발생했음을 시사합니다.",
+                "summary": "계좌 78432는 최근 3개월간 총 45건의 거래가 발생했으며, 이 중 12건(26.67%)이 이상거래로 분류되었습니다. 특히, 거래 네트워크 분석 결과 8개의 계좌와 연결되어 있으며, 주요 거래 패턴에서 '갑작스러운 거래패턴의 변화'가 의심됩니다. 샘플 거래(20241015, 20241016, 20241018)에서 높은 이상거래 확률(0.91)이 확인되었습니다. 이는 계좌의 평소 거래 행태와 현저히 다른 패턴을 보이고 있음을 시사합니다.",
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud",
@@ -144,7 +144,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-b707c80f2d22cfb0"
+              "_id": "chatcmpl-tool-8b85d7afee593d08"
             }
           ]
         }
@@ -154,7 +154,7 @@
       "avg_param_accuracy": 0.65,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 7.86
+      "elapsed_sec": 7.61
     },
     {
       "id": "mt_str_002",
@@ -200,7 +200,7 @@
                 "sender_bank": 128,
                 "time_slot": 12
               },
-              "_id": "chatcmpl-tool-b97b765d86ab6bd2"
+              "_id": "chatcmpl-tool-a4c283f492c064a2"
             },
             {
               "name": "predict_fraud",
@@ -212,7 +212,7 @@
                 "sender_bank": 128,
                 "time_slot": 15
               },
-              "_id": "chatcmpl-tool-bec3cf7091d5a820"
+              "_id": "chatcmpl-tool-8242a760f0681914"
             }
           ]
         },
@@ -230,7 +230,7 @@
                 "mode": "structuring",
                 "threshold": 10000000
               },
-              "_id": "chatcmpl-tool-95bfdf149d9d1cc3"
+              "_id": "chatcmpl-tool-a5f8a3626ba4020b"
             }
           ]
         },
@@ -250,7 +250,7 @@
                 ],
                 "fraud_probability": 0.84,
                 "fraud_type": "다중거래의 동시요청",
-                "summary": "출금계좌 55201에서 2024년 12월 중 다수의 고액 거래가 확인되었습니다. 특히, 2024년 12월 3일 (3천만원) 및 12월 5일 (2천8백만원) 거래에서 '다중거래의 동시 요청(Fraud Type 4)' 패턴이 감지되었으며, 이는 자금 세탁의 '분산(Layering)' 또는 '집중(Smurfing)' 단계와 연관될 가능성이 있습니다. 예측된 이상거래 확률은 0.84로 매우 높습니다. 해당 거래들은 CTR 대상 거래로도 확인되었습니다.",
+                "summary": "출금계좌 55201에서 2024년 12월 중 다수의 고액 거래가 발생했으며, 특히 2024년 12월 3일 (3천만원) 및 12월 5일 (2천8백만원) 거래에서 '다중거래의 동시 요청(Fraud Type 4)' 패턴이 확인되었습니다. 해당 거래들은 CTR 보고 기준 금액(1천만원)을 초과하는 고액 거래이며, 예측된 이상거래 확률은 0.84로 매우 높습니다. 이는 자금 세탁의 '분산(Layering)' 또는 '배치(Placement)' 단계와 연관될 가능성이 있어 의심 거래로 판단됩니다.",
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud",
@@ -283,7 +283,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-b5e558a4e01eb2d2"
+              "_id": "chatcmpl-tool-a64ec814753fb37b"
             }
           ]
         }
@@ -293,7 +293,7 @@
       "avg_param_accuracy": 0.35,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 9.44
+      "elapsed_sec": 9.26
     },
     {
       "id": "mt_str_003",
@@ -316,7 +316,7 @@
               "arguments": {
                 "bank_id": 134
               },
-              "_id": "chatcmpl-tool-98077c71bf96e23a"
+              "_id": "chatcmpl-tool-9e8edd7bcd105d5a"
             }
           ]
         },
@@ -333,7 +333,7 @@
               "arguments": {
                 "account_id": 78432
               },
-              "_id": "chatcmpl-tool-b8fcb4d64af94e5a"
+              "_id": "chatcmpl-tool-aef91caa2346bcad"
             }
           ]
         },
@@ -350,7 +350,7 @@
               "arguments": {
                 "account_id": 78432
               },
-              "_id": "chatcmpl-tool-879793035efdf749"
+              "_id": "chatcmpl-tool-93faa81244d90f56"
             }
           ]
         },
@@ -370,7 +370,7 @@
                 ],
                 "fraud_probability": 0.77,
                 "fraud_type": "분할거래",
-                "summary": "출금금융회사 134의 계좌 78432는 총 156건의 거래 중 12건에서 이상거래가 감지되었습니다. 해당 계좌의 위험 점수는 78점(고위험)으로 평가되었습니다. 특히, 거래 패턴 분석 결과 분할 거래(Split Transaction) 혐의가 의심되며, 이는 여러 건의 소액 거래를 통해 자금 이동을 은닉하려는 시도로 판단됩니다. 주요 거래 채널은 인터넷뱅킹이며, 심야 거래 비율도 42%로 나타나 자금 세탁의 정황을 뒷받침합니다.",
+                "summary": "출금금융회사 134의 계좌 78432는 총 156건의 거래 중 12건이 이상거래로 분류되었으며, 위험 점수는 78점(고위험)으로 평가되었습니다. 특히, 해당 계좌는 심야거래 비율(42%)이 높고, 거래 금액의 이상도(65%)가 높게 나타났습니다. 분석 결과, 해당 계좌에서 분할 거래(Split Transaction) 혐의가 강력하게 의심됩니다. 이는 자금 세탁의 '분할(Structuring)' 단계와 연관될 가능성이 높습니다.",
                 "tools_used": [
                   "query_transactions",
                   "get_account_profile",
@@ -383,15 +383,39 @@
                     "fraud_type": 3,
                     "fund_type": 0,
                     "media_type": 2,
-                    "receiver_acc": null,
-                    "receiver_bank": null,
+                    "receiver_acc": 123456,
+                    "receiver_bank": 200,
                     "sender_acc": 78432,
                     "sender_bank": 134,
                     "time_slot": 12
+                  },
+                  {
+                    "amount": 1500000,
+                    "date": 20240815,
+                    "fraud_type": 3,
+                    "fund_type": 0,
+                    "media_type": 4,
+                    "receiver_acc": 987654,
+                    "receiver_bank": 300,
+                    "sender_acc": 78432,
+                    "sender_bank": 134,
+                    "time_slot": 21
+                  },
+                  {
+                    "amount": 500000,
+                    "date": 20240901,
+                    "fraud_type": 3,
+                    "fund_type": 0,
+                    "media_type": 1,
+                    "receiver_acc": 112233,
+                    "receiver_bank": 400,
+                    "sender_acc": 78432,
+                    "sender_bank": 134,
+                    "time_slot": 3
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-b47603d4ec71c17c"
+              "_id": "chatcmpl-tool-83f8129deb6627ea"
             }
           ]
         }
@@ -401,7 +425,7 @@
       "avg_param_accuracy": 0.625,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 2.5
+      "elapsed_sec": 3.59
     },
     {
       "id": "mt_str_004",
@@ -424,7 +448,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 91205 OR receiver_acc = 91205;"
               },
-              "_id": "chatcmpl-tool-8fae59e23867aa6e"
+              "_id": "chatcmpl-tool-84be853fb05c7180"
             }
           ]
         },
@@ -443,7 +467,7 @@
                 "direction": "outbound",
                 "limit": 50
               },
-              "_id": "chatcmpl-tool-a1c95a4e364ef7f4"
+              "_id": "chatcmpl-tool-85de175772d26642"
             }
           ]
         },
@@ -461,15 +485,15 @@
                 "account_id": 91205,
                 "hops": 3
               },
-              "_id": "chatcmpl-tool-bf505f6eadef0ab9"
+              "_id": "chatcmpl-tool-90d0171f753aa735"
             }
           ]
         },
         {
           "turn": 4,
           "tool_hit": 1.0,
-          "param_accuracy": 0.4,
-          "score": 0.7,
+          "param_accuracy": 0.6,
+          "score": 0.8,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
@@ -477,12 +501,12 @@
               "name": "generate_str",
               "arguments": {
                 "aml_patterns": [
-                  "Layering",
-                  "Structuring"
+                  "Split Transaction",
+                  "Layering"
                 ],
-                "fraud_probability": 0.9,
+                "fraud_probability": 0.85,
                 "fraud_type": "분할거래",
-                "summary": "계좌 91205는 총 67건의 거래 중 18건이 이상 거래로 분류되었으며, 특히 분할 거래(Fraud Type 3) 패턴이 확인되었습니다. 자금 분산 패턴 분석 결과, 해당 계좌에서 12개 상대로 총 14.5억 원이 분산되었으며, 이는 높은 스머핑 점수(0.85)를 나타내어 자금 세탁의 분산(Layering) 단계에 해당한다고 판단됩니다. 네트워크 분석 결과도 높은 이상 거래 비율(26.87%)을 보이고 있습니다.",
+                "summary": "계좌 91205는 2024년 8월부터 11월까지 총 67건의 거래 중 18건이 이상 거래로 분류되었습니다. 특히, 초기 샘플 거래에서 분할 거래(Fraud Type 3)가 확인되었으며, 자금 분산 패턴 분석 결과 12개 상대로 14.5억 원이 분산되는 스머핑(Smurfing) 패턴(Score: 0.85)이 포착되었습니다. 이는 자금 세탁의 분산(Layering) 단계에 해당하며, 다수의 연결 계좌(12개)와 연관되어 있어 고위험군으로 판단됩니다.",
                 "tools_used": [
                   "query_transactions",
                   "detect_smurfing_network",
@@ -515,17 +539,17 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-a241e0829de0540d"
+              "_id": "chatcmpl-tool-9d0e8eab359e7644"
             }
           ]
         }
       ],
-      "avg_score": 0.925,
+      "avg_score": 0.95,
       "avg_tool_hit": 1.0,
-      "avg_param_accuracy": 0.85,
+      "avg_param_accuracy": 0.9,
       "context_accuracy": null,
       "scenario_complete": true,
-      "elapsed_sec": 6.69
+      "elapsed_sec": 6.96
     },
     {
       "id": "mt_str_005",
@@ -548,7 +572,7 @@
               "arguments": {
                 "fraud_type": 5
               },
-              "_id": "chatcmpl-tool-ab724d7735f76580"
+              "_id": "chatcmpl-tool-b3d1d1575d6f4d1a"
             }
           ]
         },
@@ -563,9 +587,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE fraud_type = 5 AND sender_bank = 88"
+                "sql": "SELECT * FROM hofinet WHERE fraud_type = 5 AND sender_bank = 88;"
               },
-              "_id": "chatcmpl-tool-b1f7021b76cc2d52"
+              "_id": "chatcmpl-tool-8ad98f60837b3ef0"
             }
           ]
         },
@@ -587,7 +611,7 @@
                 "sender_bank": 128,
                 "time_slot": 0
               },
-              "_id": "chatcmpl-tool-980ecf3206923b5d"
+              "_id": "chatcmpl-tool-9c000c576cf6a886"
             }
           ]
         },
@@ -607,7 +631,7 @@
                 ],
                 "fraud_probability": 0.76,
                 "fraud_type": "거액 입금 후 당일/익일 인출",
-                "summary": "금융회사 88에서 발생한 '거액 입금 후 당일 인출' 유형의 이상거래 187건 중 대표 거래(거래금액 9,800,000원, 거래일자 20241105, 거래시간대 0)에 대해 분석을 수행했습니다. 해당 거래는 예측 모델에서 0.76의 높은 이상거래 확률을 보였습니다. 이는 자금세탁의 전형적인 패턴인 'Placement' 또는 'Layering' 단계와 연관될 가능성이 높습니다.",
+                "summary": "금융회사 88에서 발생한 '거액 입금 후 당일 인출' 유형의 이상거래 187건 중 대표 거래(거래금액 9,800,000원)에 대해 분석을 수행했습니다. 해당 거래는 예측 모델에서 0.76의 높은 이상거래 확률을 보였습니다. 이는 자금세탁의 전형적인 패턴인 'Placement' 또는 'Layering' 단계와 연관될 가능성이 높습니다.",
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud"
@@ -627,7 +651,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-8f1a1b490dd969d1"
+              "_id": "chatcmpl-tool-ba91d03dd9788bd9"
             }
           ]
         }
@@ -637,7 +661,7 @@
       "avg_param_accuracy": 0.625,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 2.78
+      "elapsed_sec": 2.62
     },
     {
       "id": "mt_str_006",
@@ -660,7 +684,7 @@
               "arguments": {
                 "keyword": "nighttime"
               },
-              "_id": "chatcmpl-tool-89e1f3ab0c9bc12b"
+              "_id": "chatcmpl-tool-8b456dffdbfba0eb"
             }
           ]
         },
@@ -677,7 +701,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 33201 OR receiver_acc = 33201;"
               },
-              "_id": "chatcmpl-tool-8bc750a8bae80902"
+              "_id": "chatcmpl-tool-990bab40a4ed85ac"
             }
           ]
         },
@@ -694,26 +718,57 @@
               "arguments": {
                 "account_id": 33201
               },
-              "_id": "chatcmpl-tool-9961ce2aa656f460"
+              "_id": "chatcmpl-tool-86c65b75f411c8c5"
             }
           ]
         },
         {
           "turn": 4,
-          "tool_hit": 0.0,
-          "param_accuracy": 0.0,
-          "score": 0.0,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.5,
+          "score": 0.75,
           "context_hit": null,
           "clarification_hit": null,
-          "actual_tool_calls": []
+          "actual_tool_calls": [
+            {
+              "name": "generate_str",
+              "arguments": {
+                "aml_patterns": [
+                  "Late-Night/Early-Morning Bulk Transactions"
+                ],
+                "fraud_probability": 0.72,
+                "fraud_type": "기타(자유기술)",
+                "summary": "계좌 33201은 총 134건의 거래를 기록했으며, 이 중 22건이 이상거래로 분류되었습니다. 특히, 해당 계좌의 위험 점수는 72점으로 '고위험' 등급으로 평가되었습니다. 거래 내역 샘플에 따르면, 20240520에 35,000,000원의 거래가 발생했으며, 이는 심야/새벽 시간대(time_slot 12)에 발생한 것으로 확인되었습니다. 이는 심야/새벽 대량 거래 패턴과 일치하며, AML 패턴 중 'Late-Night/Early-Morning Bulk Transactions'가 감지되었습니다.",
+                "tools_used": [
+                  "query_transactions",
+                  "score_account_risk"
+                ],
+                "transactions": [
+                  {
+                    "amount": 35000000,
+                    "date": 20240520,
+                    "fraud_type": 6,
+                    "fund_type": 4,
+                    "media_type": 4,
+                    "receiver_acc": 771023,
+                    "receiver_bank": 117,
+                    "sender_acc": 33201,
+                    "sender_bank": 151,
+                    "time_slot": 12
+                  }
+                ]
+              },
+              "_id": "chatcmpl-tool-9f9f8d565cc4f3b4"
+            }
+          ]
         }
       ],
-      "avg_score": 0.625,
-      "avg_tool_hit": 0.75,
-      "avg_param_accuracy": 0.5,
+      "avg_score": 0.8125,
+      "avg_tool_hit": 1.0,
+      "avg_param_accuracy": 0.625,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 4.47
+      "elapsed_sec": 2.74
     },
     {
       "id": "mt_str_007",
@@ -745,7 +800,7 @@
               "arguments": {
                 "sql": "SELECT sender_acc, receiver_acc, date, amount FROM hofinet WHERE media_type = 1 AND time_slot IN (0, 3) AND is_fraud = 1 LIMIT 100;"
               },
-              "_id": "chatcmpl-tool-8f1b1deb924a68b1"
+              "_id": "chatcmpl-tool-9548f3a9c3d6c62e"
             }
           ]
         },
@@ -767,7 +822,7 @@
                 "sender_bank": 134,
                 "time_slot": 0
               },
-              "_id": "chatcmpl-tool-a2cb88929b670acf"
+              "_id": "chatcmpl-tool-bac476cdcbc3de47"
             }
           ]
         },
@@ -787,7 +842,7 @@
                 ],
                 "fraud_probability": 0.88,
                 "fraud_type": "갑작스러운 거래패턴의 변화",
-                "summary": "계좌 44892는 ATM을 이용한 심야(0시) 거래에서 9,900,000원의 거래가 발생했으며, 이는 해당 계좌의 평소 거래 패턴과 비교했을 때 갑작스러운 변화로 판단됩니다. 예측된 이상거래 확률은 0.88로 매우 높습니다.",
+                "summary": "계좌 44892는 ATM을 이용한 심야(0시) 거래에서 9,900,000원의 거래가 발생했으며, 이는 해당 계좌의 평소 거래 패턴과 비교했을 때 '갑작스러운 거래패턴의 변화'로 판단됩니다. 예측된 이상거래 확률은 0.88로 매우 높습니다.",
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud"
@@ -807,7 +862,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-abc6ee1a8bc88aa5"
+              "_id": "chatcmpl-tool-be87dc957bc3ad9b"
             }
           ]
         }
@@ -817,7 +872,7 @@
       "avg_param_accuracy": 0.225,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 2.78
+      "elapsed_sec": 2.72
     },
     {
       "id": "mt_str_008",
@@ -838,7 +893,7 @@
             {
               "name": "get_statistics",
               "arguments": {},
-              "_id": "chatcmpl-tool-bfa390a64ce55ff5"
+              "_id": "chatcmpl-tool-84c0c0707a8ffb5e"
             }
           ]
         },
@@ -856,7 +911,7 @@
                 "sample_size": 5000,
                 "top_k": 20
               },
-              "_id": "chatcmpl-tool-a4d2d87f933ea51b"
+              "_id": "chatcmpl-tool-bc7e946df6e28a3a"
             }
           ]
         },
@@ -878,7 +933,7 @@
                 "sender_bank": 147,
                 "time_slot": 0
               },
-              "_id": "chatcmpl-tool-a16aec67454f1707"
+              "_id": "chatcmpl-tool-a1c8b46c9ab5d0e1"
             }
           ]
         },
@@ -897,7 +952,7 @@
       "avg_param_accuracy": 0.25,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 2.77
+      "elapsed_sec": 3.09
     },
     {
       "id": "mt_str_009",
@@ -927,28 +982,20 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_bank = 73 AND receiver_bank = 305 LIMIT 1000"
+                "sql": "SELECT * FROM hofinet WHERE sender_bank = 73 AND receiver_bank = 305 LIMIT 100"
               },
-              "_id": "chatcmpl-tool-82b73a9b4531bf90"
+              "_id": "chatcmpl-tool-85856f7056d34b5b"
             }
           ]
         },
         {
           "turn": 3,
-          "tool_hit": 1.0,
-          "param_accuracy": 1.0,
-          "score": 1.0,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
           "context_hit": null,
           "clarification_hit": null,
-          "actual_tool_calls": [
-            {
-              "name": "detect_aml_patterns",
-              "arguments": {
-                "pattern_type": "layering"
-              },
-              "_id": "chatcmpl-tool-a6a71a89534c3aba"
-            }
-          ]
+          "actual_tool_calls": []
         },
         {
           "turn": 4,
@@ -966,7 +1013,7 @@
                 ],
                 "fraud_probability": 0.85,
                 "fraud_type": "갑작스러운 거래패턴의 변화",
-                "summary": "기관 73에서 305로의 자금 흐름 분석 결과, 총 234건의 이상거래가 확인되었습니다. 특히, 계좌 55012에서 발생한 거래 중 49,000,000 KRW 규모의 거래(20241110, 시간대 21시)가 확인되었으며, 이는 '갑작스러운 거래패턴의 변화' 유형에 해당합니다. 또한, AML 패턴 탐지 결과, 계좌 55012를 포함하여 3건의 레이어링(Layering) 패턴이 탐지되어 자금 세탁 의심 정황이 매우 높습니다.",
+                "summary": "기관 73에서 305로의 자금 흐름 분석 결과, 총 234건의 이상거래가 확인되었습니다. 특히, 계좌 55012에서 시작된 거래는 3단계의 레이어링(Layering) 패턴을 보이며, 총 147,000,000원의 자금이 복잡하게 이동했습니다. 이는 자금 세탁의 전형적인 특징인 '은닉(Layering)' 단계에 해당합니다. 또한, 거래 레코드 샘플(20241110, 55012 -> 770123, 49,000,000원)에서 확인된 바와 같이, 특정 계좌에서 갑작스럽고 큰 규모의 자금 이동이 관찰되어 '갑작스러운 거래패턴의 변화'로 판단됩니다.",
                 "tools_used": [
                   "query_transactions",
                   "detect_aml_patterns"
@@ -986,17 +1033,17 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-bb88ecf0419809cb"
+              "_id": "chatcmpl-tool-8e2eb3a23bd23ff8"
             }
           ]
         }
       ],
-      "avg_score": 0.6333,
-      "avg_tool_hit": 0.75,
-      "avg_param_accuracy": 0.5167,
+      "avg_score": 0.3833,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.2667,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 3.22
+      "elapsed_sec": 3.87
     },
     {
       "id": "mt_str_010",
@@ -1017,7 +1064,7 @@
             {
               "name": "detect_dormant_reactivation",
               "arguments": {},
-              "_id": "chatcmpl-tool-a34f2674e079bcbd"
+              "_id": "chatcmpl-tool-b842495de50bf567"
             }
           ]
         },
@@ -1034,18 +1081,26 @@
               "arguments": {
                 "account_id": 77501
               },
-              "_id": "chatcmpl-tool-9fd31cb12d32e1a6"
+              "_id": "chatcmpl-tool-a76aab94b67c3225"
             }
           ]
         },
         {
           "turn": 3,
-          "tool_hit": 0.0,
-          "param_accuracy": 0.0,
-          "score": 0.0,
+          "tool_hit": 1.0,
+          "param_accuracy": 1.0,
+          "score": 1.0,
           "context_hit": null,
           "clarification_hit": null,
-          "actual_tool_calls": []
+          "actual_tool_calls": [
+            {
+              "name": "detect_ctr_candidates",
+              "arguments": {
+                "mode": "high_value"
+              },
+              "_id": "chatcmpl-tool-afc2ebf717f005de"
+            }
+          ]
         },
         {
           "turn": 4,
@@ -1057,12 +1112,12 @@
           "actual_tool_calls": []
         }
       ],
-      "avg_score": 0.5,
-      "avg_tool_hit": 0.5,
-      "avg_param_accuracy": 0.5,
+      "avg_score": 0.75,
+      "avg_tool_hit": 0.75,
+      "avg_param_accuracy": 0.75,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 4.55
+      "elapsed_sec": 2.82
     },
     {
       "id": "mt_str_011",
@@ -1085,7 +1140,7 @@
               "arguments": {
                 "rule_id": "all"
               },
-              "_id": "chatcmpl-tool-8b94cb27c2808d51"
+              "_id": "chatcmpl-tool-aa936c22ad30349f"
             }
           ]
         },
@@ -1100,9 +1155,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_acc = 22801 AND date BETWEEN 20241201 AND 20241228 AND amount = 9900000"
+                "sql": "SELECT * FROM hofinet WHERE sender_acc = 22801 AND date BETWEEN 20241201 AND 20241228"
               },
-              "_id": "chatcmpl-tool-bd714eb8c2138ef7"
+              "_id": "chatcmpl-tool-ac49bd410795b5cd"
             }
           ]
         },
@@ -1119,15 +1174,15 @@
               "arguments": {
                 "account_id": 22801
               },
-              "_id": "chatcmpl-tool-bf7625a7b6a8523a"
+              "_id": "chatcmpl-tool-80fc59c14c495539"
             }
           ]
         },
         {
           "turn": 4,
           "tool_hit": 1.0,
-          "param_accuracy": 0.4,
-          "score": 0.7,
+          "param_accuracy": 0.2,
+          "score": 0.6,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
@@ -1139,38 +1194,37 @@
                 ],
                 "fraud_probability": 0.72,
                 "fraud_type": "갑작스러운 거래패턴의 변화",
-                "summary": "계좌 22801은 2024년 12월 1일부터 2024년 12월 28일 사이에 R003(정액거래패턴) 알림이 발생했으며, 해당 기간 동안 총 38건의 거래가 발생했습니다. 특히, 거래금액 9,900,000 KRW로 15건의 이상거래가 확인되었습니다. 계좌 위험 점수는 81점(고위험)으로 평가되었으며, 이는 거래 속도 변화(0.72)와 금액 이상도(0.78)가 주요 원인입니다. 이러한 정액 거래 패턴의 급격한 변화와 높은 위험 점수를 근거로 '갑작스러운 거래패턴의 변화'로 의심 거래 보고(STR)를 작성합니다.",
+                "summary": "계좌 22801은 2024년 12월 1일부터 28일 사이에 총 38건의 거래가 발생했으며, 이 중 15건이 이상거래로 분류되었습니다. 특히, R003(정액거래패턴) 알림에 의해 포착되었으며, 거래금액이 9,900,000원으로 일정하게 유지되는 패턴이 확인되었습니다. 계좌 위험도 평가 결과, 종합 위험 점수는 81점(고위험)으로 나타났습니다. 거래 속도 변화(0.72)와 금액 이상도(0.78)가 높은 주요 위험 요인으로 작용하고 있습니다. 이는 갑작스러운 거래 패턴 변화 및 정액 거래를 통한 자금 세탁 시도를 의심할 수 있는 정황입니다.",
                 "tools_used": [
-                  "detect_monitoring_alerts",
                   "query_transactions",
                   "score_account_risk"
                 ],
                 "transactions": [
                   {
-                    "\"amount\"": 9900000,
-                    "\"date\"": 20241203,
-                    "\"fraud_type\"": 1,
-                    "\"fund_type\"": 4,
-                    "\"media_type\"": 4,
-                    "\"receiver_acc\"": 551023,
-                    "\"receiver_bank\"": 134,
-                    "\"sender_acc\"": 22801,
-                    "\"sender_bank\"": 147,
-                    "\"time_slot\"": 21
+                    "amount": 9900000,
+                    "date": 20241203,
+                    "fraud_type": 1,
+                    "fund_type": 4,
+                    "media_type": 4,
+                    "receiver_acc": 551023,
+                    "receiver_bank": 134,
+                    "sender_acc": 22801,
+                    "sender_bank": 147,
+                    "time_slot": 21
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-b6ed4e70b2f4e729"
+              "_id": "chatcmpl-tool-ae6bd454a967067c"
             }
           ]
         }
       ],
-      "avg_score": 0.925,
+      "avg_score": 0.9,
       "avg_tool_hit": 1.0,
-      "avg_param_accuracy": 0.85,
+      "avg_param_accuracy": 0.8,
       "context_accuracy": null,
       "scenario_complete": true,
-      "elapsed_sec": 3.33
+      "elapsed_sec": 3.01
     },
     {
       "id": "mt_str_012",
@@ -1205,7 +1259,7 @@
                 "period2_end": 20241231,
                 "period2_start": 20241001
               },
-              "_id": "chatcmpl-tool-92f7e7b0196a0570"
+              "_id": "chatcmpl-tool-b168b688c67047f3"
             }
           ]
         },
@@ -1222,7 +1276,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE date LIKE '202412%' AND is_fraud = 1 LIMIT 100;"
               },
-              "_id": "chatcmpl-tool-a8a110265b2ba025"
+              "_id": "chatcmpl-tool-820c7c4fe4baedf5"
             }
           ]
         },
@@ -1241,7 +1295,7 @@
       "avg_param_accuracy": 0.3333,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 3.63
+      "elapsed_sec": 4.01
     },
     {
       "id": "mt_str_013",
@@ -1264,7 +1318,7 @@
               "arguments": {
                 "account_id": 445012
               },
-              "_id": "chatcmpl-tool-ac803159ce3df5dd"
+              "_id": "chatcmpl-tool-abea9349dcfe7545"
             }
           ]
         },
@@ -1279,12 +1333,11 @@
             {
               "name": "detect_smurfing_network",
               "arguments": {
-                "account_id": 445012,
                 "direction": "inbound",
-                "limit": 20,
-                "min_counterparts": 5
+                "min_counterparts": 5,
+                "account_id": 445012
               },
-              "_id": "chatcmpl-tool-adad47ee1c0ea8e7"
+              "_id": "chatcmpl-tool-9ed745e599c26c96"
             }
           ]
         },
@@ -1302,7 +1355,7 @@
                 "account_id": 445012,
                 "pattern_type": "ring"
               },
-              "_id": "chatcmpl-tool-a622ed4b76ad5deb"
+              "_id": "chatcmpl-tool-a4f1d4d60001b30b"
             }
           ]
         },
@@ -1321,7 +1374,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 3.36
+      "elapsed_sec": 3.14
     },
     {
       "id": "mt_str_014",
@@ -1353,14 +1406,14 @@
               "arguments": {
                 "account_id": 67301
               },
-              "_id": "chatcmpl-tool-b480fdae73f38302"
+              "_id": "chatcmpl-tool-9f94ab3b1ba2d7ff"
             },
             {
               "name": "query_transactions",
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 67301 AND date BETWEEN 20241001 AND 20241231"
               },
-              "_id": "chatcmpl-tool-84f48dd65c00bfa6"
+              "_id": "chatcmpl-tool-b00dbb6312b806ed"
             }
           ]
         },
@@ -1389,7 +1442,7 @@
                 ],
                 "fraud_probability": 0.89,
                 "fraud_type": "갑작스러운 거래패턴의 변화",
-                "summary": "계좌 67301에 대해 2024년 4분기(20241001 ~ 20241231) 거래를 분석한 결과, 총 52건의 거래 중 14건이 이상거래로 분류되었습니다. 특히 샘플 거래(20241012, 47,000,000원)는 '갑작스러운 거래패턴의 변화' 유형(fraud_type: 1)으로 식별되었으며, 예측된 이상거래 확률은 0.89로 매우 높습니다. 이는 해당 계좌의 거래 행태에 중대한 변화가 발생했음을 시사합니다.",
+                "summary": "계좌 67301에 대해 2024년 4분기(20241001 ~ 20241231) 거래를 분석한 결과, 총 52건의 거래 중 14건이 이상거래로 분류되었습니다. 특히, 샘플 거래(20241012, 47,000,000원)는 '갑작스러운 거래패턴의 변화' 유형(fraud_type: 1)으로 식별되었으며, 예측된 이상거래 확률은 0.89로 매우 높습니다. 이는 해당 계좌의 거래 행태에 중대한 변화가 발생했음을 시사합니다.",
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud"
@@ -1409,7 +1462,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-84b4608939bcbbf5"
+              "_id": "chatcmpl-tool-aa19b0b7cc5c6f2f"
             }
           ]
         }
@@ -1419,7 +1472,7 @@
       "avg_param_accuracy": 0.6875,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 5.85
+      "elapsed_sec": 5.72
     },
     {
       "id": "mt_str_015",
@@ -1442,7 +1495,7 @@
               "arguments": {
                 "account_id": 42105
               },
-              "_id": "chatcmpl-tool-8595d77e958f0095"
+              "_id": "chatcmpl-tool-80dbaff8d7a8febd"
             }
           ]
         },
@@ -1459,7 +1512,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 42105 AND media_type = 3;"
               },
-              "_id": "chatcmpl-tool-b5cbb25f654ab3ba"
+              "_id": "chatcmpl-tool-bd71f951e8ce3f53"
             }
           ]
         },
@@ -1481,7 +1534,7 @@
                 "sender_bank": 134,
                 "time_slot": 12
               },
-              "_id": "chatcmpl-tool-83ac2b90a12bf3a0"
+              "_id": "chatcmpl-tool-918006f0303bcfc8"
             }
           ]
         },
@@ -1498,7 +1551,7 @@
               "arguments": {
                 "keyword": "다중거래의 동시요청"
               },
-              "_id": "chatcmpl-tool-af501a883decf694"
+              "_id": "chatcmpl-tool-9b87c2e0bceb2746"
             }
           ]
         },
@@ -1518,7 +1571,7 @@
                 ],
                 "fraud_probability": 0.92,
                 "fraud_type": "다중거래의 동시요청",
-                "summary": "계좌 42105에서 20241210부터 20241220까지 총 15건의 거래가 발생했으며, 이 중 5건이 이상거래로 분류되었습니다. 특히, 20241210 및 20241211에 발생한 5천만원 및 4천8백만원 거래는 '다중거래의 동시요청' 유형(Fraud Type 4)으로 확인되었습니다. 이는 피해자가 전화(Media Type 3 또는 5로 추정)를 통해 급하게 자금을 이체하도록 유도하는 보이스피싱 패턴과 일치합니다. FIU 참고유형 B-08(전화·문자를 이용한 사기 관련 자금 이동) 및 B-11(피해자 계좌에서 급격한 자금 유출)에 해당하여 STR 작성이 필요합니다.",
+                "summary": "계좌 42105에서 2024년 12월 10일부터 12월 20일 사이에 총 15건의 거래가 발생했으며, 이 중 5건이 이상거래로 분류되었습니다. 특히, 20241210 및 20241211 거래에서 50,000,000원 및 48,000,000원의 거래가 발생했는데, 이는 '다중거래의 동시요청' 유형과 일치합니다. 피해자가 전화(Media Type 3 또는 5와 유사)를 통해 자금을 송금한 정황이 의심되며, FIU 참고유형 'B-08 (전화·문자를 이용한 사기 관련 자금 이동)' 및 'B-11 (피해자 계좌에서 급격한 자금 유출)'과 연관성이 높습니다. 예측된 사기 확률은 0.92로 매우 높습니다.",
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud",
@@ -1551,7 +1604,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-9a03d70c12fef195"
+              "_id": "chatcmpl-tool-961a2fcecec47abf"
             }
           ]
         }
@@ -1561,7 +1614,7 @@
       "avg_param_accuracy": 0.35,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 5.82
+      "elapsed_sec": 5.79
     },
     {
       "id": "mt_str_016",
@@ -1584,7 +1637,7 @@
               "arguments": {
                 "bank_id": 205
               },
-              "_id": "chatcmpl-tool-82168727133b42b0"
+              "_id": "chatcmpl-tool-b7d31f42015ffb12"
             }
           ]
         },
@@ -1601,7 +1654,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE fraud_type = 2 LIMIT 100"
               },
-              "_id": "chatcmpl-tool-a2e56b8de9178fae"
+              "_id": "chatcmpl-tool-95fc7bb1873f18fd"
             }
           ]
         },
@@ -1616,9 +1669,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE date BETWEEN 20241001 AND 20241231 AND fraud_type = 2"
+                "sql": "SELECT * FROM hofinet WHERE date BETWEEN 20241001 AND 20241231 AND fraud_type = 2 LIMIT 100"
               },
-              "_id": "chatcmpl-tool-8ad6a7b35da1f122"
+              "_id": "chatcmpl-tool-b185cd5f116dc8ac"
             }
           ]
         },
@@ -1635,7 +1688,7 @@
               "arguments": {
                 "account_id": 44201
               },
-              "_id": "chatcmpl-tool-b99e63ab9bdad105"
+              "_id": "chatcmpl-tool-aea4a1864a221a34"
             }
           ]
         },
@@ -1655,7 +1708,7 @@
                 ],
                 "fraud_probability": 0.75,
                 "fraud_type": "원격지거래",
-                "summary": "금융회사 205의 2024년 4분기 거래 중, 신규 수신처 거래 유형(Fraud Type 2)이 가장 높은 비중을 차지했습니다. 특히 계좌 44201에서 발생한 거래(샘플: 20241105, 금액 25,000,000원)는 신규 거래처와의 거래로 확인되었으며, 해당 계좌의 위험 점수는 65점(중위험)으로 평가되었습니다. 이는 자금세탁의 '신규 거래처 이용' 단계와 연관될 수 있어 의심 거래로 판단됩니다.",
+                "summary": "금융회사 205의 2024년 4분기 거래 중, 신규 수신처 거래 유형(Fraud Type 2)이 198건으로 확인되었습니다. 특히 계좌 44201에서 발생한 거래 중 일부는 높은 금액(예: 25,000,000 KRW)으로 신규 거래처(990123)와 발생했으며, 해당 계좌 44201의 위험 점수는 65점(중위험)으로 평가되었습니다. 이는 자금세탁의 '신규 거래처 이용' 단계와 연관될 가능성이 있어 의심 거래로 판단됩니다.",
                 "tools_used": [
                   "query_transactions",
                   "score_account_risk"
@@ -1675,7 +1728,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-a0b9fe60b82f67ae"
+              "_id": "chatcmpl-tool-9337f82367147d53"
             }
           ]
         }
@@ -1685,7 +1738,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 4.02
+      "elapsed_sec": 4.0
     },
     {
       "id": "mt_str_017",
@@ -1709,7 +1762,7 @@
                 "account_id": 55089,
                 "direction": "inbound"
               },
-              "_id": "chatcmpl-tool-b06aac13d8ed18ba"
+              "_id": "chatcmpl-tool-b5627ff5cbc652e0"
             },
             {
               "name": "detect_smurfing_network",
@@ -1717,7 +1770,7 @@
                 "account_id": 55089,
                 "direction": "outbound"
               },
-              "_id": "chatcmpl-tool-a74bce2b70a29942"
+              "_id": "chatcmpl-tool-8c261d040d02933b"
             }
           ]
         },
@@ -1737,7 +1790,7 @@
                 "min_counterparts": 5,
                 "account_id": 55089
               },
-              "_id": "chatcmpl-tool-b02d540fd56229b8"
+              "_id": "chatcmpl-tool-a189320ea26cde57"
             }
           ]
         },
@@ -1755,7 +1808,7 @@
                 "account_id": 55089,
                 "pattern_type": "funnel"
               },
-              "_id": "chatcmpl-tool-b1cde06ecc7d95d9"
+              "_id": "chatcmpl-tool-931e8aa18a9a6bff"
             }
           ]
         },
@@ -1774,7 +1827,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 3.08
+      "elapsed_sec": 3.93
     },
     {
       "id": "mt_str_018",
@@ -1815,7 +1868,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_bank = 73 AND receiver_bank = 305 AND is_fraud = 1 LIMIT 100;"
               },
-              "_id": "chatcmpl-tool-b914d890a14d15f9"
+              "_id": "chatcmpl-tool-ac55a44c4366e135"
             }
           ]
         },
@@ -1834,7 +1887,7 @@
       "avg_param_accuracy": 0.4167,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 4.42
+      "elapsed_sec": 4.91
     },
     {
       "id": "mt_str_019",
@@ -1866,7 +1919,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE time_slot = 0 OR time_slot = 3 OR time_slot = 6 OR time_slot = 9 OR time_slot = 12 OR time_slot = 15 OR time_slot = 18 OR time_slot = 21 AND amount > 50000000 ORDER BY amount DESC LIMIT 1;"
               },
-              "_id": "chatcmpl-tool-bd053d61544a3324"
+              "_id": "chatcmpl-tool-8234e91c772676ad"
             }
           ]
         },
@@ -1883,7 +1936,7 @@
               "arguments": {
                 "account_id": 88923
               },
-              "_id": "chatcmpl-tool-aac7278892a71d72"
+              "_id": "chatcmpl-tool-9d5f90d3cccd15ef"
             }
           ]
         },
@@ -1905,7 +1958,7 @@
                 "sender_bank": 128,
                 "time_slot": 0
               },
-              "_id": "chatcmpl-tool-a28065455fa8a2cf"
+              "_id": "chatcmpl-tool-9be4e04af142bdfb"
             }
           ]
         },
@@ -1925,7 +1978,7 @@
                 ],
                 "fraud_probability": 0.93,
                 "fraud_type": "다중거래의 동시요청",
-                "summary": "계좌 88923에서 2024년 12월 18일 0시 시간대에 75,000,000원의 거래가 발생했으며, 이는 R001(심야대량거래) 모니터링 알림에 의해 포착되었습니다. 해당 거래는 예측 모델에서 0.93의 높은 사기 확률을 보였으며, 거래 유형은 '다중거래의 동시요청'으로 분류됩니다. 이는 자금 세탁의 '분산(Layering)' 또는 '배치(Placement)' 단계와 연관될 가능성이 있습니다.",
+                "summary": "계좌 88923에서 2024년 12월 18일 0시 시간대에 75,000,000원의 거래가 발생했으며, 이는 R001(심야대량거래) 모니터링 알림에 의해 포착되었습니다. 해당 거래는 다중거래의 동시 요청 패턴(Fraud Type 4)과 높은 사기 확률(0.93)을 보이고 있어 자금세탁 의심 정황이 높습니다.",
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud"
@@ -1945,7 +1998,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-9dd81c105f91f4eb"
+              "_id": "chatcmpl-tool-829c39b3727f79b9"
             }
           ]
         }
@@ -1955,7 +2008,7 @@
       "avg_param_accuracy": 0.1,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 4.05
+      "elapsed_sec": 3.84
     },
     {
       "id": "mt_str_020",
@@ -1978,7 +2031,7 @@
               "arguments": {
                 "term": "layering"
               },
-              "_id": "chatcmpl-tool-86c0ae127e4d2aed"
+              "_id": "chatcmpl-tool-a2ee449e60680d32"
             }
           ]
         },
@@ -1993,20 +2046,12 @@
         },
         {
           "turn": 3,
-          "tool_hit": 1.0,
-          "param_accuracy": 1.0,
-          "score": 1.0,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
           "context_hit": null,
           "clarification_hit": null,
-          "actual_tool_calls": [
-            {
-              "name": "detect_aml_patterns",
-              "arguments": {
-                "pattern_type": "layering"
-              },
-              "_id": "chatcmpl-tool-b60136f48a4d9f46"
-            }
-          ]
+          "actual_tool_calls": []
         },
         {
           "turn": 4,
@@ -2021,7 +2066,7 @@
               "arguments": {
                 "account_id": 33045
               },
-              "_id": "chatcmpl-tool-bedc1c19af3c1699"
+              "_id": "chatcmpl-tool-972579450dea8960"
             }
           ]
         },
@@ -2035,12 +2080,12 @@
           "actual_tool_calls": []
         }
       ],
-      "avg_score": 0.5,
-      "avg_tool_hit": 0.6,
-      "avg_param_accuracy": 0.4,
+      "avg_score": 0.3,
+      "avg_tool_hit": 0.4,
+      "avg_param_accuracy": 0.2,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 3.9
+      "elapsed_sec": 5.17
     },
     {
       "id": "mt_str_021",
@@ -2072,7 +2117,7 @@
               "arguments": {
                 "mode": "structuring"
               },
-              "_id": "chatcmpl-tool-95173da6ebb53ef5"
+              "_id": "chatcmpl-tool-9421ea8ea3fc6c6a"
             }
           ]
         },
@@ -2089,7 +2134,7 @@
               "arguments": {
                 "account_id": 66801
               },
-              "_id": "chatcmpl-tool-b564227970296793"
+              "_id": "chatcmpl-tool-9193f0f14bbc830d"
             }
           ]
         },
@@ -2108,7 +2153,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 3.13
+      "elapsed_sec": 3.11
     },
     {
       "id": "mt_str_022",
@@ -2143,7 +2188,7 @@
                 "period2_end": 20241231,
                 "period2_start": 20240701
               },
-              "_id": "chatcmpl-tool-9cfbd262cffdf941"
+              "_id": "chatcmpl-tool-8e80656ed7a402d0"
             }
           ]
         },
@@ -2160,7 +2205,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE date >= 20240701 AND date <= 20241231 AND is_fraud = 1;"
               },
-              "_id": "chatcmpl-tool-963d39ff68240427"
+              "_id": "chatcmpl-tool-86f0d47e8ba28d9a"
             }
           ]
         },
@@ -2179,7 +2224,7 @@
       "avg_param_accuracy": 0.6667,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 4.82
+      "elapsed_sec": 4.73
     },
     {
       "id": "mt_str_023",
@@ -2211,7 +2256,7 @@
               "arguments": {
                 "keyword": "거액 입금 후 당일 인출"
               },
-              "_id": "chatcmpl-tool-b98fe1401748b5b8"
+              "_id": "chatcmpl-tool-a5a1958393538253"
             }
           ]
         },
@@ -2248,7 +2293,7 @@
       "avg_param_accuracy": 0.2,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 4.78
+      "elapsed_sec": 5.91
     },
     {
       "id": "mt_str_024",
@@ -2289,7 +2334,7 @@
               "arguments": {
                 "account_id": 44290
               },
-              "_id": "chatcmpl-tool-ada42be10b035f7d"
+              "_id": "chatcmpl-tool-a247dd9012acff5b"
             }
           ]
         },
@@ -2307,7 +2352,7 @@
                 "account_id": 44290,
                 "hops": 3
               },
-              "_id": "chatcmpl-tool-b81f182a03cd4af9"
+              "_id": "chatcmpl-tool-8f7f802f9634494f"
             }
           ]
         },
@@ -2326,7 +2371,7 @@
       "avg_param_accuracy": 0.6,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 5.48
+      "elapsed_sec": 5.69
     },
     {
       "id": "mt_str_025",
@@ -2349,7 +2394,7 @@
               "arguments": {
                 "account_id": 11045
               },
-              "_id": "chatcmpl-tool-bb8b74af49b8afea"
+              "_id": "chatcmpl-tool-8729314aa9ec50ac"
             }
           ]
         },
@@ -2366,7 +2411,7 @@
               "arguments": {
                 "account_id": 11045
               },
-              "_id": "chatcmpl-tool-bc68f899752eca68"
+              "_id": "chatcmpl-tool-8d370a7baee5d9e6"
             }
           ]
         },
@@ -2395,7 +2440,7 @@
                 "date_to": 20241231,
                 "rule_id": "all"
               },
-              "_id": "chatcmpl-tool-8be3e239d5ec839d"
+              "_id": "chatcmpl-tool-aa36417da75d1095"
             }
           ]
         },
@@ -2414,7 +2459,7 @@
       "avg_param_accuracy": 0.4,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 7.37
+      "elapsed_sec": 7.46
     },
     {
       "id": "mt_str_026",
@@ -2442,7 +2487,7 @@
                 "sender_bank": 134,
                 "time_slot": 12
               },
-              "_id": "chatcmpl-tool-a9b5bab2eaffe86d"
+              "_id": "chatcmpl-tool-92d0738955cecaf8"
             }
           ]
         },
@@ -2464,7 +2509,7 @@
                 "sender_bank": 134,
                 "time_slot": 15
               },
-              "_id": "chatcmpl-tool-bde830d79bfafc1d"
+              "_id": "chatcmpl-tool-a7639de19c4b1410"
             }
           ]
         },
@@ -2481,7 +2526,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_bank = 134 AND amount >= 85000000 ORDER BY date DESC LIMIT 10;"
               },
-              "_id": "chatcmpl-tool-aaf60c1a585389c4"
+              "_id": "chatcmpl-tool-8b5db524f6d65790"
             }
           ]
         },
@@ -2498,7 +2543,7 @@
               "arguments": {
                 "account_id": 99801
               },
-              "_id": "chatcmpl-tool-9281bef4a720a5a7"
+              "_id": "chatcmpl-tool-87032ea3fe755942"
             }
           ]
         },
@@ -2517,7 +2562,7 @@
       "avg_param_accuracy": 0.4,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 4.04
+      "elapsed_sec": 4.94
     },
     {
       "id": "mt_str_027",
@@ -2540,7 +2585,7 @@
               "arguments": {
                 "bank_id": 88
               },
-              "_id": "chatcmpl-tool-ab425b2fa337f4c7"
+              "_id": "chatcmpl-tool-9ff2b010916f7d84"
             }
           ]
         },
@@ -2557,7 +2602,7 @@
               "arguments": {
                 "account_id": 62018
               },
-              "_id": "chatcmpl-tool-9ef5439ded2dc26a"
+              "_id": "chatcmpl-tool-a7cb90011b806e05"
             }
           ]
         },
@@ -2572,51 +2617,20 @@
         },
         {
           "turn": 4,
-          "tool_hit": 1.0,
-          "param_accuracy": 0.5,
-          "score": 0.75,
-          "context_hit": true,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
           "clarification_hit": null,
-          "actual_tool_calls": [
-            {
-              "name": "generate_str",
-              "arguments": {
-                "aml_patterns": [
-                  "Sudden Change in Transaction Pattern"
-                ],
-                "fraud_probability": 0.91,
-                "fraud_type": "갑작스러운 거래패턴의 변화",
-                "summary": "계좌 62018번은 총 89건의 거래 중 18건(20.22%)이 이상거래로 분류되었습니다. 특히, 최근 거래에서 48,000,000원의 거래가 감지되었으며, 이는 높은 이상거래 확률(0.91)을 보였습니다. 이 계좌는 심야 거래 비율이 48%로 높고, 주요 매체는 인터넷뱅킹을 사용하고 있습니다. 이러한 패턴은 갑작스러운 거래 패턴 변화를 시사합니다.",
-                "tools_used": [
-                  "get_account_profile",
-                  "predict_fraud"
-                ],
-                "transactions": [
-                  {
-                    "amount": 48000000,
-                    "date": 20241231,
-                    "fraud_type": 1,
-                    "fund_type": 4,
-                    "media_type": 4,
-                    "receiver_acc": 128,
-                    "receiver_bank": 134,
-                    "sender_acc": 62018,
-                    "sender_bank": 128,
-                    "time_slot": 0
-                  }
-                ]
-              },
-              "_id": "chatcmpl-tool-872c74bc03ab5383"
-            }
-          ]
+          "actual_tool_calls": []
         }
       ],
-      "avg_score": 0.6875,
-      "avg_tool_hit": 0.75,
-      "avg_param_accuracy": 0.625,
-      "context_accuracy": 1.0,
+      "avg_score": 0.5,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.5,
+      "context_accuracy": 0.5,
       "scenario_complete": false,
-      "elapsed_sec": 3.16
+      "elapsed_sec": 2.57
     },
     {
       "id": "mt_str_028",
@@ -2639,7 +2653,7 @@
               "arguments": {
                 "account_id": 82301
               },
-              "_id": "chatcmpl-tool-a7749cffaaa2be3e"
+              "_id": "chatcmpl-tool-af4b34a15eed0022"
             }
           ]
         },
@@ -2656,7 +2670,7 @@
               "arguments": {
                 "account_id": 661023
               },
-              "_id": "chatcmpl-tool-8ea66db39ca167b4"
+              "_id": "chatcmpl-tool-bbbb92ff11ac4223"
             }
           ]
         },
@@ -2671,11 +2685,11 @@
             {
               "name": "detect_smurfing_network",
               "arguments": {
+                "account_id": 661023,
                 "direction": "inbound",
-                "min_counterparts": 5,
-                "account_id": 661023
+                "min_counterparts": 5
               },
-              "_id": "chatcmpl-tool-93a03fda726c91e6"
+              "_id": "chatcmpl-tool-9fef9b0f7a1d54f5"
             }
           ]
         },
@@ -2694,7 +2708,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 3.9
+      "elapsed_sec": 2.54
     },
     {
       "id": "mt_str_029",
@@ -2717,7 +2731,7 @@
               "arguments": {
                 "rule_id": "R005"
               },
-              "_id": "chatcmpl-tool-b59ccc3bbf1153c7"
+              "_id": "chatcmpl-tool-bdabda516a854966"
             }
           ]
         },
@@ -2734,7 +2748,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 33567 ORDER BY date DESC LIMIT 10"
               },
-              "_id": "chatcmpl-tool-a6d00cc1aaa74791"
+              "_id": "chatcmpl-tool-85c657a5dcc18bc3"
             }
           ]
         },
@@ -2754,7 +2768,7 @@
                 "period2_end": 20241231,
                 "period2_start": 20241201
               },
-              "_id": "chatcmpl-tool-aa829247f9a71a6f"
+              "_id": "chatcmpl-tool-a1fb536fe75a0a93"
             }
           ]
         },
@@ -2773,7 +2787,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 3.25
+      "elapsed_sec": 3.83
     },
     {
       "id": "mt_str_030",
@@ -2797,7 +2811,7 @@
                 "sample_size": 5000,
                 "top_k": 5
               },
-              "_id": "chatcmpl-tool-854a61dd3d199014"
+              "_id": "chatcmpl-tool-8c9632dd77023f76"
             }
           ]
         },
@@ -2815,7 +2829,7 @@
                 "account_id": 45201,
                 "hops": 3
               },
-              "_id": "chatcmpl-tool-a50ebf6c1fadcd32"
+              "_id": "chatcmpl-tool-9c532fc47d1bf5b9"
             }
           ]
         },
@@ -2832,7 +2846,7 @@
               "arguments": {
                 "pattern_type": "ring"
               },
-              "_id": "chatcmpl-tool-acc6820c79f3d37d"
+              "_id": "chatcmpl-tool-a8763fb9980a9d17"
             }
           ]
         },
@@ -2852,7 +2866,7 @@
                 ],
                 "fraud_probability": 0.98,
                 "fraud_type": "갑작스러운 거래패턴의 변화",
-                "summary": "1순위 위험 거래 계좌(45201)에 대해 분석을 수행했습니다. 해당 계좌는 높은 위험 확률(0.98)을 보였으며, 네트워크 분석 결과 18개의 계좌와 연결되어 있고, 총 67건의 거래 중 32.84%가 이상 거래로 분류되었습니다. 또한, 해당 계좌를 중심으로 3단계의 순환거래(Ring) 패턴이 탐지되었습니다. 이는 자금 세탁의 전형적인 '레이어링(Layering)' 단계와 연관될 수 있습니다. 거래 내역을 검토한 결과, 49,800,000원의 거액 거래가 확인되었습니다.",
+                "summary": "계좌 45201은 최고 위험 거래(Fraud Probability 0.98)의 당사자이며, 네트워크 분석 결과 18개의 연결 계좌와 67건의 거래를 보였습니다. 특히, 3단계 순환거래(Ring) 패턴이 탐지되었으며, 이는 자금 세탁의 전형적인 '레이어링(Layering)' 단계를 시사합니다. 해당 계좌의 거래 패턴이 갑작스럽게 변화한 정황이 포착되어 STR을 작성합니다.",
                 "tools_used": [
                   "rank_risky_transactions",
                   "analyze_network",
@@ -2873,7 +2887,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-9ed43387151fa838"
+              "_id": "chatcmpl-tool-8957fc6a581d4d52"
             }
           ]
         }
@@ -2883,7 +2897,7 @@
       "avg_param_accuracy": 0.65,
       "context_accuracy": 0.6667,
       "scenario_complete": true,
-      "elapsed_sec": 2.73
+      "elapsed_sec": 2.42
     },
     {
       "id": "mt_str_031",
@@ -2906,7 +2920,7 @@
               "arguments": {
                 "fraud_type": 4
               },
-              "_id": "chatcmpl-tool-ad8cfb49fd36e098"
+              "_id": "chatcmpl-tool-a91fb78f97c4f279"
             }
           ]
         },
@@ -2923,7 +2937,7 @@
               "arguments": {
                 "account_id": 55801
               },
-              "_id": "chatcmpl-tool-97d90c9fdda37ef9"
+              "_id": "chatcmpl-tool-b9f36bef30609919"
             }
           ]
         },
@@ -2940,7 +2954,7 @@
               "arguments": {
                 "account_id": 55801
               },
-              "_id": "chatcmpl-tool-888a68e13e957820"
+              "_id": "chatcmpl-tool-ba130c702fe6c561"
             }
           ]
         },
@@ -2956,11 +2970,11 @@
               "name": "generate_str",
               "arguments": {
                 "aml_patterns": [
-                  "다중거래의 동시 요청"
+                  "다중거래의 동시요청"
                 ],
                 "fraud_probability": 0.85,
                 "fraud_type": "다중거래의 동시요청",
-                "summary": "계좌 55801은 '다중거래의 동시 요청' 유형(Fraud Type 4)과 관련하여 높은 위험도를 보이고 있습니다. 해당 계좌는 총 28건의 거래 중 14건이 이상거래로 분류되었으며, 총 거래금액은 7억 5,600만 원에 달합니다. 특히, 2024년 11월 5일 12시 시간대에 5,500만 원 규모의 이상거래가 확인되었습니다. 계좌 위험 점수는 85점(고위험)으로 평가되었으며, 이는 높은 금액 이상도(0.88)와 거래 속도 변화(0.82)에 기인합니다. 이러한 패턴은 자금 세탁의 '분산(Layering)' 또는 '집중(Smurfing)' 단계와 연관될 가능성이 높으므로, 상세 조사가 필요합니다.",
+                "summary": "계좌 55801은 '다중거래의 동시 요청' 유형의 이상거래가 14건 발생했으며, 총 거래금액은 7억 5,600만 원에 달합니다. 해당 계좌의 위험 점수는 85점(고위험)으로 평가되었습니다. 특히, 거래 속도 변화(0.82)와 금액 이상도(0.88)가 높게 나타나 자금 세탁 의심 정황이 강합니다.",
                 "tools_used": [
                   "get_fraud_type_summary",
                   "query_transactions",
@@ -2981,7 +2995,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-9741264b23af6250"
+              "_id": "chatcmpl-tool-aa3842130a99e094"
             }
           ]
         }
@@ -2991,7 +3005,7 @@
       "avg_param_accuracy": 0.6875,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 3.1
+      "elapsed_sec": 2.46
     },
     {
       "id": "mt_str_032",
@@ -3014,7 +3028,7 @@
               "arguments": {
                 "unit": "monthly"
               },
-              "_id": "chatcmpl-tool-9eb48be063661add"
+              "_id": "chatcmpl-tool-a1bd92f32d8e2d35"
             }
           ]
         },
@@ -3029,9 +3043,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE date IN ('202412')"
+                "sql": "SELECT * FROM hofinet WHERE date IN ('202412') ORDER BY amount DESC LIMIT 100;"
               },
-              "_id": "chatcmpl-tool-a6cbb6f4bf4f4bb8"
+              "_id": "chatcmpl-tool-a3e9339f96d89e96"
             }
           ]
         },
@@ -3049,7 +3063,7 @@
                 "date_from": 20241201,
                 "date_to": 20241231
               },
-              "_id": "chatcmpl-tool-99cd4ce022474bc0"
+              "_id": "chatcmpl-tool-a3da38db5e97014b"
             }
           ]
         },
@@ -3066,7 +3080,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE date LIKE '202412%' AND media_type = 7 AND is_fraud = 1 LIMIT 1"
               },
-              "_id": "chatcmpl-tool-958c2a878c4d81be"
+              "_id": "chatcmpl-tool-9737f1370e7749a0"
             }
           ]
         },
@@ -3086,10 +3100,11 @@
                 ],
                 "fraud_probability": 0.93,
                 "fraud_type": "갑작스러운 거래패턴의 변화",
-                "summary": "2024년 12월, 텔레뱅킹(매체구분 7)을 통해 발생한 49,000,000 KRW 거래(거래일자: 20241210, 거래시간대: 0)가 높은 위험도를 보였습니다. 해당 거래는 '갑작스러운 거래패턴의 변화' 유형으로 분류되었으며, 예측된 사기 확률은 0.93으로 매우 높습니다. 이는 해당 계좌의 평소 거래 패턴과 현저히 다른 대규모 거래로 판단됩니다.",
+                "summary": "2024년 12월에 발생한 텔레뱅킹(매체구분 7) 거래 중, 특정 건(거래금액 49,000,000원)이 '갑작스러운 거래패턴의 변화' 유형으로 탐지되었습니다. 해당 거래는 2024년 12월 10일 0시 시간대에 발생했으며, 예측 모델에서 0.93의 높은 사기 확률을 보였습니다. 이는 해당 계좌의 평소 거래 패턴과 현저히 다른 대규모 거래로 판단됩니다.",
                 "tools_used": [
                   "query_transactions",
-                  "predict_fraud"
+                  "predict_fraud",
+                  "analyze_channel_risk"
                 ],
                 "transactions": [
                   {
@@ -3106,7 +3121,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-bdeca90895dbbe9d"
+              "_id": "chatcmpl-tool-a1c802f15697d8e3"
             }
           ]
         }
@@ -3116,7 +3131,7 @@
       "avg_param_accuracy": 0.6333,
       "context_accuracy": 0.5,
       "scenario_complete": false,
-      "elapsed_sec": 3.0
+      "elapsed_sec": 3.11
     },
     {
       "id": "mt_str_033",
@@ -3137,7 +3152,7 @@
             {
               "name": "get_statistics",
               "arguments": {},
-              "_id": "chatcmpl-tool-9a8f10157a1b8ec0"
+              "_id": "chatcmpl-tool-a96fa4cc4c23828a"
             }
           ]
         },
@@ -3154,7 +3169,7 @@
               "arguments": {
                 "fraud_type": 3
               },
-              "_id": "chatcmpl-tool-94f7838a08980c6d"
+              "_id": "chatcmpl-tool-9bfbc7c50fc2a1c0"
             }
           ]
         },
@@ -3182,7 +3197,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 3.11
+      "elapsed_sec": 3.1
     },
     {
       "id": "mt_str_034",
@@ -3205,7 +3220,7 @@
               "arguments": {
                 "dormant_days": 300
               },
-              "_id": "chatcmpl-tool-984823667b207539"
+              "_id": "chatcmpl-tool-a0947e02343b8339"
             }
           ]
         },
@@ -3222,7 +3237,7 @@
               "arguments": {
                 "account_id": 11290
               },
-              "_id": "chatcmpl-tool-bc553649d41cda8a"
+              "_id": "chatcmpl-tool-aab055919ce3fcfd"
             }
           ]
         },
@@ -3239,7 +3254,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 11290 AND fraud_type = 3;"
               },
-              "_id": "chatcmpl-tool-ad9043b6faeba35e"
+              "_id": "chatcmpl-tool-825fa69d79488cea"
             }
           ]
         },
@@ -3255,11 +3270,11 @@
               "name": "generate_str",
               "arguments": {
                 "aml_patterns": [
-                  "Sudden Change in Transaction Pattern"
+                  "Structuring"
                 ],
                 "fraud_probability": 0.85,
                 "fraud_type": "갑작스러운 거래패턴의 변화",
-                "summary": "계좌 11290은 356일간 휴면 상태였다가 2024년 12월 1일에 95,000,000원의 거액이 입금되며 재활성화되었습니다. 해당 계좌의 프로필 분석 결과, 총 15건의 거래 중 8건(53.33%)이 이상 거래로 분류되었으며, 심야 거래 비율이 67%로 높게 나타났습니다. 또한, 구조화(Structuring) 패턴 탐지 결과, 2024년 12월 5일에 5건의 거래가 합산되어 47,000,000원이 발생한 것으로 확인되어 분할 거래 의심 정황이 포착되었습니다. 이러한 휴면 후의 급격한 활동 증가와 분할 거래 정황을 종합할 때, '갑작스러운 거래패턴의 변화'에 따른 의심 거래로 판단됩니다.",
+                "summary": "계좌 11290은 356일간 휴면 상태였다가 2024년 12월 1일에 95,000,000원의 거액이 입금되며 재활성화되었습니다. 해당 계좌의 프로필 분석 결과, 총 15건의 거래 중 8건(53.33%)이 이상 거래로 분류되었으며, 심야 거래 비율이 67%로 높게 나타났습니다. 또한, 구조화(Structuring) 패턴 탐지 결과, 2024년 12월 5일에 5건의 거래가 합계 47,000,000원으로 탐지되어 분할 거래 의심 정황이 확인되었습니다. 이러한 휴면 후의 급격한 활동 증가, 높은 이상 거래 비율, 그리고 분할 거래 정황을 종합할 때, '갑작스러운 거래패턴의 변화'에 따른 의심 거래로 판단됩니다.",
                 "tools_used": [
                   "detect_dormant_reactivation",
                   "get_account_profile",
@@ -3274,7 +3289,7 @@
                     "media_type": 2,
                     "receiver_acc": 11290,
                     "receiver_bank": 1,
-                    "sender_acc": 99999,
+                    "sender_acc": 2,
                     "sender_bank": 1
                   },
                   {
@@ -3285,12 +3300,12 @@
                     "media_type": 2,
                     "receiver_acc": 11290,
                     "receiver_bank": 1,
-                    "sender_acc": 10001,
+                    "sender_acc": 3,
                     "sender_bank": 1
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-9062d791cfa39bad"
+              "_id": "chatcmpl-tool-8132d9ccb2cc05bf"
             }
           ]
         }
@@ -3300,7 +3315,7 @@
       "avg_param_accuracy": 0.6,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 3.68
+      "elapsed_sec": 3.52
     },
     {
       "id": "mt_str_035",
@@ -3323,7 +3338,7 @@
               "arguments": {
                 "account_id": 33801
               },
-              "_id": "chatcmpl-tool-9f5bca0bc58629c1"
+              "_id": "chatcmpl-tool-966406aaa8b92666"
             }
           ]
         },
@@ -3349,7 +3364,7 @@
               "arguments": {
                 "account_id": 33801
               },
-              "_id": "chatcmpl-tool-920d62308c457612"
+              "_id": "chatcmpl-tool-b60ed770b5abcee3"
             }
           ]
         },
@@ -3368,7 +3383,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 5.85
+      "elapsed_sec": 6.3
     },
     {
       "id": "mt_str_036",
@@ -3391,7 +3406,7 @@
               "arguments": {
                 "bank_id": 73
               },
-              "_id": "chatcmpl-tool-a84bd495430747a2"
+              "_id": "chatcmpl-tool-b4d2d620a35fb27d"
             }
           ]
         },
@@ -3411,7 +3426,7 @@
                 "limit": 20,
                 "min_transactions": 10
               },
-              "_id": "chatcmpl-tool-bb09d3ee3bcdd28c"
+              "_id": "chatcmpl-tool-b5c67812dbe57a8a"
             }
           ]
         },
@@ -3429,7 +3444,7 @@
                 "account_id": 55012,
                 "pattern_type": "layering"
               },
-              "_id": "chatcmpl-tool-b9f5272dbed1f090"
+              "_id": "chatcmpl-tool-8875f7bbe4a22b1a"
             }
           ]
         },
@@ -3448,7 +3463,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 2.21
+      "elapsed_sec": 2.56
     },
     {
       "id": "mt_str_037",
@@ -3472,7 +3487,7 @@
                 "date_from": 20241001,
                 "date_to": 20241231
               },
-              "_id": "chatcmpl-tool-82a1ef05a09b80f4"
+              "_id": "chatcmpl-tool-b2dcf2b802821a1a"
             }
           ]
         },
@@ -3487,9 +3502,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT sender_acc, COUNT(*) as transaction_count FROM hofinet WHERE media_type = 2 AND time_slot IN (0, 3) GROUP BY sender_acc ORDER BY transaction_count DESC LIMIT 10;"
+                "sql": "SELECT sender_acc, COUNT(*) as transaction_count FROM hofinet WHERE media_type = 2 AND time_slot IN (0, 3) GROUP BY sender_acc ORDER BY transaction_count DESC LIMIT 1"
               },
-              "_id": "chatcmpl-tool-9b5b6b881afa1a88"
+              "_id": "chatcmpl-tool-a283b26a4445ddde"
             }
           ]
         },
@@ -3506,7 +3521,7 @@
               "arguments": {
                 "account_id": 72301
               },
-              "_id": "chatcmpl-tool-aca7f06c2bc87ac6"
+              "_id": "chatcmpl-tool-a76c3fc875e58d4e"
             }
           ]
         },
@@ -3524,26 +3539,59 @@
                 "account_id": 72301,
                 "hops": 3
               },
-              "_id": "chatcmpl-tool-aca2daefc4b76137"
+              "_id": "chatcmpl-tool-bb1852948781bab0"
             }
           ]
         },
         {
           "turn": 5,
-          "tool_hit": 0.0,
-          "param_accuracy": 0.0,
-          "score": 0.0,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.5,
+          "score": 0.75,
           "context_hit": null,
           "clarification_hit": null,
-          "actual_tool_calls": []
+          "actual_tool_calls": [
+            {
+              "name": "generate_str",
+              "arguments": {
+                "aml_patterns": [
+                  "Layering"
+                ],
+                "fraud_probability": 0.75,
+                "fraud_type": "분할거래",
+                "summary": "계좌 72301은 2024년 4분기 심야 인터넷뱅킹 거래에서 높은 이상거래비율(26.97%)을 보였으며, 총 89건의 거래 중 24건이 이상거래로 분류되었습니다. 네트워크 분석 결과, 이 계좌는 22개의 계좌와 연결되어 있으며, 이는 자금 세탁의 분산 및 은닉(Layering) 시도를 시사합니다. 특히, 분할 거래(Split Transaction) 패턴이 의심되며, 이는 자금 이동을 여러 건으로 나누어 탐지를 회피하려는 정황이 포착되었습니다.",
+                "tools_used": [
+                  "analyze_channel_risk",
+                  "query_transactions",
+                  "get_account_profile",
+                  "analyze_network"
+                ],
+                "transactions": [
+                  {
+                    "amount": 48500000,
+                    "date": 20241210,
+                    "fraud_type": 3,
+                    "fund_type": 4,
+                    "media_type": 4,
+                    "receiver_acc": 550789,
+                    "receiver_bank": 117,
+                    "sender_acc": 72301,
+                    "sender_bank": 128,
+                    "time_slot": 0
+                  }
+                ]
+              },
+              "_id": "chatcmpl-tool-9dcc3de064073c9a"
+            }
+          ]
         }
       ],
-      "avg_score": 0.7,
-      "avg_tool_hit": 0.8,
-      "avg_param_accuracy": 0.6,
+      "avg_score": 0.85,
+      "avg_tool_hit": 1.0,
+      "avg_param_accuracy": 0.7,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 3.51
+      "elapsed_sec": 3.16
     },
     {
       "id": "mt_str_038",
@@ -3566,7 +3614,7 @@
               "arguments": {
                 "bank_id": 305
               },
-              "_id": "chatcmpl-tool-81a9ab110e1eb7ec"
+              "_id": "chatcmpl-tool-b55dadde09a99deb"
             }
           ]
         },
@@ -3592,7 +3640,7 @@
               "arguments": {
                 "account_id": 88901
               },
-              "_id": "chatcmpl-tool-96e034a0791ae838"
+              "_id": "chatcmpl-tool-83b56c6fbc8bfa68"
             }
           ]
         },
@@ -3611,7 +3659,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": 0.5,
       "scenario_complete": false,
-      "elapsed_sec": 5.02
+      "elapsed_sec": 3.81
     },
     {
       "id": "mt_str_039",
@@ -3634,7 +3682,7 @@
               "arguments": {
                 "rule_id": "R002"
               },
-              "_id": "chatcmpl-tool-aca86756079d2705"
+              "_id": "chatcmpl-tool-a62ca00b67263ad7"
             }
           ]
         },
@@ -3651,7 +3699,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 77401 AND date = 20241220 ORDER BY amount DESC;"
               },
-              "_id": "chatcmpl-tool-9d9373fe8166647a"
+              "_id": "chatcmpl-tool-b38b1e9ddd3fd40c"
             }
           ]
         },
@@ -3669,15 +3717,15 @@
                 "mode": "structuring",
                 "threshold": 10000000
               },
-              "_id": "chatcmpl-tool-a9c3d8dede60564e"
+              "_id": "chatcmpl-tool-825a004bfad655c3"
             }
           ]
         },
         {
           "turn": 4,
           "tool_hit": 1.0,
-          "param_accuracy": 0.2,
-          "score": 0.6,
+          "param_accuracy": 0.4,
+          "score": 0.7,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
@@ -3689,11 +3737,11 @@
                 ],
                 "fraud_probability": 0.85,
                 "fraud_type": "갑작스러운 거래패턴의 변화",
-                "summary": "계좌 77401은 2024년 12월 20일에 총 18건의 거래를 통해 172,000,000원의 자금을 이동시켰습니다. 이는 R002(동일일 다건거래) 알림에 해당하며, CTR(Structuring) 분석 결과에서도 해당 계좌가 구조화 의심 후보로 확인되었습니다. 거래 패턴의 급격한 변화와 다수 건의 소액/중액 분할 거래가 의심되므로, '갑작스러운 거래패턴의 변화' 및 '구조화' 패턴을 근거로 STR을 작성합니다.",
+                "summary": "계좌 77401에서 2024년 12월 20일에 총 18건의 거래가 발생하여 총 172,000,000원의 자금이 이동했습니다. 이는 R002(동일일 다건거래) 알림에 해당하며, CTR/Structuring 탐지 결과에서도 해당 계좌가 구조화(Structuring) 의심 후보로 확인되었습니다. 거래 패턴의 급격한 변화와 다수 건의 소액/중액 분할 거래 정황이 포착되어 자금세탁 혐의를 의심합니다.",
                 "tools_used": [
                   "detect_monitoring_alerts",
-                  "detect_ctr_candidates",
-                  "query_transactions"
+                  "query_transactions",
+                  "detect_ctr_candidates"
                 ],
                 "transactions": [
                   {
@@ -3722,17 +3770,17 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-993000e4eac4617b"
+              "_id": "chatcmpl-tool-a7f37b0d5b5aa67e"
             }
           ]
         }
       ],
-      "avg_score": 0.9,
+      "avg_score": 0.925,
       "avg_tool_hit": 1.0,
-      "avg_param_accuracy": 0.8,
+      "avg_param_accuracy": 0.85,
       "context_accuracy": 0.0,
       "scenario_complete": true,
-      "elapsed_sec": 3.7
+      "elapsed_sec": 3.53
     },
     {
       "id": "mt_str_040",
@@ -3755,42 +3803,42 @@
               "arguments": {
                 "fraud_type": 1
               },
-              "_id": "chatcmpl-tool-a91d72d86d220de7"
+              "_id": "chatcmpl-tool-abc4e4101b2c0e74"
             },
             {
               "name": "get_fraud_type_summary",
               "arguments": {
                 "fraud_type": 2
               },
-              "_id": "chatcmpl-tool-8add01f6c1a53193"
+              "_id": "chatcmpl-tool-891235060346ffb0"
             },
             {
               "name": "get_fraud_type_summary",
               "arguments": {
                 "fraud_type": 3
               },
-              "_id": "chatcmpl-tool-9d1d963fd5eb36e8"
+              "_id": "chatcmpl-tool-857f77022bedd914"
             },
             {
               "name": "get_fraud_type_summary",
               "arguments": {
                 "fraud_type": 4
               },
-              "_id": "chatcmpl-tool-bbcfd5952a95f987"
+              "_id": "chatcmpl-tool-9972f3c8214dd7bd"
             },
             {
               "name": "get_fraud_type_summary",
               "arguments": {
                 "fraud_type": 5
               },
-              "_id": "chatcmpl-tool-9d0884ee63bf543d"
+              "_id": "chatcmpl-tool-84ddf31caf99025d"
             },
             {
               "name": "get_fraud_type_summary",
               "arguments": {
                 "fraud_type": 7
               },
-              "_id": "chatcmpl-tool-8127ff74c96e81bf"
+              "_id": "chatcmpl-tool-b77c0f3427dcfe7a"
             }
           ]
         },
@@ -3807,7 +3855,7 @@
               "arguments": {
                 "fraud_type": 5
               },
-              "_id": "chatcmpl-tool-b54cfc9a5e3562b2"
+              "_id": "chatcmpl-tool-9c5baada1afc9c10"
             }
           ]
         },
@@ -3824,7 +3872,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 66501 LIMIT 100;"
               },
-              "_id": "chatcmpl-tool-9472f11c86822f8f"
+              "_id": "chatcmpl-tool-8dcca9af66236b31"
             }
           ]
         },
@@ -3841,7 +3889,7 @@
               "arguments": {
                 "keyword": "거액 입금 후 당일 인출"
               },
-              "_id": "chatcmpl-tool-95de79cdd604c3ad"
+              "_id": "chatcmpl-tool-92d7a2c4862ec02d"
             }
           ]
         },
@@ -3857,11 +3905,11 @@
               "name": "generate_str",
               "arguments": {
                 "aml_patterns": [
-                  "Layering"
+                  "불법도박"
                 ],
                 "fraud_probability": 0.85,
                 "fraud_type": "거액 입금 후 당일/익일 인출",
-                "summary": "계좌 66501번은 '거액 입금 후 당일/익일 인출' 유형의 이상거래(Fraud Type 5)가 19건 발생했으며, 총 거래금액은 4억 7,800만원에 달합니다. 이는 불법 도박 관련 자금 이동 패턴과 일치하며, FIU 참고유형 B-25 및 B-27과 연관성이 높습니다. 해당 계좌의 거래 패턴은 전형적인 자금 세탁의 '분산 및 은닉(Layering)' 단계로 의심됩니다.",
+                "summary": "계좌 66501번은 '거액 입금 후 당일 인출' 유형(Fraud Type 5)으로 19건의 이상거래가 확인되었습니다. 해당 계좌는 총 156건의 거래 중 19건이 이상거래로 분류되었으며, 총 거래금액은 4억 7,800만 원입니다. 특히, FIU 참고유형 B-25(온라인 도박사이트 관련 자금 입출금) 및 B-27(불법 사행성 게임 관련 다수 소액 입금)과 연관성이 높습니다. 샘플 거래(20241110, 300만원)를 포함하여 자금세탁 의심 정황이 명확하므로 STR 작성이 필요합니다.",
                 "tools_used": [
                   "query_transactions",
                   "get_fraud_type_summary",
@@ -3882,7 +3930,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-b7351d95261ea2ac"
+              "_id": "chatcmpl-tool-8a6381cced52b6b4"
             }
           ]
         }
@@ -3892,7 +3940,7 @@
       "avg_param_accuracy": 0.4667,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 3.52
+      "elapsed_sec": 3.76
     },
     {
       "id": "mt_str_041",
@@ -3916,7 +3964,7 @@
                 "account_id": 41205,
                 "rule_id": "R002"
               },
-              "_id": "chatcmpl-tool-825cda4e952677dd"
+              "_id": "chatcmpl-tool-a1aa653752e39063"
             }
           ]
         },
@@ -3938,7 +3986,7 @@
                 "sender_bank": 134,
                 "time_slot": 12
               },
-              "_id": "chatcmpl-tool-b7b49ea3f7d484b1"
+              "_id": "chatcmpl-tool-a8c80cead78dc49e"
             }
           ]
         },
@@ -3955,7 +4003,7 @@
               "arguments": {
                 "account_id": 661234
               },
-              "_id": "chatcmpl-tool-a3d068af48505a33"
+              "_id": "chatcmpl-tool-81e6c127deceddf5"
             }
           ]
         },
@@ -3974,15 +4022,15 @@
                 "min_counterparts": 5,
                 "account_id": 661234
               },
-              "_id": "chatcmpl-tool-89bc93a8c246bb49"
+              "_id": "chatcmpl-tool-85b565d50beae0eb"
             }
           ]
         },
         {
           "turn": 5,
           "tool_hit": 1.0,
-          "param_accuracy": 0.4,
-          "score": 0.7,
+          "param_accuracy": 0.6,
+          "score": 0.8,
           "context_hit": true,
           "clarification_hit": null,
           "actual_tool_calls": [
@@ -3990,14 +4038,16 @@
               "name": "generate_str",
               "arguments": {
                 "aml_patterns": [
-                  "다중거래의 동시요청"
+                  "다중거래의 동시요청",
+                  "Smurfing"
                 ],
                 "fraud_probability": 0.94,
                 "fraud_type": "다중거래의 동시요청",
-                "summary": "계좌 41205에서 20241218부터 20241225까지 총 12건의 다중거래 동시 요청(Fraud Type 4)이 발생했습니다. 총 거래금액은 5억 3,400만 원이며, 이는 해당 계좌의 평소 거래 패턴과 비교하여 비정상적인 활동으로 판단됩니다. 특히, 주요 입금 계좌인 661234는 32개의 출금 원천 계좌로부터 자금을 수집하는 패턴(Smurfing Score 0.89)을 보이고 있어, 자금 세탁의 'Placement' 또는 'Layering' 단계에 해당할 가능성이 높습니다. 예측된 사기 확률은 0.94로 매우 높습니다.",
+                "summary": "계좌 41205에서 20241218부터 20241225까지 총 12건의 다중거래 동시 요청(Fraud Type 4)이 발생했습니다. 총 거래금액은 5억 3,400만 원에 달합니다. 특히, 입금계좌 661234는 3,450,000,000원의 입금을 받았으며, 이는 32개의 출금 원천 계좌로부터의 자금 수집(Inbound Smurfing) 패턴을 보이고 있습니다. 대표 거래(48,000,000원)의 예측된 사기 확률은 0.94로 매우 높습니다. 이는 자금 세탁의 '배치(Placement)' 또는 '분산(Layering)' 단계와 연관된 것으로 판단됩니다.",
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud",
+                  "get_receiving_account_profile",
                   "detect_smurfing_network"
                 ],
                 "transactions": [
@@ -4015,17 +4065,17 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-906f3825787606c9"
+              "_id": "chatcmpl-tool-b57af195b17b32c6"
             }
           ]
         }
       ],
-      "avg_score": 0.64,
+      "avg_score": 0.66,
       "avg_tool_hit": 0.8,
-      "avg_param_accuracy": 0.48,
+      "avg_param_accuracy": 0.52,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 3.54
+      "elapsed_sec": 3.66
     },
     {
       "id": "mt_str_042",
@@ -4048,7 +4098,7 @@
               "arguments": {
                 "rule_id": "R004"
               },
-              "_id": "chatcmpl-tool-920cb120ae58a73b"
+              "_id": "chatcmpl-tool-8abeefccb47d1e79"
             }
           ]
         },
@@ -4068,7 +4118,7 @@
                 "limit": 20,
                 "min_transactions": 10
               },
-              "_id": "chatcmpl-tool-bd2867ec6a554600"
+              "_id": "chatcmpl-tool-816cdbafbaa42f02"
             }
           ]
         },
@@ -4085,7 +4135,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc IN (44201, 55302, 66403) LIMIT 100;"
               },
-              "_id": "chatcmpl-tool-85ba68ae7074fdad"
+              "_id": "chatcmpl-tool-a731fee05bf73e7d"
             }
           ]
         },
@@ -4105,7 +4155,7 @@
                 ],
                 "fraud_probability": 0.85,
                 "fraud_type": "원격지거래",
-                "summary": "계좌 44201에서 발생한 거래 중, 기관 205에서 기관 88로의 흐름에서 신규 수신처(계좌 991234)로의 거래가 확인되었습니다. 해당 거래는 이상거래 유형 2(Transaction with New Counterparty)에 해당하며, 거래 금액은 12,000,000 KRW입니다. 이는 R004 기관집중거래 알림에서 확인된 고위험 기관쌍(205->88) 내에서 발생한 패턴으로, 자금세탁의 '배치(Placement)' 또는 '은닉(Layering)' 단계와 연관될 가능성이 있습니다.",
+                "summary": "출금기관 205의 계좌 44201에서 입금기관 88의 계좌 991234로의 거래 중, 신규 수신처 거래(fraud_type 2)가 다수 확인되었습니다. 특히, 20241201에 발생한 12,000,000원 거래는 이상거래로 분류되었으며, 이는 기관 집중 거래(R004) 분석에서 도출된 고위험 거래 패턴과 일치합니다. 해당 계좌는 기관 205에서 가장 많은 이상 거래를 발생시킨 계좌 중 하나입니다.",
                 "tools_used": [
                   "query_transactions",
                   "detect_monitoring_alerts",
@@ -4119,14 +4169,14 @@
                     "fund_type": 4,
                     "media_type": 4,
                     "receiver_acc": 991234,
-                    "receiver_bank": 143,
+                    "receiver_bank": 88,
                     "sender_acc": 44201,
-                    "sender_bank": 151,
+                    "sender_bank": 205,
                     "time_slot": 15
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-af0496947cc935f4"
+              "_id": "chatcmpl-tool-9e6f47af56c3cff0"
             }
           ]
         }
@@ -4136,7 +4186,7 @@
       "avg_param_accuracy": 0.5833,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 3.11
+      "elapsed_sec": 2.96
     },
     {
       "id": "mt_str_043",
@@ -4159,7 +4209,7 @@
               "arguments": {
                 "account_id": 29501
               },
-              "_id": "chatcmpl-tool-8f1eeb1f22210392"
+              "_id": "chatcmpl-tool-81b8aa82dc7e0e73"
             }
           ]
         },
@@ -4181,7 +4231,7 @@
                 "sender_bank": 134,
                 "time_slot": 3
               },
-              "_id": "chatcmpl-tool-9407bdc5c0e73bef"
+              "_id": "chatcmpl-tool-a81bf264c6db4a04"
             }
           ]
         },
@@ -4199,7 +4249,7 @@
                 "account_id": 29501,
                 "hops": 3
               },
-              "_id": "chatcmpl-tool-a3c1b85d4dcf9f95"
+              "_id": "chatcmpl-tool-87854f7ce43840f8"
             }
           ]
         },
@@ -4218,7 +4268,7 @@
                 "account_b": 99801,
                 "pattern_type": "shortest_path"
               },
-              "_id": "chatcmpl-tool-bb1944aff80d8efb"
+              "_id": "chatcmpl-tool-b725431e37172c96"
             }
           ]
         },
@@ -4238,7 +4288,7 @@
                 ],
                 "fraud_probability": 0.9,
                 "fraud_type": "갑작스러운 거래패턴의 변화",
-                "summary": "계좌 29501에 대한 분석 결과, 총 45건의 거래 중 11건(24.44%)이 이상거래로 분류되었습니다. 특히, 29501에서 99801로의 최단 경로 분석 결과, 3단계의 경로([29501, 551023, 773245, 99801])가 확인되었으며, 이 경로를 통한 총 거래금액은 145,000,000원입니다. 또한, 샘플 거래(20241110, 49,000,000원)에 대한 예측 모델링 결과, 거래 확률은 0.9로 매우 높게 나타났습니다. 이러한 다수의 이상 징후와 특정 계좌 간의 연결 패턴을 종합할 때, '갑작스러운 거래패턴의 변화'에 따른 의심 거래로 판단됩니다.",
+                "summary": "계좌 29501에 대한 분석 결과, 해당 계좌는 총 45건의 거래를 기록했으며, 이 중 11건(24.44%)이 이상거래로 분류되었습니다. 특히, 2024년 11월 10일 발생한 49,000,000원 거래는 예측 모델에서 0.9의 높은 사기 확률을 보였습니다. 네트워크 분석 결과, 29501 계좌는 14개의 계좌와 연결되어 있으며, 29501에서 99801까지의 최단 경로는 3단계(29501 -> 551023 -> 773245 -> 99801)로 확인되었습니다. 이는 갑작스러운 거래 패턴 변화 및 복잡한 자금 이동 경로를 시사합니다.",
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud",
@@ -4260,7 +4310,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-851ef59f29282be5"
+              "_id": "chatcmpl-tool-a1c445c07cc5d044"
             }
           ]
         }
@@ -4270,7 +4320,7 @@
       "avg_param_accuracy": 0.42,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 4.72
+      "elapsed_sec": 4.52
     },
     {
       "id": "mt_str_044",
@@ -4293,7 +4343,7 @@
               "arguments": {
                 "account_id": 55901
               },
-              "_id": "chatcmpl-tool-8e444e499ec03e57"
+              "_id": "chatcmpl-tool-9f70099e3fcbaf10"
             }
           ]
         },
@@ -4315,7 +4365,7 @@
                 "sender_bank": null,
                 "time_slot": null
               },
-              "_id": "chatcmpl-tool-9966f3e1663b70a8"
+              "_id": "chatcmpl-tool-887e2212c5fcf53c"
             }
           ]
         },
@@ -4334,7 +4384,7 @@
                 "limit": 20,
                 "min_counterparts": 5
               },
-              "_id": "chatcmpl-tool-b6165314187e800e"
+              "_id": "chatcmpl-tool-af38013e61652cd8"
             }
           ]
         },
@@ -4353,7 +4403,7 @@
       "avg_param_accuracy": 0.625,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 4.58
+      "elapsed_sec": 4.53
     },
     {
       "id": "mt_str_045",
@@ -4376,7 +4426,7 @@
               "arguments": {
                 "rule_id": "R001"
               },
-              "_id": "chatcmpl-tool-b163caeeac55958b"
+              "_id": "chatcmpl-tool-b7ea81bda88c0a20"
             }
           ]
         },
@@ -4393,7 +4443,7 @@
               "arguments": {
                 "account_id": 34901
               },
-              "_id": "chatcmpl-tool-b7e1336d9c7e2e9e"
+              "_id": "chatcmpl-tool-b6c93f27023db084"
             }
           ]
         },
@@ -4410,7 +4460,7 @@
               "arguments": {
                 "account_id": 34901
               },
-              "_id": "chatcmpl-tool-9d0fb25f02f995a5"
+              "_id": "chatcmpl-tool-a82eb3713807aa88"
             }
           ]
         },
@@ -4425,28 +4475,53 @@
         },
         {
           "turn": 5,
-          "tool_hit": 0.0,
-          "param_accuracy": 0.0,
-          "score": 0.0,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.5,
+          "score": 0.75,
           "context_hit": false,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
-              "name": "query_transactions",
+              "name": "generate_str",
               "arguments": {
-                "sql": "SELECT * FROM hofinet WHERE sender_acc = 34901 OR receiver_acc = 34901 AND date >= 20241201 AND date <= 20241231;"
+                "aml_patterns": [
+                  "Sudden Change in Transaction Pattern"
+                ],
+                "fraud_probability": 0.95,
+                "fraud_type": "갑작스러운 거래패턴의 변화",
+                "summary": "계좌 34901은 R001(심야대량거래) 알림에서 포착되었으며, 해당 계좌의 거래 프로필 분석 결과, 심야거래 비율이 71%로 높고, 거래 금액 이상도(0.85) 및 거래 속도 변화(0.78) 지표에서 높은 위험도를 보였습니다. 종합적인 위험 점수는 89점(고위험)으로 평가되었습니다. 해당 계좌는 12월 25일 0시 시간대에 98,000,000원의 대규모 거래를 실행하였으며, 이는 평소 거래 패턴에서 벗어난 급격한 변화로 판단됩니다. 금융회사 134의 전반적인 이상거래 비율은 0.39%로, 해당 계좌의 이상 징후가 두드러집니다.",
+                "tools_used": [
+                  "detect_monitoring_alerts",
+                  "get_account_profile",
+                  "score_account_risk",
+                  "get_institution_report"
+                ],
+                "transactions": [
+                  {
+                    "amount": 98000000,
+                    "date": 20241225,
+                    "fraud_type": 1,
+                    "fund_type": 0,
+                    "media_type": 2,
+                    "receiver_acc": 45002,
+                    "receiver_bank": 201,
+                    "sender_acc": 34901,
+                    "sender_bank": 134,
+                    "time_slot": 0
+                  }
+                ]
               },
-              "_id": "chatcmpl-tool-878b02577a4f2851"
+              "_id": "chatcmpl-tool-9282af5c085682e5"
             }
           ]
         }
       ],
-      "avg_score": 0.6,
-      "avg_tool_hit": 0.6,
-      "avg_param_accuracy": 0.6,
+      "avg_score": 0.75,
+      "avg_tool_hit": 0.8,
+      "avg_param_accuracy": 0.7,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 3.66
+      "elapsed_sec": 3.27
     },
     {
       "id": "mt_str_046",
@@ -4469,7 +4544,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 81402 OR receiver_acc = 81402;"
               },
-              "_id": "chatcmpl-tool-bde76739915636a3"
+              "_id": "chatcmpl-tool-b568953b74fefa9e"
             }
           ]
         },
@@ -4507,7 +4582,7 @@
                 ],
                 "fraud_probability": 0.86,
                 "fraud_type": "분할거래",
-                "summary": "계좌 81402의 거래 내역 중 20241115에 발생한 47,500,000원 거래(이상거래유형 3)를 포함하여, 해당 계좌의 전반적인 거래 패턴(총 67건, 총액 15.6억)에서 분할 거래 의심 정황이 포착되었습니다. 특히, 해당 거래는 심야 시간대(21시)에 발생했으며, 예측된 사기 확률은 0.86으로 매우 높습니다.",
+                "summary": "계좌 81402에서 발생한 거래 중, 20241115에 47,500,000원의 거래가 탐지되었으며, 이는 분할 거래(Fraud Type 3)로 분류되었습니다. 해당 거래는 심야 시간대(21시)에 모바일(Media Type 4)을 통해 발생했으며, 예측된 사기 확률은 0.86으로 매우 높습니다. 전체 거래 기간(20240601 ~ 20241231) 동안 총 67건의 거래가 있었으며, 이 중 19건이 이상 거래로 확인되었습니다.",
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud",
@@ -4528,7 +4603,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-af20104c03517191"
+              "_id": "chatcmpl-tool-98d4179c5352b4ae"
             }
           ]
         }
@@ -4538,7 +4613,7 @@
       "avg_param_accuracy": 0.4375,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 4.47
+      "elapsed_sec": 4.67
     },
     {
       "id": "mt_str_047",
@@ -4562,14 +4637,14 @@
                 "account_id": 22901,
                 "rule_id": "R002"
               },
-              "_id": "chatcmpl-tool-adbbc030506066f6"
+              "_id": "chatcmpl-tool-90d028e987780657"
             },
             {
               "name": "query_transactions",
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 22901;"
               },
-              "_id": "chatcmpl-tool-82c69525f776243e"
+              "_id": "chatcmpl-tool-9311f647ebf5a81d"
             }
           ]
         },
@@ -4586,7 +4661,7 @@
               "arguments": {
                 "account_id": 22901
               },
-              "_id": "chatcmpl-tool-adcb369e81bebdc3"
+              "_id": "chatcmpl-tool-b4689cdad80bb688"
             }
           ]
         },
@@ -4604,7 +4679,7 @@
                 "account_id": 22901,
                 "hops": 3
               },
-              "_id": "chatcmpl-tool-88f8d1c0d98a1593"
+              "_id": "chatcmpl-tool-ac43d6363e0d6c87"
             }
           ]
         },
@@ -4623,7 +4698,7 @@
       "avg_param_accuracy": 1.0,
       "context_accuracy": null,
       "scenario_complete": true,
-      "elapsed_sec": 4.46
+      "elapsed_sec": 4.91
     },
     {
       "id": "mt_str_048",
@@ -4646,7 +4721,7 @@
               "arguments": {
                 "keyword": "nighttime"
               },
-              "_id": "chatcmpl-tool-b0337098198b3414"
+              "_id": "chatcmpl-tool-b70e27d99396ff56"
             }
           ]
         },
@@ -4663,7 +4738,7 @@
               "arguments": {
                 "account_id": 88234
               },
-              "_id": "chatcmpl-tool-8a25d4ff88320830"
+              "_id": "chatcmpl-tool-aedcfef82fbea9f4"
             }
           ]
         },
@@ -4680,7 +4755,7 @@
               "arguments": {
                 "account_id": 88234
               },
-              "_id": "chatcmpl-tool-85b15beb2cd6c589"
+              "_id": "chatcmpl-tool-85d6180df567867f"
             }
           ]
         },
@@ -4697,7 +4772,7 @@
               "arguments": {
                 "account_id": 88234
               },
-              "_id": "chatcmpl-tool-a1075658636515f9"
+              "_id": "chatcmpl-tool-9c784b52bae2a1bd"
             }
           ]
         },
@@ -4717,7 +4792,7 @@
                 ],
                 "fraud_probability": 0.75,
                 "fraud_type": "기타(자유기술)",
-                "summary": "계좌 88234는 총 312건의 입금 거래를 통해 56.7억 원의 자금을 수취했습니다. 특히, 입금 거래 중 심야 시간대(0.08 비율)에 자금이 유입되는 경향이 관찰되었습니다. 또한, 해당 계좌는 89개의 다양한 출금 원천 계좌로부터 자금을 받고 있으며, 계좌 위험 점수는 76점(고위험)으로 평가되었습니다. 이는 자금 세탁의 '배치(Placement)' 또는 '분산(Layering)' 단계와 연관될 가능성이 높습니다.",
+                "summary": "계좌 88234는 총 312건의 입금 거래를 통해 56.7억 원의 자금을 수취했으며, 출금 원천 계좌가 89개로 다수의 출처로부터 자금이 유입되는 패턴을 보입니다. 특히, 심야 입금 비율이 8%로 나타나며, 이는 자금 세탁의 '배치(Placement)' 또는 '분산(Layering)' 단계와 연관될 수 있습니다. 계좌 위험 점수는 76점(고위험)으로 평가되었습니다. 거래 샘플 중 일부는 이상거래로 분류되었습니다.",
                 "tools_used": [
                   "query_transactions",
                   "get_receiving_account_profile",
@@ -4725,20 +4800,20 @@
                 ],
                 "transactions": [
                   {
-                    "\"amount\"": 25000000,
-                    "\"date\"": 20241010,
-                    "\"fraud_type\"": 6,
-                    "\"fund_type\"": 4,
-                    "\"media_type\"": 4,
-                    "\"receiver_acc\"": 88234,
-                    "\"receiver_bank\"": 117,
-                    "\"sender_acc\"": 112901,
-                    "\"sender_bank\"": 147,
-                    "\"time_slot\"": 15
+                    "amount": 25000000,
+                    "date": 20241010,
+                    "fraud_type": 6,
+                    "fund_type": 4,
+                    "media_type": 4,
+                    "receiver_acc": 88234,
+                    "receiver_bank": 117,
+                    "sender_acc": 112901,
+                    "sender_bank": 147,
+                    "time_slot": 15
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-b206d04af51d134b"
+              "_id": "chatcmpl-tool-84e936fa588565b7"
             }
           ]
         }
@@ -4748,7 +4823,7 @@
       "avg_param_accuracy": 0.45,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 2.95
+      "elapsed_sec": 2.74
     },
     {
       "id": "mt_str_049",
@@ -4771,7 +4846,7 @@
               "arguments": {
                 "rule_id": "R003"
               },
-              "_id": "chatcmpl-tool-91c96dc21dba7657"
+              "_id": "chatcmpl-tool-854518a44216ae2d"
             }
           ]
         },
@@ -4788,7 +4863,7 @@
               "arguments": {
                 "account_id": 55601
               },
-              "_id": "chatcmpl-tool-95f7997503391542"
+              "_id": "chatcmpl-tool-966b3ccd19874e46"
             }
           ]
         },
@@ -4805,7 +4880,7 @@
               "arguments": {
                 "sql": "SELECT * FROM hofinet WHERE sender_acc = 55601 AND fraud_type = 3;"
               },
-              "_id": "chatcmpl-tool-bda068e63c33a1eb"
+              "_id": "chatcmpl-tool-b2f215332bf7e196"
             }
           ]
         },
@@ -4822,7 +4897,7 @@
               "arguments": {
                 "term": "structuring"
               },
-              "_id": "chatcmpl-tool-9dc98611598d94ab"
+              "_id": "chatcmpl-tool-bb936596c16388ba"
             }
           ]
         },
@@ -4841,7 +4916,7 @@
       "avg_param_accuracy": 0.4,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 2.76
+      "elapsed_sec": 2.33
     },
     {
       "id": "mt_str_050",
@@ -4864,7 +4939,7 @@
               "arguments": {
                 "account_id": 99301
               },
-              "_id": "chatcmpl-tool-853af0b3b52ed773"
+              "_id": "chatcmpl-tool-8f0b156157be56b8"
             }
           ]
         },
@@ -4886,7 +4961,7 @@
                 "sender_bank": 128,
                 "time_slot": 0
               },
-              "_id": "chatcmpl-tool-8b3f559bff8ad5c5"
+              "_id": "chatcmpl-tool-b7117c7f7be33eb8"
             }
           ]
         },
@@ -4904,7 +4979,7 @@
                 "account_id": 99301,
                 "hops": 3
               },
-              "_id": "chatcmpl-tool-9fd66e9d8f0ae5a3"
+              "_id": "chatcmpl-tool-8648623d549290f0"
             }
           ]
         },
@@ -4921,7 +4996,7 @@
               "arguments": {
                 "account_id": 99301
               },
-              "_id": "chatcmpl-tool-a400041e4ffdcbf9"
+              "_id": "chatcmpl-tool-b0212e9a10059d13"
             }
           ]
         },
@@ -4938,7 +5013,7 @@
               "arguments": {
                 "keyword": "structuring"
               },
-              "_id": "chatcmpl-tool-ad7c9bcbaf6a2b35"
+              "_id": "chatcmpl-tool-96d2e8ef7f4b2da9"
             }
           ]
         },
@@ -4960,7 +5035,7 @@
                 ],
                 "fraud_probability": 0.95,
                 "fraud_type": "갑작스러운 거래패턴의 변화",
-                "summary": "계좌 99301은 2024년 7월부터 12월까지 총 78건의 거래를 통해 21.2억 원의 자금을 이동시켰습니다. 이 중 25건(32.05%)이 이상거래로 분류되었으며, 특히 2024년 11월 15일 0시 시간대에 4,950만 원의 거래가 발생하여 예측 모델에서 0.95의 높은 사기 확률을 보였습니다. 계좌 위험 점수는 91점(고위험)으로 평가되었습니다. 네트워크 분석 결과, 22개의 계좌와 연결되어 있으며, 이는 자금 분산/집중 패턴을 시사합니다. FIU 참고유형 중 'B-01 (대규모 자금 이체 후 즉시 출금)', 'B-03 (다수 계좌를 이용한 자금 분산/집중)', 'B-05 (심야/새벽 시간대 비정상 거래)'와 일치하는 정황이 포착되어 의심거래로 판단됩니다.",
+                "summary": "계좌 99301은 2024년 7월 1일부터 12월 31일까지 총 78건의 거래를 기록했으며, 이 중 25건(32.05%)이 이상거래로 분류되었습니다. 특히, 단일 거래(49,500,000 KRW)에 대해 예측된 사기 확률이 0.95로 매우 높게 나타났습니다. 네트워크 분석 결과, 해당 계좌는 22개의 계좌와 연결되어 있으며, 위험도 평가 결과 91점(고위험)으로 산정되었습니다. 이는 갑작스러운 거래 패턴 변화, 다수 계좌를 이용한 자금 분산/집중, 그리고 심야/새벽 시간대 비정상 거래(FIU 참고유형 B-05)와 일치하는 정황을 보입니다.",
                 "tools_used": [
                   "query_transactions",
                   "predict_fraud",
@@ -4983,7 +5058,7 @@
                   }
                 ]
               },
-              "_id": "chatcmpl-tool-9c6e068161382538"
+              "_id": "chatcmpl-tool-a73f4a45b754f2ba"
             }
           ]
         }
@@ -4993,7 +5068,7 @@
       "avg_param_accuracy": 0.35,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 4.32
+      "elapsed_sec": 3.97
     }
   ]
 }

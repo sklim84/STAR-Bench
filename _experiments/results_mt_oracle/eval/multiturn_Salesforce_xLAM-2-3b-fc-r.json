@@ -3,30 +3,30 @@
   "model_id": "Salesforce/xLAM-2-3b-fc-r",
   "provider": "vllm",
   "think": null,
-  "timestamp": "2026-06-07T00:17:08.852946",
+  "timestamp": "2026-09-09T20:23:45.092339",
   "total_scenarios": 50,
-  "total_elapsed_sec": 95.24,
+  "total_elapsed_sec": 86.72,
   "overall": {
-    "avg_score": 0.4446,
-    "avg_tool_hit": 0.5473,
-    "avg_param_accuracy": 0.3418,
-    "context_accuracy": 0.4621,
+    "avg_score": 0.4323,
+    "avg_tool_hit": 0.5263,
+    "avg_param_accuracy": 0.3382,
+    "context_accuracy": 0.4242,
     "scenario_complete_rate": 0.0
   },
   "by_sub_category": {
     "base": {
       "count": 14,
-      "avg_score": 0.4857,
+      "avg_score": 0.4554,
       "complete_rate": 0.0
     },
     "missing_parameter": {
       "count": 14,
-      "avg_score": 0.3152,
+      "avg_score": 0.342,
       "complete_rate": 0.0
     },
     "long_context": {
       "count": 22,
-      "avg_score": 0.5007,
+      "avg_score": 0.475,
       "complete_rate": 0.0
     }
   },
@@ -52,7 +52,7 @@
               "arguments": {
                 "account_id": 78432
               },
-              "_id": "call_0_ad887bddcde270a0"
+              "_id": "call_0_81c28a26267edb86"
             }
           ]
         },
@@ -74,7 +74,7 @@
                 "media_type": 4,
                 "amount": 49500000
               },
-              "_id": "call_0_9f2b75bf75355ea2"
+              "_id": "call_0_824286c1ece25731"
             }
           ]
         },
@@ -91,82 +91,26 @@
               "arguments": {
                 "account_id": 78432
               },
-              "_id": "call_0_99461512d2ae6560"
+              "_id": "call_0_b01823c554485047"
             }
           ]
         },
         {
           "turn": 4,
-          "tool_hit": 1.0,
-          "param_accuracy": 0.4,
-          "score": 0.7,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
           "context_hit": null,
           "clarification_hit": null,
-          "actual_tool_calls": [
-            {
-              "name": "generate_str",
-              "arguments": {
-                "summary": "이 계좌는 최근 1년 동안 26.67%의 거래가 이상거래였습니다. 특히, 출금 금액이 큰 거래가 많았으며, 주요 입금 계좌는 330021, 550078, 112345입니다. 이상거래 유형은 갑작스러운 거래 패턴의 변화로 판단됩니다.",
-                "transactions": [
-                  {
-                    "거래일자": 20241015,
-                    "거래시간대": 0,
-                    "출금금융회사일련번호": 134,
-                    "출금계좌일련번호": 78432,
-                    "입금금융회사일련번호": 117,
-                    "입금계좌일련번호": 330021,
-                    "자금구분": 4,
-                    "매체구분": 4,
-                    "거래금액": 49500000,
-                    "이상거래여부": 1,
-                    "이상거래유형": 1
-                  },
-                  {
-                    "거래일자": 20241016,
-                    "거래시간대": 3,
-                    "출금금융회사일련번호": 134,
-                    "출금계좌일련번호": 78432,
-                    "입금금융회사일련번호": 117,
-                    "입금계좌일련번호": 550078,
-                    "자금구분": 4,
-                    "매체구분": 7,
-                    "거래금액": 48700000,
-                    "이상거래여부": 1,
-                    "이상거래유형": 1
-                  },
-                  {
-                    "거래일자": 20241018,
-                    "거래시간대": 0,
-                    "출금금융회사일련번호": 134,
-                    "출금계좌일련번호": 78432,
-                    "입금금융회사일련번호": 122,
-                    "입금계좌일련번호": 112345,
-                    "자금구분": 4,
-                    "매체구분": 4,
-                    "거래금액": 47800000,
-                    "이상거래여부": 1,
-                    "이상거래유형": 1
-                  }
-                ],
-                "fraud_probability": 0.91,
-                "aml_patterns": [],
-                "tools_used": [
-                  "query_transactions",
-                  "predict_fraud",
-                  "analyze_network"
-                ]
-              },
-              "_id": "call_0_88775f7963d7b43d"
-            }
-          ]
+          "actual_tool_calls": []
         }
       ],
-      "avg_score": 0.55,
-      "avg_tool_hit": 0.75,
-      "avg_param_accuracy": 0.35,
+      "avg_score": 0.375,
+      "avg_tool_hit": 0.5,
+      "avg_param_accuracy": 0.25,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 3.79
+      "elapsed_sec": 3.48
     },
     {
       "id": "mt_str_002",
@@ -198,7 +142,7 @@
               "arguments": {
                 "sql": "SELECT * FROM `hofinet` WHERE `receiver_acc` = 55201 AND YEAR(`date`) = 2024 AND MONTH(`date`) = 12"
               },
-              "_id": "call_0_9893c8640cab5ae5"
+              "_id": "call_0_a06115b8aca07e50"
             }
           ]
         },
@@ -220,27 +164,28 @@
                 "media_type": 5,
                 "amount": 58000000
               },
-              "_id": "call_0_ab31eab28e6f8cfd"
+              "_id": "call_0_8f641acfae5af24d"
             }
           ]
         },
         {
           "turn": 4,
-          "tool_hit": 0.0,
+          "tool_hit": 1.0,
           "param_accuracy": 0.0,
-          "score": 0.0,
+          "score": 0.5,
           "context_hit": null,
           "clarification_hit": null,
           "actual_tool_calls": [
             {
-              "name": "detect_smurfing_network",
+              "name": "detect_ctr_candidates",
               "arguments": {
                 "출금계좌일련번호": 55201,
                 "입금계좌일련번호": 992345,
                 "min_counterparts": 2,
-                "direction": "inbound"
+                "date_from": 20241201,
+                "date_to": 20241228
               },
-              "_id": "call_0_9d3d95b5e42bc5e6"
+              "_id": "call_0_9c5a2539fea75edc"
             }
           ]
         },
@@ -260,12 +205,12 @@
           ]
         }
       ],
-      "avg_score": 0.55,
-      "avg_tool_hit": 0.8,
+      "avg_score": 0.65,
+      "avg_tool_hit": 1.0,
       "avg_param_accuracy": 0.3,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 2.42
+      "elapsed_sec": 2.37
     },
     {
       "id": "mt_str_003",
@@ -288,7 +233,7 @@
               "arguments": {
                 "bank_id": 134
               },
-              "_id": "call_0_ae4d0dbc4514398c"
+              "_id": "call_0_9669c52665bfb886"
             }
           ]
         },
@@ -305,7 +250,7 @@
               "arguments": {
                 "account_id": 78432
               },
-              "_id": "call_0_b7c5c207f26b62eb"
+              "_id": "call_0_908dce83b8d005fa"
             }
           ]
         },
@@ -322,7 +267,7 @@
               "arguments": {
                 "account_id": 78432
               },
-              "_id": "call_0_818917dbe888e5e7"
+              "_id": "call_0_97fca4787f6b7317"
             }
           ]
         },
@@ -349,7 +294,7 @@
                     "receiver_acc": 63210,
                     "fund_type": 1,
                     "media_type": 2,
-                    "amount": 30000000
+                    "amount": 10000000
                   }
                 ],
                 "fraud_probability": 0.8,
@@ -362,7 +307,7 @@
                   "score_account_risk"
                 ]
               },
-              "_id": "call_0_bfe672b06768da07"
+              "_id": "call_0_b0bb10692475f277"
             }
           ]
         }
@@ -372,7 +317,7 @@
       "avg_param_accuracy": 0.625,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 1.49
+      "elapsed_sec": 1.43
     },
     {
       "id": "mt_str_004",
@@ -395,7 +340,7 @@
               "arguments": {
                 "account_id": 91205
               },
-              "_id": "call_0_b62b27110c50540b"
+              "_id": "call_0_ac115c0b1eaaa267"
             }
           ]
         },
@@ -412,7 +357,7 @@
               "arguments": {
                 "account_id": 91205
               },
-              "_id": "call_0_82323f1f0b129100"
+              "_id": "call_0_a58a18452fee7729"
             }
           ]
         },
@@ -429,7 +374,7 @@
               "arguments": {
                 "account_id": 91205
               },
-              "_id": "call_0_b1ad080bbaac5630"
+              "_id": "call_0_bef59e716f246b7b"
             }
           ]
         },
@@ -448,7 +393,7 @@
       "avg_param_accuracy": 0.25,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 2.02
+      "elapsed_sec": 1.93
     },
     {
       "id": "mt_str_005",
@@ -469,7 +414,7 @@
             {
               "name": "get_statistics",
               "arguments": {},
-              "_id": "call_0_b07d987be74d58a7"
+              "_id": "call_0_bc55d6e7a77f9d49"
             }
           ]
         },
@@ -486,7 +431,7 @@
               "arguments": {
                 "account_id": 88
               },
-              "_id": "call_0_83eb2e9db022fa73"
+              "_id": "call_0_af923e84822596eb"
             }
           ]
         },
@@ -508,47 +453,26 @@
                 "media_type": 4,
                 "amount": 9800000
               },
-              "_id": "call_0_a0e9308b42da6dcd"
+              "_id": "call_0_bdb7b98d813e02ea"
             }
           ]
         },
         {
           "turn": 4,
-          "tool_hit": 1.0,
+          "tool_hit": 0.0,
           "param_accuracy": 0.0,
-          "score": 0.5,
+          "score": 0.0,
           "context_hit": null,
           "clarification_hit": null,
-          "actual_tool_calls": [
-            {
-              "name": "generate_str",
-              "arguments": {
-                "transactions": [
-                  {
-                    "date": 20241105,
-                    "time_slot": 0,
-                    "sender_bank": 122,
-                    "sender_acc": 887012,
-                    "receiver_bank": 128,
-                    "receiver_acc": 12045,
-                    "fund_type": 4,
-                    "media_type": 4,
-                    "amount": 98000000,
-                    "fraud_type": 5
-                  }
-                ]
-              },
-              "_id": "call_1_91efe3b2f3a3510c"
-            }
-          ]
+          "actual_tool_calls": []
         }
       ],
-      "avg_score": 0.5,
-      "avg_tool_hit": 0.75,
+      "avg_score": 0.375,
+      "avg_tool_hit": 0.5,
       "avg_param_accuracy": 0.25,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.6
+      "elapsed_sec": 1.7
     },
     {
       "id": "mt_str_006",
@@ -571,7 +495,7 @@
               "arguments": {
                 "keyword": "Late-Night/Early-Morning Bulk Transactions"
               },
-              "_id": "call_0_a39666d434e66e42"
+              "_id": "call_0_9c0c411d121f329f"
             }
           ]
         },
@@ -588,7 +512,7 @@
               "arguments": {
                 "account_id": 33201
               },
-              "_id": "call_0_91132354171460d4"
+              "_id": "call_0_83a72af61d9b53ca"
             }
           ]
         },
@@ -605,49 +529,26 @@
               "arguments": {
                 "account_id": 33201
               },
-              "_id": "call_0_82d34ac351aa9374"
+              "_id": "call_0_807ff721952c1db6"
             }
           ]
         },
         {
           "turn": 4,
-          "tool_hit": 1.0,
+          "tool_hit": 0.0,
           "param_accuracy": 0.0,
-          "score": 0.5,
+          "score": 0.0,
           "context_hit": null,
           "clarification_hit": null,
-          "actual_tool_calls": [
-            {
-              "name": "generate_str",
-              "arguments": {
-                "summary": "계좌 33201은 심야/새벽 대량 거래로 인한 이상거래가 발생했습니다. 해당 계좌는 2024년 5월 20일에 350,000,000원의 거래가 이루어졌으며, 이는 금융당국의 지시에 따라 신고해야 할 금액입니다. 이상거래 유형은 '분할거래'로 판단됩니다.",
-                "fraud_type": "분할거래",
-                "transactions": [
-                  {
-                    "date": 20240520,
-                    "time_slot": 12,
-                    "sender_bank": 151,
-                    "sender_acc": 33201,
-                    "receiver_bank": 117,
-                    "receiver_acc": 771023,
-                    "fund_type": 4,
-                    "media_type": 4,
-                    "amount": 35000000,
-                    "fraud_type": 6
-                  }
-                ]
-              },
-              "_id": "call_0_9a1ad7fa805890d5"
-            }
-          ]
+          "actual_tool_calls": []
         }
       ],
-      "avg_score": 0.5,
-      "avg_tool_hit": 0.75,
+      "avg_score": 0.375,
+      "avg_tool_hit": 0.5,
       "avg_param_accuracy": 0.25,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.32
+      "elapsed_sec": 1.42
     },
     {
       "id": "mt_str_007",
@@ -668,7 +569,7 @@
             {
               "name": "analyze_channel_risk",
               "arguments": {},
-              "_id": "call_0_95682e920984abfb"
+              "_id": "call_0_9ef2e13c76983977"
             }
           ]
         },
@@ -699,7 +600,7 @@
                 "media_type": 1,
                 "amount": 9900000
               },
-              "_id": "call_0_974c4b9d2e2985fb"
+              "_id": "call_0_b46a059b47edee15"
             }
           ]
         },
@@ -718,7 +619,7 @@
       "avg_param_accuracy": 0.25,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.37
+      "elapsed_sec": 1.36
     },
     {
       "id": "mt_str_008",
@@ -739,7 +640,7 @@
             {
               "name": "get_statistics",
               "arguments": {},
-              "_id": "call_0_9ff6a78284b2c041"
+              "_id": "call_0_a3208b68dcdadac2"
             }
           ]
         },
@@ -756,7 +657,7 @@
               "arguments": {
                 "sample_size": 1000
               },
-              "_id": "call_0_bd8f58f88f6e2e4a"
+              "_id": "call_0_ac285554e18a6cc9"
             }
           ]
         },
@@ -774,7 +675,7 @@
                 "sample_size": 1,
                 "top_k": 1
               },
-              "_id": "call_0_9888201e9b2fcad1"
+              "_id": "call_0_a75e5d7668e70408"
             }
           ]
         },
@@ -817,7 +718,7 @@
                 "date_from": 20220101,
                 "date_to": 20221231
               },
-              "_id": "call_0_a0cdfa2b6355c7c2"
+              "_id": "call_0_8120c4f7d6971e83"
             }
           ]
         },
@@ -854,7 +755,7 @@
       "avg_param_accuracy": 0.25,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.36
+      "elapsed_sec": 1.35
     },
     {
       "id": "mt_str_010",
@@ -878,7 +779,7 @@
                 "dormant_days": 180,
                 "min_reactivation_amount": 5000000
               },
-              "_id": "call_0_8b4e3fa2e88c1388"
+              "_id": "call_0_a909605882d9f6dd"
             }
           ]
         },
@@ -895,7 +796,7 @@
               "arguments": {
                 "account_id": 77501
               },
-              "_id": "call_0_adbee3e5dde08afe"
+              "_id": "call_0_8c1b38e5b387312a"
             }
           ]
         },
@@ -912,7 +813,7 @@
               "arguments": {
                 "account_id": 77501
               },
-              "_id": "call_0_812de6ad37e60d9c"
+              "_id": "call_0_a5d7ce16dde1ef5d"
             }
           ]
         },
@@ -931,7 +832,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.43
+      "elapsed_sec": 2.17
     },
     {
       "id": "mt_str_011",
@@ -954,7 +855,7 @@
               "arguments": {
                 "rule_id": "all"
               },
-              "_id": "call_0_969effcff4210668"
+              "_id": "call_0_9dd1a3b2eb93efc4"
             }
           ]
         },
@@ -971,7 +872,7 @@
               "arguments": {
                 "account_id": 22801
               },
-              "_id": "call_0_bb37e0b7c8d980aa"
+              "_id": "call_0_b204c1046d27e374"
             }
           ]
         },
@@ -988,7 +889,7 @@
               "arguments": {
                 "account_id": 22801
               },
-              "_id": "call_0_b30007126a25b6c3"
+              "_id": "call_0_ab83190f3615f8d3"
             }
           ]
         },
@@ -1007,7 +908,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.13
+      "elapsed_sec": 1.09
     },
     {
       "id": "mt_str_012",
@@ -1030,7 +931,7 @@
               "arguments": {
                 "unit": "quarterly"
               },
-              "_id": "call_0_a6e631fb5203bb83"
+              "_id": "call_0_9cc5fa2869360e13"
             }
           ]
         },
@@ -1076,7 +977,7 @@
       "avg_param_accuracy": 0.25,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.63
+      "elapsed_sec": 1.6
     },
     {
       "id": "mt_str_013",
@@ -1099,7 +1000,7 @@
               "arguments": {
                 "account_id": 445012
               },
-              "_id": "call_0_a7aecb83f7cb80e4"
+              "_id": "call_0_99c3747af3089841"
             }
           ]
         },
@@ -1116,7 +1017,7 @@
               "arguments": {
                 "account_id": 445012
               },
-              "_id": "call_0_9fe28f5b569c3a1c"
+              "_id": "call_0_98e4e02ce9589f5c"
             }
           ]
         },
@@ -1134,7 +1035,7 @@
                 "account_id": 445012,
                 "min_counterparts": 2
               },
-              "_id": "call_0_a764086da8181ec5"
+              "_id": "call_0_a1fb75f61b2612a1"
             }
           ]
         },
@@ -1174,7 +1075,7 @@
                   "detect_aml_patterns"
                 ]
               },
-              "_id": "call_0_96bfaaa8c7dde00f"
+              "_id": "call_0_bce42a6fbe118bb4"
             }
           ]
         }
@@ -1184,7 +1085,7 @@
       "avg_param_accuracy": 0.0,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.52
+      "elapsed_sec": 1.51
     },
     {
       "id": "mt_str_014",
@@ -1207,7 +1108,7 @@
               "arguments": {
                 "sql": "SELECT * FROM `hofinet` WHERE `fraud_type` = 1"
               },
-              "_id": "call_0_94e2508d8f63647d"
+              "_id": "call_0_89d3386ad11b1824"
             }
           ]
         },
@@ -1224,7 +1125,7 @@
               "arguments": {
                 "sql": "SELECT * FROM `hofinet` WHERE `receiver_acc` = 67301 AND YEAR(`date`) = 2024 AND QUARTER(`date`) = 4"
               },
-              "_id": "call_0_99c671089d1ff26f"
+              "_id": "call_0_853075db31d911f7"
             }
           ]
         },
@@ -1246,7 +1147,7 @@
                 "media_type": 7,
                 "amount": 47000000
               },
-              "_id": "call_0_9700393c3c64eee7"
+              "_id": "call_0_a6465c7b60deaaec"
             }
           ]
         },
@@ -1265,7 +1166,7 @@
       "avg_param_accuracy": 0.125,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.82
+      "elapsed_sec": 1.86
     },
     {
       "id": "mt_str_015",
@@ -1288,7 +1189,7 @@
               "arguments": {
                 "account_id": 42105
               },
-              "_id": "call_0_b6c2a1bfa5bd6ecc"
+              "_id": "call_0_a382925148679153"
             }
           ]
         },
@@ -1303,9 +1204,9 @@
             {
               "name": "query_transactions",
               "arguments": {
-                "sql": "SELECT * FROM `hofinet` WHERE `sender_acc` = 42105 ORDER BY `date` DESC"
+                "sql": "SELECT * FROM `hofinet` WHERE `sender_acc` = 42105 ORDER BY `date`"
               },
-              "_id": "call_0_858fbf06a59a0ac8"
+              "_id": "call_0_82a062820ad6be0d"
             }
           ]
         },
@@ -1327,7 +1228,7 @@
                 "media_type": 5,
                 "amount": 98000000
               },
-              "_id": "call_0_91a38826d8a2f256"
+              "_id": "call_0_97a1e67ec27d3466"
             }
           ]
         },
@@ -1345,26 +1246,68 @@
                 "keyword": "신규 수신처",
                 "industry": ""
               },
-              "_id": "call_0_b7e99f909686af57"
+              "_id": "call_0_9154fbf34b4cec5f"
             }
           ]
         },
         {
           "turn": 5,
-          "tool_hit": 0.0,
-          "param_accuracy": 0.0,
-          "score": 0.0,
+          "tool_hit": 1.0,
+          "param_accuracy": 0.5,
+          "score": 0.75,
           "context_hit": null,
           "clarification_hit": null,
-          "actual_tool_calls": []
+          "actual_tool_calls": [
+            {
+              "name": "generate_str",
+              "arguments": {
+                "summary": "계좌 42105에서 이상한 거래가 발생했습니다. 두 번째로는 2024년 12월 11일에 42105계좌에서 771089계좌로 480,000,000원이 송금되었습니다. 이 거래는 신용카드 대신 전화를 통해 이루어진 것으로 추정됩니다. 이로 인해 피해자가 피해를 입었을 가능성이 있습니다. FIU 참고 유형 B-08: 전화·문자를 이용한 사기 관련 자금 이동 및 B-11: 피해자 계좌에서 급격한 자금 유출이 적용될 수 있습니다.",
+                "fraud_type": "의심스러운 담보대출/보험약관대출",
+                "transactions": [
+                  {
+                    "date": 20241210,
+                    "time_slot": 12,
+                    "sender_bank": 134,
+                    "sender_acc": 42105,
+                    "receiver_bank": 122,
+                    "receiver_acc": 771089,
+                    "fund_type": 4,
+                    "media_type": 5,
+                    "amount": 50000000,
+                    "fraud_type": 4
+                  },
+                  {
+                    "date": 20241211,
+                    "time_slot": 12,
+                    "sender_bank": 134,
+                    "sender_acc": 42105,
+                    "receiver_bank": 122,
+                    "receiver_acc": 771089,
+                    "fund_type": 4,
+                    "media_type": 5,
+                    "amount": 48000000,
+                    "fraud_type": 4
+                  }
+                ],
+                "fraud_probability": 0.92,
+                "aml_patterns": [],
+                "tools_used": [
+                  "query_transactions",
+                  "predict_fraud",
+                  "lookup_fiu_reference_types"
+                ]
+              },
+              "_id": "call_0_8016989e9a04ee72"
+            }
+          ]
         }
       ],
-      "avg_score": 0.4,
-      "avg_tool_hit": 0.6,
-      "avg_param_accuracy": 0.2,
+      "avg_score": 0.55,
+      "avg_tool_hit": 0.8,
+      "avg_param_accuracy": 0.3,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 2.49
+      "elapsed_sec": 2.34
     },
     {
       "id": "mt_str_016",
@@ -1387,7 +1330,7 @@
               "arguments": {
                 "bank_id": 205
               },
-              "_id": "call_0_95209a6ede1687ab"
+              "_id": "call_0_98a04e4e8f98b83b"
             }
           ]
         },
@@ -1404,7 +1347,7 @@
               "arguments": {
                 "fraud_type": 2
               },
-              "_id": "call_0_8b7f08569f25b920"
+              "_id": "call_0_992000d46fd94235"
             }
           ]
         },
@@ -1424,7 +1367,7 @@
                 "period2_start": 20240401,
                 "period2_end": 20240430
               },
-              "_id": "call_0_80bfe49d4352d30c"
+              "_id": "call_0_be60b16baa07455c"
             }
           ]
         },
@@ -1441,7 +1384,7 @@
               "arguments": {
                 "account_id": 44201
               },
-              "_id": "call_0_896aa1e4e553c33f"
+              "_id": "call_0_90341355b4d7ee77"
             }
           ]
         },
@@ -1460,7 +1403,7 @@
       "avg_param_accuracy": 0.4,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.75
+      "elapsed_sec": 1.76
     },
     {
       "id": "mt_str_017",
@@ -1481,10 +1424,10 @@
             {
               "name": "analyze_smurfing_network",
               "arguments": {
-                "account_id": 55089,
-                "direction": "inbound"
+                "direction": "inbound",
+                "account_id": 55089
               },
-              "_id": "call_0_9973674ee04684c5"
+              "_id": "call_0_a128164b249820d5"
             }
           ]
         },
@@ -1502,7 +1445,7 @@
                 "direction": "inbound",
                 "account_id": 55089
               },
-              "_id": "call_0_b4c6fce84070bfa7"
+              "_id": "call_0_be1f2caff8a3d013"
             }
           ]
         },
@@ -1530,7 +1473,7 @@
       "avg_param_accuracy": 0.0,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 4.01
+      "elapsed_sec": 3.92
     },
     {
       "id": "mt_str_018",
@@ -1555,7 +1498,7 @@
                 "date_to": 20221231,
                 "min_transactions": 10
               },
-              "_id": "call_0_8d7f5c99a347e04c"
+              "_id": "call_0_82b2eb2b4cfb124d"
             }
           ]
         },
@@ -1574,7 +1517,7 @@
                 "date_to": 20221231,
                 "min_transactions": 10
               },
-              "_id": "call_0_a5e75997b072c9aa"
+              "_id": "call_0_ad02a6fe16f23ac1"
             }
           ]
         },
@@ -1590,9 +1533,9 @@
               "name": "detect_ctr_candidates",
               "arguments": {
                 "date_from": 20220922,
-                "date_to": 20220926
+                "date_to": 20220928
               },
-              "_id": "call_0_bac35d8a358e7e88"
+              "_id": "call_0_a2a553c8cff8885e"
             }
           ]
         },
@@ -1611,7 +1554,7 @@
       "avg_param_accuracy": 0.25,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.9
+      "elapsed_sec": 1.89
     },
     {
       "id": "mt_str_019",
@@ -1634,7 +1577,7 @@
               "arguments": {
                 "rule_id": "all"
               },
-              "_id": "call_0_aee3eeb310ca843c"
+              "_id": "call_0_a1fa95ae7a87e470"
             }
           ]
         },
@@ -1653,7 +1596,7 @@
                 "date_from": 20241218,
                 "date_to": 20241218
               },
-              "_id": "call_0_8ecdb34e5979caf3"
+              "_id": "call_0_9a1203e19037e5d9"
             }
           ]
         },
@@ -1670,7 +1613,7 @@
               "arguments": {
                 "account_id": 88923
               },
-              "_id": "call_0_b8fa2d7be46143e4"
+              "_id": "call_0_94579c5189a0de22"
             }
           ]
         },
@@ -1698,7 +1641,7 @@
       "avg_param_accuracy": 0.2,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 2.45
+      "elapsed_sec": 2.75
     },
     {
       "id": "mt_str_020",
@@ -1730,7 +1673,7 @@
               "arguments": {
                 "pattern_type": "layering"
               },
-              "_id": "call_0_8bbfe6e82dea7289"
+              "_id": "call_0_a260bf5849656199"
             }
           ]
         },
@@ -1756,7 +1699,7 @@
               "arguments": {
                 "account_id": 33045
               },
-              "_id": "call_0_b857df9df02f5bb6"
+              "_id": "call_0_b5069d4fc6da119c"
             }
           ]
         },
@@ -1775,7 +1718,7 @@
       "avg_param_accuracy": 0.0,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.51
+      "elapsed_sec": 2.24
     },
     {
       "id": "mt_str_021",
@@ -1801,7 +1744,7 @@
                 "period2_start": 20220201,
                 "period2_end": 20220228
               },
-              "_id": "call_0_b3426513f85a34e0"
+              "_id": "call_0_8e11ac2720ce1ecf"
             }
           ]
         },
@@ -1827,7 +1770,7 @@
               "arguments": {
                 "account_id": 66801
               },
-              "_id": "call_0_b5d6297c04ba808f"
+              "_id": "call_0_9f2be65ac30fcb9a"
             }
           ]
         },
@@ -1846,7 +1789,7 @@
       "avg_param_accuracy": 0.25,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.89
+      "elapsed_sec": 1.84
     },
     {
       "id": "mt_str_022",
@@ -1872,7 +1815,7 @@
                 "period2_start": 20220201,
                 "period2_end": 20220228
               },
-              "_id": "call_0_a13252f7696c8b1d"
+              "_id": "call_0_8e23c57f71bc9c08"
             }
           ]
         },
@@ -1892,7 +1835,7 @@
                 "period2_start": 20240701,
                 "period2_end": 20241231
               },
-              "_id": "call_0_ae51e5cd0725cb18"
+              "_id": "call_0_ab190b1ee2655494"
             }
           ]
         },
@@ -1912,26 +1855,55 @@
                 "period2_start": 20240701,
                 "period2_end": 20241231
               },
-              "_id": "call_0_90332fea0b93c2b2"
+              "_id": "call_0_875ac0675df77028"
             }
           ]
         },
         {
           "turn": 4,
-          "tool_hit": 0.0,
+          "tool_hit": 1.0,
           "param_accuracy": 0.0,
-          "score": 0.0,
+          "score": 0.5,
           "context_hit": null,
           "clarification_hit": null,
-          "actual_tool_calls": []
+          "actual_tool_calls": [
+            {
+              "name": "generate_str",
+              "arguments": {
+                "summary": "신규 수신처 거래가 급증하여 이상거래로 판단되었습니다.",
+                "transactions": [
+                  {
+                    "date": 20241001,
+                    "time_slot": 15,
+                    "sender_bank": 117,
+                    "sender_acc": 147,
+                    "receiver_bank": 117,
+                    "receiver_acc": 880123,
+                    "fund_type": 4,
+                    "media_type": 4,
+                    "amount": 18000000,
+                    "fraud_type": 2
+                  }
+                ],
+                "fraud_probability": 0.8,
+                "aml_patterns": [
+                  "New Counterparty"
+                ],
+                "tools_used": [
+                  "query_transactions"
+                ]
+              },
+              "_id": "call_0_988739a92acf1414"
+            }
+          ]
         }
       ],
-      "avg_score": 0.25,
-      "avg_tool_hit": 0.25,
+      "avg_score": 0.375,
+      "avg_tool_hit": 0.5,
       "avg_param_accuracy": 0.25,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.61
+      "elapsed_sec": 1.54
     },
     {
       "id": "mt_str_023",
@@ -1954,7 +1926,7 @@
               "arguments": {
                 "keyword": "structuring"
               },
-              "_id": "call_0_99b9567d2fd5fd62"
+              "_id": "call_0_9726803e255223db"
             }
           ]
         },
@@ -1971,7 +1943,7 @@
               "arguments": {
                 "keyword": "거액 입금 후 당일 인출"
               },
-              "_id": "call_0_97ee59b77eecd25f"
+              "_id": "call_0_a3fbab9f168528d7"
             }
           ]
         },
@@ -1988,7 +1960,7 @@
               "arguments": {
                 "account_id": 77234
               },
-              "_id": "call_0_abe594dd0346d8d4"
+              "_id": "call_0_8516669f0a12d4ab"
             }
           ]
         },
@@ -2002,25 +1974,8 @@
           "actual_tool_calls": [
             {
               "name": "validate_str_fields",
-              "arguments": {
-                "str_draft": {
-                  "I_ReportingInstitution": "국세청",
-                  "II_Transactor": "A씨",
-                  "III_TransactionDetails": {
-                    "거래일자": "20241105",
-                    "거래시간대": "21",
-                    "출금금융회사일련번호": "147",
-                    "출금계좌일련번호": "77234",
-                    "입금금융회사일련번호": "122",
-                    "입금계좌일련번호": "990456",
-                    "자금구분": "4",
-                    "매체구분": "4",
-                    "거래금액": 5000000,
-                    "이상거래유형": "5"
-                  }
-                }
-              },
-              "_id": "call_0_b27863600c3b760b"
+              "arguments": {},
+              "_id": "parsed_000"
             }
           ]
         },
@@ -2039,7 +1994,7 @@
       "avg_param_accuracy": 0.0,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.79
+      "elapsed_sec": 1.83
     },
     {
       "id": "mt_str_024",
@@ -2071,7 +2026,7 @@
               "arguments": {
                 "account_id": 44290
               },
-              "_id": "call_0_82e429277830d564"
+              "_id": "call_0_b6fbb051972de619"
             }
           ]
         },
@@ -2088,7 +2043,7 @@
               "arguments": {
                 "account_id": 44290
               },
-              "_id": "call_0_90032ef61b065017"
+              "_id": "call_0_a3db0fc4eb34c605"
             }
           ]
         },
@@ -2105,7 +2060,7 @@
               "arguments": {
                 "account_id": 44290
               },
-              "_id": "call_0_93f298293692f132"
+              "_id": "call_0_ab7a685c958989bb"
             }
           ]
         },
@@ -2122,7 +2077,7 @@
               "arguments": {
                 "fraud_type": 3
               },
-              "_id": "call_0_86c90c7aacdece9f"
+              "_id": "call_0_a37d35dcaecbe355"
             }
           ]
         }
@@ -2132,7 +2087,7 @@
       "avg_param_accuracy": 0.8,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 0.62
+      "elapsed_sec": 0.55
     },
     {
       "id": "mt_str_025",
@@ -2155,7 +2110,7 @@
               "arguments": {
                 "account_id": 11045
               },
-              "_id": "call_0_98de09d33797ce67"
+              "_id": "call_0_b0f4770e142a24e4"
             }
           ]
         },
@@ -2172,7 +2127,7 @@
               "arguments": {
                 "account_id": 11045
               },
-              "_id": "call_0_8bed9668ce340df0"
+              "_id": "call_0_bb529a154ee3d4ff"
             }
           ]
         },
@@ -2194,7 +2149,7 @@
                 "media_type": 4,
                 "amount": 1200000
               },
-              "_id": "call_0_8568622f03c97d66"
+              "_id": "call_0_9f0c299d20971915"
             }
           ]
         },
@@ -2214,7 +2169,7 @@
                 "date_to": 20241231,
                 "account_id": 11045
               },
-              "_id": "call_0_9fa85cd857d08d9f"
+              "_id": "call_0_993f1b07406421d0"
             }
           ]
         },
@@ -2233,7 +2188,7 @@
       "avg_param_accuracy": 0.4,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.76
+      "elapsed_sec": 1.64
     },
     {
       "id": "mt_str_026",
@@ -2261,7 +2216,7 @@
                 "media_type": 5,
                 "amount": 8500000
               },
-              "_id": "call_0_a6514a35fb415e24"
+              "_id": "call_0_a4210cccaf9b0242"
             }
           ]
         },
@@ -2283,7 +2238,7 @@
                 "media_type": 5,
                 "amount": 8500000
               },
-              "_id": "call_0_b572884f3808cab1"
+              "_id": "call_0_84c96da6358f46c1"
             }
           ]
         },
@@ -2301,7 +2256,7 @@
                 "account_id": 134,
                 "hops": 1
               },
-              "_id": "call_0_9b2ecbf0ac7213e7"
+              "_id": "call_0_97302e45c518ab17"
             }
           ]
         },
@@ -2318,7 +2273,7 @@
               "arguments": {
                 "account_id": 99801
               },
-              "_id": "call_0_a31fc67e9f5c3987"
+              "_id": "call_0_80868a5ac85b3948"
             }
           ]
         },
@@ -2337,7 +2292,7 @@
       "avg_param_accuracy": 0.2,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.71
+      "elapsed_sec": 1.73
     },
     {
       "id": "mt_str_027",
@@ -2360,7 +2315,7 @@
               "arguments": {
                 "bank_id": 88
               },
-              "_id": "call_0_a8faebadbfb0f562"
+              "_id": "call_0_9b6732f61ede87da"
             }
           ]
         },
@@ -2377,7 +2332,7 @@
               "arguments": {
                 "account_id": 62018
               },
-              "_id": "call_0_9ac4ad60fda46dd3"
+              "_id": "call_0_afde7404c17dab18"
             }
           ]
         },
@@ -2399,7 +2354,7 @@
                 "media_type": 2,
                 "amount": 10000000
               },
-              "_id": "call_0_be9841bc625904f4"
+              "_id": "call_0_8b5ae62ce80c2236"
             }
           ]
         },
@@ -2418,7 +2373,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": 0.5,
       "scenario_complete": false,
-      "elapsed_sec": 1.56
+      "elapsed_sec": 1.5
     },
     {
       "id": "mt_str_028",
@@ -2441,7 +2396,7 @@
               "arguments": {
                 "account_id": 82301
               },
-              "_id": "call_0_b84ffdcf73018d78"
+              "_id": "call_0_9e6971a1230fcf46"
             }
           ]
         },
@@ -2458,7 +2413,7 @@
               "arguments": {
                 "account_id": 661023
               },
-              "_id": "call_0_b3bde2f1e8c2b5b5"
+              "_id": "call_0_a9f2a656fe57d8de"
             }
           ]
         },
@@ -2475,7 +2430,7 @@
               "arguments": {
                 "account_id": 661023
               },
-              "_id": "call_0_a6e2807122aafed7"
+              "_id": "call_0_a81d588e9353cdfe"
             }
           ]
         },
@@ -2510,7 +2465,7 @@
                   "신규 수신처"
                 ]
               },
-              "_id": "call_0_b06cec4055084850"
+              "_id": "call_0_b663d6a2d00cf7d0"
             }
           ]
         }
@@ -2520,7 +2475,7 @@
       "avg_param_accuracy": 0.0,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 1.17
+      "elapsed_sec": 1.1
     },
     {
       "id": "mt_str_029",
@@ -2543,7 +2498,7 @@
               "arguments": {
                 "rule_id": "R005"
               },
-              "_id": "call_0_b0a96f7843566305"
+              "_id": "call_0_9824239bffa8a870"
             }
           ]
         },
@@ -2560,7 +2515,7 @@
               "arguments": {
                 "account_id": 33567
               },
-              "_id": "call_0_8c6c51fcd741ee05"
+              "_id": "call_0_b019620bb46f3666"
             }
           ]
         },
@@ -2581,7 +2536,7 @@
                 "period2_end": 20241231,
                 "rule_id": "R005"
               },
-              "_id": "call_0_8c3fd3e5c08dd371"
+              "_id": "call_0_94597bed7ef1724d"
             }
           ]
         },
@@ -2624,7 +2579,7 @@
                 "sample_size": 10000,
                 "top_k": 5
               },
-              "_id": "call_0_92bb5691d674d204"
+              "_id": "call_0_9a8b005e2ca692de"
             }
           ]
         },
@@ -2641,7 +2596,7 @@
               "arguments": {
                 "account_id": 45201
               },
-              "_id": "call_0_be3bf3f6fd25d7b5"
+              "_id": "call_0_91c1bcc32cf35be5"
             }
           ]
         },
@@ -2662,7 +2617,7 @@
                 "max_len": 6,
                 "limit": 20
               },
-              "_id": "call_0_b3a46675fe87b2bc"
+              "_id": "call_0_9112e9d30eac3932"
             }
           ]
         },
@@ -2681,7 +2636,7 @@
       "avg_param_accuracy": 0.375,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 1.53
+      "elapsed_sec": 1.68
     },
     {
       "id": "mt_str_031",
@@ -2702,7 +2657,7 @@
             {
               "name": "get_statistics",
               "arguments": {},
-              "_id": "call_0_aca989c61c485d35"
+              "_id": "call_0_a8192599c1d72113"
             }
           ]
         },
@@ -2719,7 +2674,7 @@
               "arguments": {
                 "account_id": 55801
               },
-              "_id": "call_0_96e4226663733b50"
+              "_id": "call_0_997bf7da81a43a53"
             }
           ]
         },
@@ -2736,55 +2691,26 @@
               "arguments": {
                 "account_id": 55801
               },
-              "_id": "call_0_bbac40ecbf3fa9a4"
+              "_id": "call_0_a654d1de646499ae"
             }
           ]
         },
         {
           "turn": 4,
-          "tool_hit": 1.0,
+          "tool_hit": 0.0,
           "param_accuracy": 0.0,
-          "score": 0.5,
+          "score": 0.0,
           "context_hit": false,
           "clarification_hit": null,
-          "actual_tool_calls": [
-            {
-              "name": "generate_str",
-              "arguments": {
-                "summary": "다중거래의 동시 요청 분석 결과, 금융사 A와 금융사 B에서 총 987건의 보이스피싱이 발생하였으며, 이 중에서 금융사 B에서 발생한 14건의 거래가 이상거래로 확인되었습니다. 이상거래 건수는 14건이며, 총 거래금액은 6,230억 원입니다. 최다출금계좌는 금융사 B의 계좌 55801번이며, 이 계좌에서 발생한 거래 금액은 550억 원입니다.",
-                "fraud_type": "보이스피싱",
-                "transactions": [
-                  {
-                    "date": 20241105,
-                    "time_slot": 12,
-                    "sender_bank": 134,
-                    "sender_acc": 55801,
-                    "receiver_bank": 143,
-                    "receiver_acc": 223456,
-                    "fund_type": 4,
-                    "media_type": 5,
-                    "amount": 55000000,
-                    "fraud_type": 4
-                  }
-                ],
-                "fraud_probability": 0.0,
-                "aml_patterns": [],
-                "tools_used": [
-                  "query_transactions",
-                  "score_account_risk"
-                ]
-              },
-              "_id": "call_0_a0a76bd2b11550ce"
-            }
-          ]
+          "actual_tool_calls": []
         }
       ],
-      "avg_score": 0.375,
-      "avg_tool_hit": 0.5,
+      "avg_score": 0.25,
+      "avg_tool_hit": 0.25,
       "avg_param_accuracy": 0.25,
       "context_accuracy": 0.3333,
       "scenario_complete": false,
-      "elapsed_sec": 1.51
+      "elapsed_sec": 1.06
     },
     {
       "id": "mt_str_032",
@@ -2807,7 +2733,7 @@
               "arguments": {
                 "unit": "monthly"
               },
-              "_id": "call_0_92c7426d8e6c3061"
+              "_id": "call_0_95dfc51248e51417"
             }
           ]
         },
@@ -2826,7 +2752,7 @@
                 "date_to": 20241130,
                 "unit": "daily"
               },
-              "_id": "call_0_9bb0796b576b513a"
+              "_id": "call_0_bd267160f26327fe"
             }
           ]
         },
@@ -2843,9 +2769,9 @@
               "arguments": {
                 "date_from": 20241201,
                 "date_to": 20241231,
-                "channel": "ATM"
+                "channel": 1
               },
-              "_id": "call_0_bfd553419dcdd593"
+              "_id": "call_0_8bf48b6cb5cb0dba"
             }
           ]
         },
@@ -2867,55 +2793,26 @@
                 "media_type": 7,
                 "amount": 49000000
               },
-              "_id": "call_0_986f3f6784fb2ccd"
+              "_id": "call_0_adf6d721f6419605"
             }
           ]
         },
         {
           "turn": 5,
-          "tool_hit": 1.0,
-          "param_accuracy": 0.5,
-          "score": 0.75,
-          "context_hit": true,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
           "clarification_hit": null,
-          "actual_tool_calls": [
-            {
-              "name": "generate_str",
-              "arguments": {
-                "summary": "12월 10일, 텔레뱅킹을 통해 금액이 큰 송금이 발생하여 이상거래로 판단됨. 거래금액: 490,000,000원, 위험도: 93%",
-                "fraud_type": "갑작스러운 거래패턴의 변화",
-                "transactions": [
-                  {
-                    "date": 20241210,
-                    "time_slot": 0,
-                    "sender_bank": 147,
-                    "sender_acc": 45201,
-                    "receiver_bank": 117,
-                    "receiver_acc": 880123,
-                    "fund_type": 4,
-                    "media_type": 7,
-                    "amount": 49000000,
-                    "fraud_type": 1
-                  }
-                ],
-                "fraud_probability": 0.93,
-                "aml_patterns": [],
-                "tools_used": [
-                  "query_transactions",
-                  "predict_fraud"
-                ]
-              },
-              "_id": "call_0_bd566df69faebc8e"
-            }
-          ]
+          "actual_tool_calls": []
         }
       ],
-      "avg_score": 0.75,
-      "avg_tool_hit": 1.0,
-      "avg_param_accuracy": 0.5,
-      "context_accuracy": 0.5,
+      "avg_score": 0.6,
+      "avg_tool_hit": 0.8,
+      "avg_param_accuracy": 0.4,
+      "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 1.7
+      "elapsed_sec": 1.82
     },
     {
       "id": "mt_str_033",
@@ -2936,7 +2833,7 @@
             {
               "name": "get_statistics",
               "arguments": {},
-              "_id": "call_0_b91f37aabfbcda15"
+              "_id": "call_0_bb7554f67e9ca81b"
             }
           ]
         },
@@ -2953,7 +2850,7 @@
               "arguments": {
                 "fraud_type": 3
               },
-              "_id": "call_0_95d63c5ae6aa737e"
+              "_id": "call_0_8287acf97272f497"
             }
           ]
         },
@@ -2971,7 +2868,7 @@
                 "account_id": 88712,
                 "pattern_type": "funnel"
               },
-              "_id": "call_0_898375c4e09a0e46"
+              "_id": "call_0_96195238248ea81b"
             }
           ]
         },
@@ -2990,7 +2887,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 1.36
+      "elapsed_sec": 1.29
     },
     {
       "id": "mt_str_034",
@@ -3013,7 +2910,7 @@
               "arguments": {
                 "dormant_days": 300
               },
-              "_id": "call_0_9ccfc3b165dcea52"
+              "_id": "call_0_839fab5b49e9ea86"
             }
           ]
         },
@@ -3030,7 +2927,7 @@
               "arguments": {
                 "account_id": 11290
               },
-              "_id": "call_0_abf29b296930b607"
+              "_id": "call_0_adfcfe090e518a4d"
             }
           ]
         },
@@ -3047,58 +2944,26 @@
               "arguments": {
                 "account_id": 11290
               },
-              "_id": "call_0_a3bf9db70d971f96"
+              "_id": "call_0_b110251c699069e9"
             }
           ]
         },
         {
           "turn": 4,
-          "tool_hit": 1.0,
+          "tool_hit": 0.0,
           "param_accuracy": 0.0,
-          "score": 0.5,
+          "score": 0.0,
           "context_hit": null,
           "clarification_hit": null,
-          "actual_tool_calls": [
-            {
-              "name": "generate_str",
-              "arguments": {
-                "summary": "300일 이상 휴眠 후 재활성화된 계좌를 찾았습니다. 가장 오래 휴眠한 계좌의 프로필을 분석했습니다. 이 계좌는 분할거래 의심이 있습니다. 갑작스러운 거래 패턴의 변화로 인한 이상거래를 확인했습니다.",
-                "transactions": [
-                  {
-                    "date": 20241205,
-                    "time_slot": 5,
-                    "sender_bank": 11290,
-                    "sender_acc": 11290,
-                    "receiver_bank": 11290,
-                    "receiver_acc": 11290,
-                    "fund_type": 0,
-                    "media_type": 1,
-                    "amount": 47000000,
-                    "fraud_type": 1
-                  }
-                ],
-                "fraud_probability": 0.8,
-                "aml_patterns": [
-                  "갑작스러운 거래패턴의 변화"
-                ],
-                "tools_used": [
-                  "detect_dormant_reactivation",
-                  "get_account_profile",
-                  "detect_ctr_candidates",
-                  "analyze_fraud_type"
-                ]
-              },
-              "_id": "call_0_b488500cbbec6363"
-            }
-          ]
+          "actual_tool_calls": []
         }
       ],
-      "avg_score": 0.625,
-      "avg_tool_hit": 0.75,
+      "avg_score": 0.5,
+      "avg_tool_hit": 0.5,
       "avg_param_accuracy": 0.5,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 1.39
+      "elapsed_sec": 1.34
     },
     {
       "id": "mt_str_035",
@@ -3121,7 +2986,7 @@
               "arguments": {
                 "account_id": 33801
               },
-              "_id": "call_0_866c4782ffc44d9e"
+              "_id": "call_0_808bbcf3643f2579"
             }
           ]
         },
@@ -3143,7 +3008,7 @@
                 "media_type": 4,
                 "amount": 2000000
               },
-              "_id": "call_0_9d3c7d6bd5c126dd"
+              "_id": "call_0_b76a1e28827e8543"
             }
           ]
         },
@@ -3160,7 +3025,7 @@
               "arguments": {
                 "account_id": 33801
               },
-              "_id": "call_0_befdedfa8e7fb8fd"
+              "_id": "call_0_b5fa6f09228b7ab3"
             }
           ]
         },
@@ -3179,7 +3044,7 @@
       "avg_param_accuracy": 0.5,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.67
+      "elapsed_sec": 1.66
     },
     {
       "id": "mt_str_036",
@@ -3202,7 +3067,7 @@
               "arguments": {
                 "bank_id": 73
               },
-              "_id": "call_0_97a5d94d25f7f745"
+              "_id": "call_0_877d5d254fde85f8"
             }
           ]
         },
@@ -3221,7 +3086,7 @@
                 "date_to": 20221231,
                 "account_id": 305
               },
-              "_id": "call_0_aaa97008a1d8eadc"
+              "_id": "call_0_9d10dd7c29d56bf5"
             }
           ]
         },
@@ -3236,50 +3101,20 @@
         },
         {
           "turn": 4,
-          "tool_hit": 1.0,
+          "tool_hit": 0.0,
           "param_accuracy": 0.0,
-          "score": 0.5,
+          "score": 0.0,
           "context_hit": null,
           "clarification_hit": null,
-          "actual_tool_calls": [
-            {
-              "name": "generate_str",
-              "arguments": {
-                "summary": "금융회사 73에서 금융사 305와의 이상거래가 많은 상대기관 간의 흐름을 분석한 결과, 금융사 305에서 금융회사 73으로 이체된 금액이 매우 높은 비율로 이상거래로 분류되었습니다. 이는 두 기관 간의 불법 거래나 범죄 활동의 징후를 나타낼 수 있습니다.",
-                "transactions": [
-                  {
-                    "date": 20230924,
-                    "time_slot": 18,
-                    "sender_bank": 73,
-                    "sender_acc": 55012,
-                    "receiver_bank": 305,
-                    "receiver_acc": 12345,
-                    "fund_type": 0,
-                    "media_type": 7,
-                    "amount": 10000000,
-                    "fraud_type": 1
-                  }
-                ],
-                "fraud_probability": 0.8,
-                "aml_patterns": [
-                  "layering"
-                ],
-                "tools_used": [
-                  "analyze_cross_institution_flow",
-                  "detect_aml_patterns"
-                ]
-              },
-              "_id": "call_0_9c6a03c11cc0eb0d"
-            }
-          ]
+          "actual_tool_calls": []
         }
       ],
-      "avg_score": 0.625,
-      "avg_tool_hit": 0.75,
+      "avg_score": 0.5,
+      "avg_tool_hit": 0.5,
       "avg_param_accuracy": 0.5,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 1.51
+      "elapsed_sec": 1.55
     },
     {
       "id": "mt_str_037",
@@ -3303,7 +3138,7 @@
                 "date_from": 20241001,
                 "date_to": 20241231
               },
-              "_id": "call_0_a1465d0ee7a1c2d9"
+              "_id": "call_0_85c29ba1ae4da042"
             }
           ]
         },
@@ -3321,7 +3156,7 @@
                 "account_id": 72301,
                 "hops": 1
               },
-              "_id": "call_0_880385a800c037a7"
+              "_id": "call_0_bb843b2eb784db6d"
             }
           ]
         },
@@ -3338,7 +3173,7 @@
               "arguments": {
                 "account_id": 72301
               },
-              "_id": "call_0_885e66f52a4e1bc9"
+              "_id": "call_0_9e4ce7580f803e4f"
             }
           ]
         },
@@ -3355,7 +3190,7 @@
               "arguments": {
                 "account_id": 72301
               },
-              "_id": "call_0_8983e522f4261b0a"
+              "_id": "call_0_b452db5a7a7346c9"
             }
           ]
         },
@@ -3374,7 +3209,7 @@
       "avg_param_accuracy": 0.6,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 1.17
+      "elapsed_sec": 1.19
     },
     {
       "id": "mt_str_038",
@@ -3397,7 +3232,7 @@
               "arguments": {
                 "bank_id": 305
               },
-              "_id": "call_0_b3f0f3974deeeb13"
+              "_id": "call_0_aed2de213dd8d88a"
             }
           ]
         },
@@ -3414,7 +3249,7 @@
               "arguments": {
                 "account_id": 88901
               },
-              "_id": "call_0_8110240e12b197fb"
+              "_id": "call_0_9113f072cd2f44fc"
             }
           ]
         },
@@ -3431,7 +3266,7 @@
               "arguments": {
                 "account_id": 88901
               },
-              "_id": "call_0_b929506e6f56a83d"
+              "_id": "call_0_bead0fbe1bf40325"
             }
           ]
         },
@@ -3450,7 +3285,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": 0.5,
       "scenario_complete": false,
-      "elapsed_sec": 1.37
+      "elapsed_sec": 1.31
     },
     {
       "id": "mt_str_039",
@@ -3473,7 +3308,7 @@
               "arguments": {
                 "rule_id": "R002"
               },
-              "_id": "call_0_af6f9e8248f2c624"
+              "_id": "call_0_83ce5baabc39fca1"
             }
           ]
         },
@@ -3490,7 +3325,7 @@
               "arguments": {
                 "account_id": 77401
               },
-              "_id": "call_0_b488d531e3ae5d5f"
+              "_id": "call_0_b87f1e3efbcc4fc3"
             }
           ]
         },
@@ -3512,7 +3347,7 @@
                 "media_type": 4,
                 "amount": 9600000
               },
-              "_id": "call_0_88c58f5d3d0da3bf"
+              "_id": "call_0_8e3650258b64af0e"
             }
           ]
         },
@@ -3531,7 +3366,7 @@
       "avg_param_accuracy": 0.25,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 1.57
+      "elapsed_sec": 1.67
     },
     {
       "id": "mt_str_040",
@@ -3552,7 +3387,7 @@
             {
               "name": "get_statistics",
               "arguments": {},
-              "_id": "call_0_b0110a027993ebaa"
+              "_id": "call_0_bedaf9a6171d0a1b"
             }
           ]
         },
@@ -3586,7 +3421,7 @@
               "arguments": {
                 "account_id": 66501
               },
-              "_id": "call_0_93f25ed2f905b313"
+              "_id": "call_0_82f39a39d1b8552a"
             }
           ]
         },
@@ -3604,7 +3439,7 @@
                 "keyword": "불법도박",
                 "industry": ""
               },
-              "_id": "call_0_89b482bbd801595d"
+              "_id": "call_0_89abb596530a8205"
             }
           ]
         },
@@ -3623,7 +3458,7 @@
       "avg_param_accuracy": 0.4,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 1.51
+      "elapsed_sec": 1.47
     },
     {
       "id": "mt_str_041",
@@ -3646,7 +3481,7 @@
               "arguments": {
                 "account_id": 41205
               },
-              "_id": "call_0_8f51d075898488e9"
+              "_id": "call_0_a5c4f3243ba02cea"
             }
           ]
         },
@@ -3668,7 +3503,7 @@
                 "media_type": 5,
                 "amount": 48000000
               },
-              "_id": "call_0_aca2194a5a3062fc"
+              "_id": "call_0_ace0b60e795ce363"
             }
           ]
         },
@@ -3685,7 +3520,7 @@
               "arguments": {
                 "account_id": 661234
               },
-              "_id": "call_0_b4f34303a370c4b0"
+              "_id": "call_0_aedc0072374df893"
             }
           ]
         },
@@ -3702,56 +3537,26 @@
               "arguments": {
                 "account_id": 661234
               },
-              "_id": "call_0_8e3ce13bdeaaa965"
+              "_id": "call_0_865cc91abb357142"
             }
           ]
         },
         {
           "turn": 5,
-          "tool_hit": 1.0,
-          "param_accuracy": 0.4,
-          "score": 0.7,
-          "context_hit": true,
+          "tool_hit": 0.0,
+          "param_accuracy": 0.0,
+          "score": 0.0,
+          "context_hit": false,
           "clarification_hit": null,
-          "actual_tool_calls": [
-            {
-              "name": "generate_str",
-              "arguments": {
-                "summary": "계좌 41205에서 2024년 12월 18일부터 2024년 12월 25일까지 12건의 이상거래가 발생하였으며, 이 중 4건이 다중거래의 동시 요청으로 판단됩니다. 총 거래 금액은 5,340,000,000원입니다. 주요 입금 계좌는 661234번 계좌이며, 이 계좌는 심야에 많은 금액을 입금하였습니다. 이 이상거래는 위험성이 매우 높습니다.",
-                "fraud_type": "다중거래의 동시 요청",
-                "transactions": [
-                  {
-                    "date": 20241218,
-                    "time_slot": 12,
-                    "sender_bank": 134,
-                    "sender_acc": 41205,
-                    "receiver_bank": 117,
-                    "receiver_acc": 661234,
-                    "fund_type": 4,
-                    "media_type": 5,
-                    "amount": 48000000
-                  }
-                ],
-                "fraud_probability": 0.94,
-                "aml_patterns": [],
-                "tools_used": [
-                  "query_transactions",
-                  "predict_fraud",
-                  "get_receiving_account_profile",
-                  "detect_smurfing_network"
-                ]
-              },
-              "_id": "call_0_abbb33e417cf2046"
-            }
-          ]
+          "actual_tool_calls": []
         }
       ],
-      "avg_score": 0.24,
-      "avg_tool_hit": 0.4,
-      "avg_param_accuracy": 0.08,
-      "context_accuracy": 1.0,
+      "avg_score": 0.1,
+      "avg_tool_hit": 0.2,
+      "avg_param_accuracy": 0.0,
+      "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 1.89
+      "elapsed_sec": 1.96
     },
     {
       "id": "mt_str_042",
@@ -3774,7 +3579,7 @@
               "arguments": {
                 "rule_id": "R004"
               },
-              "_id": "call_0_9203ac0f3f440924"
+              "_id": "call_0_9f0c4f0f308e422c"
             }
           ]
         },
@@ -3787,19 +3592,13 @@
           "clarification_hit": null,
           "actual_tool_calls": [
             {
-              "name": "detect_aml_patterns",
+              "name": "analyze_network",
               "arguments": {
                 "account_id": 205,
-                "account_a": 88,
-                "account_b": 134,
-                "min_len": 3,
-                "max_len": 6,
-                "min_layers": 3,
-                "min_inflow": 10,
-                "max_outflow": 3,
-                "limit": 20
+                "date_from": 20220101,
+                "date_to": 20220331
               },
-              "_id": "call_0_8c6168871e5ea034"
+              "_id": "call_0_8cffd3aaabfe2a6a"
             }
           ]
         },
@@ -3816,7 +3615,7 @@
               "arguments": {
                 "account_id": 44201
               },
-              "_id": "call_0_b3f4831f5f82d7b5"
+              "_id": "call_0_86a344ea1ccd92f9"
             }
           ]
         },
@@ -3835,7 +3634,7 @@
       "avg_param_accuracy": 0.25,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 1.33
+      "elapsed_sec": 1.21
     },
     {
       "id": "mt_str_043",
@@ -3858,7 +3657,7 @@
               "arguments": {
                 "account_id": 29501
               },
-              "_id": "call_0_9900ad3d19212e49"
+              "_id": "call_0_9ea97d70f00d06ac"
             }
           ]
         },
@@ -3880,7 +3679,7 @@
                 "media_type": 4,
                 "amount": 49000000
               },
-              "_id": "call_0_a21a5087bdf68b75"
+              "_id": "call_0_a7827be238257122"
             }
           ]
         },
@@ -3897,7 +3696,7 @@
               "arguments": {
                 "account_id": 29501
               },
-              "_id": "call_0_bf403d2b498f3d0c"
+              "_id": "call_0_b9d41ab4b9b1da24"
             }
           ]
         },
@@ -3917,7 +3716,7 @@
                 "min_len": 1,
                 "max_len": 1
               },
-              "_id": "call_0_89c6f953dd208947"
+              "_id": "call_0_805463b00e3ca7bd"
             }
           ]
         },
@@ -3936,7 +3735,7 @@
       "avg_param_accuracy": 0.2333,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 1.94
+      "elapsed_sec": 1.93
     },
     {
       "id": "mt_str_044",
@@ -3959,7 +3758,7 @@
               "arguments": {
                 "account_id": 55901
               },
-              "_id": "call_0_b3a261cbc74e30dd"
+              "_id": "call_0_aeb90f01abdc5880"
             }
           ]
         },
@@ -3981,7 +3780,7 @@
                 "media_type": 2,
                 "amount": 10000000
               },
-              "_id": "call_0_86fffaf454a1ffde"
+              "_id": "call_0_8cdb0e835b269efd"
             }
           ]
         },
@@ -3999,7 +3798,7 @@
                 "account_id": 55901,
                 "direction": "inbound"
               },
-              "_id": "call_0_ab7534a0014ff0c9"
+              "_id": "call_0_8d987dd003d178f5"
             }
           ]
         },
@@ -4018,7 +3817,7 @@
       "avg_param_accuracy": 0.75,
       "context_accuracy": null,
       "scenario_complete": false,
-      "elapsed_sec": 1.81
+      "elapsed_sec": 1.77
     },
     {
       "id": "mt_str_045",
@@ -4041,7 +3840,7 @@
               "arguments": {
                 "rule_id": "R001"
               },
-              "_id": "call_0_826c9f32097cba08"
+              "_id": "call_0_9e234df6bf5eb885"
             }
           ]
         },
@@ -4058,7 +3857,7 @@
               "arguments": {
                 "account_id": 34901
               },
-              "_id": "call_0_ad227aa93bd46ece"
+              "_id": "call_0_80392e766bc653b7"
             }
           ]
         },
@@ -4075,7 +3874,7 @@
               "arguments": {
                 "account_id": 34901
               },
-              "_id": "call_0_a0e912bf7d0333ef"
+              "_id": "call_0_8d796dbc713bbf2d"
             }
           ]
         },
@@ -4092,7 +3891,7 @@
               "arguments": {
                 "bank_id": 34901
               },
-              "_id": "call_0_96c1d0cbd4c62541"
+              "_id": "call_0_baf7bfc5280c56e5"
             }
           ]
         },
@@ -4111,7 +3910,7 @@
       "avg_param_accuracy": 0.6,
       "context_accuracy": 0.6667,
       "scenario_complete": false,
-      "elapsed_sec": 1.61
+      "elapsed_sec": 1.57
     },
     {
       "id": "mt_str_046",
@@ -4134,7 +3933,7 @@
               "arguments": {
                 "account_id": 81402
               },
-              "_id": "call_0_92477e0276841f14"
+              "_id": "call_0_bcf67253ddb08522"
             }
           ]
         },
@@ -4156,7 +3955,7 @@
                 "media_type": 4,
                 "amount": 47500000
               },
-              "_id": "call_0_a8dcb4ef170f1c4d"
+              "_id": "call_0_82ae32962e16b951"
             }
           ]
         },
@@ -4188,7 +3987,7 @@
                   }
                 }
               },
-              "_id": "call_0_9a5f0a89a48bd8f0"
+              "_id": "call_0_967f3588f695b9e7"
             }
           ]
         },
@@ -4220,7 +4019,7 @@
                   }
                 ]
               },
-              "_id": "call_0_b51eb9b598de5015"
+              "_id": "call_0_a7eceec2c92dbbf2"
             }
           ]
         }
@@ -4230,7 +4029,7 @@
       "avg_param_accuracy": 0.0,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 1.91
+      "elapsed_sec": 1.89
     },
     {
       "id": "mt_str_047",
@@ -4253,7 +4052,7 @@
               "arguments": {
                 "account_id": 22901
               },
-              "_id": "call_0_a8fd27a727681b56"
+              "_id": "call_0_bcf3b48c429562f7"
             }
           ]
         },
@@ -4270,7 +4069,7 @@
               "arguments": {
                 "account_id": 22901
               },
-              "_id": "call_0_b7f03a0c3b0a6ef1"
+              "_id": "call_0_a5a9c049009a7243"
             }
           ]
         },
@@ -4287,7 +4086,7 @@
               "arguments": {
                 "account_id": 22901
               },
-              "_id": "call_0_bb1cb352f86d57fe"
+              "_id": "call_0_bd6729f679da1705"
             }
           ]
         },
@@ -4329,7 +4128,7 @@
               "arguments": {
                 "keyword": "Late-Night/Early-Morning Bulk Transactions"
               },
-              "_id": "call_0_8cb57f7d80b4bfe3"
+              "_id": "call_0_9d6f52adade96d04"
             }
           ]
         },
@@ -4346,7 +4145,7 @@
               "arguments": {
                 "account_id": 88234
               },
-              "_id": "call_0_a333285c4949ea11"
+              "_id": "call_0_8556cb4027261ca7"
             }
           ]
         },
@@ -4363,7 +4162,7 @@
               "arguments": {
                 "account_id": 88234
               },
-              "_id": "call_0_b2686affb4ed62ec"
+              "_id": "call_0_865463bb3e06d3f4"
             }
           ]
         },
@@ -4380,26 +4179,32 @@
               "arguments": {
                 "account_id": 88234
               },
-              "_id": "call_0_932539ef54b325df"
+              "_id": "call_0_a6c812cbb0d8a42a"
             }
           ]
         },
         {
           "turn": 5,
-          "tool_hit": 0.0,
+          "tool_hit": 1.0,
           "param_accuracy": 0.0,
-          "score": 0.0,
+          "score": 0.5,
           "context_hit": false,
           "clarification_hit": null,
-          "actual_tool_calls": []
+          "actual_tool_calls": [
+            {
+              "name": "generate_str",
+              "arguments": {},
+              "_id": "parsed_000"
+            }
+          ]
         }
       ],
-      "avg_score": 0.3,
-      "avg_tool_hit": 0.4,
+      "avg_score": 0.4,
+      "avg_tool_hit": 0.6,
       "avg_param_accuracy": 0.2,
       "context_accuracy": 0.0,
       "scenario_complete": false,
-      "elapsed_sec": 1.96
+      "elapsed_sec": 1.76
     },
     {
       "id": "mt_str_049",
@@ -4422,7 +4227,7 @@
               "arguments": {
                 "rule_id": "R003"
               },
-              "_id": "call_0_813d142d74e4b79a"
+              "_id": "call_0_a33099c525cf47a4"
             }
           ]
         },
@@ -4439,7 +4244,7 @@
               "arguments": {
                 "account_id": 55601
               },
-              "_id": "call_0_83eab3fefe27ce76"
+              "_id": "call_0_8b49ec95d41a412f"
             }
           ]
         },
@@ -4456,7 +4261,7 @@
               "arguments": {
                 "account_id": 55601
               },
-              "_id": "call_0_8b380770990199a4"
+              "_id": "call_0_b3cf12a1d7abbcba"
             }
           ]
         },
@@ -4473,7 +4278,7 @@
               "arguments": {
                 "term": "structuring"
               },
-              "_id": "call_0_b78ed91081986e91"
+              "_id": "call_0_b69a14c575b56fc8"
             }
           ]
         },
@@ -4492,7 +4297,7 @@
       "avg_param_accuracy": 0.4,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 11.5
+      "elapsed_sec": 2.29
     },
     {
       "id": "mt_str_050",
@@ -4515,7 +4320,7 @@
               "arguments": {
                 "account_id": 99301
               },
-              "_id": "call_0_bca6b92ab5803578"
+              "_id": "call_0_960bd1a946a9f355"
             }
           ]
         },
@@ -4532,12 +4337,12 @@
               "arguments": {
                 "time_slot": 0,
                 "sender_bank": 99301,
-                "receiver_bank": 110234,
+                "receiver_bank": 117,
                 "fund_type": 4,
                 "media_type": 4,
                 "amount": 49500000
               },
-              "_id": "call_0_82df8ab6f44f9459"
+              "_id": "call_0_9a66613d7c3a3edd"
             }
           ]
         },
@@ -4554,7 +4359,7 @@
               "arguments": {
                 "account_id": 99301
               },
-              "_id": "call_0_9ede676fe857c4af"
+              "_id": "call_0_bc6fa5eb184c949e"
             }
           ]
         },
@@ -4571,7 +4376,7 @@
               "arguments": {
                 "account_id": 99301
               },
-              "_id": "call_0_a64d8e1a42299430"
+              "_id": "call_0_b47b4780fdb6078d"
             }
           ]
         },
@@ -4620,7 +4425,7 @@
                   "lookup_fiu_reference_types"
                 ]
               },
-              "_id": "call_0_88c8d0d1ace3776a"
+              "_id": "call_0_afeabe097035f8ed"
             }
           ]
         }
@@ -4630,7 +4435,7 @@
       "avg_param_accuracy": 0.35,
       "context_accuracy": 1.0,
       "scenario_complete": false,
-      "elapsed_sec": 2.04
+      "elapsed_sec": 2.58
     }
   ]
 }
