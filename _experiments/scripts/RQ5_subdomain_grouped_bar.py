@@ -61,6 +61,7 @@ SD_SHORT = {
     "Money Flow & Network Analysis":    "Money Flow\n& Network",
     "Regulatory Reporting":             "Regulatory\nReporting",
 }
+# 축 라벨은 두 줄로 둔다. 한 줄이면 전폭(5.5in)에서도 이웃 라벨과 겹친다.
 sd_labels = [SD_SHORT.get(sd, sd) for sd in sub_domains]
 
 n_sd    = len(sub_domains)
@@ -71,7 +72,8 @@ bar_w   = total_w / n_grp
 offsets = np.linspace(-(total_w - bar_w) / 2, (total_w - bar_w) / 2, n_grp)
 
 # ── 플롯 ─────────────────────────────────────────────────────────────────────
-fig, ax = plt.subplots(figsize=(5.2, 3.8))
+# 본문 폭(5.5in)에 1:1로 들어가도록 가로로 넓고 낮게 그린다. 글자는 6~8pt.
+fig, ax = plt.subplots(figsize=(5.5, 2.0))
 
 for idx, (grp, off) in enumerate(zip(GROUP_ORDER, offsets)):
     vals = [group_means[grp][sd] for sd in sub_domains]
@@ -91,26 +93,27 @@ for idx, (grp, off) in enumerate(zip(GROUP_ORDER, offsets)):
             f"{val:.2f}",
             ha="center", va="bottom",
             rotation=90,
-            fontsize=9,
+            fontsize=6,
             color="#1a1a1a",
         )
 
 ax.set_xticks(x)
-ax.set_xticklabels(sd_labels, fontsize=9.5, rotation=0, ha="center")
-ax.set_ylabel("Tool hit $h$", fontsize=13)
+ax.set_xticklabels(sd_labels, fontsize=7.5, rotation=0, ha="center")
+ax.set_ylabel("Tool hit $h$", fontsize=8)
 ax.set_ylim(0, 1.18)
 # 네모박스: 4면 spine 모두 표시 (fig:bfcl과 일치)
 ax.grid(True, alpha=0.3)
-ax.tick_params(axis="y", labelsize=10.5)
+ax.tick_params(axis="y", labelsize=7)
 
 ax.legend(
-    fontsize=10,
-    loc="upper center",
-    bbox_to_anchor=(0.5, -0.26),
+    fontsize=7.5,
+    loc="lower center",
+    bbox_to_anchor=(0.5, 1.0),
     frameon=False,
-    ncol=2,
-    handlelength=1.2,
-    columnspacing=1.2,
+    ncol=4,
+    handlelength=1.0,
+    handletextpad=0.4,
+    columnspacing=0.8,
 )
 
 fig.tight_layout()

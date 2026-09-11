@@ -19,7 +19,7 @@ from pathlib import Path as _P
 _SB = _P(__file__).resolve().parents[2]            # star-bench root
 _WS = _SB.parent                                    # workspace root
 SB_FIG = _SB / "_experiments" / "figures"
-PAPER_FIG = _WS / "star-bench-paper" / "figures"
+PAPER_FIG = _WS / "STAR-Bench-manu" / "figures"   # 논문 저장소의 그림 폴더
 SB_FIG.mkdir(parents=True, exist_ok=True); PAPER_FIG.mkdir(parents=True, exist_ok=True)
 import matplotlib.pyplot as _pltD
 from matplotlib.figure import Figure as _FigD
@@ -86,32 +86,34 @@ def main():
     ang = np.linspace(0, 2 * np.pi, N, endpoint=False).tolist()
     ang += ang[:1]
 
-    fig, ax = plt.subplots(figsize=(4.3, 3.0), subplot_kw=dict(polar=True))
-    ax.set_theta_offset(np.pi / 2 + np.pi / 4)   # rotate 45deg: 4 axes at corners (right side clear for legend)
+    # 본문에는 폭 0.38\textwidth(약 2.1in) wrapfigure로 들어간다. bbox_inches="tight"로 잘린 뒤
+    # 폭이 약 2.1in가 되어 1:1로 찍힌다. 글자는 5~7pt, 범례는 레이더 아래 2열.
+    fig, ax = plt.subplots(figsize=(2.45, 2.55), subplot_kw=dict(polar=True))
+    ax.set_theta_offset(np.pi / 2 + np.pi / 4)   # rotate 45deg: 4 axes at corners
     ax.set_theta_direction(-1)              # clockwise
     for disp, (vals, color) in prof.items():
         vv = vals + vals[:1]
-        ax.plot(ang, vv, color=color, linewidth=1.1, marker="o", markersize=2.6,
+        ax.plot(ang, vv, color=color, linewidth=1.0, marker="o", markersize=2.2,
                 markeredgecolor="white", markeredgewidth=0.3, label=disp, zorder=3)
         ax.fill(ang, vv, color=color, alpha=0.06, zorder=2)
 
     ax.set_xticks(ang[:-1])
-    ax.set_xticklabels(axes, fontsize=8.5)
-    ax.tick_params(axis="x", pad=9)
+    ax.set_xticklabels(axes, fontsize=7)
+    ax.tick_params(axis="x", pad=4)
     ax.set_ylim(0, 1)
     ax.set_yticks([0.25, 0.5, 0.75, 1.0])
-    ax.set_yticklabels([".25", ".5", ".75", "1"], fontsize=6, color="#888888")
+    ax.set_yticklabels([".25", ".5", ".75", "1"], fontsize=5, color="#888888")
     ax.set_rlabel_position(90)
     ax.spines["polar"].set_color("#cccccc")
     ax.spines["polar"].set_linewidth(0.8)
     ax.grid(color="#d0d0d0", alpha=0.9, linewidth=0.5)
     ax.set_facecolor("#f0f3f7")  # radar 원에 옅은 바탕색
-    ax.legend(loc="center left", bbox_to_anchor=(0.98, 0.5), ncol=1,
-              fontsize=8, frameon=False, handletextpad=0.5,
-              handlelength=1.4, labelspacing=0.9)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncol=2,
+              fontsize=7, frameon=False, handletextpad=0.4,
+              handlelength=1.2, labelspacing=0.35, columnspacing=1.0)
     plt.tight_layout()
-    plt.savefig(OUT, dpi=300, bbox_inches="tight")
-    plt.savefig(str(OUT).replace(".png", ".pdf"), bbox_inches="tight")
+    plt.savefig(OUT, dpi=300, bbox_inches="tight", pad_inches=0.02)
+    plt.savefig(str(OUT).replace(".png", ".pdf"), bbox_inches="tight", pad_inches=0.02)
     plt.close()
     print(f"Saved {OUT}")
     for disp, (vals, _) in prof.items():
