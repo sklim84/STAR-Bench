@@ -16,7 +16,7 @@ from pathlib import Path as _P
 _SB = _P(__file__).resolve().parents[2]            # star-bench root
 _WS = _SB.parent                                    # workspace root
 SB_FIG = _SB / "_experiments" / "figures"
-PAPER_FIG = _WS / "star-bench-paper" / "figures"
+PAPER_FIG = _WS / "STAR-Bench-manu" / "figures"   # 논문 저장소의 그림 폴더
 SB_FIG.mkdir(parents=True, exist_ok=True); PAPER_FIG.mkdir(parents=True, exist_ok=True)
 import matplotlib.pyplot as _pltD
 from matplotlib.figure import Figure as _FigD
@@ -44,6 +44,7 @@ EXCLUDE = {
     "Salesforce_Llama-xLAM-2-8b-fc-r", "Salesforce_xLAM-2-1b-fc-r",
     "Salesforce_xLAM-2-32b-fc-r",
     "kakaocorp/kanana-2-30b-a3b-instruct-2601",  # drop redundant Kanana release (keep orig + Think)
+    "meta-llama/Llama-3.1-8B-Instruct",  # RQ5 금융특화 base 비교용으로만 추가(2026-09-09). 본문 28설정 코호트 밖
 }
 NAME = {
     "DragonLLM_Llama-Open-Finance-8B": "Llama-Fin-8B",
@@ -101,9 +102,9 @@ ana = np.array([r[2] for r in rows])
 reg = np.array([r[1] for r in rows])
 x = np.arange(len(rows))
 
-# single-column (\columnwidth): set figsize to the column width (~3.45in) so the
-# PDF is NOT downscaled in LaTeX and the tick/legend fonts render at true size.
-fig, ax = plt.subplots(figsize=(4.3, 2.7))
+# 부록 전폭(5.5in)에 1:1로 들어가도록 그린다. tight bbox 후 폭이 약 5.5in이므로
+# LaTeX에서 확대·축소 없이 눈금·범례 글자가 설정한 크기(6~8pt)로 찍힌다.
+fig, ax = plt.subplots(figsize=(5.6, 2.4))
 ax.vlines(x, reg, ana, color="#BBBBBB", lw=0.9, zorder=1)
 ax.scatter(x, ana, s=16, color=C_ANA, zorder=3, label="Analysis tools")
 ax.scatter(x, reg, s=16, color=C_REG, marker="s", zorder=3, label="Regulatory tools")

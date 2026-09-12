@@ -23,7 +23,7 @@ from pathlib import Path as _P
 _SB = _P(__file__).resolve().parents[2]            # star-bench root
 _WS = _SB.parent                                    # workspace root
 SB_FIG = _SB / "_experiments" / "figures"
-PAPER_FIG = _WS / "star-bench-paper" / "figures"
+PAPER_FIG = _WS / "STAR-Bench-manu" / "figures"   # 논문 저장소의 그림 폴더
 SB_FIG.mkdir(parents=True, exist_ok=True); PAPER_FIG.mkdir(parents=True, exist_ok=True)
 import matplotlib.pyplot as _pltD
 from matplotlib.figure import Figure as _FigD
@@ -41,7 +41,7 @@ import matplotlib.ticker as mticker
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-FIGURES_DIR = _WS / "star-bench-paper" / "figures"
+FIGURES_DIR = _WS / "STAR-Bench-manu" / "figures"
 BENCHMARKS_DIR = _SB / "benchmarks"
 FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -195,7 +195,8 @@ def fig_turnwise_line():
     mean = np.array([np.mean([m[tn] for m in per_model if tn in m]) for tn in turns])
     std = np.array([np.std([m[tn] for m in per_model if tn in m]) for tn in turns])
 
-    fig, ax = plt.subplots(figsize=(3.5, 2.6))
+    # 부록 전폭(5.5in)에 1:1로 들어가도록 가로로 넓고 낮게 그린다.
+    fig, ax = plt.subplots(figsize=(5.5, 1.9))
     ax.fill_between(turns, np.clip(mean - std, 0, 100), np.clip(mean + std, 0, 100),
                     color=_VIR_SD(0.92), alpha=0.30, linewidth=0,
                     label=r"$\pm$1 SD")
@@ -563,8 +564,8 @@ def fig_tsne_semantic():
         "Multi-tool": _VIR_SD(0.72), "Missing-param": _VIR_SD(0.86),
     }
 
-    # 2-panel figure*(\app:diversity)용: 패널 실제 폭(~3.5in)에 맞춰 figsize/폰트 재설정 → 다운스케일 없이 가독성 확보
-    fig, ax = plt.subplots(figsize=(3.6, 2.3))
+    # 부록에서 두 패널을 나란히(각 0.49\textwidth ≈ 2.7in) 둔다. tight bbox 후 폭이 약 2.7in가 되어 1:1로 찍힌다.
+    fig, ax = plt.subplots(figsize=(2.8, 2.15))
 
     plotted_subdomains = set()
     for i, (x, y) in enumerate(coords):
@@ -773,8 +774,8 @@ def fig_question_length_boxplot_summary():
         sd = SUBDOMAIN_MAP.get(tool, "Multi-tool")
         lengths_by_sd[sd].extend([len(c.get("question", "")) for c in data])
 
-    # 2-panel figure*(\app:diversity)용: 패널 실제 폭(~3.5in)에 맞춰 figsize/폰트 재설정 → 다운스케일 없이 가독성 확보
-    fig, ax = plt.subplots(figsize=(3.6, 2.3))
+    # 부록에서 두 패널을 나란히(각 0.49\textwidth ≈ 2.7in) 둔다. tight bbox 후 폭이 약 2.7in가 되어 1:1로 찍힌다.
+    fig, ax = plt.subplots(figsize=(2.8, 2.15))
     box_data = [lengths_by_sd[sd] for sd in SUBDOMAIN_ORDER]
 
     bp = ax.boxplot(box_data, patch_artist=True, vert=True,
