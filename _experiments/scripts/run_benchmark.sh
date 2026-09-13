@@ -191,6 +191,62 @@ GROUP_RQ2_KR_LOCAL=(
     "ax-4.0|skt/A.X-4.0|hermes|--tensor-parallel-size 4 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager|skt/A.X-4.0"
 )
 
+# ── 주 표(tab:exp-oveall)를 KR 스키마로 교체하기 위한 로컬 몫 ────────────────
+# 2026-09-14 결정: 28설정 코호트를 KR 도구 정의로 다시 돌린다. OpenRouter 가용
+# 11설정은 총괄이 API로, 카탈로그에 없는 17설정을 여기서 돌린다.
+# 주 표는 한국어 질의만 실으므로 --mode kr 한 축이면 된다(EN 축은 2×2용이고
+# 거기 해당하는 것은 EXAONE-32B / A.X-4.0 뿐이라 GROUP_RQ2_KR_LOCAL 을 쓴다).
+#
+# TP는 L40S 48GB 기준. HF 실측 가중치로 배치했다 —
+#   ax-light 7.3B(15GB) · gemma-4-E4B 8.0B(16GB) 은 단일로 충분하고,
+#   mistral-small 24B(48GB) · kanana 30.7B(61GB) · exaone-32b 32B(64GB) 는 TP=2,
+#   xlam-70b 70.6B(141GB) · ax-4.0 71.9B(144GB) 는 TP=4 가 필요하다.
+# 주의: 스크립트는 TP=2 일 때 GPU 를 0,1 로 자동 고정한다. MID 그룹은 --gpu 값과
+# 무관하게 0,1 만 쓰므로, 4장을 채우려면 SMALL 을 다른 포트로 동시에 돌린다.
+
+# 17설정 중 단일 GPU 로 충분한 11설정 (qwen35-4b 가 T/NT 2설정)
+GROUP_KR_MAIN_SMALL=(
+    "qwen35-4b|Qwen/Qwen3.5-4B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-4B"
+    "gemma-4-e4b|google/gemma-4-E4B-it|gemma4||google/gemma-4-E4B-it"
+    "phi-4-mini|microsoft/Phi-4-mini-instruct|phi4_mini_json|--chat-template $PROJECT_ROOT/_experiments/scripts/tool_chat_template_phi4_mini.jinja --max-model-len 12288|microsoft/Phi-4-mini-instruct"
+    "xlam-3b|Salesforce/xLAM-2-3b-fc-r|xlam||Salesforce/xLAM-2-3b-fc-r"
+    "exaone-1.2b|LGAI-EXAONE/EXAONE-4.0-1.2B|hermes|--trust-remote-code|LGAI-EXAONE/EXAONE-4.0-1.2B"
+    "dragon-llama-fin|DragonLLM/Llama-Open-Finance-8B|llama3_json||DragonLLM/Llama-Open-Finance-8B"
+    "dragon-qwen-fin|DragonLLM/Qwen-Open-Finance-R-8B|qwen3_xml|--reasoning-parser qwen3|DragonLLM/Qwen-Open-Finance-R-8B"
+    "ministral-3b|mistralai/Ministral-3-3B-Instruct-2512|mistral||mistralai/Ministral-3-3B-Instruct-2512"
+    "hermes-3-8b|NousResearch/Hermes-3-Llama-3.1-8B|hermes||NousResearch/Hermes-3-Llama-3.1-8B"
+    "ax-light|skt/A.X-4.0-Light|hermes|--max-model-len 16384|skt/A.X-4.0-Light"
+)
+
+# TP=2 가 필요한 4설정 (GPU 0,1 고정)
+GROUP_KR_MAIN_MID=(
+    "mistral-small|mistralai/Mistral-Small-3.2-24B-Instruct-2506|mistral|--tensor-parallel-size 2 --max-model-len 32768 --gpu-memory-utilization 0.95|mistralai/Mistral-Small-3.2-24B-Instruct-2506"
+    "kanana-2-inst|kakaocorp/kanana-2-30b-a3b-instruct|functionary_v3_llama_31|--tensor-parallel-size 2 --max-model-len 32768 --gpu-memory-utilization 0.95|kakaocorp/kanana-2-30b-a3b-instruct"
+    "kanana-2-think|kakaocorp/kanana-2-30b-a3b-thinking-2601|functionary_v3_llama_31|--tensor-parallel-size 2 --max-model-len 32768 --gpu-memory-utilization 0.95|kakaocorp/kanana-2-30b-a3b-thinking-2601"
+    "exaone-32b|LGAI-EXAONE/EXAONE-4.0-32B|hermes|--tensor-parallel-size 2 --trust-remote-code --max-model-len 32768 --gpu-memory-utilization 0.95|LGAI-EXAONE/EXAONE-4.0-32B"
+)
+
+# TP=4 가 필요한 2설정 (--gpu 0,1,2,3 을 반드시 넘긴다)
+GROUP_KR_MAIN_BIG=(
+    "xlam-70b|Salesforce/Llama-xLAM-2-70b-fc-r|xlam|--tensor-parallel-size 4 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager|Salesforce/Llama-xLAM-2-70b-fc-r"
+    "ax-4.0|skt/A.X-4.0|hermes|--tensor-parallel-size 4 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager|skt/A.X-4.0"
+)
+
+# 80GB급 카드(A100/H100 등, VESSL 온디맨드)용 변형. 48GB 기준 TP 를 그대로 쓰면
+# 카드를 놀리게 되므로 낮춰 잡았다 — 24B(48GB)·30B(61GB)·32B(64GB) 는 단일에
+# 들어가고, 70B(141GB)·72B(144GB) 는 TP=2 면 충분하다.
+GROUP_KR_MAIN_MID_80G=(
+    "mistral-small|mistralai/Mistral-Small-3.2-24B-Instruct-2506|mistral|--max-model-len 32768 --gpu-memory-utilization 0.92|mistralai/Mistral-Small-3.2-24B-Instruct-2506"
+    "kanana-2-inst|kakaocorp/kanana-2-30b-a3b-instruct|functionary_v3_llama_31|--max-model-len 32768 --gpu-memory-utilization 0.92|kakaocorp/kanana-2-30b-a3b-instruct"
+    "kanana-2-think|kakaocorp/kanana-2-30b-a3b-thinking-2601|functionary_v3_llama_31|--max-model-len 32768 --gpu-memory-utilization 0.92|kakaocorp/kanana-2-30b-a3b-thinking-2601"
+    "exaone-32b|LGAI-EXAONE/EXAONE-4.0-32B|hermes|--trust-remote-code --max-model-len 32768 --gpu-memory-utilization 0.92|LGAI-EXAONE/EXAONE-4.0-32B"
+)
+
+GROUP_KR_MAIN_BIG_80G=(
+    "xlam-70b|Salesforce/Llama-xLAM-2-70b-fc-r|xlam|--tensor-parallel-size 2 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager|Salesforce/Llama-xLAM-2-70b-fc-r"
+    "ax-4.0|skt/A.X-4.0|hermes|--tensor-parallel-size 2 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager|skt/A.X-4.0"
+)
+
 # S1_RQ2_RECOVERY_QWEN: 누락 KR-EN Qwen3.5-27B (think+nothink)
 # 단일 GPU + max-model-len 32768 (long context cases 처리)
 GROUP_S1_RQ2_RECOVERY_QWEN=(
@@ -277,6 +333,12 @@ case "$GROUP" in
     SMOKE) MODELS=("${GROUP_SMOKE[@]}") ;;
     RQ2_REPS) MODELS=("${GROUP_RQ2_REPS[@]}") ;;
     RQ2_KR_LOCAL) MODELS=("${GROUP_RQ2_KR_LOCAL[@]}") ;;
+    # 주 표 KR 스키마 교체용 로컬 17설정 (2026-09-14)
+    KR_MAIN_SMALL) MODELS=("${GROUP_KR_MAIN_SMALL[@]}") ;;
+    KR_MAIN_MID) MODELS=("${GROUP_KR_MAIN_MID[@]}") ;;
+    KR_MAIN_BIG) MODELS=("${GROUP_KR_MAIN_BIG[@]}") ;;
+    KR_MAIN_MID_80G) MODELS=("${GROUP_KR_MAIN_MID_80G[@]}") ;;
+    KR_MAIN_BIG_80G) MODELS=("${GROUP_KR_MAIN_BIG_80G[@]}") ;;
     S1_RQ2_RECOVERY_QWEN) MODELS=("${GROUP_S1_RQ2_RECOVERY_QWEN[@]}") ;;
     S1_RQ2_RECOVERY_EXAONE) MODELS=("${GROUP_S1_RQ2_RECOVERY_EXAONE[@]}") ;;
     S1_RQ2_RECOVERY_GEMMA) MODELS=("${GROUP_S1_RQ2_RECOVERY_GEMMA[@]}") ;;
