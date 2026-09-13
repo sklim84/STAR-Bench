@@ -209,8 +209,11 @@ def main():
         # with no STR contributes 0 fidelity -> it raises the hallucination figure.
         fidelity = pen([1 - h for h in halluc_list])  # produced fidelity, penalized
         halluc = round(1 - fidelity, 4) if fidelity is not None else None
-        # Overall = mean of Field, Ground., Term, fidelity (all penalized, higher=better).
-        comps = [c for c in (field_cov, grounding, term, fidelity) if c is not None]
+        # Overall = mean of Field, Ground., Term (all penalized, higher=better).
+        # Fidelity is deliberately NOT averaged in: hallucination is defined as the
+        # complement of grounding, so fidelity == grounding and including both would
+        # weight grounding twice. Hallucination stays in the row as a diagnostic column.
+        comps = [c for c in (field_cov, grounding, term) if c is not None]
         str_overall = round(sum(comps) / len(comps), 4) if comps else None
         # conditional (produced-only) quality kept for reference / sensitivity analysis
         def cavg(x):
