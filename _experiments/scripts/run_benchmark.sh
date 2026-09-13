@@ -217,7 +217,9 @@ GROUP_RQ2_KR_LOCAL=(
 # 주의: 스크립트는 TP=2 일 때 GPU 를 0,1 로 자동 고정한다. MID 그룹은 --gpu 값과
 # 무관하게 0,1 만 쓰므로, 4장을 채우려면 SMALL 을 다른 포트로 동시에 돌린다.
 
-# 17설정 중 단일 GPU 로 충분한 11설정 (qwen35-4b 가 T/NT 2설정)
+# 18설정 중 단일 GPU 로 충분한 12설정 (qwen35-4b 가 T/NT 2설정)
+# llama-3.2-3b 는 2026-09-14 에 OpenRouter 몫에서 넘어왔다. 그 게이트웨이에 이 모델의
+# 도구 호출 엔드포인트가 없어 1,258 케이스가 전부 404 로 죽었다(avg_score 0.0).
 GROUP_KR_MAIN_SMALL=(
     "qwen35-4b|Qwen/Qwen3.5-4B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-4B"
     "gemma-4-e4b|google/gemma-4-E4B-it|gemma4||google/gemma-4-E4B-it"
@@ -229,6 +231,7 @@ GROUP_KR_MAIN_SMALL=(
     "ministral-3b|mistralai/Ministral-3-3B-Instruct-2512|mistral||mistralai/Ministral-3-3B-Instruct-2512"
     "hermes-3-8b|NousResearch/Hermes-3-Llama-3.1-8B|hermes||NousResearch/Hermes-3-Llama-3.1-8B"
     "ax-light|skt/A.X-4.0-Light|hermes|--max-model-len 16384|skt/A.X-4.0-Light"
+    "llama-3.2-3b|meta-llama/Llama-3.2-3B-Instruct|llama3_json||meta-llama/Llama-3.2-3B-Instruct"
 )
 
 # TP=2 가 필요한 4설정 (GPU 0,1 고정)
