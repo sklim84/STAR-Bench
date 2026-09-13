@@ -173,17 +173,20 @@ GROUP_RQ2_REPS=(
 )
 
 # RQ2_KR_LOCAL: KR 스키마(tools_kr) ablation 중 OpenRouter로 돌릴 수 없는 설정만.
-# EXAONE-4.0-32B / A.X-4.0 은 OpenRouter 목록에 없고, Qwen3.5-27B 는 thinking 토글이
-# OpenRouter에서 지원되지 않아 T/NT 를 구분할 수 없다. 나머지 3개 모델
-# (Qwen3.6-27B, Llama-3.3-70B, Gemma-4-31B)은 API로 별도 수행한다.
-# 4설정 = Qwen3.5-27B(T) + Qwen3.5-27B(NT) + EXAONE-4.0-32B + A.X-4.0
+# EXAONE-4.0-32B / A.X-4.0 은 OpenRouter 카탈로그에 없다(lgai·exaone·skt 검색 모두 0건).
+# 나머지 5설정(Qwen3.6-27B, Llama-3.3-70B, Gemma-4-31B, Qwen3.5-27B T/NT)은 API로
+# 별도 수행한다.
+# 2설정 = EXAONE-4.0-32B + A.X-4.0
 #
-# TP는 L40S 48GB x4 기준으로 잡았다(bf16 가중치만으로 27B~54GB, 32B~64GB, 72B~144GB라
-# 단일 48GB 카드에는 셋 다 들어가지 않는다). 80GB급 카드를 쓴다면 앞의 둘은 TP를 빼도 된다.
+# Qwen3.5-27B 는 2026-09-14 에 이 그룹에서 뺐다. OpenRouter 도 reasoning 파라미터로
+# T/NT 를 가를 수 있어서다(benchmark_openrouter --think both). 이 모델이 로컬 작업량의
+# 대부분(축당 23시간)이었으므로 API 로 옮겨 로컬 부담을 8.2시간으로 줄였다.
+#
+# TP는 L40S 48GB x4 기준으로 잡았다(bf16 가중치만으로 32B~64GB, 72B~144GB라 단일
+# 48GB 카드에 들어가지 않는다). 80GB급 카드를 쓴다면 EXAONE 은 TP를 빼도 된다.
 # 주의: 스크립트는 tensor-parallel-size 2 일 때만 GPU를 자동으로 0,1에 묶는다.
 # TP=4 항목(A.X-4.0)이 있으므로 실행 시 --gpu 0,1,2,3 을 반드시 넘긴다.
 GROUP_RQ2_KR_LOCAL=(
-    "qwen35-27b|Qwen/Qwen3.5-27B|qwen3_coder|--tensor-parallel-size 2 --reasoning-parser qwen3 --max-model-len 32768 --gpu-memory-utilization 0.95|Qwen/Qwen3.5-27B"
     "exaone-32b|LGAI-EXAONE/EXAONE-4.0-32B|hermes|--tensor-parallel-size 2 --trust-remote-code --max-model-len 32768 --gpu-memory-utilization 0.95|LGAI-EXAONE/EXAONE-4.0-32B"
     "ax-4.0|skt/A.X-4.0|hermes|--tensor-parallel-size 4 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager|skt/A.X-4.0"
 )
