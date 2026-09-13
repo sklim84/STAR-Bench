@@ -105,6 +105,10 @@ _TOOLS_LANG_EN: bool = False
 # 모델이 한글 인자명을 내므로 실행·채점 전에 tools_kr.normalize_args 로 정규화한다.
 _TOOLS_LANG_KR: bool = False
 _MAX_TOKENS: int = 4096  # --max-tokens CLI 옵션으로 덮어쓰기 가능 (입력 토큰 오버플로우 완화용)
+# 추론 토글을 어떤 방식으로 보낼지. "vllm"은 chat_template_kwargs(로컬 서빙),
+# "openrouter"는 OpenRouter 자체 reasoning 파라미터. 게이트웨이는 전자를 모델에
+# 전달하지 않으므로 방식을 바꾸지 않으면 T/NT가 같은 조건으로 실행된다.
+_REASONING_STYLE: str = "vllm"
 _CASE_ID_FILTER = None  # --case-ids / --case-ids-file: 부분 재실험 시 특정 ID set
 _FORCE_RERUN: bool = False  # --force-rerun: 체크포인트 캐시 무시 (--case-ids와 함께 사용)
 
@@ -1116,7 +1120,19 @@ def chat_with_model(
         #    토글 미지원. think=None으로 등록되어 이 분기 진입하지 않음.
         if think is not None:
             if "gpt-oss" in model_name:
-                create_kwargs["reasoning_effort"] = "high" if think else "low"
+                # gpt-oss는 on/off가 아니라 effort 수준(high/low) 비교다. 경로가
+                # 바뀌어도 그 의미를 유지해야 T/NT가 논문과 같은 대비로 남는다.
+                if _REASONING_STYLE == "openrouter":
+                    create_kwargs["extra_body"] = {
+                        "reasoning": {"effort": "high" if think else "low"},
+                    }
+                else:
+                    create_kwargs["reasoning_effort"] = "high" if think else "low"
+            elif _REASONING_STYLE == "openrouter":
+                # 4) OpenRouter: chat_template_kwargs를 업스트림에 전달하지 않으므로
+                #    자체 reasoning 파라미터로 토글한다. 실측으로 확인했다 —
+                #    enabled=true는 추론 토큰 306, false는 0.
+                create_kwargs["extra_body"] = {"reasoning": {"enabled": think}}
             else:
                 create_kwargs["extra_body"] = {
                     "chat_template_kwargs": {"enable_thinking": think},

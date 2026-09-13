@@ -6,8 +6,11 @@
 
 기존 ``benchmark.py``와의 차이는 단 하나 — 모델을 고정 레지스트리(MODELS)에서 고르는
 대신, OpenRouter 모델 ID를 ``--models``로 자유 지정한다(provider="openrouter",
-base_url=OpenRouter). thinking 토글(chat_template_kwargs)은 OpenRouter에서 지원되지
-않으므로 think=None(plain tool calling)으로 호출한다.
+base_url=OpenRouter).
+
+추론 토글은 ``--think both`` 로 켠다. OpenRouter는 vLLM의 chat_template_kwargs를
+업스트림에 전달하지 않으므로 자체 ``reasoning`` 파라미터를 쓰며, 이 스크립트가
+``benchmark._REASONING_STYLE`` 을 바꿔 그 경로를 태운다.
 
 사용 예:
     PYTHONPATH=. python -m _experiments.scripts.benchmark_openrouter \
@@ -59,15 +62,19 @@ _load_dotenv(_STARBENCH_ROOT / ".env")
 import _experiments.scripts.benchmark as bench  # noqa: E402
 
 
-def _make_model(model_id: str) -> dict:
+def _make_model(model_id: str, think: bool | None = None) -> dict:
     """OpenRouter 모델 설정 dict. benchmark.py의 dispatch는 provider!=anthropic을
-    OpenAI 호환 경로(chat_with_model, base_url 사용)로 보내므로 그대로 동작한다."""
+    OpenAI 호환 경로(chat_with_model, base_url 사용)로 보내므로 그대로 동작한다.
+
+    think가 True/False면 _model_key가 ``__think`` / ``__nothink`` 접미를 붙여
+    두 설정의 결과 파일이 갈린다.
+    """
     return {
         "name": model_id,
         "provider": "openrouter",
         "base_url": OPENROUTER_BASE_URL,
         "api_key_env": "OPENROUTER_API_KEY",
-        "think": None,
+        "think": think,
     }
 
 
@@ -84,6 +91,10 @@ def main() -> None:
                         help="벤치마크 케이스 디렉토리 (기본: star-bench/benchmarks, KR)")
     parser.add_argument("--tools-lang", choices=["kr", "en"], default="kr",
                         help="도구 정의 언어 (en이면 영문 도구 + 영문 시스템 프롬프트)")
+    parser.add_argument("--think", choices=["none", "on", "off", "both"], default="none",
+                        help="추론 토글. both면 모델마다 T/NT 두 설정을 돌린다 "
+                             "(결과는 __think / __nothink 로 갈린다). "
+                             "토글을 지원하지 않는 모델에는 none을 쓴다.")
     parser.add_argument("--checkpoint", action="store_true",
                         help="케이스 단위 체크포인트 저장 및 resume")
     parser.add_argument("--resume", action="store_true",
@@ -101,6 +112,10 @@ def main() -> None:
 
     # OpenRouter 경로가 VLLM_BASE_URL로 가로채이지 않도록 제거(벤치 dispatch가 우선 사용함)
     os.environ.pop("VLLM_BASE_URL", None)
+
+    # 추론 토글을 OpenRouter 방식으로. 이 줄이 없으면 chat_template_kwargs가
+    # 게이트웨이에서 무시되어 T와 NT가 같은 조건으로 실행된다.
+    bench._REASONING_STYLE = "openrouter"
 
     # ── benchmark.py 모듈 전역 주입(파이프라인 재사용) ──────────────────────
     if args.tools_lang == "en":
@@ -139,7 +154,13 @@ def main() -> None:
         )
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    selected = [_make_model(m) for m in args.models]
+    _THINK_VARIANTS = {"none": [None], "on": [True], "off": [False], "both": [False, True]}
+    selected = [_make_model(m, t)
+                for m in args.models
+                for t in _THINK_VARIANTS[args.think]]
+    if args.think != "none":
+        bench._ts_print(f"추론 토글: {args.think} → 설정 {len(selected)}개 "
+                        f"({', '.join(bench._model_key(m) for m in selected)})")
 
     existing = bench.load_existing_results(output_dir) if args.resume else {}
     if existing:
