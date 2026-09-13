@@ -172,6 +172,22 @@ GROUP_RQ2_REPS=(
     "ax-4.0|skt/A.X-4.0|hermes|--tensor-parallel-size 2 --max-model-len 16384 --gpu-memory-utilization 0.95|skt/A.X-4.0"
 )
 
+# RQ2_KR_LOCAL: KR 스키마(tools_kr) ablation 중 OpenRouter로 돌릴 수 없는 설정만.
+# EXAONE-4.0-32B / A.X-4.0 은 OpenRouter 목록에 없고, Qwen3.5-27B 는 thinking 토글이
+# OpenRouter에서 지원되지 않아 T/NT 를 구분할 수 없다. 나머지 3개 모델
+# (Qwen3.6-27B, Llama-3.3-70B, Gemma-4-31B)은 API로 별도 수행한다.
+# 4설정 = Qwen3.5-27B(T) + Qwen3.5-27B(NT) + EXAONE-4.0-32B + A.X-4.0
+#
+# TP는 L40S 48GB x4 기준으로 잡았다(bf16 가중치만으로 27B~54GB, 32B~64GB, 72B~144GB라
+# 단일 48GB 카드에는 셋 다 들어가지 않는다). 80GB급 카드를 쓴다면 앞의 둘은 TP를 빼도 된다.
+# 주의: 스크립트는 tensor-parallel-size 2 일 때만 GPU를 자동으로 0,1에 묶는다.
+# TP=4 항목(A.X-4.0)이 있으므로 실행 시 --gpu 0,1,2,3 을 반드시 넘긴다.
+GROUP_RQ2_KR_LOCAL=(
+    "qwen35-27b|Qwen/Qwen3.5-27B|qwen3_coder|--tensor-parallel-size 2 --reasoning-parser qwen3 --max-model-len 32768 --gpu-memory-utilization 0.95|Qwen/Qwen3.5-27B"
+    "exaone-32b|LGAI-EXAONE/EXAONE-4.0-32B|hermes|--tensor-parallel-size 2 --trust-remote-code --max-model-len 32768 --gpu-memory-utilization 0.95|LGAI-EXAONE/EXAONE-4.0-32B"
+    "ax-4.0|skt/A.X-4.0|hermes|--tensor-parallel-size 4 --max-model-len 16384 --gpu-memory-utilization 0.95 --enforce-eager|skt/A.X-4.0"
+)
+
 # S1_RQ2_RECOVERY_QWEN: 누락 KR-EN Qwen3.5-27B (think+nothink)
 # 단일 GPU + max-model-len 32768 (long context cases 처리)
 GROUP_S1_RQ2_RECOVERY_QWEN=(
@@ -257,6 +273,7 @@ case "$GROUP" in
     # 보조
     SMOKE) MODELS=("${GROUP_SMOKE[@]}") ;;
     RQ2_REPS) MODELS=("${GROUP_RQ2_REPS[@]}") ;;
+    RQ2_KR_LOCAL) MODELS=("${GROUP_RQ2_KR_LOCAL[@]}") ;;
     S1_RQ2_RECOVERY_QWEN) MODELS=("${GROUP_S1_RQ2_RECOVERY_QWEN[@]}") ;;
     S1_RQ2_RECOVERY_EXAONE) MODELS=("${GROUP_S1_RQ2_RECOVERY_EXAONE[@]}") ;;
     S1_RQ2_RECOVERY_GEMMA) MODELS=("${GROUP_S1_RQ2_RECOVERY_GEMMA[@]}") ;;
@@ -282,10 +299,16 @@ case "$MODE" in
     *)  echo "Unknown mode: $MODE (kr, en, mt)"; exit 1 ;;
 esac
 
-# RQ2 4-way ablation: --tools-lang en일 때 별도 디렉토리/플래그 (kr+en/en+en만 별도 보관, kr/en 기본 결과와 분리)
-if [[ "$TOOLS_LANG" == "en" ]]; then
-    OUTPUT_DIR="${OUTPUT_DIR}_tools_en"
-    BENCH_EXTRA="$BENCH_EXTRA --tools-lang en"
+# 도구 정의 언어 ablation: 기본 결과와 반드시 분리 보관한다.
+# en = tools_en.py, kr = tools_kr.py(2026-04-21 영문화 이전 스키마 복원).
+# 접미사를 빼면 results_kr/results_en(본문 주 표의 단일턴 결과)을 덮어쓴다.
+if [[ -n "$TOOLS_LANG" ]]; then
+    case "$TOOLS_LANG" in
+        en|kr) ;;
+        *) echo "Unknown --tools-lang: $TOOLS_LANG (en, kr)"; exit 1 ;;
+    esac
+    OUTPUT_DIR="${OUTPUT_DIR}_tools_${TOOLS_LANG}"
+    BENCH_EXTRA="$BENCH_EXTRA --tools-lang $TOOLS_LANG"
 fi
 
 # 부분 재실험: --case-ids-file / --force-rerun 패스스루

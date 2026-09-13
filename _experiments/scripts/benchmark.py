@@ -101,6 +101,9 @@ logger = logging.getLogger(__name__)
 
 # --tools-lang en 활성화 플래그 (main에서 설정)
 _TOOLS_LANG_EN: bool = False
+# --tools-lang kr: 번역 이전 한국어 스키마(tools_kr.TOOLS_KR)로 실행.
+# 모델이 한글 인자명을 내므로 실행·채점 전에 tools_kr.normalize_args 로 정규화한다.
+_TOOLS_LANG_KR: bool = False
 _MAX_TOKENS: int = 4096  # --max-tokens CLI 옵션으로 덮어쓰기 가능 (입력 토큰 오버플로우 완화용)
 _CASE_ID_FILTER = None  # --case-ids / --case-ids-file: 부분 재실험 시 특정 ID set
 _FORCE_RERUN: bool = False  # --force-rerun: 체크포인트 캐시 무시 (--case-ids와 함께 사용)
@@ -807,6 +810,18 @@ def _rename_schema_keys(schema: dict) -> dict:
     return schema
 
 
+def _normalize_tool_args(tool_name: str, args: dict) -> dict:
+    """KR 스키마로 받은 인자를 실행부/정답이 쓰는 영문 형태로 정규화한다.
+
+    KR 팔이 아니면 그대로 통과시킨다. 실행 **이전**에 불러야 한다. 기존
+    --tools-lang en 경로는 채점 직전에만 키를 바꿔 도구 실행은 잘못된 키를 받았다.
+    """
+    if not _TOOLS_LANG_KR:
+        return args
+    from _experiments.scripts.tools_kr import normalize_args
+    return normalize_args(tool_name, args)
+
+
 def _revert_args_keys(args: dict) -> dict:
     """Anthropic 모델이 반환한 영문 argument key를 원래 한글로 복원한다."""
     result = {}
@@ -898,7 +913,7 @@ def chat_with_anthropic_model(
             tool_name = block.name
             tool_args_en = block.input if isinstance(block.input, dict) else {}
             # 영문 키를 한글로 복원하여 실행 및 평가에 사용
-            tool_args = _revert_args_keys(tool_args_en)
+            tool_args = _normalize_tool_args(tool_name, _revert_args_keys(tool_args_en))
 
             if debug_chat:
                 _ts_print(f"      [chat] round {round_idx+1}: 도구 실행 {tool_name}(...)", flush=True)
@@ -1128,6 +1143,7 @@ def chat_with_model(
                 except json.JSONDecodeError:
                     tool_args = {}
 
+                tool_args = _normalize_tool_args(tool_name, tool_args)
                 if debug_chat:
                     _ts_print(f"      [chat] round {round_idx+1}: 도구 실행 {tool_name}(...)", flush=True)
                 t0 = time.time()
@@ -1177,6 +1193,7 @@ def chat_with_model(
                     if debug_chat:
                         _ts_print(f"      [chat] round {round_idx+1}: 도구 실행 {pc['name']}(...)", flush=True)
                     t0 = time.time()
+                    pc["arguments"] = _normalize_tool_args(pc["name"], pc["arguments"])
                     result = _execute_tool(pc["name"], pc["arguments"])
                     if debug_chat:
                         _ts_print(f"      [chat] round {round_idx+1}: 도구 완료 {pc['name']} ({time.time()-t0:.1f}s, {len(str(result))} chars)", flush=True)
@@ -2049,7 +2066,7 @@ def main():
     parser.add_argument(
         "--tools-lang",
         default=None,
-        choices=["en"],
+        choices=["en", "kr"],
         help="도구 정의 언어 변경. 'en'=영문 도구 정의 + 영문 시스템 프롬프트 (도구 정의 언어 ablation용)",
     )
     parser.add_argument(
@@ -2088,13 +2105,19 @@ def main():
         sys.stderr = log_f
 
     # --tools-lang: 도구 정의 언어 오버라이드 (도구 정의 언어 ablation)
+    global TOOLS, SYSTEM_PROMPT, _TOOLS_LANG_EN, _TOOLS_LANG_KR
     if args.tools_lang == "en":
         from _experiments.scripts.tools_en import TOOLS_EN, SYSTEM_PROMPT_EN
-        global TOOLS, SYSTEM_PROMPT, _TOOLS_LANG_EN
         TOOLS = TOOLS_EN
         SYSTEM_PROMPT = SYSTEM_PROMPT_EN
         _TOOLS_LANG_EN = True
-        _ts_print(f"도구 정의 언어 오버라이드: EN (23개 도구 + 시스템 프롬프트 영문)")
+        _ts_print("도구 정의 언어 오버라이드: EN (23개 도구 + 시스템 프롬프트 영문)")
+    elif args.tools_lang == "kr":
+        from _experiments.scripts.tools_kr import TOOLS_KR, SYSTEM_PROMPT_KR
+        TOOLS = TOOLS_KR
+        SYSTEM_PROMPT = SYSTEM_PROMPT_KR
+        _TOOLS_LANG_KR = True
+        _ts_print("도구 정의 언어 오버라이드: KR (번역 이전 23개 도구 + 한국어 시스템 프롬프트)")
 
     # --max-tokens: 응답 최대 토큰 오버라이드
     if args.max_tokens != 4096:

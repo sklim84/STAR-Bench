@@ -109,6 +109,14 @@ def main() -> None:
         bench.SYSTEM_PROMPT = SYSTEM_PROMPT_EN
         bench._TOOLS_LANG_EN = True
         bench._ts_print("도구 정의 언어: EN")
+    elif args.tools_lang == "kr":
+        # 기본 agent.py 는 2026-04-21 영문화 이후 영어다. 진짜 KR 팔은
+        # 번역 이전 스키마를 복원한 tools_kr 를 명시적으로 주입해야 한다.
+        from _experiments.scripts.tools_kr import TOOLS_KR, SYSTEM_PROMPT_KR
+        bench.TOOLS = TOOLS_KR
+        bench.SYSTEM_PROMPT = SYSTEM_PROMPT_KR
+        bench._TOOLS_LANG_KR = True
+        bench._ts_print("도구 정의 언어: KR (번역 이전 스키마 복원)")
 
     cases_dir = Path(args.cases_dir)
     if not cases_dir.is_absolute():
@@ -121,6 +129,14 @@ def main() -> None:
     bench._ts_print(f"케이스 디렉토리: {cases_dir}")
 
     output_dir = Path(args.output)
+    # 덮어쓰기 가드: results_kr / results_en 은 본문 주 표의 단일턴 결과다.
+    # 도구 정의를 바꾼 실행을 그 위에 쓰면 조건이 다른 결과가 조용히 섞인다.
+    _base = output_dir.name.rstrip("/") or output_dir.parent.name
+    if args.tools_lang and _base in ("results_kr", "results_en"):
+        raise SystemExit(
+            f"--tools-lang {args.tools_lang} 실행은 {_base} 에 쓸 수 없다. "
+            f"{_base}_tools_{args.tools_lang} 처럼 별도 디렉터리를 지정한다."
+        )
     output_dir.mkdir(parents=True, exist_ok=True)
 
     selected = [_make_model(m) for m in args.models]
