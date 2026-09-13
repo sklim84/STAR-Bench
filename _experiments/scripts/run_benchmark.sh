@@ -147,6 +147,19 @@ GROUP_S2_LARGE_L3=(
     "kanana-2-think|kakaocorp/kanana-2-30b-a3b-thinking-2601|functionary_v3_llama_31||kakaocorp/kanana-2-30b-a3b-thinking-2601"
 )
 
+# 금키 재실행 잔여분 (2026-09-14). 28설정 중 20설정은 완료됐고 아래 6 모델 = 8설정만 남았다.
+# qwen35-4b 와 qwen35-27b 가 T/NT 두 설정씩이라 6 모델이 8설정이 된다. 전부 단일 GPU 로 돈다.
+# 공통점이 하나 있다 — Qwen3.5/3.6 과 MoE 는 flashinfer JIT(gdn_linear_attn) 를 타므로
+# CUDA_HOME 이 12.x 를 가리키지 않으면 전부 기동 직후 죽는다. RERUN_GOLD_FIX.md §3-A 참조.
+GROUP_GOLDFIX_REMAIN=(
+    "qwen35-4b|Qwen/Qwen3.5-4B|qwen3_coder|--reasoning-parser qwen3|Qwen/Qwen3.5-4B"
+    "qwen35-27b|Qwen/Qwen3.5-27B|qwen3_coder|--reasoning-parser qwen3 --enforce-eager|Qwen/Qwen3.5-27B"
+    "qwen36-27b|Qwen/Qwen3.6-27B|qwen3_xml||Qwen/Qwen3.6-27B"
+    "qwen36-35b-a3b|Qwen/Qwen3.6-35B-A3B|qwen3_xml|--max-model-len 32768|Qwen/Qwen3.6-35B-A3B"
+    "kanana-2-inst|kakaocorp/kanana-2-30b-a3b-instruct|functionary_v3_llama_31||kakaocorp/kanana-2-30b-a3b-instruct"
+    "kanana-2-think|kakaocorp/kanana-2-30b-a3b-thinking-2601|functionary_v3_llama_31||kakaocorp/kanana-2-30b-a3b-thinking-2601"
+)
+
 # ===========================================================================
 # 보조 그룹
 # ===========================================================================
@@ -330,6 +343,7 @@ case "$GROUP" in
     S2_LARGE_L2) MODELS=("${GROUP_S2_LARGE_L2[@]}") ;;
     S2_LARGE_L3) MODELS=("${GROUP_S2_LARGE_L3[@]}") ;;
     # 보조
+    GOLDFIX_REMAIN) MODELS=("${GROUP_GOLDFIX_REMAIN[@]}") ;;
     SMOKE) MODELS=("${GROUP_SMOKE[@]}") ;;
     RQ2_REPS) MODELS=("${GROUP_RQ2_REPS[@]}") ;;
     RQ2_KR_LOCAL) MODELS=("${GROUP_RQ2_KR_LOCAL[@]}") ;;
