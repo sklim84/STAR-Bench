@@ -131,6 +131,23 @@ def check_results(results_dir: Path) -> None:
             rows.append((name, num / den, per))
 
     print(f"\n  코호트 설정 수: {len(rows)} (기대 28)")
+
+    # 설정별 미완료 목록: 서버 기동 실패로 조용히 건너뛴 모델을 잡아낸다.
+    # run_benchmark.sh 는 기동 실패 시 continue 하고 그룹은 "전체 완료"로 끝난다.
+    pending = sorted(
+        (n, p.get("predict_fraud")) for n, _, p in rows
+        if p.get("predict_fraud") is not None and p["predict_fraud"] < 0.3
+    )
+    if pending:
+        print(f"\n  ** 아직 재실행되지 않은 설정 {len(pending)}개 "
+              f"(predict_fraud a < 0.3) **")
+        for n, v in pending:
+            print(f"    {n[:50]:<50} {v:.3f}")
+        print("    → 해당 설정이 속한 그룹만 다시 돌린다. "
+              "_experiments/logs/vllm_kr_<alias>.log 에서 기동 실패를 먼저 확인할 것.")
+    else:
+        print("\n  모든 설정이 재실행 완료 상태다 (predict_fraud a >= 0.3)")
+
     for t in TARGET_TOOLS:
         vals = [p[t] for _, _, p in rows if t in p]
         if not vals:
