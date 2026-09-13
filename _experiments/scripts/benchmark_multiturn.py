@@ -78,6 +78,11 @@ logger = logging.getLogger(__name__)
 _MULTITURN_DIR = _PROJECT_ROOT / "benchmarks_multiturn"
 
 
+# --scenario-ids / --scenario-ids-file: 부분 재실험 시 특정 시나리오만 실행 (main에서 설정).
+# 싱글턴 benchmark.py의 _CASE_ID_FILTER와 같은 패턴이다.
+_SCENARIO_ID_FILTER: set[str] | None = None
+
+
 def _load_multiturn_cases() -> list[dict]:
     """멀티턴 벤치마크 케이스를 로드한다."""
     path = _MULTITURN_DIR / "cases_str_workflow.json"
@@ -85,7 +90,11 @@ def _load_multiturn_cases() -> list[dict]:
         logger.error("멀티턴 데이터셋 없음: %s", path)
         return []
     with open(path, encoding="utf-8") as f:
-        return json.load(f)
+        cases = json.load(f)
+    if _SCENARIO_ID_FILTER is not None:
+        cases = [c for c in cases if c.get("id") in _SCENARIO_ID_FILTER]
+        _ts_print(f"시나리오 ID 필터 적용: {len(cases)}건")
+    return cases
 
 
 # ---------------------------------------------------------------------------
@@ -620,11 +629,15 @@ def _multiturn_checkpoint_path(model_id: str, output_dir: Path) -> Path:
 
 
 def _load_multiturn_checkpoint(cp_path: Path) -> tuple[set[str], list[dict]]:
-    """checkpoint jsonl 로드 → (완료 시나리오 ID set, 결과 list)."""
-    completed_ids: set[str] = set()
-    cached_results: list[dict] = []
+    """checkpoint jsonl 로드 → (완료 시나리오 ID set, 결과 list).
+
+    같은 시나리오가 여러 번 append된 경우 **최신 레코드를 채택한다**. 부분 재실험을
+    하면 새 결과가 뒤에 붙으므로, 먼저 나온 것을 채택하면 옛 값이 계속 이긴다.
+    싱글턴의 merge_partial_results.compact_checkpoint 와 같은 의미다.
+    """
+    latest: dict[str, dict] = {}
     if not cp_path.exists():
-        return completed_ids, cached_results
+        return set(), []
     with open(cp_path, encoding="utf-8") as f:
         for line in f:
             line = line.strip()
@@ -635,10 +648,9 @@ def _load_multiturn_checkpoint(cp_path: Path) -> tuple[set[str], list[dict]]:
             except json.JSONDecodeError:
                 continue
             sid = rec.get("id")
-            if sid and sid not in completed_ids:
-                completed_ids.add(sid)
-                cached_results.append(rec)
-    return completed_ids, cached_results
+            if sid:
+                latest[sid] = rec  # 뒤에 오는 레코드가 이긴다
+    return set(latest), list(latest.values())
 
 
 def _append_multiturn_checkpoint(cp_path: Path, record: dict) -> None:
@@ -691,6 +703,14 @@ def run_multiturn_benchmark(
         _ts_print("  ⚠ 멀티턴 케이스 없음")
         return {}
 
+    # 부분 재실험 가드: 결과 JSON은 고정 파일명에 "w"로 덮어쓴다. 필터만 걸고
+    # checkpoint 없이 돌리면 대상 외 시나리오가 결과에서 사라진다.
+    if _SCENARIO_ID_FILTER is not None and not use_checkpoint:
+        raise SystemExit(
+            "시나리오 필터를 쓸 때는 --checkpoint 가 필요하다. "
+            "없으면 대상 외 시나리오가 결과 JSON에서 삭제된다."
+        )
+
     # 시나리오 레벨 checkpoint 로드
     cp_path: Path | None = None
     completed_ids: set[str] = set()
@@ -699,9 +719,19 @@ def run_multiturn_benchmark(
         cp_path = _multiturn_checkpoint_path(model_id, output_dir)
         completed_ids, scenario_results = _load_multiturn_checkpoint(cp_path)
         if force_rerun and completed_ids:
-            _ts_print(f"  [force-rerun] checkpoint {len(completed_ids)}건 무시")
-            completed_ids = set()
-            scenario_results = []
+            if _SCENARIO_ID_FILTER is not None:
+                # 필터 대상만 다시 돌리고 나머지 캐시는 보존해 합집합으로 기록한다
+                drop = completed_ids & _SCENARIO_ID_FILTER
+                completed_ids = completed_ids - _SCENARIO_ID_FILTER
+                scenario_results = [
+                    r for r in scenario_results if r.get("id") not in _SCENARIO_ID_FILTER
+                ]
+                _ts_print(f"  [force-rerun] 필터 대상 {len(drop)}건만 재실행, "
+                          f"캐시 {len(scenario_results)}건 보존")
+            else:
+                _ts_print(f"  [force-rerun] checkpoint {len(completed_ids)}건 무시")
+                completed_ids = set()
+                scenario_results = []
         elif completed_ids:
             _ts_print(f"  [재개] checkpoint에서 완료 {len(completed_ids)}건 로드")
 
@@ -740,14 +770,18 @@ def run_multiturn_benchmark(
         "provider": model["provider"],
         "think": model.get("think"),
         "timestamp": datetime.now().isoformat(),
-        "total_scenarios": len(cases),
+        # 분모는 실제 집계 대상(재실행분 + 보존된 캐시)이다. len(cases)를 쓰면
+        # 부분 재실험 시 필터 크기로 나뉘어 비율이 왜곡된다.
+        "total_scenarios": len(scenario_results),
         "total_elapsed_sec": round(total_elapsed, 2),
         "overall": {
             "avg_score": round(sum(all_scores) / len(all_scores), 4) if all_scores else 0.0,
             "avg_tool_hit": round(sum(all_hits) / len(all_hits), 4) if all_hits else 0.0,
             "avg_param_accuracy": round(sum(all_params) / len(all_params), 4) if all_params else 0.0,
             "context_accuracy": round(sum(ctx_vals) / len(ctx_vals), 4) if ctx_vals else None,
-            "scenario_complete_rate": round(complete_count / len(cases), 4) if cases else 0.0,
+            "scenario_complete_rate": (
+                round(complete_count / len(scenario_results), 4) if scenario_results else 0.0
+            ),
         },
         "by_sub_category": _aggregate_by_subcategory(scenario_results),
         "scenarios": scenario_results,
@@ -811,6 +845,11 @@ def main():
                         help="oracle(default): 매 턴 정답 도구호출+결과 주입(완벽 맥락). "
                              "real: 모델 실제 호출을 HOFINET 백엔드로 실행한 결과를 주입(오류 전파, end-to-end). "
                              "real 비교는 별도 출력 권장: --output _experiments/results_mt_real/")
+    parser.add_argument("--scenario-ids", default=None, metavar="ID1,ID2,...",
+                        help="특정 시나리오 ID만 실행 (콤마 구분). 정답 정정 등 부분 재실험용. "
+                             "ID는 데이터셋의 id 필드와 완전일치해야 한다")
+    parser.add_argument("--scenario-ids-file", default=None, metavar="PATH",
+                        help="시나리오 ID 목록 파일 (JSON 배열 또는 줄바꿈 구분, # 주석 허용)")
     args = parser.parse_args()
 
     # --cases-dir: 멀티턴 케이스 디렉토리 오버라이드 (한/영 ablation). 싱글턴 benchmark.py와 동일 패턴.
@@ -818,6 +857,19 @@ def main():
         global _MULTITURN_DIR
         _MULTITURN_DIR = Path(args.cases_dir)
         _ts_print(f"멀티턴 케이스 디렉토리 오버라이드: {_MULTITURN_DIR}")
+
+    # --scenario-ids / --scenario-ids-file: 부분 재실험
+    global _SCENARIO_ID_FILTER
+    if args.scenario_ids_file:
+        raw = Path(args.scenario_ids_file).read_text(encoding="utf-8").strip()
+        ids = (json.loads(raw) if raw.startswith("[")
+               else [x.strip() for x in raw.splitlines() if x.strip() and not x.startswith("#")])
+        _SCENARIO_ID_FILTER = set(ids)
+    elif args.scenario_ids:
+        _SCENARIO_ID_FILTER = {x.strip() for x in args.scenario_ids.split(",") if x.strip()}
+    if _SCENARIO_ID_FILTER:
+        _ts_print(f"시나리오 ID 필터: {len(_SCENARIO_ID_FILTER)}건 "
+                  f"(force_rerun={args.force_rerun})")
 
     output_dir = Path(args.output)
 
