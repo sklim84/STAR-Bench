@@ -333,6 +333,13 @@ def _evaluate_params(
         # 할루시네이션 파라미터 집계: GT에 없는 argument 키
         for ev in tool_event_list:
             args = ev.get("arguments", {})
+            if not isinstance(args, dict):
+                # 모델이 인자를 객체가 아니라 배열로 내는 경우가 있다. 그러면 아래
+                # 순회에서 k 가 dict 가 되어 집합 조회가 TypeError: unhashable type
+                # 으로 터지고, 케이스 하나가 실행 전체를 죽인다(llama-3.3-70b 가
+                # EN 축 327/1258 에서 그렇게 중단됐다, 2026-09-15).
+                # 키 집합이 없으니 할루시네이션 집계 대상이 아니다.
+                continue
             for k in args:
                 if k not in expected_arg_keys:
                     hallucinated_total += 1

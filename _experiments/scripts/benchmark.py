@@ -1140,7 +1140,14 @@ def chat_with_model(
         response = client.chat.completions.create(**create_kwargs)
         round_elapsed = time.time() - round_start
 
-        msg = response.choices[0].message
+        choices = getattr(response, "choices", None)
+        if not choices:
+            # 게이트웨이가 choices 없는 본문을 돌려줄 때가 있다(OpenRouter 에서 관측).
+            # 그대로 두면 None[0] 이라 'NoneType' object is not subscriptable 이 나고,
+            # 상위 except 가 이를 삼켜 해당 케이스가 조용히 0 점으로 기록된다.
+            # 무엇이 일어났는지 드러나도록 케이스 단위 오류로 올린다.
+            raise RuntimeError(f"gateway returned no choices (model={model_name})")
+        msg = choices[0].message
 
         # 네이티브 tool_calls 확인
         native_tool_calls = getattr(msg, "tool_calls", None)
