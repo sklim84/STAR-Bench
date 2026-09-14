@@ -27,9 +27,24 @@ EXCLUDE = {  # 28-model cohort: drop 8 non-cohort variants + redundant Kanana-2-
     "Salesforce_Llama-xLAM-2-8b-fc-r", "Salesforce_xLAM-2-1b-fc-r",
     "Salesforce_xLAM-2-32b-fc-r",
     "kakaocorp/kanana-2-30b-a3b-instruct-2601",
+    # RQ5 금융특화 base 비교용으로만 results_kr 에 추가된 모델(2026-09-09). 본문 28설정 코호트
+    # 밖이다. generate_reg_vs_analysis.py·verify_gold_fix.py 에는 들어가 있었는데 여기만 빠져
+    # 있어, 그 eval 이 생긴 뒤로 29번째 모델이 순위 안정성 계산에 섞였다(2026-09-15 발견).
+    "meta-llama/Llama-3.1-8B-Instruct",
 }
 N_ITER = 10_000
 SEED = 42
+
+
+def _norm(name: str) -> str:
+    """eval 의 model 필드는 원래 이름(Qwen/Qwen3.5-27B)과 sanitize 이름(Qwen_Qwen3_5-27B)이
+    섞여 있고 EXCLUDE 도 두 형식이 섞여 있다. 원시 문자열로 비교하면 eval 형식이 바뀔 때마다
+    코호트 밖 모델이 새어 들어오므로 양쪽을 같은 형식으로 맞춰 비교한다(2026-09-15)."""
+    return name.replace("/", "_").replace(".", "_")
+
+
+_EXCLUDE_N = {_norm(e) for e in EXCLUDE}
+
 
 def load_model_scores() -> tuple[list[str], np.ndarray, list[str]]:
     """Return (models, score_matrix[M,N], case_ids) for the 28-model KR cohort."""
@@ -40,8 +55,8 @@ def load_model_scores() -> tuple[list[str], np.ndarray, list[str]]:
 
     for fp in files:
         d = json.load(open(fp))
-        model = d["model"]
-        if model in EXCLUDE:
+        model = _norm(d["model"])
+        if model in _EXCLUDE_N:
             continue
         scores: dict[str, float] = {}
         for cat in d.get("by_category", {}).values():

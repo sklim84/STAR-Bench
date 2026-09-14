@@ -82,11 +82,22 @@ import matplotlib as _mpl  # 색감 통일: viridis 2색 (analysis=blue, regulat
 _VIR = _mpl.colormaps["viridis"]
 C_ANA, C_REG = _VIR(0.25), _VIR(0.72)
 
+# eval 의 model 필드는 원래 이름(openai/gpt-oss-20b__think)과 sanitize 이름
+# (Qwen_Qwen3_5-27B__nothink)이 섞여 있고, EXCLUDE 와 NAME 도 두 형식이 섞여 있다. 원시
+# 문자열로 비교하면 eval 형식이 바뀔 때마다 코호트 밖 모델이 새고 표시명이 빠진다(2026-09-15).
+# 읽는 순간 한 형식으로 맞추고, 조회 테이블도 같은 형식으로 만든다.
+def _norm(name):
+    return name.replace("/", "_").replace(".", "_")
+
+
+_EXCLUDE_N = {_norm(e) for e in EXCLUDE}
+_NAME_N = {_norm(k): v for k, v in NAME.items()}
+
 rows = []
 for f in sorted(glob.glob(str(EVAL / "eval_*.json"))):
     d = json.load(open(f))
-    mid = d.get("model", "?")
-    if mid in EXCLUDE:
+    mid = _norm(d.get("model", "?"))
+    if mid in _EXCLUDE_N:
         continue
     cats = d.get("by_category", {})
     reg = [cats[t]["aggregated"]["primary_tool_hit_rate"] for t in REG if t in cats]
@@ -94,7 +105,7 @@ for f in sorted(glob.glob(str(EVAL / "eval_*.json"))):
            for t in cats if t not in REG and t not in SPECIAL]
     if not reg or not ana:
         continue
-    rows.append((NAME.get(mid, mid), sum(reg) / len(reg), sum(ana) / len(ana)))
+    rows.append((_NAME_N.get(mid, mid), sum(reg) / len(reg), sum(ana) / len(ana)))
 
 rows.sort(key=lambda r: r[2])  # sort by analysis h ascending
 labels = [r[0] for r in rows]

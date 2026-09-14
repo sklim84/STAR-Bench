@@ -58,12 +58,23 @@ LABELS = {
 }
 
 
+def _norm(name):
+    """eval 의 model 필드는 원래 이름(google/gemma-4-31B-it)과 sanitize 이름
+    (google_gemma-4-31B-it)이 섞여 있고, KR·EN 결과 디렉터리마다 비율도 다르다. 원시 문자열로
+    KR∩EN 을 구하면 형식이 어긋난 모델이 통째로 빠지고(2026-09-15 에 28개 중 5개만 남았다),
+    EXCLUDE 와 LABELS 의 부분문자열 매칭도 빗나간다. 읽는 순간 한 형식으로 맞춘다."""
+    return name.replace("/", "_").replace(".", "_")
+
+
+_EXCLUDE_N = {_norm(e) for e in EXCLUDE}
+
+
 def load(evdir):
     out = {}
     for f in glob.glob(str(evdir / "eval_*.json")):
         d = json.load(open(f))
-        m = d["model"]
-        if m in EXCLUDE:
+        m = _norm(d["model"])
+        if m in _EXCLUDE_N:
             continue
         out[m] = d.get("overall", {}).get("primary_tool_hit_rate")
     return out

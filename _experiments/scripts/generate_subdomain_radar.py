@@ -63,11 +63,19 @@ MODELS = [
 ]
 
 
+def _norm(name):
+    """eval 의 model 필드는 원래 이름(google/gemma-4-31B-it)과 sanitize 이름
+    (google_gemma-4-31B-it)이 섞여 있고, MODELS 키도 두 형식이 섞여 있다. 원시 문자열로
+    부분문자열을 찾으면 형식이 어긋난 키를 못 찾아 SystemExit 로 멈춘다(2026-09-15 에 병합본
+    model 을 원래 이름으로 되돌린 뒤 네 키 중 셋이 그렇게 됐다). 양쪽을 한 형식으로 맞춘다."""
+    return name.replace("/", "_").replace(".", "_")
+
+
 def load_profiles():
-    files = {json.load(open(f))["model"]: f for f in glob.glob(str(EVAL / "eval_*.json"))}
+    files = {_norm(json.load(open(f))["model"]): f for f in glob.glob(str(EVAL / "eval_*.json"))}
     prof = {}
     for key, disp, color in MODELS:
-        mid = next((m for m in files if key in m), None)
+        mid = next((m for m in files if _norm(key) in m), None)
         if mid is None:
             raise SystemExit(f"model not found: {key}")
         cats = json.load(open(files[mid])).get("by_category", {})

@@ -27,7 +27,7 @@ import argparse
 import json
 import shutil
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
 
@@ -85,10 +85,32 @@ def find_latest_eval(output_dir: Path, model_safe: str) -> Path | None:
     return candidates[-1] if candidates else None
 
 
+def _canonical_model_name(seen: Counter, model_id: str) -> str:
+    """eval 의 model 필드를 벤치마크가 쓴 원래 이름으로 맞춘다.
+
+    model_id 는 체크포인트 파일명에서 뽑은 sanitize 이름이라 슬래시와 마침표가 밑줄로 바뀌어
+    있다(Qwen_Qwen3_5-27B__nothink). 벤치마크가 직접 쓴 eval 은 원래 이름
+    (Qwen/Qwen3.5-27B__nothink)을 쓰므로, 예전에는 병합본만 형식이 달라 같은 설정이 두 키로
+    갈렸다. 원시 d["model"] 을 dict 키로 쓰는 분석 스크립트에서 설정이 이중으로 잡히고,
+    슬래시형으로 적힌 EXCLUDE 와 표시명 매핑이 병합본을 놓쳤다(2026-09-15).
+
+    체크포인트 레코드의 model 이 벤치마크가 쓴 값이므로 그것을 쓴다. think 접미사가
+    빠져 있으면 T/NT 가 같은 이름이 되므로 파일명 쪽 접미사로 보충한다.
+    """
+    if not seen:
+        return model_id
+    name = seen.most_common(1)[0][0]
+    for suffix in ("__think", "__nothink"):
+        if model_id.endswith(suffix) and not name.endswith(suffix):
+            name += suffix
+    return name
+
+
 def reaggregate_eval(ckpt_path: Path, model_id: str, provider: str | None,
                      think: bool | None) -> dict:
     """compact된 체크포인트에서 eval payload 재구성."""
     by_cat_records: dict[str, list[dict]] = defaultdict(list)
+    seen_models: Counter = Counter()
     with ckpt_path.open(encoding="utf-8") as f:
         for line in f:
             line = line.strip()
@@ -98,6 +120,8 @@ def reaggregate_eval(ckpt_path: Path, model_id: str, provider: str | None,
                 rec = json.loads(line)
             except json.JSONDecodeError:
                 continue
+            if rec.get("model"):
+                seen_models[rec["model"]] += 1
             cat = rec.get("category", "")
             if not cat:
                 continue
@@ -120,7 +144,7 @@ def reaggregate_eval(ckpt_path: Path, model_id: str, provider: str | None,
         all_results.extend(records)
     overall = aggregate_results(all_results)
     return {
-        "model": model_id,
+        "model": _canonical_model_name(seen_models, model_id),
         "provider": provider,
         "think": think,
         "timestamp": datetime.now().isoformat(),
