@@ -5,8 +5,8 @@
 
 | 파일 | 역할 |
 |---|---|
-| `h200_pty_driver.py` | 웹콘솔 PTY 폴링 드라이버. 접속 정보는 환경변수로 받는다 |
-| `goldfix_h200.sh` | 4레인 본 실행 (laneA~laneD) |
+| `pty_driver.py` | 웹콘솔 PTY 폴링 드라이버. 접속 정보는 환경변수로 받는다 |
+| `goldfix_main.sh` | 4레인 본 실행 (laneA~laneD) |
 | `goldfix_moe.sh` · `goldfix_moe2.sh` | MoE 따라잡기 1·2차. 2차는 flashinfer 캐시를 지운다 |
 | `goldfix_idle.sh` · `idle2.sh` | 유휴 GPU 투입 |
 | `l1guard.sh` | 레인이 중복 모델로 넘어가기 직전 차단하는 감시자 |

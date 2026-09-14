@@ -6,21 +6,21 @@
 
     export H200_BASE='https://<임시>.trycloudflare.com'
     export H200_TOKEN='<모니터 토큰>'
-    export H200_COOKIE_JAR=/tmp/h200_jar.txt   # 선택, 기본값 동일
+    export H200_COOKIE_JAR=/tmp/remote_jar.txt   # 선택, 기본값 동일
 
 쿠키는 먼저 unlock 으로 받아 jar 에 저장해 둔다(비밀번호는 사용자에게 받는다):
     curl -c "$H200_COOKIE_JAR" -H 'Content-Type: application/json' \
          -d '{"password":"<비밀번호>"}' \
          "$H200_BASE/api/terminal/unlock?token=$H200_TOKEN"
 
-사용: python3 h200_pty_driver.py '<명령>' [타임아웃초]
+사용: python3 pty_driver.py '<명령>' [타임아웃초]
 """
 import json, os, re, sys, time, urllib.request
 
 BASE = os.environ.get("H200_BASE", "").rstrip("/")
 TOKEN = os.environ.get("H200_TOKEN", "")
-JAR = os.environ.get("H200_COOKIE_JAR", "/tmp/h200_jar.txt")
-SESS_FILE = os.environ.get("H200_SESSION_FILE", "/tmp/h200_session.txt")
+JAR = os.environ.get("H200_COOKIE_JAR", "/tmp/remote_jar.txt")
+SESS_FILE = os.environ.get("H200_SESSION_FILE", "/tmp/remote_session.txt")
 
 if not BASE or not TOKEN:
     sys.exit("H200_BASE 와 H200_TOKEN 을 환경변수로 설정하십시오 (docstring 참조).")

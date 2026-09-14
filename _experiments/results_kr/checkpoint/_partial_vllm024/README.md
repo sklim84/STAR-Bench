@@ -15,7 +15,7 @@
 ## 함께 보존한 비교표
 
 파생 집계물(comparison·eval)은 미실행 카테고리가 0.0%로 들어가 오독을 부르므로
-저장소에 넣지 않는다. 로컬 `results_kr/_gb10_partial_vllm024/` 에만 있다.
+저장소에 넣지 않는다. 로컬 `results_kr/_partial_vllm024/` 에만 있다.
 
 중단된 GB10 실행이 자동 생성한 것으로, **미실행 카테고리가 0.0% 로 집계돼 있다.**
 `analyze_cross_institution_flow` · `lookup_fiu_reference_types` · `validate_str_fields` ·
