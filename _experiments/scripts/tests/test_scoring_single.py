@@ -372,3 +372,17 @@ def test_result_checks_read_english_keys(ctx):
     korean = score_case(c, record([call("query_transactions", {"sql": "SELECT 1"},
                                         result=json.dumps({"결과": [1, 2, 3]}))]), ctx)
     assert ok["a"] == 1.0 and korean["a"] == 0.0
+
+
+def test_a_retried_round_error_is_flagged_but_does_not_hide_the_real_failure(ctx):
+    rec = record([call("analyze_network", {"account_id": 1})])
+    rec["rounds"][0]["error"] = {"type": "api_error", "message": "400, retried", "round": 0}
+    rec["rounds"][0]["attempts"] = 2
+    r = score_case(NET, rec, ctx)
+    assert r["error_flag"] is True and r["round_errors"] == 1 and r["error_type"] == "param_error"
+
+
+def test_length_finish_reason_on_the_last_round_is_a_length_stop(ctx):
+    rec = record([])
+    rec["rounds"][0]["finish_reason"] = "length"
+    assert score_case(NET, rec, ctx)["error_type"] == "length_stop"

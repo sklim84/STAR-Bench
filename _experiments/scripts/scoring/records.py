@@ -42,17 +42,24 @@ class RunView:
     error: dict | None = None
     stop_reason: str | None = None
     text_unavailable: bool = False  # legacy record that kept no final text
+    round_errors: list[dict] = field(default_factory=list)
+    last_finish_reason: str | None = None
 
     @property
     def length_stop(self) -> bool:
-        if self.stop_reason == "length":
+        if self.stop_reason == "length" or self.last_finish_reason == "length":
             return True
         err_type = (self.error or {}).get("type") or ""
         return "length" in str(err_type).lower()
 
     @property
-    def error_flag(self) -> bool:
+    def run_failed(self) -> bool:
+        """The run itself ended in an error, as opposed to a round that was retried."""
         return self.error is not None or self.stop_reason == "error"
+
+    @property
+    def error_flag(self) -> bool:
+        return self.run_failed or bool(self.round_errors)
 
     @property
     def name_artifacts(self) -> list[str]:
@@ -89,12 +96,17 @@ def view_record(record: dict) -> RunView:
     calls: list[Call] = []
     order = 0
     last_content = ""
+    round_errors: list[dict] = []
+    last_finish_reason = None
     for r_pos, rnd in enumerate(record.get("rounds") or []):
         if not isinstance(rnd, dict):
             continue
         r_idx = rnd.get("idx", r_pos)
         if isinstance(rnd.get("content"), str):
             last_content = rnd["content"]
+        if rnd.get("error"):
+            round_errors.append(dict(rnd["error"], round=r_idx))
+        last_finish_reason = rnd.get("finish_reason", last_finish_reason)
         executed = [e for e in (rnd.get("executed") or []) if isinstance(e, dict)]
         by_id = {e.get("tool_call_id"): e for e in executed if e.get("tool_call_id") is not None}
         for pos, tc in enumerate(rnd.get("tool_calls") or []):
@@ -121,6 +133,7 @@ def view_record(record: dict) -> RunView:
         record=record, calls=calls, final_text=final_text if isinstance(final_text, str) else "",
         error=record.get("error"), stop_reason=record.get("stop_reason"),
         text_unavailable=legacy.get("final_text_recorded") is False,
+        round_errors=round_errors, last_finish_reason=last_finish_reason,
     )
 
 

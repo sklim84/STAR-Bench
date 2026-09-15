@@ -92,7 +92,7 @@ def _error_type(cand: Candidate, s: dict, view: RunView) -> str:
         return "correct"
     if view.length_stop:
         return "length_stop"
-    if view.error_flag:
+    if view.run_failed:
         return "system_error"
     if not view.calls and (is_unparsed_tool_call(view.final_text) or not view.final_text.strip()):
         return "parse_fail"
@@ -142,7 +142,8 @@ def score_case(case: dict, record: dict | None, ctx: ScoringContext, *,
         "abstain_ok": best["abstain_ok"],
         "clarification_ok": best["clarification_ok"],
         "error_flag": view.error_flag,
-        "error": view.error,
+        "error": view.error or (view.round_errors[0] if view.round_errors else None),
+        "round_errors": len(view.round_errors),
         "stop_reason": view.stop_reason,
         "parser_artifacts": view.name_artifacts,
         "malformed_arg_calls": sum(1 for c in view.calls if not c.args_ok),
