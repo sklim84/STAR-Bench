@@ -71,7 +71,7 @@
   },
   {
     "id": "st_mtool_004",
-    "question": "거래시간대 3, 출금사 134, 입금사 119, 타행 자동이체, 인터넷뱅킹, 1000만원 거래의 이상거래 확률을 예측하고, 해당 출금계좌 9000000000024638의 네트워크도 분석해줘",
+    "question": "거래시간대 3, 출금사 134, 입금사 119, 일반(자금구분 0), 인터넷뱅킹(매체구분 2), 1000만원 거래의 이상거래 확률을 예측하고, 해당 출금계좌 9000000000024638의 네트워크도 분석해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -83,7 +83,9 @@
           "time_slot": 3,
           "sender_bank": 134,
           "receiver_bank": 119,
-          "amount": 10000000
+          "amount": 10000000,
+          "fund_type": 0,
+          "media_type": 2
         },
         "analyze_network": {
           "account_id": 9000000000024638
@@ -115,7 +117,7 @@
   },
   {
     "id": "st_mtool_006",
-    "question": "출금금융회사 134의 이상거래 데이터를 조회하고 이상거래 확률도 하나 예측해줘. 거래시간대 9, 입금사 119, 타행 자동이체, 인터넷뱅킹, 500만원 조건으로.",
+    "question": "출금금융회사 134의 이상거래 데이터를 조회하고 이상거래 확률도 하나 예측해줘. 거래시간대 9, 출금사 134, 입금사 119, 일반(자금구분 0), 인터넷뱅킹(매체구분 2), 500만원 조건으로.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -131,9 +133,11 @@
         },
         "predict_fraud": {
           "time_slot": 9,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 2,
-          "amount": 5000000
+          "amount": 5000000,
+          "sender_bank": 134,
+          "receiver_bank": 119
         }
       }
     },
@@ -435,7 +439,7 @@
   },
   {
     "id": "st_mtool_018",
-    "question": "갑작스러운 거래패턴의 변화(유형1) 이상거래 요약을 확인하고, 거래시간대 3, 출금사 118, 입금사 119, 타행 자동이체, PC뱅킹, 1200만원 거래의 이상거래 확률도 예측해줘",
+    "question": "갑작스러운 거래패턴의 변화(유형1) 이상거래 요약을 확인하고, 거래시간대 3, 출금사 118, 입금사 119, 일반(자금구분 0), PC뱅킹(매체구분 1), 1000만원 거래의 이상거래 확률도 예측해줘",
     "expected": {
       "primary_tool": "get_fraud_type_summary",
       "tools_must_include": [
@@ -450,9 +454,9 @@
           "time_slot": 3,
           "sender_bank": 118,
           "receiver_bank": 119,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 1,
-          "amount": 12000000
+          "amount": 10000000
         }
       }
     },
@@ -632,7 +636,7 @@
   },
   {
     "id": "st_mtool_026",
-    "question": "금융회사 158 리포트를 확인하고, 해당 기관 이상거래를 SQL로 조회하고, 거래시간대 0, 출금사 158, 입금사 134, 타행 자동이체, PC뱅킹, 2000만원 거래의 사기 확률도 예측해줘",
+    "question": "금융회사 158 리포트를 확인하고, 해당 기관 이상거래를 SQL로 조회하고, 거래시간대 0, 출금사 158, 입금사 134, 급여(자금구분 1), PC뱅킹(매체구분 1), 2000만원 거래의 사기 확률도 예측해줘",
     "expected": {
       "primary_tool": "get_institution_report",
       "tools_must_include": [
@@ -659,7 +663,7 @@
           "time_slot": 0,
           "sender_bank": 158,
           "receiver_bank": 134,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 1,
           "amount": 20000000
         }
@@ -1762,7 +1766,7 @@
   },
   {
     "id": "st_mtool_072",
-    "question": "거래시간대 21, 출금사 134, 입금사 119, 타행 자동이체, 인터넷뱅킹, 300만원 조건으로 이상거래 확률을 예측하고, 전체 통계도 보여줘",
+    "question": "거래시간대 21, 출금사 134, 입금사 119, 일반(자금구분 0), 인터넷뱅킹(매체구분 2), 300만원 조건으로 이상거래 확률을 예측하고, 전체 통계도 보여줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -1774,7 +1778,7 @@
           "time_slot": 21,
           "sender_bank": 134,
           "receiver_bank": 119,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 2,
           "amount": 3000000
         }
@@ -2038,7 +2042,7 @@
   },
   {
     "id": "st_mtool_086",
-    "question": "출금금융회사 107의 이상거래를 조회하고, 예측 확률도 구해줘. 거래시간대 12, 입금사 122, 타행 자동이체, 모바일, 200만원.",
+    "question": "출금금융회사 107의 이상거래를 조회하고, 예측 확률도 구해줘. 거래시간대 12, 출금사 107, 입금사 122, 기타(자금구분 3), 휴대전화(매체구분 4), 200만원.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -2056,7 +2060,7 @@
           "time_slot": 12,
           "sender_bank": 107,
           "receiver_bank": 122,
-          "fund_type": 4,
+          "fund_type": 3,
           "media_type": 4,
           "amount": 2000000
         }

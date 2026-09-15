@@ -1,7 +1,7 @@
 [
   {
     "id": "st_pf_001",
-    "question": "Please predict the fraud probability of a transaction with time slot 9, withdrawal institution 134, deposit institution 119, transfer (fund type 4), internet banking (media type 2), and an amount of 5 million won.",
+    "question": "Please predict the fraud probability of a transaction with time slot 9, withdrawal institution 134, deposit institution 119, other-purpose transfer (fund type 3), internet banking (media type 2), and an amount of 5 million won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -12,7 +12,7 @@
           "time_slot": 9,
           "sender_bank": 134,
           "receiver_bank": 119,
-          "fund_type": 4,
+          "fund_type": 3,
           "media_type": 2,
           "amount": 5000000
         }
@@ -22,7 +22,7 @@
   },
   {
     "id": "st_pf_002",
-    "question": "At 3 AM (time slot 3), a 12 million won transaction occurred via PC banking (media type 1) from withdrawal institution 118 to deposit institution 134 with fund type 3 (other). What is the probability that this transaction is suspicious?",
+    "question": "At 3 AM (time slot 3), a 10 million won transaction occurred via PC banking (media type 1) from withdrawal institution 118 to deposit institution 134 with fund type 3 (other). What is the probability that this transaction is suspicious?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -35,7 +35,7 @@
           "receiver_bank": 134,
           "fund_type": 3,
           "media_type": 1,
-          "amount": 12000000
+          "amount": 10000000
         }
       }
     },
@@ -43,7 +43,7 @@
   },
   {
     "id": "st_pf_003",
-    "question": "Please use AI to determine whether a transaction from withdrawal institution 123 to deposit institution 122 at 6 AM (time slot 6) via internet banking (media type 2) as a transfer (fund type 4) with an amount of 3,000,000 won is suspicious.",
+    "question": "Please use AI to determine whether a transaction from withdrawal institution 123 to deposit institution 122 at 6 AM (time slot 6) via internet banking (media type 2) as a general transfer (fund type 0) with an amount of 3,000,000 won is suspicious.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -54,7 +54,7 @@
           "time_slot": 6,
           "sender_bank": 123,
           "receiver_bank": 122,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 2,
           "amount": 3000000
         }
@@ -106,7 +106,7 @@
   },
   {
     "id": "st_pf_006",
-    "question": "Please analyze the following transaction with the fraud model: time slot=15, withdrawal institution=118, deposit institution=119, inter-bank auto transfer, other media (media type 6), 7 million won.",
+    "question": "Please analyze the following transaction with the fraud model: time slot=15, withdrawal institution=118, deposit institution=119, fund type=0 (general), other media (media type 6), 7 million won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -117,7 +117,7 @@
           "time_slot": 15,
           "sender_bank": 118,
           "receiver_bank": 119,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 6,
           "amount": 7000000
         }
@@ -149,7 +149,7 @@
   },
   {
     "id": "st_pf_008",
-    "question": "Please predict the fraud probability when 2,000,000 won was sent from withdrawal institution 123 to deposit institution 122 via phone banking (media type 3) at 6 PM (time slot 18) as a transfer (fund type 4).",
+    "question": "Please predict the fraud probability when 2,000,000 won was sent from withdrawal institution 123 to deposit institution 122 via phone banking (media type 3) at 6 PM (time slot 18) as a general transfer (fund type 0).",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -160,7 +160,7 @@
           "time_slot": 18,
           "sender_bank": 123,
           "receiver_bank": 122,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 3,
           "amount": 2000000
         }
@@ -170,7 +170,7 @@
   },
   {
     "id": "st_pf_009",
-    "question": "Please use AI to predict how likely a 5 million won inter-bank auto transfer from withdrawal institution 118 to deposit institution 119 at midnight (time slot 0) via bulk transfer (media type 7) is to be suspicious.",
+    "question": "Please use AI to predict how likely a 5 million won salary transaction (fund type 1) from withdrawal institution 118 to deposit institution 119 at midnight (time slot 0) via bulk transfer (media type 7) is to be suspicious.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -181,7 +181,7 @@
           "time_slot": 0,
           "sender_bank": 118,
           "receiver_bank": 119,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 7,
           "amount": 5000000
         }
@@ -191,7 +191,7 @@
   },
   {
     "id": "st_pf_010",
-    "question": "Please calculate the fraud probability under these conditions: early morning (time slot 3), internet banking (media type 2), withdrawal institution 134, deposit institution 122, fund type 3 (other), and an amount of 15 million won.",
+    "question": "Please calculate the fraud probability under these conditions: early morning (time slot 3), internet banking (media type 2), withdrawal institution 134, deposit institution 122, fund type 3 (other), and an amount of 10 million won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -204,7 +204,7 @@
           "receiver_bank": 122,
           "fund_type": 3,
           "media_type": 2,
-          "amount": 15000000
+          "amount": 10000000
         }
       }
     },
@@ -213,7 +213,7 @@
   },
   {
     "id": "st_pf_011",
-    "question": "Please predict the fraud probability of a transaction with time slot 15, withdrawal institution 158, deposit institution 150, transfer (fund type 4), internet banking (media type 2), and an amount of 2,500,000 won.",
+    "question": "Please predict the fraud probability of a transaction with time slot 15, withdrawal institution 158, deposit institution 150, salary transfer (fund type 1), internet banking (media type 2), and an amount of 2,000,000 won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -224,9 +224,9 @@
           "time_slot": 15,
           "sender_bank": 158,
           "receiver_bank": 150,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 2,
-          "amount": 2500000
+          "amount": 2000000
         }
       }
     },
@@ -234,7 +234,7 @@
   },
   {
     "id": "st_pf_012",
-    "question": "What is the probability that a 9,000,000 won transaction via internet banking (media type 2) at 6 PM (time slot 18) from withdrawal institution 130 to deposit institution 157 as a transfer (fund type 4) is suspicious?",
+    "question": "What is the probability that a 9,000,000 won transaction via internet banking (media type 2) at 6 PM (time slot 18) from withdrawal institution 130 to deposit institution 157 as a general transfer (fund type 0) is suspicious?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -245,7 +245,7 @@
           "time_slot": 18,
           "sender_bank": 130,
           "receiver_bank": 157,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 2,
           "amount": 9000000
         }
@@ -297,7 +297,7 @@
   },
   {
     "id": "st_pf_015",
-    "question": "What is the probability that a 4,500,000 won transfer (fund type 4) from withdrawal institution 118 to deposit institution 156 at 12 PM (time slot 12) via other media (media type 6) is suspicious?",
+    "question": "What is the probability that a 4,000,000 won general transfer (fund type 0) from withdrawal institution 118 to deposit institution 156 at 12 PM (time slot 12) via other media (media type 6) is suspicious?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -308,9 +308,9 @@
           "time_slot": 12,
           "sender_bank": 118,
           "receiver_bank": 156,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 6,
-          "amount": 4500000
+          "amount": 4000000
         }
       }
     },
@@ -318,7 +318,7 @@
   },
   {
     "id": "st_pf_016",
-    "question": "Please analyze the following transaction with the fraud detection model: time slot=6, withdrawal institution=158, deposit institution=110, fund type=4, media type=5, amount=3500000.",
+    "question": "Please analyze the following transaction with the fraud detection model: time slot=6, withdrawal institution=158, deposit institution=110, fund type=3, media type=5, amount=3000000.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -329,9 +329,9 @@
           "time_slot": 6,
           "sender_bank": 158,
           "receiver_bank": 110,
-          "fund_type": 4,
+          "fund_type": 3,
           "media_type": 5,
-          "amount": 3500000
+          "amount": 3000000
         }
       }
     },
@@ -339,7 +339,7 @@
   },
   {
     "id": "st_pf_017",
-    "question": "Please calculate the fraud probability of a 5,500,000 won transaction at 6 AM (time slot 6) via internet banking (media type 2) from withdrawal institution 134 to deposit institution 127 with fund type 3 (other).",
+    "question": "Please calculate the fraud probability of a 5,000,000 won transaction at 6 AM (time slot 6) via internet banking (media type 2) from withdrawal institution 134 to deposit institution 127 with fund type 3 (other).",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -352,7 +352,7 @@
           "receiver_bank": 127,
           "fund_type": 3,
           "media_type": 2,
-          "amount": 5500000
+          "amount": 5000000
         }
       }
     },
@@ -360,7 +360,7 @@
   },
   {
     "id": "st_pf_018",
-    "question": "Is a 15,000,000 won transaction with time slot 21 from withdrawal institution 119 to deposit institution 157 as a transfer (fund type 4) via internet banking (media type 2) suspicious?",
+    "question": "Is a 10,000,000 won transaction with time slot 21 from withdrawal institution 119 to deposit institution 157 as a general transfer (fund type 0) via internet banking (media type 2) suspicious?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -371,9 +371,9 @@
           "time_slot": 21,
           "sender_bank": 119,
           "receiver_bank": 157,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 2,
-          "amount": 15000000
+          "amount": 10000000
         }
       }
     },
@@ -402,7 +402,7 @@
   },
   {
     "id": "st_pf_020",
-    "question": "Please calculate the fraud probability of a 7,000,000 won transfer (fund type 4) from withdrawal institution 156 to deposit institution 110 via phone banking (media type 3) at 4 AM (time slot 3).",
+    "question": "Please calculate the fraud probability of a 7,000,000 won general transfer (fund type 0) from withdrawal institution 156 to deposit institution 110 via phone banking (media type 3) at 4 AM (time slot 3).",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -413,7 +413,7 @@
           "time_slot": 3,
           "sender_bank": 156,
           "receiver_bank": 110,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 3,
           "amount": 7000000
         }
@@ -423,7 +423,7 @@
   },
   {
     "id": "st_pf_021",
-    "question": "Please use the AI model to determine whether the following transaction is suspicious in relation to voice phishing: time slot=0, withdrawal institution=118, deposit institution=117, fund type=4, media type=7, amount=25000000.",
+    "question": "Please use the AI model to determine whether the following transaction is suspicious in relation to voice phishing: time slot=0, withdrawal institution=118, deposit institution=117, fund type=3, media type=7, amount=20000000.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -434,9 +434,9 @@
           "time_slot": 0,
           "sender_bank": 118,
           "receiver_bank": 117,
-          "fund_type": 4,
+          "fund_type": 3,
           "media_type": 7,
-          "amount": 25000000
+          "amount": 20000000
         }
       }
     },
@@ -444,7 +444,7 @@
   },
   {
     "id": "st_pf_022",
-    "question": "What is the probability that a transaction with time slot 9, withdrawal institution 108, deposit institution 134, fund type 4 (transfer), media type 2 (internet banking), and an amount of 4,500,000 won is suspicious?",
+    "question": "What is the probability that a transaction with time slot 9, withdrawal institution 108, deposit institution 134, fund type 0 (general), media type 2 (internet banking), and an amount of 4,000,000 won is suspicious?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -455,9 +455,9 @@
           "time_slot": 9,
           "sender_bank": 108,
           "receiver_bank": 134,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 2,
-          "amount": 4500000
+          "amount": 4000000
         }
       }
     },
@@ -465,7 +465,7 @@
   },
   {
     "id": "st_pf_023",
-    "question": "Please predict the fraud likelihood of a transaction at 9 PM (time slot 21) via internet banking (media type 2) from withdrawal institution 150 to deposit institution 120 as a transfer (fund type 4) with an amount of 1,800,000 won.",
+    "question": "Please predict the fraud likelihood of a transaction at 9 PM (time slot 21) via internet banking (media type 2) from withdrawal institution 150 to deposit institution 120 as a general transfer (fund type 0) with an amount of 2,000,000 won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -476,9 +476,9 @@
           "time_slot": 21,
           "sender_bank": 150,
           "receiver_bank": 120,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 2,
-          "amount": 1800000
+          "amount": 2000000
         }
       }
     },
@@ -486,7 +486,7 @@
   },
   {
     "id": "st_pf_024",
-    "question": "Please use AI to determine whether a large 50 million won transaction from withdrawal institution 129 to deposit institution 150 at midnight (time slot 0) via bulk transfer (media type 7) as a transfer (fund type 4) is suspicious.",
+    "question": "Please use AI to determine whether a large 50 million won transaction from withdrawal institution 129 to deposit institution 150 at midnight (time slot 0) via bulk transfer (media type 7) as a salary transfer (fund type 1) is suspicious.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -497,7 +497,7 @@
           "time_slot": 0,
           "sender_bank": 129,
           "receiver_bank": 150,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 7,
           "amount": 50000000
         }
@@ -507,7 +507,7 @@
   },
   {
     "id": "st_pf_025",
-    "question": "Please use the model to calculate the fraud probability of a 12 million won transaction via PC banking (media type 1) at 9 AM (time slot 9) from withdrawal institution 150 to deposit institution 157 with fund type 3 (other).",
+    "question": "Please use the model to calculate the fraud probability of a 10 million won transaction via PC banking (media type 1) at 9 AM (time slot 9) from withdrawal institution 150 to deposit institution 157 with fund type 3 (other).",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -520,7 +520,7 @@
           "receiver_bank": 157,
           "fund_type": 3,
           "media_type": 1,
-          "amount": 12000000
+          "amount": 10000000
         }
       }
     },
@@ -528,7 +528,7 @@
   },
   {
     "id": "st_pf_026",
-    "question": "Please use XGBoost to predict whether a transaction is fraudulent: time slot 21, other media (media type 6), withdrawal institution 131, deposit institution 154, fund type 4 (transfer), and an amount of 35,000,000 won.",
+    "question": "Please use XGBoost to predict whether a transaction is fraudulent: time slot 21, other media (media type 6), withdrawal institution 131, deposit institution 154, fund type 1 (salary), and an amount of 30,000,000 won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -539,9 +539,9 @@
           "time_slot": 21,
           "sender_bank": 131,
           "receiver_bank": 154,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 6,
-          "amount": 35000000
+          "amount": 30000000
         }
       }
     },
@@ -549,7 +549,7 @@
   },
   {
     "id": "st_pf_027",
-    "question": "Please predict the fraud probability of a transaction with time slot 18, withdrawal institution 116, deposit institution 156, fund type 4 (transfer), media type 2 (internet banking), and an amount of 4,300,000 won.",
+    "question": "Please predict the fraud probability of a transaction with time slot 18, withdrawal institution 116, deposit institution 156, fund type 3 (other), media type 2 (internet banking), and an amount of 4,000,000 won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -560,9 +560,9 @@
           "time_slot": 18,
           "sender_bank": 116,
           "receiver_bank": 156,
-          "fund_type": 4,
+          "fund_type": 3,
           "media_type": 2,
-          "amount": 4300000
+          "amount": 4000000
         }
       }
     },
@@ -570,7 +570,7 @@
   },
   {
     "id": "st_pf_028",
-    "question": "What is the probability that an 18,000,000 won transaction at 9 AM (time slot 9) via PC banking (media type 1) from withdrawal institution 118 to deposit institution 114 as a transfer (fund type 4) is suspicious?",
+    "question": "What is the probability that a 20,000,000 won transaction at 9 AM (time slot 9) via PC banking (media type 1) from withdrawal institution 118 to deposit institution 114 as a salary transfer (fund type 1) is suspicious?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -581,9 +581,9 @@
           "time_slot": 9,
           "sender_bank": 118,
           "receiver_bank": 114,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 1,
-          "amount": 18000000
+          "amount": 20000000
         }
       }
     },
@@ -591,7 +591,7 @@
   },
   {
     "id": "st_pf_029",
-    "question": "Please use AI to calculate the fraud probability of a 6,800,000 won transaction via internet banking (media type 2) at 6 AM (time slot 6) from withdrawal institution 119 to deposit institution 152 with fund type 3 (other).",
+    "question": "Please use AI to calculate the fraud probability of a 7,000,000 won transaction via internet banking (media type 2) at 6 AM (time slot 6) from withdrawal institution 119 to deposit institution 152 with fund type 3 (other).",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -604,7 +604,7 @@
           "receiver_bank": 152,
           "fund_type": 3,
           "media_type": 2,
-          "amount": 6800000
+          "amount": 7000000
         }
       }
     },
@@ -633,7 +633,7 @@
   },
   {
     "id": "st_pf_031",
-    "question": "A 3,200,000 won transfer (fund type 4) was sent from withdrawal institution 134 to deposit institution 123 via internet banking (media type 2) at 3 PM (time slot 15). Please predict how likely it is to be suspicious.",
+    "question": "A 3,000,000 won salary transfer (fund type 1) was sent from withdrawal institution 134 to deposit institution 123 via internet banking (media type 2) at 3 PM (time slot 15). Please predict how likely it is to be suspicious.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -644,9 +644,9 @@
           "time_slot": 15,
           "sender_bank": 134,
           "receiver_bank": 123,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 2,
-          "amount": 3200000
+          "amount": 3000000
         }
       }
     },
@@ -654,7 +654,7 @@
   },
   {
     "id": "st_pf_032",
-    "question": "Please predict whether a transaction with time slot 21, withdrawal institution 128, deposit institution 119, fund type 4 (transfer), internet banking (media type 2), and an amount of 7,500,000 won is suspicious.",
+    "question": "Please predict whether a transaction with time slot 21, withdrawal institution 128, deposit institution 119, fund type 1 (salary), internet banking (media type 2), and an amount of 7,000,000 won is suspicious.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -665,9 +665,9 @@
           "time_slot": 21,
           "sender_bank": 128,
           "receiver_bank": 119,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 2,
-          "amount": 7500000
+          "amount": 7000000
         }
       }
     },
@@ -675,7 +675,7 @@
   },
   {
     "id": "st_pf_033",
-    "question": "Please use the model to predict the fraud probability of a 24 million won transaction: phone banking (media type 3), 12 PM (time slot 12), withdrawal institution 128, deposit institution 134, fund type 4 (transfer).",
+    "question": "Please use the model to predict the fraud probability of a 20 million won transaction: phone banking (media type 3), 12 PM (time slot 12), withdrawal institution 128, deposit institution 134, fund type 1 (salary).",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -686,9 +686,9 @@
           "time_slot": 12,
           "sender_bank": 128,
           "receiver_bank": 134,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 3,
-          "amount": 24000000
+          "amount": 20000000
         }
       }
     },
@@ -696,7 +696,7 @@
   },
   {
     "id": "st_pf_034",
-    "question": "Please use the XGBoost model to predict the probability that the following transaction is suspicious: time slot=6, withdrawal institution=113, deposit institution=143, fund type=3, media type=6, amount=9500000.",
+    "question": "Please use the XGBoost model to predict the probability that the following transaction is suspicious: time slot=6, withdrawal institution=113, deposit institution=143, fund type=3, media type=6, amount=9000000.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -709,7 +709,7 @@
           "receiver_bank": 143,
           "fund_type": 3,
           "media_type": 6,
-          "amount": 9500000
+          "amount": 9000000
         }
       }
     },
@@ -717,7 +717,7 @@
   },
   {
     "id": "st_pf_035",
-    "question": "At midnight (time slot 0), via other media (media type 6), from withdrawal institution 150 to deposit institution 146, transfer (fund type 4), 30 million won — please tell me numerically how likely this transaction is to be suspicious.",
+    "question": "At midnight (time slot 0), via other media (media type 6), from withdrawal institution 150 to deposit institution 146, general transfer (fund type 0), 30 million won — please tell me numerically how likely this transaction is to be suspicious.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -728,7 +728,7 @@
           "time_slot": 0,
           "sender_bank": 150,
           "receiver_bank": 146,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 6,
           "amount": 30000000
         }
@@ -739,7 +739,7 @@
   },
   {
     "id": "st_pf_036",
-    "question": "Please analyze the transaction with the AI model: time slot 12, withdrawal institution 107, deposit institution 152, fund type 0 (general), media type 7 (bulk transfer), and an amount of 5,600,000 won.",
+    "question": "Please analyze the transaction with the AI model: time slot 12, withdrawal institution 107, deposit institution 152, fund type 0 (general), media type 7 (bulk transfer), and an amount of 6,000,000 won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -752,7 +752,7 @@
           "receiver_bank": 152,
           "fund_type": 0,
           "media_type": 7,
-          "amount": 5600000
+          "amount": 6000000
         }
       }
     },
@@ -760,7 +760,7 @@
   },
   {
     "id": "st_pf_037",
-    "question": "At 3 AM, a 5 million won inter-bank auto transfer occurred via phone banking from withdrawal institution 130 to deposit institution 113. Can you tell me the probability that this is a suspicious transaction?",
+    "question": "At 3 AM, 5 million won was transferred as general funds (fund type 0) via phone banking from withdrawal institution 130 to deposit institution 113. Can you tell me the probability that this is a suspicious transaction?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -771,7 +771,7 @@
           "time_slot": 3,
           "sender_bank": 130,
           "receiver_bank": 113,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 3,
           "amount": 5000000
         }
@@ -782,7 +782,7 @@
   },
   {
     "id": "st_pf_038",
-    "question": "Is a transaction with time slot 18, withdrawal institution 108, deposit institution 116, fund type 1 (salary), media type 2 (internet banking), and an amount of 120 million won suspicious?",
+    "question": "Is a transaction with time slot 18, withdrawal institution 108, deposit institution 116, fund type 1 (salary), media type 2 (internet banking), and an amount of 100 million won suspicious?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -795,7 +795,7 @@
           "receiver_bank": 116,
           "fund_type": 1,
           "media_type": 2,
-          "amount": 120000000
+          "amount": 100000000
         }
       }
     },
@@ -804,7 +804,7 @@
   },
   {
     "id": "st_pf_039",
-    "question": "Please assess whether this transaction is risky — withdrawal institution 131, deposit institution 120, 11 PM, mobile banking (media type 4), fund type 3 (other), 45 million won.",
+    "question": "Please assess whether this transaction is risky - withdrawal institution 131, deposit institution 120, 11 PM (time slot 21), mobile phone (media type 4), other (fund type 3), 40 million won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -817,7 +817,7 @@
           "receiver_bank": 120,
           "fund_type": 3,
           "media_type": 4,
-          "amount": 45000000
+          "amount": 40000000
         }
       }
     },
@@ -826,7 +826,7 @@
   },
   {
     "id": "st_pf_040",
-    "question": "Please have the AI determine whether a 100 million won inter-bank auto transfer from withdrawal institution 113 to deposit institution 154 via PC banking at 10 PM is a suspicious transaction.",
+    "question": "Please have the AI determine whether a 100 million won salary transaction (fund type 1) from withdrawal institution 113 to deposit institution 154 via PC banking at 10 PM is a suspicious transaction.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -837,7 +837,7 @@
           "time_slot": 21,
           "sender_bank": 113,
           "receiver_bank": 154,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 1,
           "amount": 100000000
         }
@@ -848,7 +848,7 @@
   },
   {
     "id": "st_pf_041",
-    "question": "Please predict the fraud probability of a transaction with time slot 6, withdrawal institution 112, deposit institution 151, fund type 4 (transfer), media type 2 (internet banking), and an amount of 2,700,000 won.",
+    "question": "Please predict the fraud probability of a transaction with time slot 6, withdrawal institution 112, deposit institution 151, fund type 1 (salary), media type 2 (internet banking), and an amount of 3,000,000 won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -859,9 +859,9 @@
           "time_slot": 6,
           "sender_bank": 112,
           "receiver_bank": 151,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 2,
-          "amount": 2700000
+          "amount": 3000000
         }
       }
     },
@@ -869,7 +869,7 @@
   },
   {
     "id": "st_pf_042",
-    "question": "What is the probability that a 39 million won transaction at 6 PM (time slot 18) via bulk transfer (media type 7) from withdrawal institution 134 to deposit institution 112 with salary (fund type 1) is suspicious?",
+    "question": "What is the probability that a 40 million won transaction at 6 PM (time slot 18) via bulk transfer (media type 7) from withdrawal institution 134 to deposit institution 112 with salary (fund type 1) is suspicious?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -882,7 +882,7 @@
           "receiver_bank": 112,
           "fund_type": 1,
           "media_type": 7,
-          "amount": 39000000
+          "amount": 40000000
         }
       }
     },
@@ -890,7 +890,7 @@
   },
   {
     "id": "st_pf_043",
-    "question": "Please use the fraud detection model to predict a transaction with time slot 9, withdrawal institution 151, deposit institution 143, fund type 3 (other), media type 3 (phone banking), and an amount of 16,500,000 won.",
+    "question": "Please use the fraud detection model to predict a transaction with time slot 9, withdrawal institution 151, deposit institution 143, fund type 3 (other), media type 3 (phone banking), and an amount of 20,000,000 won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -903,7 +903,7 @@
           "receiver_bank": 143,
           "fund_type": 3,
           "media_type": 3,
-          "amount": 16500000
+          "amount": 20000000
         }
       }
     },
@@ -981,7 +981,7 @@
   },
   {
     "id": "st_pf_044",
-    "question": "Please predict the fraud probability of a transaction with time slot 12, withdrawal institution 128, deposit institution 154, fund type 4 (transfer), media type 1 (PC banking), and an amount of 3,900,000 won.",
+    "question": "Please predict the fraud probability of a transaction with time slot 12, withdrawal institution 128, deposit institution 154, fund type 0 (general), media type 1 (PC banking), and an amount of 4,000,000 won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -992,9 +992,9 @@
           "time_slot": 12,
           "sender_bank": 128,
           "receiver_bank": 154,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 1,
-          "amount": 3900000
+          "amount": 4000000
         }
       }
     },
@@ -1002,7 +1002,7 @@
   },
   {
     "id": "st_pf_045",
-    "question": "Please use AI to assess how likely a 22 million won transaction at 9 AM (time slot 9) via internet banking (media type 2) from withdrawal institution 107 to deposit institution 112 as a transfer (fund type 4) is to be suspicious.",
+    "question": "Please use AI to assess how likely a 20 million won transaction at 9 AM (time slot 9) via internet banking (media type 2) from withdrawal institution 107 to deposit institution 112 as an other-purpose transfer (fund type 3) is to be suspicious.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -1013,9 +1013,9 @@
           "time_slot": 9,
           "sender_bank": 107,
           "receiver_bank": 112,
-          "fund_type": 4,
+          "fund_type": 3,
           "media_type": 2,
-          "amount": 22000000
+          "amount": 20000000
         }
       }
     },
@@ -1023,7 +1023,7 @@
   },
   {
     "id": "st_pf_046",
-    "question": "At 11 PM, a 9.8 million won transaction with the 'other' fund type occurred via internet banking from withdrawal institution 151 to deposit institution 143. Can you tell me the probability that this is a suspicious transaction?",
+    "question": "At 11 PM, a 10 million won transaction with the 'other' fund type occurred via internet banking from withdrawal institution 151 to deposit institution 143. Can you tell me the probability that this is a suspicious transaction?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -1036,7 +1036,7 @@
           "receiver_bank": 143,
           "fund_type": 3,
           "media_type": 2,
-          "amount": 9800000
+          "amount": 10000000
         }
       }
     },
@@ -1045,7 +1045,7 @@
   },
   {
     "id": "st_pf_047",
-    "question": "Please use XGBoost to predict the fraud probability of a transaction with time slot 15, withdrawal institution 134, deposit institution 146, fund type 1 (salary), media type 6 (other), and an amount of 68 million won.",
+    "question": "Please use XGBoost to predict the fraud probability of a transaction with time slot 15, withdrawal institution 134, deposit institution 146, fund type 1 (salary), media type 6 (other), and an amount of 70 million won.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -1058,7 +1058,7 @@
           "receiver_bank": 146,
           "fund_type": 1,
           "media_type": 6,
-          "amount": 68000000
+          "amount": 70000000
         }
       }
     },
@@ -1067,7 +1067,7 @@
   },
   {
     "id": "st_pf_048",
-    "question": "Please assess whether this transaction is suspicious — at 4 AM, over 200 million won moved from withdrawal institution 129 to deposit institution 151 as an inter-bank auto transfer via bulk transfer.",
+    "question": "Please assess whether this transaction is suspicious — at 4 AM, 200 million won moved from withdrawal institution 129 to deposit institution 151 as general funds (fund type 0) via bulk transfer.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -1078,7 +1078,7 @@
           "time_slot": 3,
           "sender_bank": 129,
           "receiver_bank": 151,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 7,
           "amount": 200000000
         }

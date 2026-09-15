@@ -1,7 +1,7 @@
 [
   {
     "id": "st_pf_001",
-    "question": "거래시간대 9시, 출금사 134, 입금사 119, 이체(자금구분 4), 인터넷뱅킹(매체구분 2), 5백만원 거래의 이상거래 확률을 예측해줘",
+    "question": "거래시간대 9시, 출금사 134, 입금사 119, 기타(자금구분 3), 인터넷뱅킹(매체구분 2), 5백만원 거래의 이상거래 확률을 예측해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -12,7 +12,7 @@
           "time_slot": 9,
           "sender_bank": 134,
           "receiver_bank": 119,
-          "fund_type": 4,
+          "fund_type": 3,
           "media_type": 2,
           "amount": 5000000
         }
@@ -22,7 +22,7 @@
   },
   {
     "id": "st_pf_002",
-    "question": "새벽 3시(거래시간대 3)에 PC뱅킹(매체구분 1)에서 출금사 118, 입금사 134로 기타(자금구분 3) 방식으로 1200만원 거래가 발생했어. 이 거래가 이상거래일 확률은?",
+    "question": "새벽 3시(거래시간대 3)에 PC뱅킹(매체구분 1)에서 출금사 118, 입금사 134로 기타(자금구분 3) 방식으로 1000만원 거래가 발생했어. 이 거래가 이상거래일 확률은?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -35,7 +35,7 @@
           "receiver_bank": 134,
           "fund_type": 3,
           "media_type": 1,
-          "amount": 12000000
+          "amount": 10000000
         }
       }
     },
@@ -43,7 +43,7 @@
   },
   {
     "id": "st_pf_003",
-    "question": "출금금융회사 123, 입금금융회사 122, 오전 6시(거래시간대 6), 인터넷뱅킹(매체구분 2), 이체(자금구분 4), 거래금액 300만원인 거래의 이상거래 여부를 AI로 판단해줘",
+    "question": "출금금융회사 123, 입금금융회사 122, 오전 6시(거래시간대 6), 인터넷뱅킹(매체구분 2), 일반(자금구분 0), 거래금액 300만원인 거래의 이상거래 여부를 AI로 판단해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -54,7 +54,7 @@
           "time_slot": 6,
           "sender_bank": 123,
           "receiver_bank": 122,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 2,
           "amount": 3000000
         }
@@ -106,7 +106,7 @@
   },
   {
     "id": "st_pf_006",
-    "question": "다음 거래를 이상거래 모델로 분석해줘: 거래시간대=15, 출금사=118, 입금사=119, 타행 자동이체, 기타 매체(매체구분 6), 7백만원",
+    "question": "다음 거래를 이상거래 모델로 분석해줘: 거래시간대=15, 출금사=118, 입금사=119, 자금구분=0(일반), 기타 매체(매체구분 6), 7백만원",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -117,7 +117,7 @@
           "time_slot": 15,
           "sender_bank": 118,
           "receiver_bank": 119,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 6,
           "amount": 7000000
         }
@@ -149,7 +149,7 @@
   },
   {
     "id": "st_pf_008",
-    "question": "전화뱅킹(매체구분 3)으로 오후 6시(거래시간대 18)에 출금사 123에서 입금사 122로 이체(자금구분 4) 방식으로 200만원을 보냈을 때 사기 확률을 예측해줘",
+    "question": "전화뱅킹(매체구분 3)으로 오후 6시(거래시간대 18)에 출금사 123에서 입금사 122로 일반(자금구분 0) 방식으로 200만원을 보냈을 때 사기 확률을 예측해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -160,7 +160,7 @@
           "time_slot": 18,
           "sender_bank": 123,
           "receiver_bank": 122,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 3,
           "amount": 2000000
         }
@@ -170,7 +170,7 @@
   },
   {
     "id": "st_pf_009",
-    "question": "대량이체(매체구분 7), 자정(거래시간대 0), 출금사 118, 입금사 119, 타행 자동이체, 5백만원인 거래가 이상거래일 가능성을 AI로 예측해줘",
+    "question": "대량이체(매체구분 7), 자정(거래시간대 0), 출금사 118, 입금사 119, 급여(자금구분 1), 5백만원인 거래가 이상거래일 가능성을 AI로 예측해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -181,7 +181,7 @@
           "time_slot": 0,
           "sender_bank": 118,
           "receiver_bank": 119,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 7,
           "amount": 5000000
         }
@@ -191,7 +191,7 @@
   },
   {
     "id": "st_pf_010",
-    "question": "새벽(거래시간대 3), 인터넷뱅킹(매체구분 2), 출금사 134, 입금사 122, 자금구분 3(기타), 거래금액 1500만원 조건에서 이상거래 확률을 계산해줘",
+    "question": "새벽(거래시간대 3), 인터넷뱅킹(매체구분 2), 출금사 134, 입금사 122, 자금구분 3(기타), 거래금액 1000만원 조건에서 이상거래 확률을 계산해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -204,7 +204,7 @@
           "receiver_bank": 122,
           "fund_type": 3,
           "media_type": 2,
-          "amount": 15000000
+          "amount": 10000000
         }
       }
     },
@@ -213,7 +213,7 @@
   },
   {
     "id": "st_pf_011",
-    "question": "거래시간대 15, 출금사 158, 입금사 150, 이체(자금구분 4), 인터넷뱅킹(매체구분 2), 250만원 거래의 이상거래 확률을 예측해줘",
+    "question": "거래시간대 15, 출금사 158, 입금사 150, 급여(자금구분 1), 인터넷뱅킹(매체구분 2), 200만원 거래의 이상거래 확률을 예측해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -224,9 +224,9 @@
           "time_slot": 15,
           "sender_bank": 158,
           "receiver_bank": 150,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 2,
-          "amount": 2500000
+          "amount": 2000000
         }
       }
     },
@@ -234,7 +234,7 @@
   },
   {
     "id": "st_pf_012",
-    "question": "인터넷뱅킹(매체구분 2), 오후 6시(거래시간대 18), 출금사 130, 입금사 157, 이체(자금구분 4), 900만원 거래의 이상거래 확률은?",
+    "question": "인터넷뱅킹(매체구분 2), 오후 6시(거래시간대 18), 출금사 130, 입금사 157, 일반(자금구분 0), 900만원 거래의 이상거래 확률은?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -245,7 +245,7 @@
           "time_slot": 18,
           "sender_bank": 130,
           "receiver_bank": 157,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 2,
           "amount": 9000000
         }
@@ -297,7 +297,7 @@
   },
   {
     "id": "st_pf_015",
-    "question": "기타 매체(매체구분 6)로 낮 12시(거래시간대 12)에 출금사 118에서 입금사 156으로 이체(자금구분 4) 방식으로 450만원 거래가 이상거래일 확률은?",
+    "question": "기타 매체(매체구분 6)로 낮 12시(거래시간대 12)에 출금사 118에서 입금사 156으로 일반(자금구분 0) 방식으로 400만원 거래가 이상거래일 확률은?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -308,9 +308,9 @@
           "time_slot": 12,
           "sender_bank": 118,
           "receiver_bank": 156,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 6,
-          "amount": 4500000
+          "amount": 4000000
         }
       }
     },
@@ -318,7 +318,7 @@
   },
   {
     "id": "st_pf_016",
-    "question": "다음 거래를 사기 탐지 모델로 분석해줘: 거래시간대=6, 출금사=158, 입금사=110, 자금구분=4, 매체구분=5, 거래금액=3500000",
+    "question": "다음 거래를 사기 탐지 모델로 분석해줘: 거래시간대=6, 출금사=158, 입금사=110, 자금구분=3, 매체구분=5, 거래금액=3000000",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -329,9 +329,9 @@
           "time_slot": 6,
           "sender_bank": 158,
           "receiver_bank": 110,
-          "fund_type": 4,
+          "fund_type": 3,
           "media_type": 5,
-          "amount": 3500000
+          "amount": 3000000
         }
       }
     },
@@ -339,7 +339,7 @@
   },
   {
     "id": "st_pf_017",
-    "question": "오전 6시(거래시간대 6) 인터넷뱅킹(매체구분 2), 출금사 134, 입금사 127, 기타(자금구분 3), 550만원 거래의 이상거래 확률을 계산해줘",
+    "question": "오전 6시(거래시간대 6) 인터넷뱅킹(매체구분 2), 출금사 134, 입금사 127, 기타(자금구분 3), 500만원 거래의 이상거래 확률을 계산해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -352,7 +352,7 @@
           "receiver_bank": 127,
           "fund_type": 3,
           "media_type": 2,
-          "amount": 5500000
+          "amount": 5000000
         }
       }
     },
@@ -360,7 +360,7 @@
   },
   {
     "id": "st_pf_018",
-    "question": "거래시간대 21, 출금사 119, 입금사 157, 이체(자금구분 4), 인터넷뱅킹(매체구분 2), 1500만원인 거래가 이상거래야?",
+    "question": "거래시간대 21, 출금사 119, 입금사 157, 일반(자금구분 0), 인터넷뱅킹(매체구분 2), 1000만원인 거래가 이상거래야?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -371,9 +371,9 @@
           "time_slot": 21,
           "sender_bank": 119,
           "receiver_bank": 157,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 2,
-          "amount": 15000000
+          "amount": 10000000
         }
       }
     },
@@ -402,7 +402,7 @@
   },
   {
     "id": "st_pf_020",
-    "question": "전화뱅킹(매체구분 3)으로 새벽 4시(거래시간대 3)에 출금사 156에서 입금사 110으로 이체(자금구분 4), 700만원. 이상거래 확률을 구해줘",
+    "question": "전화뱅킹(매체구분 3)으로 새벽 4시(거래시간대 3)에 출금사 156에서 입금사 110으로 일반(자금구분 0), 700만원. 이상거래 확률을 구해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -413,7 +413,7 @@
           "time_slot": 3,
           "sender_bank": 156,
           "receiver_bank": 110,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 3,
           "amount": 7000000
         }
@@ -423,7 +423,7 @@
   },
   {
     "id": "st_pf_021",
-    "question": "다음 거래가 보이스피싱과 관련된 이상거래인지 AI 모델로 판단해줘: 거래시간대=0, 출금사=118, 입금사=117, 자금구분=4, 매체구분=7, 거래금액=25000000",
+    "question": "다음 거래가 보이스피싱과 관련된 이상거래인지 AI 모델로 판단해줘: 거래시간대=0, 출금사=118, 입금사=117, 자금구분=3, 매체구분=7, 거래금액=20000000",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -434,9 +434,9 @@
           "time_slot": 0,
           "sender_bank": 118,
           "receiver_bank": 117,
-          "fund_type": 4,
+          "fund_type": 3,
           "media_type": 7,
-          "amount": 25000000
+          "amount": 20000000
         }
       }
     },
@@ -444,7 +444,7 @@
   },
   {
     "id": "st_pf_022",
-    "question": "거래시간대 9, 출금사 108, 입금사 134, 자금구분 4(이체), 매체구분 2(인터넷뱅킹), 거래금액 450만원인 거래의 이상거래 확률은?",
+    "question": "거래시간대 9, 출금사 108, 입금사 134, 자금구분 0(일반), 매체구분 2(인터넷뱅킹), 거래금액 400만원인 거래의 이상거래 확률은?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -455,9 +455,9 @@
           "time_slot": 9,
           "sender_bank": 108,
           "receiver_bank": 134,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 2,
-          "amount": 4500000
+          "amount": 4000000
         }
       }
     },
@@ -465,7 +465,7 @@
   },
   {
     "id": "st_pf_023",
-    "question": "오후 9시(거래시간대 21), 인터넷뱅킹(매체구분 2), 출금사 150, 입금사 120, 이체(자금구분 4), 거래금액 180만원 거래의 사기 가능성을 예측해줘",
+    "question": "오후 9시(거래시간대 21), 인터넷뱅킹(매체구분 2), 출금사 150, 입금사 120, 일반(자금구분 0), 거래금액 200만원 거래의 사기 가능성을 예측해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -476,9 +476,9 @@
           "time_slot": 21,
           "sender_bank": 150,
           "receiver_bank": 120,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 2,
-          "amount": 1800000
+          "amount": 2000000
         }
       }
     },
@@ -486,7 +486,7 @@
   },
   {
     "id": "st_pf_024",
-    "question": "출금사 129, 입금사 150, 자정(거래시간대 0), 대량이체(매체구분 7), 이체(자금구분 4), 5000만원 대형 거래가 이상거래인지 AI로 판단해줘",
+    "question": "출금사 129, 입금사 150, 자정(거래시간대 0), 대량이체(매체구분 7), 급여(자금구분 1), 5000만원 대형 거래가 이상거래인지 AI로 판단해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -497,7 +497,7 @@
           "time_slot": 0,
           "sender_bank": 129,
           "receiver_bank": 150,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 7,
           "amount": 50000000
         }
@@ -507,7 +507,7 @@
   },
   {
     "id": "st_pf_025",
-    "question": "PC뱅킹(매체구분 1), 오전 9시(거래시간대 9), 출금사 150, 입금사 157, 기타(자금구분 3), 거래금액 1200만원 거래의 이상거래 확률을 모델로 구해줘",
+    "question": "PC뱅킹(매체구분 1), 오전 9시(거래시간대 9), 출금사 150, 입금사 157, 기타(자금구분 3), 거래금액 1000만원 거래의 이상거래 확률을 모델로 구해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -520,7 +520,7 @@
           "receiver_bank": 157,
           "fund_type": 3,
           "media_type": 1,
-          "amount": 12000000
+          "amount": 10000000
         }
       }
     },
@@ -528,7 +528,7 @@
   },
   {
     "id": "st_pf_026",
-    "question": "거래시간대 21, 기타 매체(매체구분 6), 출금사 131, 입금사 154, 자금구분 4(이체), 거래금액 3500만원 거래의 사기 여부를 XGBoost로 예측해줘",
+    "question": "거래시간대 21, 기타 매체(매체구분 6), 출금사 131, 입금사 154, 자금구분 1(급여), 거래금액 3000만원 거래의 사기 여부를 XGBoost로 예측해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -539,9 +539,9 @@
           "time_slot": 21,
           "sender_bank": 131,
           "receiver_bank": 154,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 6,
-          "amount": 35000000
+          "amount": 30000000
         }
       }
     },
@@ -549,7 +549,7 @@
   },
   {
     "id": "st_pf_027",
-    "question": "거래시간대 18, 출금사 116, 입금사 156, 자금구분 4(이체), 매체구분 2(인터넷뱅킹), 거래금액 430만원인 거래의 이상거래 확률을 예측해줘",
+    "question": "거래시간대 18, 출금사 116, 입금사 156, 자금구분 3(기타), 매체구분 2(인터넷뱅킹), 거래금액 400만원인 거래의 이상거래 확률을 예측해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -560,9 +560,9 @@
           "time_slot": 18,
           "sender_bank": 116,
           "receiver_bank": 156,
-          "fund_type": 4,
+          "fund_type": 3,
           "media_type": 2,
-          "amount": 4300000
+          "amount": 4000000
         }
       }
     },
@@ -570,7 +570,7 @@
   },
   {
     "id": "st_pf_028",
-    "question": "오전 9시(거래시간대 9), PC뱅킹(매체구분 1), 출금사 118, 입금사 114, 이체(자금구분 4), 1800만원 거래가 이상거래일 확률은?",
+    "question": "오전 9시(거래시간대 9), PC뱅킹(매체구분 1), 출금사 118, 입금사 114, 급여(자금구분 1), 2000만원 거래가 이상거래일 확률은?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -581,9 +581,9 @@
           "time_slot": 9,
           "sender_bank": 118,
           "receiver_bank": 114,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 1,
-          "amount": 18000000
+          "amount": 20000000
         }
       }
     },
@@ -591,7 +591,7 @@
   },
   {
     "id": "st_pf_029",
-    "question": "인터넷뱅킹(매체구분 2)으로 새벽 6시(거래시간대 6)에 출금사 119에서 입금사 152로 기타(자금구분 3), 680만원 거래의 사기 확률을 AI로 구해줘",
+    "question": "인터넷뱅킹(매체구분 2)으로 새벽 6시(거래시간대 6)에 출금사 119에서 입금사 152로 기타(자금구분 3), 700만원 거래의 사기 확률을 AI로 구해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -604,7 +604,7 @@
           "receiver_bank": 152,
           "fund_type": 3,
           "media_type": 2,
-          "amount": 6800000
+          "amount": 7000000
         }
       }
     },
@@ -633,7 +633,7 @@
   },
   {
     "id": "st_pf_031",
-    "question": "인터넷뱅킹(매체구분 2)으로 오후 3시(거래시간대 15)에 출금사 134에서 입금사 123으로 이체(자금구분 4) 방식으로 320만원을 보냈어. 이상거래 가능성을 예측해줘",
+    "question": "인터넷뱅킹(매체구분 2)으로 오후 3시(거래시간대 15)에 출금사 134에서 입금사 123으로 급여(자금구분 1) 방식으로 300만원을 보냈어. 이상거래 가능성을 예측해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -644,9 +644,9 @@
           "time_slot": 15,
           "sender_bank": 134,
           "receiver_bank": 123,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 2,
-          "amount": 3200000
+          "amount": 3000000
         }
       }
     },
@@ -654,7 +654,7 @@
   },
   {
     "id": "st_pf_032",
-    "question": "거래시간대 21, 출금사 128, 입금사 119, 자금구분 4(이체), 인터넷뱅킹(매체구분 2), 거래금액 750만원의 이상거래 여부를 예측해줘",
+    "question": "거래시간대 21, 출금사 128, 입금사 119, 자금구분 1(급여), 인터넷뱅킹(매체구분 2), 거래금액 700만원의 이상거래 여부를 예측해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -665,9 +665,9 @@
           "time_slot": 21,
           "sender_bank": 128,
           "receiver_bank": 119,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 2,
-          "amount": 7500000
+          "amount": 7000000
         }
       }
     },
@@ -675,7 +675,7 @@
   },
   {
     "id": "st_pf_033",
-    "question": "전화뱅킹(매체구분 3), 낮 12시(거래시간대 12), 출금사 128, 입금사 134, 자금구분 4(이체), 2400만원 거래의 사기 확률을 모델로 예측해줘",
+    "question": "전화뱅킹(매체구분 3), 낮 12시(거래시간대 12), 출금사 128, 입금사 134, 자금구분 1(급여), 2000만원 거래의 사기 확률을 모델로 예측해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -686,9 +686,9 @@
           "time_slot": 12,
           "sender_bank": 128,
           "receiver_bank": 134,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 3,
-          "amount": 24000000
+          "amount": 20000000
         }
       }
     },
@@ -696,7 +696,7 @@
   },
   {
     "id": "st_pf_034",
-    "question": "다음 거래의 이상거래 확률을 XGBoost 모델로 예측해줘: 거래시간대=6, 출금사=113, 입금사=143, 자금구분=3, 매체구분=6, 거래금액=9500000",
+    "question": "다음 거래의 이상거래 확률을 XGBoost 모델로 예측해줘: 거래시간대=6, 출금사=113, 입금사=143, 자금구분=3, 매체구분=6, 거래금액=9000000",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -709,7 +709,7 @@
           "receiver_bank": 143,
           "fund_type": 3,
           "media_type": 6,
-          "amount": 9500000
+          "amount": 9000000
         }
       }
     },
@@ -717,7 +717,7 @@
   },
   {
     "id": "st_pf_035",
-    "question": "자정(거래시간대 0), 기타 매체(매체구분 6), 출금사 150, 입금사 146, 이체(자금구분 4), 3천만원 — 이 거래가 이상거래일 가능성을 수치로 알려줘",
+    "question": "자정(거래시간대 0), 기타 매체(매체구분 6), 출금사 150, 입금사 146, 일반(자금구분 0), 3천만원 — 이 거래가 이상거래일 가능성을 수치로 알려줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -728,7 +728,7 @@
           "time_slot": 0,
           "sender_bank": 150,
           "receiver_bank": 146,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 6,
           "amount": 30000000
         }
@@ -739,7 +739,7 @@
   },
   {
     "id": "st_pf_036",
-    "question": "거래시간대 12, 출금사 107, 입금사 152, 자금구분 0(일반), 매체구분 7(대량이체), 거래금액 560만원 거래를 AI 모델로 분석해줘",
+    "question": "거래시간대 12, 출금사 107, 입금사 152, 자금구분 0(일반), 매체구분 7(대량이체), 거래금액 600만원 거래를 AI 모델로 분석해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -752,7 +752,7 @@
           "receiver_bank": 152,
           "fund_type": 0,
           "media_type": 7,
-          "amount": 5600000
+          "amount": 6000000
         }
       }
     },
@@ -760,7 +760,7 @@
   },
   {
     "id": "st_pf_037",
-    "question": "오전 3시 새벽에 전화뱅킹으로 출금사 130에서 입금사 113으로 5백만원 타행 자동이체가 발생했어. 이상거래인지 확률로 알려줘",
+    "question": "오전 3시 새벽에 전화뱅킹으로 출금사 130에서 입금사 113으로 5백만원이 일반 자금(자금구분 0)으로 이체됐어. 이상거래인지 확률로 알려줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -771,7 +771,7 @@
           "time_slot": 3,
           "sender_bank": 130,
           "receiver_bank": 113,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 3,
           "amount": 5000000
         }
@@ -782,7 +782,7 @@
   },
   {
     "id": "st_pf_038",
-    "question": "거래시간대 18, 출금사 108, 입금사 116, 자금구분 1(급여), 매체구분 2(인터넷뱅킹), 거래금액 1.2억원 거래가 이상거래야?",
+    "question": "거래시간대 18, 출금사 108, 입금사 116, 자금구분 1(급여), 매체구분 2(인터넷뱅킹), 거래금액 1억원 거래가 이상거래야?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -795,7 +795,7 @@
           "receiver_bank": 116,
           "fund_type": 1,
           "media_type": 2,
-          "amount": 120000000
+          "amount": 100000000
         }
       }
     },
@@ -804,7 +804,7 @@
   },
   {
     "id": "st_pf_039",
-    "question": "이 계좌에서 발생한 거래가 위험한지 판단해줘 — 출금사 131, 입금사 120, 밤 11시, 모바일뱅킹(매체구분 4), 기타(자금구분 3), 4천5백만원",
+    "question": "이 계좌에서 발생한 거래가 위험한지 판단해줘 — 출금사 131, 입금사 120, 밤 11시(거래시간대 21), 휴대전화(매체구분 4), 기타(자금구분 3), 4천만원",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -817,7 +817,7 @@
           "receiver_bank": 120,
           "fund_type": 3,
           "media_type": 4,
-          "amount": 45000000
+          "amount": 40000000
         }
       }
     },
@@ -826,7 +826,7 @@
   },
   {
     "id": "st_pf_040",
-    "question": "밤 10시에 PC뱅킹에서 출금사 113, 입금사 154, 타행 자동이체로 1억원짜리 거래가 이상거래인지 AI가 판단해줘",
+    "question": "밤 10시에 PC뱅킹에서 출금사 113, 입금사 154로 급여(자금구분 1) 1억원짜리 거래가 이상거래인지 AI가 판단해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -837,7 +837,7 @@
           "time_slot": 21,
           "sender_bank": 113,
           "receiver_bank": 154,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 1,
           "amount": 100000000
         }
@@ -848,7 +848,7 @@
   },
   {
     "id": "st_pf_041",
-    "question": "거래시간대 6, 출금사 112, 입금사 151, 자금구분 4(이체), 매체구분 2(인터넷뱅킹), 거래금액 270만원 거래의 이상거래 확률을 예측해줘",
+    "question": "거래시간대 6, 출금사 112, 입금사 151, 자금구분 1(급여), 매체구분 2(인터넷뱅킹), 거래금액 300만원 거래의 이상거래 확률을 예측해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -859,9 +859,9 @@
           "time_slot": 6,
           "sender_bank": 112,
           "receiver_bank": 151,
-          "fund_type": 4,
+          "fund_type": 1,
           "media_type": 2,
-          "amount": 2700000
+          "amount": 3000000
         }
       }
     },
@@ -869,7 +869,7 @@
   },
   {
     "id": "st_pf_042",
-    "question": "오후 6시(거래시간대 18), 대량이체(매체구분 7), 출금사 134, 입금사 112, 급여(자금구분 1), 거래금액 3900만원인 거래가 이상거래일 확률은?",
+    "question": "오후 6시(거래시간대 18), 대량이체(매체구분 7), 출금사 134, 입금사 112, 급여(자금구분 1), 거래금액 4000만원인 거래가 이상거래일 확률은?",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -882,7 +882,7 @@
           "receiver_bank": 112,
           "fund_type": 1,
           "media_type": 7,
-          "amount": 39000000
+          "amount": 40000000
         }
       }
     },
@@ -890,7 +890,7 @@
   },
   {
     "id": "st_pf_043",
-    "question": "거래시간대 9, 출금사 151, 입금사 143, 자금구분 3(기타), 매체구분 3(전화뱅킹), 거래금액 1650만원 거래를 이상거래 탐지 모델로 예측해줘",
+    "question": "거래시간대 9, 출금사 151, 입금사 143, 자금구분 3(기타), 매체구분 3(전화뱅킹), 거래금액 2000만원 거래를 이상거래 탐지 모델로 예측해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -903,7 +903,7 @@
           "receiver_bank": 143,
           "fund_type": 3,
           "media_type": 3,
-          "amount": 16500000
+          "amount": 20000000
         }
       }
     },
@@ -981,7 +981,7 @@
   },
   {
     "id": "st_pf_044",
-    "question": "거래시간대 12, 출금사 128, 입금사 154, 자금구분 4(이체), 매체구분 1(PC뱅킹), 거래금액 390만원 거래의 이상거래 확률을 예측해줘",
+    "question": "거래시간대 12, 출금사 128, 입금사 154, 자금구분 0(일반), 매체구분 1(PC뱅킹), 거래금액 400만원 거래의 이상거래 확률을 예측해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -992,9 +992,9 @@
           "time_slot": 12,
           "sender_bank": 128,
           "receiver_bank": 154,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 1,
-          "amount": 3900000
+          "amount": 4000000
         }
       }
     },
@@ -1002,7 +1002,7 @@
   },
   {
     "id": "st_pf_045",
-    "question": "오전 9시(거래시간대 9), 인터넷뱅킹(매체구분 2), 출금사 107, 입금사 112, 이체(자금구분 4), 2200만원 거래의 이상거래 가능성을 AI로 평가해줘",
+    "question": "오전 9시(거래시간대 9), 인터넷뱅킹(매체구분 2), 출금사 107, 입금사 112, 기타(자금구분 3), 2000만원 거래의 이상거래 가능성을 AI로 평가해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -1013,9 +1013,9 @@
           "time_slot": 9,
           "sender_bank": 107,
           "receiver_bank": 112,
-          "fund_type": 4,
+          "fund_type": 3,
           "media_type": 2,
-          "amount": 22000000
+          "amount": 20000000
         }
       }
     },
@@ -1023,7 +1023,7 @@
   },
   {
     "id": "st_pf_046",
-    "question": "밤 11시에 인터넷뱅킹으로 출금사 151에서 입금사 143으로 자금구분 기타로 980만원 거래가 일어났어. 이상거래인지 확률로 알려줘",
+    "question": "밤 11시에 인터넷뱅킹으로 출금사 151에서 입금사 143으로 자금구분 기타로 1000만원 거래가 일어났어. 이상거래인지 확률로 알려줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -1036,7 +1036,7 @@
           "receiver_bank": 143,
           "fund_type": 3,
           "media_type": 2,
-          "amount": 9800000
+          "amount": 10000000
         }
       }
     },
@@ -1045,7 +1045,7 @@
   },
   {
     "id": "st_pf_047",
-    "question": "거래시간대 15, 출금사 134, 입금사 146, 자금구분 1(급여), 매체구분 6(기타), 거래금액 6800만원 거래의 사기 확률을 XGBoost로 예측해줘",
+    "question": "거래시간대 15, 출금사 134, 입금사 146, 자금구분 1(급여), 매체구분 6(기타), 거래금액 7000만원 거래의 사기 확률을 XGBoost로 예측해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -1058,7 +1058,7 @@
           "receiver_bank": 146,
           "fund_type": 1,
           "media_type": 6,
-          "amount": 68000000
+          "amount": 70000000
         }
       }
     },
@@ -1067,7 +1067,7 @@
   },
   {
     "id": "st_pf_048",
-    "question": "이 거래가 수상한지 판단해줘 — 새벽 4시에 대량이체 매체를 통해 출금사 129에서 입금사 151로 무려 2억원이 넘는 금액이 타행 자동이체로 이동했어",
+    "question": "이 거래가 수상한지 판단해줘 — 새벽 4시에 대량이체 매체를 통해 출금사 129에서 입금사 151로 2억원이 일반 자금(자금구분 0)으로 이동했어",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -1078,7 +1078,7 @@
           "time_slot": 3,
           "sender_bank": 129,
           "receiver_bank": 151,
-          "fund_type": 4,
+          "fund_type": 0,
           "media_type": 7,
           "amount": 200000000
         }

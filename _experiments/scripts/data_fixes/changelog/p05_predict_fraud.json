@@ -1,0 +1,4674 @@
+{
+  "pass": "p05_predict_fraud",
+  "description": "Re-apply the 868fd28 R3/R7 mapping so every predict_fraud input is a value HOFINET holds (D12, C1-003).",
+  "n_changes": 188,
+  "n_cases": 47,
+  "by_issue": {
+    "C1-003/D12": 188
+  },
+  "notes": [
+    "30 amounts mapped onto the 48-value set, 34 fund types moved off 4"
+  ],
+  "changes": [
+    {
+      "case_id": "st_mtool_004",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반); the gold omitted the required arguments ['fund_type', 'media_type'], so the gold call could not be executed; they are taken from the question (L1-016)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud",
+          "analyze_network"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 134,
+            "receiver_bank": 119,
+            "amount": 10000000
+          },
+          "analyze_network": {
+            "account_id": 9000000000024638
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud",
+          "analyze_network"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 134,
+            "receiver_bank": 119,
+            "amount": 10000000,
+            "fund_type": 0,
+            "media_type": 2
+          },
+          "analyze_network": {
+            "account_id": 9000000000024638
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_004",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반); the gold omitted the required arguments ['fund_type', 'media_type'], so the gold call could not be executed; they are taken from the question (L1-016)",
+      "before": "거래시간대 3, 출금사 134, 입금사 119, 타행 자동이체, 인터넷뱅킹, 1000만원 거래의 이상거래 확률을 예측하고, 해당 출금계좌 9000000000024638의 네트워크도 분석해줘",
+      "after": "거래시간대 3, 출금사 134, 입금사 119, 일반(자금구분 0), 인터넷뱅킹(매체구분 2), 1000만원 거래의 이상거래 확률을 예측하고, 해당 출금계좌 9000000000024638의 네트워크도 분석해줘"
+    },
+    {
+      "case_id": "st_mtool_004",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반); the gold omitted the required arguments ['fund_type', 'media_type'], so the gold call could not be executed; they are taken from the question (L1-016)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud",
+          "analyze_network"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 134,
+            "receiver_bank": 119,
+            "amount": 10000000
+          },
+          "analyze_network": {
+            "account_id": 9000000000024638
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud",
+          "analyze_network"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 134,
+            "receiver_bank": 119,
+            "amount": 10000000,
+            "fund_type": 0,
+            "media_type": 2
+          },
+          "analyze_network": {
+            "account_id": 9000000000024638
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_004",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반); the gold omitted the required arguments ['fund_type', 'media_type'], so the gold call could not be executed; they are taken from the question (L1-016)",
+      "before": "Please predict the fraud probability of a 10,000,000 won inter-bank auto transfer via internet banking with time slot 3, withdrawal institution 134, and deposit institution 119, and also analyze the network of withdrawal account 9000000000024638.",
+      "after": "Please predict the fraud probability of a 10,000,000 won general transaction (fund type 0) via internet banking (media type 2) with time slot 3, withdrawal institution 134, and deposit institution 119, and also analyze the network of withdrawal account 9000000000024638."
+    },
+    {
+      "case_id": "st_mtool_006",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반); the gold omitted the required arguments ['receiver_bank', 'sender_bank'], so the gold call could not be executed; they are taken from the question (L1-016)",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_contains": [
+              "134"
+            ],
+            "sql_valid": true
+          },
+          "predict_fraud": {
+            "time_slot": 9,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 5000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_contains": [
+              "134"
+            ],
+            "sql_valid": true
+          },
+          "predict_fraud": {
+            "time_slot": 9,
+            "fund_type": 0,
+            "media_type": 2,
+            "amount": 5000000,
+            "sender_bank": 134,
+            "receiver_bank": 119
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_006",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반); the gold omitted the required arguments ['receiver_bank', 'sender_bank'], so the gold call could not be executed; they are taken from the question (L1-016)",
+      "before": "출금금융회사 134의 이상거래 데이터를 조회하고 이상거래 확률도 하나 예측해줘. 거래시간대 9, 입금사 119, 타행 자동이체, 인터넷뱅킹, 500만원 조건으로.",
+      "after": "출금금융회사 134의 이상거래 데이터를 조회하고 이상거래 확률도 하나 예측해줘. 거래시간대 9, 출금사 134, 입금사 119, 일반(자금구분 0), 인터넷뱅킹(매체구분 2), 500만원 조건으로."
+    },
+    {
+      "case_id": "st_mtool_006",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반); the gold omitted the required arguments ['receiver_bank', 'sender_bank'], so the gold call could not be executed; they are taken from the question (L1-016)",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_contains": [
+              "134"
+            ],
+            "sql_valid": true
+          },
+          "predict_fraud": {
+            "time_slot": 9,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 5000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_contains": [
+              "134"
+            ],
+            "sql_valid": true
+          },
+          "predict_fraud": {
+            "time_slot": 9,
+            "fund_type": 0,
+            "media_type": 2,
+            "amount": 5000000,
+            "sender_bank": 134,
+            "receiver_bank": 119
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_006",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반); the gold omitted the required arguments ['receiver_bank', 'sender_bank'], so the gold call could not be executed; they are taken from the question (L1-016)",
+      "before": "Please query the suspicious transaction data of withdrawal financial institution 134 and also predict one fraud probability under these conditions: time slot 9, deposit institution 119, inter-bank auto transfer, internet banking, 5,000,000 won.",
+      "after": "Please query the suspicious transaction data of withdrawal financial institution 134 and also predict one fraud probability under these conditions: time slot 9, withdrawal institution 134, deposit institution 119, general (fund type 0), internet banking (media type 2), 5,000,000 won."
+    },
+    {
+      "case_id": "st_mtool_018",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "12000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "get_fraud_type_summary",
+        "tools_must_include": [
+          "get_fraud_type_summary",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "get_fraud_type_summary": {
+            "fraud_type": 1
+          },
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 118,
+            "receiver_bank": 119,
+            "fund_type": 4,
+            "media_type": 1,
+            "amount": 12000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "get_fraud_type_summary",
+        "tools_must_include": [
+          "get_fraud_type_summary",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "get_fraud_type_summary": {
+            "fraud_type": 1
+          },
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 118,
+            "receiver_bank": 119,
+            "fund_type": 0,
+            "media_type": 1,
+            "amount": 10000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_018",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "12000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "갑작스러운 거래패턴의 변화(유형1) 이상거래 요약을 확인하고, 거래시간대 3, 출금사 118, 입금사 119, 타행 자동이체, PC뱅킹, 1200만원 거래의 이상거래 확률도 예측해줘",
+      "after": "갑작스러운 거래패턴의 변화(유형1) 이상거래 요약을 확인하고, 거래시간대 3, 출금사 118, 입금사 119, 일반(자금구분 0), PC뱅킹(매체구분 1), 1000만원 거래의 이상거래 확률도 예측해줘"
+    },
+    {
+      "case_id": "st_mtool_018",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "12000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "get_fraud_type_summary",
+        "tools_must_include": [
+          "get_fraud_type_summary",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "get_fraud_type_summary": {
+            "fraud_type": 1
+          },
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 118,
+            "receiver_bank": 119,
+            "fund_type": 4,
+            "media_type": 1,
+            "amount": 12000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "get_fraud_type_summary",
+        "tools_must_include": [
+          "get_fraud_type_summary",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "get_fraud_type_summary": {
+            "fraud_type": 1
+          },
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 118,
+            "receiver_bank": 119,
+            "fund_type": 0,
+            "media_type": 1,
+            "amount": 10000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_018",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "12000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "Please check the summary of sudden change in transaction pattern (Type 1) suspicious transactions and also predict the fraud probability of a 12 million won transaction with time slot 3, withdrawal institution 118, deposit institution 119, inter-bank auto transfer, and PC banking.",
+      "after": "Please check the summary of sudden change in transaction pattern (type 1) suspicious transactions and also predict the fraud probability of a 10,000,000 won general transaction (fund type 0) with time slot 3, withdrawal institution 118, deposit institution 119, and PC banking (media type 1)."
+    },
+    {
+      "case_id": "st_mtool_026",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "get_institution_report",
+        "tools_must_include": [
+          "get_institution_report",
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "tool_order": [
+          "get_institution_report",
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "get_institution_report": {
+            "bank_id": 158
+          },
+          "query_transactions": {
+            "sql_contains": [
+              "158"
+            ],
+            "sql_valid": true
+          },
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 158,
+            "receiver_bank": 134,
+            "fund_type": 4,
+            "media_type": 1,
+            "amount": 20000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "get_institution_report",
+        "tools_must_include": [
+          "get_institution_report",
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "tool_order": [
+          "get_institution_report",
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "get_institution_report": {
+            "bank_id": 158
+          },
+          "query_transactions": {
+            "sql_contains": [
+              "158"
+            ],
+            "sql_valid": true
+          },
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 158,
+            "receiver_bank": 134,
+            "fund_type": 1,
+            "media_type": 1,
+            "amount": 20000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_026",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "금융회사 158 리포트를 확인하고, 해당 기관 이상거래를 SQL로 조회하고, 거래시간대 0, 출금사 158, 입금사 134, 타행 자동이체, PC뱅킹, 2000만원 거래의 사기 확률도 예측해줘",
+      "after": "금융회사 158 리포트를 확인하고, 해당 기관 이상거래를 SQL로 조회하고, 거래시간대 0, 출금사 158, 입금사 134, 급여(자금구분 1), PC뱅킹(매체구분 1), 2000만원 거래의 사기 확률도 예측해줘"
+    },
+    {
+      "case_id": "st_mtool_026",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "get_institution_report",
+        "tools_must_include": [
+          "get_institution_report",
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "tool_order": [
+          "get_institution_report",
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "get_institution_report": {
+            "bank_id": 158
+          },
+          "query_transactions": {
+            "sql_contains": [
+              "158"
+            ],
+            "sql_valid": true
+          },
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 158,
+            "receiver_bank": 134,
+            "fund_type": 4,
+            "media_type": 1,
+            "amount": 20000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "get_institution_report",
+        "tools_must_include": [
+          "get_institution_report",
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "tool_order": [
+          "get_institution_report",
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "get_institution_report": {
+            "bank_id": 158
+          },
+          "query_transactions": {
+            "sql_contains": [
+              "158"
+            ],
+            "sql_valid": true
+          },
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 158,
+            "receiver_bank": 134,
+            "fund_type": 1,
+            "media_type": 1,
+            "amount": 20000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_026",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "Please check the report for financial institution 158, query that institution's suspicious transactions with SQL, and also predict the fraud probability of a 20 million won transaction with time slot 0, withdrawal institution 158, deposit institution 134, inter-bank auto transfer, and PC banking.",
+      "after": "Please check the report for financial institution 158, query that institution's suspicious transactions with SQL, and also predict the fraud probability of a 20 million won salary transaction (fund type 1) with time slot 0, withdrawal institution 158, deposit institution 134, and PC banking (media type 1)."
+    },
+    {
+      "case_id": "st_mtool_072",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud",
+          "get_statistics"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 134,
+            "receiver_bank": 119,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 3000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud",
+          "get_statistics"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 134,
+            "receiver_bank": 119,
+            "fund_type": 0,
+            "media_type": 2,
+            "amount": 3000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_072",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "거래시간대 21, 출금사 134, 입금사 119, 타행 자동이체, 인터넷뱅킹, 300만원 조건으로 이상거래 확률을 예측하고, 전체 통계도 보여줘",
+      "after": "거래시간대 21, 출금사 134, 입금사 119, 일반(자금구분 0), 인터넷뱅킹(매체구분 2), 300만원 조건으로 이상거래 확률을 예측하고, 전체 통계도 보여줘"
+    },
+    {
+      "case_id": "st_mtool_072",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud",
+          "get_statistics"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 134,
+            "receiver_bank": 119,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 3000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud",
+          "get_statistics"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 134,
+            "receiver_bank": 119,
+            "fund_type": 0,
+            "media_type": 2,
+            "amount": 3000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_072",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "Please predict the fraud probability under these conditions: time slot 21, withdrawal institution 134, deposit institution 119, inter-bank auto transfer, internet banking, 3,000,000 won, and also show the overall statistics.",
+      "after": "Please predict the fraud probability under these conditions: time slot 21, withdrawal institution 134, deposit institution 119, general (fund type 0), internet banking (media type 2), 3,000,000 won, and also show the overall statistics."
+    },
+    {
+      "case_id": "st_mtool_086",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_contains": [
+              "107"
+            ],
+            "sql_valid": true
+          },
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 107,
+            "receiver_bank": 122,
+            "fund_type": 4,
+            "media_type": 4,
+            "amount": 2000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_contains": [
+              "107"
+            ],
+            "sql_valid": true
+          },
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 107,
+            "receiver_bank": 122,
+            "fund_type": 3,
+            "media_type": 4,
+            "amount": 2000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_086",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": "출금금융회사 107의 이상거래를 조회하고, 예측 확률도 구해줘. 거래시간대 12, 입금사 122, 타행 자동이체, 모바일, 200만원.",
+      "after": "출금금융회사 107의 이상거래를 조회하고, 예측 확률도 구해줘. 거래시간대 12, 출금사 107, 입금사 122, 기타(자금구분 3), 휴대전화(매체구분 4), 200만원."
+    },
+    {
+      "case_id": "st_mtool_086",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_contains": [
+              "107"
+            ],
+            "sql_valid": true
+          },
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 107,
+            "receiver_bank": 122,
+            "fund_type": 4,
+            "media_type": 4,
+            "amount": 2000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_contains": [
+              "107"
+            ],
+            "sql_valid": true
+          },
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 107,
+            "receiver_bank": 122,
+            "fund_type": 3,
+            "media_type": 4,
+            "amount": 2000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_086",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": "Please query the suspicious transactions of withdrawal financial institution 107 and also get the prediction probability: time slot 12, deposit institution 122, inter-bank auto transfer, mobile, 2,000,000 won.",
+      "after": "Please query the suspicious transactions of withdrawal financial institution 107 and also get the prediction probability: time slot 12, withdrawal institution 107, deposit institution 122, other (fund type 3), mobile phone (media type 4), 2,000,000 won."
+    },
+    {
+      "case_id": "st_pf_001",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 134,
+            "receiver_bank": 119,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 5000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 134,
+            "receiver_bank": 119,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 5000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_001",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": "거래시간대 9시, 출금사 134, 입금사 119, 이체(자금구분 4), 인터넷뱅킹(매체구분 2), 5백만원 거래의 이상거래 확률을 예측해줘",
+      "after": "거래시간대 9시, 출금사 134, 입금사 119, 기타(자금구분 3), 인터넷뱅킹(매체구분 2), 5백만원 거래의 이상거래 확률을 예측해줘"
+    },
+    {
+      "case_id": "st_pf_001",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 134,
+            "receiver_bank": 119,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 5000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 134,
+            "receiver_bank": 119,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 5000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_001",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": "Please predict the fraud probability of a transaction with time slot 9, withdrawal institution 134, deposit institution 119, transfer (fund type 4), internet banking (media type 2), and an amount of 5 million won.",
+      "after": "Please predict the fraud probability of a transaction with time slot 9, withdrawal institution 134, deposit institution 119, other-purpose transfer (fund type 3), internet banking (media type 2), and an amount of 5 million won."
+    },
+    {
+      "case_id": "st_pf_002",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "12000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 118,
+            "receiver_bank": 134,
+            "fund_type": 3,
+            "media_type": 1,
+            "amount": 12000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 118,
+            "receiver_bank": 134,
+            "fund_type": 3,
+            "media_type": 1,
+            "amount": 10000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_002",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "12000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000",
+      "before": "새벽 3시(거래시간대 3)에 PC뱅킹(매체구분 1)에서 출금사 118, 입금사 134로 기타(자금구분 3) 방식으로 1200만원 거래가 발생했어. 이 거래가 이상거래일 확률은?",
+      "after": "새벽 3시(거래시간대 3)에 PC뱅킹(매체구분 1)에서 출금사 118, 입금사 134로 기타(자금구분 3) 방식으로 1000만원 거래가 발생했어. 이 거래가 이상거래일 확률은?"
+    },
+    {
+      "case_id": "st_pf_002",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "12000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 118,
+            "receiver_bank": 134,
+            "fund_type": 3,
+            "media_type": 1,
+            "amount": 12000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 118,
+            "receiver_bank": 134,
+            "fund_type": 3,
+            "media_type": 1,
+            "amount": 10000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_002",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "12000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000",
+      "before": "At 3 AM (time slot 3), a 12 million won transaction occurred via PC banking (media type 1) from withdrawal institution 118 to deposit institution 134 with fund type 3 (other). What is the probability that this transaction is suspicious?",
+      "after": "At 3 AM (time slot 3), a 10 million won transaction occurred via PC banking (media type 1) from withdrawal institution 118 to deposit institution 134 with fund type 3 (other). What is the probability that this transaction is suspicious?"
+    },
+    {
+      "case_id": "st_pf_003",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 123,
+            "receiver_bank": 122,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 3000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 123,
+            "receiver_bank": 122,
+            "fund_type": 0,
+            "media_type": 2,
+            "amount": 3000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_003",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "출금금융회사 123, 입금금융회사 122, 오전 6시(거래시간대 6), 인터넷뱅킹(매체구분 2), 이체(자금구분 4), 거래금액 300만원인 거래의 이상거래 여부를 AI로 판단해줘",
+      "after": "출금금융회사 123, 입금금융회사 122, 오전 6시(거래시간대 6), 인터넷뱅킹(매체구분 2), 일반(자금구분 0), 거래금액 300만원인 거래의 이상거래 여부를 AI로 판단해줘"
+    },
+    {
+      "case_id": "st_pf_003",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 123,
+            "receiver_bank": 122,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 3000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 123,
+            "receiver_bank": 122,
+            "fund_type": 0,
+            "media_type": 2,
+            "amount": 3000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_003",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "Please use AI to determine whether a transaction from withdrawal institution 123 to deposit institution 122 at 6 AM (time slot 6) via internet banking (media type 2) as a transfer (fund type 4) with an amount of 3,000,000 won is suspicious.",
+      "after": "Please use AI to determine whether a transaction from withdrawal institution 123 to deposit institution 122 at 6 AM (time slot 6) via internet banking (media type 2) as a general transfer (fund type 0) with an amount of 3,000,000 won is suspicious."
+    },
+    {
+      "case_id": "st_pf_006",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 15,
+            "sender_bank": 118,
+            "receiver_bank": 119,
+            "fund_type": 4,
+            "media_type": 6,
+            "amount": 7000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 15,
+            "sender_bank": 118,
+            "receiver_bank": 119,
+            "fund_type": 0,
+            "media_type": 6,
+            "amount": 7000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_006",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "다음 거래를 이상거래 모델로 분석해줘: 거래시간대=15, 출금사=118, 입금사=119, 타행 자동이체, 기타 매체(매체구분 6), 7백만원",
+      "after": "다음 거래를 이상거래 모델로 분석해줘: 거래시간대=15, 출금사=118, 입금사=119, 자금구분=0(일반), 기타 매체(매체구분 6), 7백만원"
+    },
+    {
+      "case_id": "st_pf_006",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 15,
+            "sender_bank": 118,
+            "receiver_bank": 119,
+            "fund_type": 4,
+            "media_type": 6,
+            "amount": 7000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 15,
+            "sender_bank": 118,
+            "receiver_bank": 119,
+            "fund_type": 0,
+            "media_type": 6,
+            "amount": 7000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_006",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "Please analyze the following transaction with the fraud model: time slot=15, withdrawal institution=118, deposit institution=119, inter-bank auto transfer, other media (media type 6), 7 million won.",
+      "after": "Please analyze the following transaction with the fraud model: time slot=15, withdrawal institution=118, deposit institution=119, fund type=0 (general), other media (media type 6), 7 million won."
+    },
+    {
+      "case_id": "st_pf_008",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 123,
+            "receiver_bank": 122,
+            "fund_type": 4,
+            "media_type": 3,
+            "amount": 2000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 123,
+            "receiver_bank": 122,
+            "fund_type": 0,
+            "media_type": 3,
+            "amount": 2000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_008",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "전화뱅킹(매체구분 3)으로 오후 6시(거래시간대 18)에 출금사 123에서 입금사 122로 이체(자금구분 4) 방식으로 200만원을 보냈을 때 사기 확률을 예측해줘",
+      "after": "전화뱅킹(매체구분 3)으로 오후 6시(거래시간대 18)에 출금사 123에서 입금사 122로 일반(자금구분 0) 방식으로 200만원을 보냈을 때 사기 확률을 예측해줘"
+    },
+    {
+      "case_id": "st_pf_008",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 123,
+            "receiver_bank": 122,
+            "fund_type": 4,
+            "media_type": 3,
+            "amount": 2000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 123,
+            "receiver_bank": 122,
+            "fund_type": 0,
+            "media_type": 3,
+            "amount": 2000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_008",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "Please predict the fraud probability when 2,000,000 won was sent from withdrawal institution 123 to deposit institution 122 via phone banking (media type 3) at 6 PM (time slot 18) as a transfer (fund type 4).",
+      "after": "Please predict the fraud probability when 2,000,000 won was sent from withdrawal institution 123 to deposit institution 122 via phone banking (media type 3) at 6 PM (time slot 18) as a general transfer (fund type 0)."
+    },
+    {
+      "case_id": "st_pf_009",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 118,
+            "receiver_bank": 119,
+            "fund_type": 4,
+            "media_type": 7,
+            "amount": 5000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 118,
+            "receiver_bank": 119,
+            "fund_type": 1,
+            "media_type": 7,
+            "amount": 5000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_009",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "대량이체(매체구분 7), 자정(거래시간대 0), 출금사 118, 입금사 119, 타행 자동이체, 5백만원인 거래가 이상거래일 가능성을 AI로 예측해줘",
+      "after": "대량이체(매체구분 7), 자정(거래시간대 0), 출금사 118, 입금사 119, 급여(자금구분 1), 5백만원인 거래가 이상거래일 가능성을 AI로 예측해줘"
+    },
+    {
+      "case_id": "st_pf_009",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 118,
+            "receiver_bank": 119,
+            "fund_type": 4,
+            "media_type": 7,
+            "amount": 5000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 118,
+            "receiver_bank": 119,
+            "fund_type": 1,
+            "media_type": 7,
+            "amount": 5000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_009",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "Please use AI to predict how likely a 5 million won inter-bank auto transfer from withdrawal institution 118 to deposit institution 119 at midnight (time slot 0) via bulk transfer (media type 7) is to be suspicious.",
+      "after": "Please use AI to predict how likely a 5 million won salary transaction (fund type 1) from withdrawal institution 118 to deposit institution 119 at midnight (time slot 0) via bulk transfer (media type 7) is to be suspicious."
+    },
+    {
+      "case_id": "st_pf_010",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "15000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 134,
+            "receiver_bank": 122,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 15000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 134,
+            "receiver_bank": 122,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 10000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_010",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "15000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000",
+      "before": "새벽(거래시간대 3), 인터넷뱅킹(매체구분 2), 출금사 134, 입금사 122, 자금구분 3(기타), 거래금액 1500만원 조건에서 이상거래 확률을 계산해줘",
+      "after": "새벽(거래시간대 3), 인터넷뱅킹(매체구분 2), 출금사 134, 입금사 122, 자금구분 3(기타), 거래금액 1000만원 조건에서 이상거래 확률을 계산해줘"
+    },
+    {
+      "case_id": "st_pf_010",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "15000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 134,
+            "receiver_bank": 122,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 15000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 134,
+            "receiver_bank": 122,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 10000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_010",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "15000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000",
+      "before": "Please calculate the fraud probability under these conditions: early morning (time slot 3), internet banking (media type 2), withdrawal institution 134, deposit institution 122, fund type 3 (other), and an amount of 15 million won.",
+      "after": "Please calculate the fraud probability under these conditions: early morning (time slot 3), internet banking (media type 2), withdrawal institution 134, deposit institution 122, fund type 3 (other), and an amount of 10 million won."
+    },
+    {
+      "case_id": "st_pf_011",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "2500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 2000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 15,
+            "sender_bank": 158,
+            "receiver_bank": 150,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 2500000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 15,
+            "sender_bank": 158,
+            "receiver_bank": 150,
+            "fund_type": 1,
+            "media_type": 2,
+            "amount": 2000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_011",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "2500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 2000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "거래시간대 15, 출금사 158, 입금사 150, 이체(자금구분 4), 인터넷뱅킹(매체구분 2), 250만원 거래의 이상거래 확률을 예측해줘",
+      "after": "거래시간대 15, 출금사 158, 입금사 150, 급여(자금구분 1), 인터넷뱅킹(매체구분 2), 200만원 거래의 이상거래 확률을 예측해줘"
+    },
+    {
+      "case_id": "st_pf_011",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "2500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 2000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 15,
+            "sender_bank": 158,
+            "receiver_bank": 150,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 2500000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 15,
+            "sender_bank": 158,
+            "receiver_bank": 150,
+            "fund_type": 1,
+            "media_type": 2,
+            "amount": 2000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_011",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "2500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 2000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "Please predict the fraud probability of a transaction with time slot 15, withdrawal institution 158, deposit institution 150, transfer (fund type 4), internet banking (media type 2), and an amount of 2,500,000 won.",
+      "after": "Please predict the fraud probability of a transaction with time slot 15, withdrawal institution 158, deposit institution 150, salary transfer (fund type 1), internet banking (media type 2), and an amount of 2,000,000 won."
+    },
+    {
+      "case_id": "st_pf_012",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 130,
+            "receiver_bank": 157,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 9000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 130,
+            "receiver_bank": 157,
+            "fund_type": 0,
+            "media_type": 2,
+            "amount": 9000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_012",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "인터넷뱅킹(매체구분 2), 오후 6시(거래시간대 18), 출금사 130, 입금사 157, 이체(자금구분 4), 900만원 거래의 이상거래 확률은?",
+      "after": "인터넷뱅킹(매체구분 2), 오후 6시(거래시간대 18), 출금사 130, 입금사 157, 일반(자금구분 0), 900만원 거래의 이상거래 확률은?"
+    },
+    {
+      "case_id": "st_pf_012",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 130,
+            "receiver_bank": 157,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 9000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 130,
+            "receiver_bank": 157,
+            "fund_type": 0,
+            "media_type": 2,
+            "amount": 9000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_012",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "What is the probability that a 9,000,000 won transaction via internet banking (media type 2) at 6 PM (time slot 18) from withdrawal institution 130 to deposit institution 157 as a transfer (fund type 4) is suspicious?",
+      "after": "What is the probability that a 9,000,000 won transaction via internet banking (media type 2) at 6 PM (time slot 18) from withdrawal institution 130 to deposit institution 157 as a general transfer (fund type 0) is suspicious?"
+    },
+    {
+      "case_id": "st_pf_015",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "4500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 4000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 118,
+            "receiver_bank": 156,
+            "fund_type": 4,
+            "media_type": 6,
+            "amount": 4500000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 118,
+            "receiver_bank": 156,
+            "fund_type": 0,
+            "media_type": 6,
+            "amount": 4000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_015",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "4500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 4000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "기타 매체(매체구분 6)로 낮 12시(거래시간대 12)에 출금사 118에서 입금사 156으로 이체(자금구분 4) 방식으로 450만원 거래가 이상거래일 확률은?",
+      "after": "기타 매체(매체구분 6)로 낮 12시(거래시간대 12)에 출금사 118에서 입금사 156으로 일반(자금구분 0) 방식으로 400만원 거래가 이상거래일 확률은?"
+    },
+    {
+      "case_id": "st_pf_015",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "4500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 4000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 118,
+            "receiver_bank": 156,
+            "fund_type": 4,
+            "media_type": 6,
+            "amount": 4500000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 118,
+            "receiver_bank": 156,
+            "fund_type": 0,
+            "media_type": 6,
+            "amount": 4000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_015",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "4500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 4000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "What is the probability that a 4,500,000 won transfer (fund type 4) from withdrawal institution 118 to deposit institution 156 at 12 PM (time slot 12) via other media (media type 6) is suspicious?",
+      "after": "What is the probability that a 4,000,000 won general transfer (fund type 0) from withdrawal institution 118 to deposit institution 156 at 12 PM (time slot 12) via other media (media type 6) is suspicious?"
+    },
+    {
+      "case_id": "st_pf_016",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "3500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 3000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 158,
+            "receiver_bank": 110,
+            "fund_type": 4,
+            "media_type": 5,
+            "amount": 3500000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 158,
+            "receiver_bank": 110,
+            "fund_type": 3,
+            "media_type": 5,
+            "amount": 3000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_016",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "3500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 3000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": "다음 거래를 사기 탐지 모델로 분석해줘: 거래시간대=6, 출금사=158, 입금사=110, 자금구분=4, 매체구분=5, 거래금액=3500000",
+      "after": "다음 거래를 사기 탐지 모델로 분석해줘: 거래시간대=6, 출금사=158, 입금사=110, 자금구분=3, 매체구분=5, 거래금액=3000000"
+    },
+    {
+      "case_id": "st_pf_016",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "3500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 3000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 158,
+            "receiver_bank": 110,
+            "fund_type": 4,
+            "media_type": 5,
+            "amount": 3500000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 158,
+            "receiver_bank": 110,
+            "fund_type": 3,
+            "media_type": 5,
+            "amount": 3000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_016",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "3500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 3000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": "Please analyze the following transaction with the fraud detection model: time slot=6, withdrawal institution=158, deposit institution=110, fund type=4, media type=5, amount=3500000.",
+      "after": "Please analyze the following transaction with the fraud detection model: time slot=6, withdrawal institution=158, deposit institution=110, fund type=3, media type=5, amount=3000000."
+    },
+    {
+      "case_id": "st_pf_017",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "5500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 5000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 134,
+            "receiver_bank": 127,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 5500000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 134,
+            "receiver_bank": 127,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 5000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_017",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "5500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 5000000",
+      "before": "오전 6시(거래시간대 6) 인터넷뱅킹(매체구분 2), 출금사 134, 입금사 127, 기타(자금구분 3), 550만원 거래의 이상거래 확률을 계산해줘",
+      "after": "오전 6시(거래시간대 6) 인터넷뱅킹(매체구분 2), 출금사 134, 입금사 127, 기타(자금구분 3), 500만원 거래의 이상거래 확률을 계산해줘"
+    },
+    {
+      "case_id": "st_pf_017",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "5500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 5000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 134,
+            "receiver_bank": 127,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 5500000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 134,
+            "receiver_bank": 127,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 5000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_017",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "5500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 5000000",
+      "before": "Please calculate the fraud probability of a 5,500,000 won transaction at 6 AM (time slot 6) via internet banking (media type 2) from withdrawal institution 134 to deposit institution 127 with fund type 3 (other).",
+      "after": "Please calculate the fraud probability of a 5,000,000 won transaction at 6 AM (time slot 6) via internet banking (media type 2) from withdrawal institution 134 to deposit institution 127 with fund type 3 (other)."
+    },
+    {
+      "case_id": "st_pf_018",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "15000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 119,
+            "receiver_bank": 157,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 15000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 119,
+            "receiver_bank": 157,
+            "fund_type": 0,
+            "media_type": 2,
+            "amount": 10000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_018",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "15000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "거래시간대 21, 출금사 119, 입금사 157, 이체(자금구분 4), 인터넷뱅킹(매체구분 2), 1500만원인 거래가 이상거래야?",
+      "after": "거래시간대 21, 출금사 119, 입금사 157, 일반(자금구분 0), 인터넷뱅킹(매체구분 2), 1000만원인 거래가 이상거래야?"
+    },
+    {
+      "case_id": "st_pf_018",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "15000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 119,
+            "receiver_bank": 157,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 15000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 119,
+            "receiver_bank": 157,
+            "fund_type": 0,
+            "media_type": 2,
+            "amount": 10000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_018",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "15000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "Is a 15,000,000 won transaction with time slot 21 from withdrawal institution 119 to deposit institution 157 as a transfer (fund type 4) via internet banking (media type 2) suspicious?",
+      "after": "Is a 10,000,000 won transaction with time slot 21 from withdrawal institution 119 to deposit institution 157 as a general transfer (fund type 0) via internet banking (media type 2) suspicious?"
+    },
+    {
+      "case_id": "st_pf_020",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 156,
+            "receiver_bank": 110,
+            "fund_type": 4,
+            "media_type": 3,
+            "amount": 7000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 156,
+            "receiver_bank": 110,
+            "fund_type": 0,
+            "media_type": 3,
+            "amount": 7000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_020",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "전화뱅킹(매체구분 3)으로 새벽 4시(거래시간대 3)에 출금사 156에서 입금사 110으로 이체(자금구분 4), 700만원. 이상거래 확률을 구해줘",
+      "after": "전화뱅킹(매체구분 3)으로 새벽 4시(거래시간대 3)에 출금사 156에서 입금사 110으로 일반(자금구분 0), 700만원. 이상거래 확률을 구해줘"
+    },
+    {
+      "case_id": "st_pf_020",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 156,
+            "receiver_bank": 110,
+            "fund_type": 4,
+            "media_type": 3,
+            "amount": 7000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 156,
+            "receiver_bank": 110,
+            "fund_type": 0,
+            "media_type": 3,
+            "amount": 7000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_020",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "Please calculate the fraud probability of a 7,000,000 won transfer (fund type 4) from withdrawal institution 156 to deposit institution 110 via phone banking (media type 3) at 4 AM (time slot 3).",
+      "after": "Please calculate the fraud probability of a 7,000,000 won general transfer (fund type 0) from withdrawal institution 156 to deposit institution 110 via phone banking (media type 3) at 4 AM (time slot 3)."
+    },
+    {
+      "case_id": "st_pf_021",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "25000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 118,
+            "receiver_bank": 117,
+            "fund_type": 4,
+            "media_type": 7,
+            "amount": 25000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 118,
+            "receiver_bank": 117,
+            "fund_type": 3,
+            "media_type": 7,
+            "amount": 20000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_021",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "25000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": "다음 거래가 보이스피싱과 관련된 이상거래인지 AI 모델로 판단해줘: 거래시간대=0, 출금사=118, 입금사=117, 자금구분=4, 매체구분=7, 거래금액=25000000",
+      "after": "다음 거래가 보이스피싱과 관련된 이상거래인지 AI 모델로 판단해줘: 거래시간대=0, 출금사=118, 입금사=117, 자금구분=3, 매체구분=7, 거래금액=20000000"
+    },
+    {
+      "case_id": "st_pf_021",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "25000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 118,
+            "receiver_bank": 117,
+            "fund_type": 4,
+            "media_type": 7,
+            "amount": 25000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 118,
+            "receiver_bank": 117,
+            "fund_type": 3,
+            "media_type": 7,
+            "amount": 20000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_021",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "25000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": "Please use the AI model to determine whether the following transaction is suspicious in relation to voice phishing: time slot=0, withdrawal institution=118, deposit institution=117, fund type=4, media type=7, amount=25000000.",
+      "after": "Please use the AI model to determine whether the following transaction is suspicious in relation to voice phishing: time slot=0, withdrawal institution=118, deposit institution=117, fund type=3, media type=7, amount=20000000."
+    },
+    {
+      "case_id": "st_pf_022",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "4500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 4000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 108,
+            "receiver_bank": 134,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 4500000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 108,
+            "receiver_bank": 134,
+            "fund_type": 0,
+            "media_type": 2,
+            "amount": 4000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_022",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "4500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 4000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "거래시간대 9, 출금사 108, 입금사 134, 자금구분 4(이체), 매체구분 2(인터넷뱅킹), 거래금액 450만원인 거래의 이상거래 확률은?",
+      "after": "거래시간대 9, 출금사 108, 입금사 134, 자금구분 0(일반), 매체구분 2(인터넷뱅킹), 거래금액 400만원인 거래의 이상거래 확률은?"
+    },
+    {
+      "case_id": "st_pf_022",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "4500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 4000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 108,
+            "receiver_bank": 134,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 4500000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 108,
+            "receiver_bank": 134,
+            "fund_type": 0,
+            "media_type": 2,
+            "amount": 4000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_022",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "4500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 4000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "What is the probability that a transaction with time slot 9, withdrawal institution 108, deposit institution 134, fund type 4 (transfer), media type 2 (internet banking), and an amount of 4,500,000 won is suspicious?",
+      "after": "What is the probability that a transaction with time slot 9, withdrawal institution 108, deposit institution 134, fund type 0 (general), media type 2 (internet banking), and an amount of 4,000,000 won is suspicious?"
+    },
+    {
+      "case_id": "st_pf_023",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "1800000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 2000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 150,
+            "receiver_bank": 120,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 1800000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 150,
+            "receiver_bank": 120,
+            "fund_type": 0,
+            "media_type": 2,
+            "amount": 2000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_023",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "1800000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 2000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "오후 9시(거래시간대 21), 인터넷뱅킹(매체구분 2), 출금사 150, 입금사 120, 이체(자금구분 4), 거래금액 180만원 거래의 사기 가능성을 예측해줘",
+      "after": "오후 9시(거래시간대 21), 인터넷뱅킹(매체구분 2), 출금사 150, 입금사 120, 일반(자금구분 0), 거래금액 200만원 거래의 사기 가능성을 예측해줘"
+    },
+    {
+      "case_id": "st_pf_023",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "1800000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 2000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 150,
+            "receiver_bank": 120,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 1800000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 150,
+            "receiver_bank": 120,
+            "fund_type": 0,
+            "media_type": 2,
+            "amount": 2000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_023",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "1800000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 2000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "Please predict the fraud likelihood of a transaction at 9 PM (time slot 21) via internet banking (media type 2) from withdrawal institution 150 to deposit institution 120 as a transfer (fund type 4) with an amount of 1,800,000 won.",
+      "after": "Please predict the fraud likelihood of a transaction at 9 PM (time slot 21) via internet banking (media type 2) from withdrawal institution 150 to deposit institution 120 as a general transfer (fund type 0) with an amount of 2,000,000 won."
+    },
+    {
+      "case_id": "st_pf_024",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 129,
+            "receiver_bank": 150,
+            "fund_type": 4,
+            "media_type": 7,
+            "amount": 50000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 129,
+            "receiver_bank": 150,
+            "fund_type": 1,
+            "media_type": 7,
+            "amount": 50000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_024",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "출금사 129, 입금사 150, 자정(거래시간대 0), 대량이체(매체구분 7), 이체(자금구분 4), 5000만원 대형 거래가 이상거래인지 AI로 판단해줘",
+      "after": "출금사 129, 입금사 150, 자정(거래시간대 0), 대량이체(매체구분 7), 급여(자금구분 1), 5000만원 대형 거래가 이상거래인지 AI로 판단해줘"
+    },
+    {
+      "case_id": "st_pf_024",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 129,
+            "receiver_bank": 150,
+            "fund_type": 4,
+            "media_type": 7,
+            "amount": 50000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 129,
+            "receiver_bank": 150,
+            "fund_type": 1,
+            "media_type": 7,
+            "amount": 50000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_024",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "Please use AI to determine whether a large 50 million won transaction from withdrawal institution 129 to deposit institution 150 at midnight (time slot 0) via bulk transfer (media type 7) as a transfer (fund type 4) is suspicious.",
+      "after": "Please use AI to determine whether a large 50 million won transaction from withdrawal institution 129 to deposit institution 150 at midnight (time slot 0) via bulk transfer (media type 7) as a salary transfer (fund type 1) is suspicious."
+    },
+    {
+      "case_id": "st_pf_025",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "12000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 150,
+            "receiver_bank": 157,
+            "fund_type": 3,
+            "media_type": 1,
+            "amount": 12000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 150,
+            "receiver_bank": 157,
+            "fund_type": 3,
+            "media_type": 1,
+            "amount": 10000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_025",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "12000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000",
+      "before": "PC뱅킹(매체구분 1), 오전 9시(거래시간대 9), 출금사 150, 입금사 157, 기타(자금구분 3), 거래금액 1200만원 거래의 이상거래 확률을 모델로 구해줘",
+      "after": "PC뱅킹(매체구분 1), 오전 9시(거래시간대 9), 출금사 150, 입금사 157, 기타(자금구분 3), 거래금액 1000만원 거래의 이상거래 확률을 모델로 구해줘"
+    },
+    {
+      "case_id": "st_pf_025",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "12000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 150,
+            "receiver_bank": 157,
+            "fund_type": 3,
+            "media_type": 1,
+            "amount": 12000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 150,
+            "receiver_bank": 157,
+            "fund_type": 3,
+            "media_type": 1,
+            "amount": 10000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_025",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "12000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000",
+      "before": "Please use the model to calculate the fraud probability of a 12 million won transaction via PC banking (media type 1) at 9 AM (time slot 9) from withdrawal institution 150 to deposit institution 157 with fund type 3 (other).",
+      "after": "Please use the model to calculate the fraud probability of a 10 million won transaction via PC banking (media type 1) at 9 AM (time slot 9) from withdrawal institution 150 to deposit institution 157 with fund type 3 (other)."
+    },
+    {
+      "case_id": "st_pf_026",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "35000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 30000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 131,
+            "receiver_bank": 154,
+            "fund_type": 4,
+            "media_type": 6,
+            "amount": 35000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 131,
+            "receiver_bank": 154,
+            "fund_type": 1,
+            "media_type": 6,
+            "amount": 30000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_026",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "35000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 30000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "거래시간대 21, 기타 매체(매체구분 6), 출금사 131, 입금사 154, 자금구분 4(이체), 거래금액 3500만원 거래의 사기 여부를 XGBoost로 예측해줘",
+      "after": "거래시간대 21, 기타 매체(매체구분 6), 출금사 131, 입금사 154, 자금구분 1(급여), 거래금액 3000만원 거래의 사기 여부를 XGBoost로 예측해줘"
+    },
+    {
+      "case_id": "st_pf_026",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "35000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 30000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 131,
+            "receiver_bank": 154,
+            "fund_type": 4,
+            "media_type": 6,
+            "amount": 35000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 131,
+            "receiver_bank": 154,
+            "fund_type": 1,
+            "media_type": 6,
+            "amount": 30000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_026",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "35000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 30000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "Please use XGBoost to predict whether a transaction is fraudulent: time slot 21, other media (media type 6), withdrawal institution 131, deposit institution 154, fund type 4 (transfer), and an amount of 35,000,000 won.",
+      "after": "Please use XGBoost to predict whether a transaction is fraudulent: time slot 21, other media (media type 6), withdrawal institution 131, deposit institution 154, fund type 1 (salary), and an amount of 30,000,000 won."
+    },
+    {
+      "case_id": "st_pf_027",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "4300000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 4000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 116,
+            "receiver_bank": 156,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 4300000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 116,
+            "receiver_bank": 156,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 4000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_027",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "4300000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 4000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": "거래시간대 18, 출금사 116, 입금사 156, 자금구분 4(이체), 매체구분 2(인터넷뱅킹), 거래금액 430만원인 거래의 이상거래 확률을 예측해줘",
+      "after": "거래시간대 18, 출금사 116, 입금사 156, 자금구분 3(기타), 매체구분 2(인터넷뱅킹), 거래금액 400만원인 거래의 이상거래 확률을 예측해줘"
+    },
+    {
+      "case_id": "st_pf_027",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "4300000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 4000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 116,
+            "receiver_bank": 156,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 4300000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 116,
+            "receiver_bank": 156,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 4000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_027",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "4300000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 4000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": "Please predict the fraud probability of a transaction with time slot 18, withdrawal institution 116, deposit institution 156, fund type 4 (transfer), media type 2 (internet banking), and an amount of 4,300,000 won.",
+      "after": "Please predict the fraud probability of a transaction with time slot 18, withdrawal institution 116, deposit institution 156, fund type 3 (other), media type 2 (internet banking), and an amount of 4,000,000 won."
+    },
+    {
+      "case_id": "st_pf_028",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "18000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 118,
+            "receiver_bank": 114,
+            "fund_type": 4,
+            "media_type": 1,
+            "amount": 18000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 118,
+            "receiver_bank": 114,
+            "fund_type": 1,
+            "media_type": 1,
+            "amount": 20000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_028",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "18000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "오전 9시(거래시간대 9), PC뱅킹(매체구분 1), 출금사 118, 입금사 114, 이체(자금구분 4), 1800만원 거래가 이상거래일 확률은?",
+      "after": "오전 9시(거래시간대 9), PC뱅킹(매체구분 1), 출금사 118, 입금사 114, 급여(자금구분 1), 2000만원 거래가 이상거래일 확률은?"
+    },
+    {
+      "case_id": "st_pf_028",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "18000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 118,
+            "receiver_bank": 114,
+            "fund_type": 4,
+            "media_type": 1,
+            "amount": 18000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 118,
+            "receiver_bank": 114,
+            "fund_type": 1,
+            "media_type": 1,
+            "amount": 20000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_028",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "18000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "What is the probability that an 18,000,000 won transaction at 9 AM (time slot 9) via PC banking (media type 1) from withdrawal institution 118 to deposit institution 114 as a transfer (fund type 4) is suspicious?",
+      "after": "What is the probability that a 20,000,000 won transaction at 9 AM (time slot 9) via PC banking (media type 1) from withdrawal institution 118 to deposit institution 114 as a salary transfer (fund type 1) is suspicious?"
+    },
+    {
+      "case_id": "st_pf_029",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "6800000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 7000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 119,
+            "receiver_bank": 152,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 6800000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 119,
+            "receiver_bank": 152,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 7000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_029",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "6800000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 7000000",
+      "before": "인터넷뱅킹(매체구분 2)으로 새벽 6시(거래시간대 6)에 출금사 119에서 입금사 152로 기타(자금구분 3), 680만원 거래의 사기 확률을 AI로 구해줘",
+      "after": "인터넷뱅킹(매체구분 2)으로 새벽 6시(거래시간대 6)에 출금사 119에서 입금사 152로 기타(자금구분 3), 700만원 거래의 사기 확률을 AI로 구해줘"
+    },
+    {
+      "case_id": "st_pf_029",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "6800000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 7000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 119,
+            "receiver_bank": 152,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 6800000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 119,
+            "receiver_bank": 152,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 7000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_029",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "6800000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 7000000",
+      "before": "Please use AI to calculate the fraud probability of a 6,800,000 won transaction via internet banking (media type 2) at 6 AM (time slot 6) from withdrawal institution 119 to deposit institution 152 with fund type 3 (other).",
+      "after": "Please use AI to calculate the fraud probability of a 7,000,000 won transaction via internet banking (media type 2) at 6 AM (time slot 6) from withdrawal institution 119 to deposit institution 152 with fund type 3 (other)."
+    },
+    {
+      "case_id": "st_pf_031",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "3200000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 3000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 15,
+            "sender_bank": 134,
+            "receiver_bank": 123,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 3200000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 15,
+            "sender_bank": 134,
+            "receiver_bank": 123,
+            "fund_type": 1,
+            "media_type": 2,
+            "amount": 3000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_031",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "3200000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 3000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "인터넷뱅킹(매체구분 2)으로 오후 3시(거래시간대 15)에 출금사 134에서 입금사 123으로 이체(자금구분 4) 방식으로 320만원을 보냈어. 이상거래 가능성을 예측해줘",
+      "after": "인터넷뱅킹(매체구분 2)으로 오후 3시(거래시간대 15)에 출금사 134에서 입금사 123으로 급여(자금구분 1) 방식으로 300만원을 보냈어. 이상거래 가능성을 예측해줘"
+    },
+    {
+      "case_id": "st_pf_031",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "3200000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 3000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 15,
+            "sender_bank": 134,
+            "receiver_bank": 123,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 3200000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 15,
+            "sender_bank": 134,
+            "receiver_bank": 123,
+            "fund_type": 1,
+            "media_type": 2,
+            "amount": 3000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_031",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "3200000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 3000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "A 3,200,000 won transfer (fund type 4) was sent from withdrawal institution 134 to deposit institution 123 via internet banking (media type 2) at 3 PM (time slot 15). Please predict how likely it is to be suspicious.",
+      "after": "A 3,000,000 won salary transfer (fund type 1) was sent from withdrawal institution 134 to deposit institution 123 via internet banking (media type 2) at 3 PM (time slot 15). Please predict how likely it is to be suspicious."
+    },
+    {
+      "case_id": "st_pf_032",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "7500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 7000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 128,
+            "receiver_bank": 119,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 7500000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 128,
+            "receiver_bank": 119,
+            "fund_type": 1,
+            "media_type": 2,
+            "amount": 7000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_032",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "7500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 7000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "거래시간대 21, 출금사 128, 입금사 119, 자금구분 4(이체), 인터넷뱅킹(매체구분 2), 거래금액 750만원의 이상거래 여부를 예측해줘",
+      "after": "거래시간대 21, 출금사 128, 입금사 119, 자금구분 1(급여), 인터넷뱅킹(매체구분 2), 거래금액 700만원의 이상거래 여부를 예측해줘"
+    },
+    {
+      "case_id": "st_pf_032",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "7500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 7000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 128,
+            "receiver_bank": 119,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 7500000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 128,
+            "receiver_bank": 119,
+            "fund_type": 1,
+            "media_type": 2,
+            "amount": 7000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_032",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "7500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 7000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "Please predict whether a transaction with time slot 21, withdrawal institution 128, deposit institution 119, fund type 4 (transfer), internet banking (media type 2), and an amount of 7,500,000 won is suspicious.",
+      "after": "Please predict whether a transaction with time slot 21, withdrawal institution 128, deposit institution 119, fund type 1 (salary), internet banking (media type 2), and an amount of 7,000,000 won is suspicious."
+    },
+    {
+      "case_id": "st_pf_033",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "24000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 128,
+            "receiver_bank": 134,
+            "fund_type": 4,
+            "media_type": 3,
+            "amount": 24000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 128,
+            "receiver_bank": 134,
+            "fund_type": 1,
+            "media_type": 3,
+            "amount": 20000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_033",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "24000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "전화뱅킹(매체구분 3), 낮 12시(거래시간대 12), 출금사 128, 입금사 134, 자금구분 4(이체), 2400만원 거래의 사기 확률을 모델로 예측해줘",
+      "after": "전화뱅킹(매체구분 3), 낮 12시(거래시간대 12), 출금사 128, 입금사 134, 자금구분 1(급여), 2000만원 거래의 사기 확률을 모델로 예측해줘"
+    },
+    {
+      "case_id": "st_pf_033",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "24000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 128,
+            "receiver_bank": 134,
+            "fund_type": 4,
+            "media_type": 3,
+            "amount": 24000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 128,
+            "receiver_bank": 134,
+            "fund_type": 1,
+            "media_type": 3,
+            "amount": 20000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_033",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "24000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "Please use the model to predict the fraud probability of a 24 million won transaction: phone banking (media type 3), 12 PM (time slot 12), withdrawal institution 128, deposit institution 134, fund type 4 (transfer).",
+      "after": "Please use the model to predict the fraud probability of a 20 million won transaction: phone banking (media type 3), 12 PM (time slot 12), withdrawal institution 128, deposit institution 134, fund type 1 (salary)."
+    },
+    {
+      "case_id": "st_pf_034",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "9500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 9000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 113,
+            "receiver_bank": 143,
+            "fund_type": 3,
+            "media_type": 6,
+            "amount": 9500000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 113,
+            "receiver_bank": 143,
+            "fund_type": 3,
+            "media_type": 6,
+            "amount": 9000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_034",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "9500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 9000000",
+      "before": "다음 거래의 이상거래 확률을 XGBoost 모델로 예측해줘: 거래시간대=6, 출금사=113, 입금사=143, 자금구분=3, 매체구분=6, 거래금액=9500000",
+      "after": "다음 거래의 이상거래 확률을 XGBoost 모델로 예측해줘: 거래시간대=6, 출금사=113, 입금사=143, 자금구분=3, 매체구분=6, 거래금액=9000000"
+    },
+    {
+      "case_id": "st_pf_034",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "9500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 9000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 113,
+            "receiver_bank": 143,
+            "fund_type": 3,
+            "media_type": 6,
+            "amount": 9500000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 113,
+            "receiver_bank": 143,
+            "fund_type": 3,
+            "media_type": 6,
+            "amount": 9000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_034",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "9500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 9000000",
+      "before": "Please use the XGBoost model to predict the probability that the following transaction is suspicious: time slot=6, withdrawal institution=113, deposit institution=143, fund type=3, media type=6, amount=9500000.",
+      "after": "Please use the XGBoost model to predict the probability that the following transaction is suspicious: time slot=6, withdrawal institution=113, deposit institution=143, fund type=3, media type=6, amount=9000000."
+    },
+    {
+      "case_id": "st_pf_035",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 150,
+            "receiver_bank": 146,
+            "fund_type": 4,
+            "media_type": 6,
+            "amount": 30000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 150,
+            "receiver_bank": 146,
+            "fund_type": 0,
+            "media_type": 6,
+            "amount": 30000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_035",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "자정(거래시간대 0), 기타 매체(매체구분 6), 출금사 150, 입금사 146, 이체(자금구분 4), 3천만원 — 이 거래가 이상거래일 가능성을 수치로 알려줘",
+      "after": "자정(거래시간대 0), 기타 매체(매체구분 6), 출금사 150, 입금사 146, 일반(자금구분 0), 3천만원 — 이 거래가 이상거래일 가능성을 수치로 알려줘"
+    },
+    {
+      "case_id": "st_pf_035",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 150,
+            "receiver_bank": 146,
+            "fund_type": 4,
+            "media_type": 6,
+            "amount": 30000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 0,
+            "sender_bank": 150,
+            "receiver_bank": 146,
+            "fund_type": 0,
+            "media_type": 6,
+            "amount": 30000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_035",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "At midnight (time slot 0), via other media (media type 6), from withdrawal institution 150 to deposit institution 146, transfer (fund type 4), 30 million won — please tell me numerically how likely this transaction is to be suspicious.",
+      "after": "At midnight (time slot 0), via other media (media type 6), from withdrawal institution 150 to deposit institution 146, general transfer (fund type 0), 30 million won — please tell me numerically how likely this transaction is to be suspicious."
+    },
+    {
+      "case_id": "st_pf_036",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "5600000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 6000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 107,
+            "receiver_bank": 152,
+            "fund_type": 0,
+            "media_type": 7,
+            "amount": 5600000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 107,
+            "receiver_bank": 152,
+            "fund_type": 0,
+            "media_type": 7,
+            "amount": 6000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_036",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "5600000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 6000000",
+      "before": "거래시간대 12, 출금사 107, 입금사 152, 자금구분 0(일반), 매체구분 7(대량이체), 거래금액 560만원 거래를 AI 모델로 분석해줘",
+      "after": "거래시간대 12, 출금사 107, 입금사 152, 자금구분 0(일반), 매체구분 7(대량이체), 거래금액 600만원 거래를 AI 모델로 분석해줘"
+    },
+    {
+      "case_id": "st_pf_036",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "5600000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 6000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 107,
+            "receiver_bank": 152,
+            "fund_type": 0,
+            "media_type": 7,
+            "amount": 5600000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 107,
+            "receiver_bank": 152,
+            "fund_type": 0,
+            "media_type": 7,
+            "amount": 6000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_036",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "5600000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 6000000",
+      "before": "Please analyze the transaction with the AI model: time slot 12, withdrawal institution 107, deposit institution 152, fund type 0 (general), media type 7 (bulk transfer), and an amount of 5,600,000 won.",
+      "after": "Please analyze the transaction with the AI model: time slot 12, withdrawal institution 107, deposit institution 152, fund type 0 (general), media type 7 (bulk transfer), and an amount of 6,000,000 won."
+    },
+    {
+      "case_id": "st_pf_037",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 130,
+            "receiver_bank": 113,
+            "fund_type": 4,
+            "media_type": 3,
+            "amount": 5000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 130,
+            "receiver_bank": 113,
+            "fund_type": 0,
+            "media_type": 3,
+            "amount": 5000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_037",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "오전 3시 새벽에 전화뱅킹으로 출금사 130에서 입금사 113으로 5백만원 타행 자동이체가 발생했어. 이상거래인지 확률로 알려줘",
+      "after": "오전 3시 새벽에 전화뱅킹으로 출금사 130에서 입금사 113으로 5백만원이 일반 자금(자금구분 0)으로 이체됐어. 이상거래인지 확률로 알려줘"
+    },
+    {
+      "case_id": "st_pf_037",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 130,
+            "receiver_bank": 113,
+            "fund_type": 4,
+            "media_type": 3,
+            "amount": 5000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 130,
+            "receiver_bank": 113,
+            "fund_type": 0,
+            "media_type": 3,
+            "amount": 5000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_037",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "At 3 AM, a 5 million won inter-bank auto transfer occurred via phone banking from withdrawal institution 130 to deposit institution 113. Can you tell me the probability that this is a suspicious transaction?",
+      "after": "At 3 AM, 5 million won was transferred as general funds (fund type 0) via phone banking from withdrawal institution 130 to deposit institution 113. Can you tell me the probability that this is a suspicious transaction?"
+    },
+    {
+      "case_id": "st_pf_038",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "120000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 100000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 108,
+            "receiver_bank": 116,
+            "fund_type": 1,
+            "media_type": 2,
+            "amount": 120000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 108,
+            "receiver_bank": 116,
+            "fund_type": 1,
+            "media_type": 2,
+            "amount": 100000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_038",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "120000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 100000000",
+      "before": "거래시간대 18, 출금사 108, 입금사 116, 자금구분 1(급여), 매체구분 2(인터넷뱅킹), 거래금액 1.2억원 거래가 이상거래야?",
+      "after": "거래시간대 18, 출금사 108, 입금사 116, 자금구분 1(급여), 매체구분 2(인터넷뱅킹), 거래금액 1억원 거래가 이상거래야?"
+    },
+    {
+      "case_id": "st_pf_038",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "120000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 100000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 108,
+            "receiver_bank": 116,
+            "fund_type": 1,
+            "media_type": 2,
+            "amount": 120000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 108,
+            "receiver_bank": 116,
+            "fund_type": 1,
+            "media_type": 2,
+            "amount": 100000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_038",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "120000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 100000000",
+      "before": "Is a transaction with time slot 18, withdrawal institution 108, deposit institution 116, fund type 1 (salary), media type 2 (internet banking), and an amount of 120 million won suspicious?",
+      "after": "Is a transaction with time slot 18, withdrawal institution 108, deposit institution 116, fund type 1 (salary), media type 2 (internet banking), and an amount of 100 million won suspicious?"
+    },
+    {
+      "case_id": "st_pf_039",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "45000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 40000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 131,
+            "receiver_bank": 120,
+            "fund_type": 3,
+            "media_type": 4,
+            "amount": 45000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 131,
+            "receiver_bank": 120,
+            "fund_type": 3,
+            "media_type": 4,
+            "amount": 40000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_039",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "45000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 40000000",
+      "before": "이 계좌에서 발생한 거래가 위험한지 판단해줘 — 출금사 131, 입금사 120, 밤 11시, 모바일뱅킹(매체구분 4), 기타(자금구분 3), 4천5백만원",
+      "after": "이 계좌에서 발생한 거래가 위험한지 판단해줘 — 출금사 131, 입금사 120, 밤 11시(거래시간대 21), 휴대전화(매체구분 4), 기타(자금구분 3), 4천만원"
+    },
+    {
+      "case_id": "st_pf_039",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "45000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 40000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 131,
+            "receiver_bank": 120,
+            "fund_type": 3,
+            "media_type": 4,
+            "amount": 45000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 131,
+            "receiver_bank": 120,
+            "fund_type": 3,
+            "media_type": 4,
+            "amount": 40000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_039",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "45000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 40000000",
+      "before": "Please assess whether this transaction is risky — withdrawal institution 131, deposit institution 120, 11 PM, mobile banking (media type 4), fund type 3 (other), 45 million won.",
+      "after": "Please assess whether this transaction is risky - withdrawal institution 131, deposit institution 120, 11 PM (time slot 21), mobile phone (media type 4), other (fund type 3), 40 million won."
+    },
+    {
+      "case_id": "st_pf_040",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 113,
+            "receiver_bank": 154,
+            "fund_type": 4,
+            "media_type": 1,
+            "amount": 100000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 113,
+            "receiver_bank": 154,
+            "fund_type": 1,
+            "media_type": 1,
+            "amount": 100000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_040",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "밤 10시에 PC뱅킹에서 출금사 113, 입금사 154, 타행 자동이체로 1억원짜리 거래가 이상거래인지 AI가 판단해줘",
+      "after": "밤 10시에 PC뱅킹에서 출금사 113, 입금사 154로 급여(자금구분 1) 1억원짜리 거래가 이상거래인지 AI가 판단해줘"
+    },
+    {
+      "case_id": "st_pf_040",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 113,
+            "receiver_bank": 154,
+            "fund_type": 4,
+            "media_type": 1,
+            "amount": 100000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 113,
+            "receiver_bank": 154,
+            "fund_type": 1,
+            "media_type": 1,
+            "amount": 100000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_040",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "Please have the AI determine whether a 100 million won inter-bank auto transfer from withdrawal institution 113 to deposit institution 154 via PC banking at 10 PM is a suspicious transaction.",
+      "after": "Please have the AI determine whether a 100 million won salary transaction (fund type 1) from withdrawal institution 113 to deposit institution 154 via PC banking at 10 PM is a suspicious transaction."
+    },
+    {
+      "case_id": "st_pf_041",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "2700000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 3000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 112,
+            "receiver_bank": 151,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 2700000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 112,
+            "receiver_bank": 151,
+            "fund_type": 1,
+            "media_type": 2,
+            "amount": 3000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_041",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "2700000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 3000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "거래시간대 6, 출금사 112, 입금사 151, 자금구분 4(이체), 매체구분 2(인터넷뱅킹), 거래금액 270만원 거래의 이상거래 확률을 예측해줘",
+      "after": "거래시간대 6, 출금사 112, 입금사 151, 자금구분 1(급여), 매체구분 2(인터넷뱅킹), 거래금액 300만원 거래의 이상거래 확률을 예측해줘"
+    },
+    {
+      "case_id": "st_pf_041",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "2700000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 3000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 112,
+            "receiver_bank": 151,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 2700000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 6,
+            "sender_bank": 112,
+            "receiver_bank": 151,
+            "fund_type": 1,
+            "media_type": 2,
+            "amount": 3000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_041",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "2700000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 3000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 1 (급여)",
+      "before": "Please predict the fraud probability of a transaction with time slot 6, withdrawal institution 112, deposit institution 151, fund type 4 (transfer), media type 2 (internet banking), and an amount of 2,700,000 won.",
+      "after": "Please predict the fraud probability of a transaction with time slot 6, withdrawal institution 112, deposit institution 151, fund type 1 (salary), media type 2 (internet banking), and an amount of 3,000,000 won."
+    },
+    {
+      "case_id": "st_pf_042",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "39000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 40000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 134,
+            "receiver_bank": 112,
+            "fund_type": 1,
+            "media_type": 7,
+            "amount": 39000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 134,
+            "receiver_bank": 112,
+            "fund_type": 1,
+            "media_type": 7,
+            "amount": 40000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_042",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "39000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 40000000",
+      "before": "오후 6시(거래시간대 18), 대량이체(매체구분 7), 출금사 134, 입금사 112, 급여(자금구분 1), 거래금액 3900만원인 거래가 이상거래일 확률은?",
+      "after": "오후 6시(거래시간대 18), 대량이체(매체구분 7), 출금사 134, 입금사 112, 급여(자금구분 1), 거래금액 4000만원인 거래가 이상거래일 확률은?"
+    },
+    {
+      "case_id": "st_pf_042",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "39000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 40000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 134,
+            "receiver_bank": 112,
+            "fund_type": 1,
+            "media_type": 7,
+            "amount": 39000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 18,
+            "sender_bank": 134,
+            "receiver_bank": 112,
+            "fund_type": 1,
+            "media_type": 7,
+            "amount": 40000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_042",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "39000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 40000000",
+      "before": "What is the probability that a 39 million won transaction at 6 PM (time slot 18) via bulk transfer (media type 7) from withdrawal institution 134 to deposit institution 112 with salary (fund type 1) is suspicious?",
+      "after": "What is the probability that a 40 million won transaction at 6 PM (time slot 18) via bulk transfer (media type 7) from withdrawal institution 134 to deposit institution 112 with salary (fund type 1) is suspicious?"
+    },
+    {
+      "case_id": "st_pf_043",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "16500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 151,
+            "receiver_bank": 143,
+            "fund_type": 3,
+            "media_type": 3,
+            "amount": 16500000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 151,
+            "receiver_bank": 143,
+            "fund_type": 3,
+            "media_type": 3,
+            "amount": 20000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_043",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "16500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000",
+      "before": "거래시간대 9, 출금사 151, 입금사 143, 자금구분 3(기타), 매체구분 3(전화뱅킹), 거래금액 1650만원 거래를 이상거래 탐지 모델로 예측해줘",
+      "after": "거래시간대 9, 출금사 151, 입금사 143, 자금구분 3(기타), 매체구분 3(전화뱅킹), 거래금액 2000만원 거래를 이상거래 탐지 모델로 예측해줘"
+    },
+    {
+      "case_id": "st_pf_043",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "16500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 151,
+            "receiver_bank": 143,
+            "fund_type": 3,
+            "media_type": 3,
+            "amount": 16500000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 151,
+            "receiver_bank": 143,
+            "fund_type": 3,
+            "media_type": 3,
+            "amount": 20000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_043",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "16500000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000",
+      "before": "Please use the fraud detection model to predict a transaction with time slot 9, withdrawal institution 151, deposit institution 143, fund type 3 (other), media type 3 (phone banking), and an amount of 16,500,000 won.",
+      "after": "Please use the fraud detection model to predict a transaction with time slot 9, withdrawal institution 151, deposit institution 143, fund type 3 (other), media type 3 (phone banking), and an amount of 20,000,000 won."
+    },
+    {
+      "case_id": "st_pf_044",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "3900000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 4000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 128,
+            "receiver_bank": 154,
+            "fund_type": 4,
+            "media_type": 1,
+            "amount": 3900000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 128,
+            "receiver_bank": 154,
+            "fund_type": 0,
+            "media_type": 1,
+            "amount": 4000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_044",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "3900000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 4000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "거래시간대 12, 출금사 128, 입금사 154, 자금구분 4(이체), 매체구분 1(PC뱅킹), 거래금액 390만원 거래의 이상거래 확률을 예측해줘",
+      "after": "거래시간대 12, 출금사 128, 입금사 154, 자금구분 0(일반), 매체구분 1(PC뱅킹), 거래금액 400만원 거래의 이상거래 확률을 예측해줘"
+    },
+    {
+      "case_id": "st_pf_044",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "3900000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 4000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 128,
+            "receiver_bank": 154,
+            "fund_type": 4,
+            "media_type": 1,
+            "amount": 3900000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 128,
+            "receiver_bank": 154,
+            "fund_type": 0,
+            "media_type": 1,
+            "amount": 4000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_044",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "3900000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 4000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "Please predict the fraud probability of a transaction with time slot 12, withdrawal institution 128, deposit institution 154, fund type 4 (transfer), media type 1 (PC banking), and an amount of 3,900,000 won.",
+      "after": "Please predict the fraud probability of a transaction with time slot 12, withdrawal institution 128, deposit institution 154, fund type 0 (general), media type 1 (PC banking), and an amount of 4,000,000 won."
+    },
+    {
+      "case_id": "st_pf_045",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "22000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 107,
+            "receiver_bank": 112,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 22000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 107,
+            "receiver_bank": 112,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 20000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_045",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "22000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": "오전 9시(거래시간대 9), 인터넷뱅킹(매체구분 2), 출금사 107, 입금사 112, 이체(자금구분 4), 2200만원 거래의 이상거래 가능성을 AI로 평가해줘",
+      "after": "오전 9시(거래시간대 9), 인터넷뱅킹(매체구분 2), 출금사 107, 입금사 112, 기타(자금구분 3), 2000만원 거래의 이상거래 가능성을 AI로 평가해줘"
+    },
+    {
+      "case_id": "st_pf_045",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "22000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 107,
+            "receiver_bank": 112,
+            "fund_type": 4,
+            "media_type": 2,
+            "amount": 22000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 9,
+            "sender_bank": 107,
+            "receiver_bank": 112,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 20000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_045",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "22000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 20000000; fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 3 (기타)",
+      "before": "Please use AI to assess how likely a 22 million won transaction at 9 AM (time slot 9) via internet banking (media type 2) from withdrawal institution 107 to deposit institution 112 as a transfer (fund type 4) is to be suspicious.",
+      "after": "Please use AI to assess how likely a 20 million won transaction at 9 AM (time slot 9) via internet banking (media type 2) from withdrawal institution 107 to deposit institution 112 as an other-purpose transfer (fund type 3) is to be suspicious."
+    },
+    {
+      "case_id": "st_pf_046",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "9800000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 151,
+            "receiver_bank": 143,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 9800000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 151,
+            "receiver_bank": 143,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 10000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_046",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "9800000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000",
+      "before": "밤 11시에 인터넷뱅킹으로 출금사 151에서 입금사 143으로 자금구분 기타로 980만원 거래가 일어났어. 이상거래인지 확률로 알려줘",
+      "after": "밤 11시에 인터넷뱅킹으로 출금사 151에서 입금사 143으로 자금구분 기타로 1000만원 거래가 일어났어. 이상거래인지 확률로 알려줘"
+    },
+    {
+      "case_id": "st_pf_046",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "9800000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 151,
+            "receiver_bank": 143,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 9800000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 21,
+            "sender_bank": 151,
+            "receiver_bank": 143,
+            "fund_type": 3,
+            "media_type": 2,
+            "amount": 10000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_046",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "9800000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 10000000",
+      "before": "At 11 PM, a 9.8 million won transaction with the 'other' fund type occurred via internet banking from withdrawal institution 151 to deposit institution 143. Can you tell me the probability that this is a suspicious transaction?",
+      "after": "At 11 PM, a 10 million won transaction with the 'other' fund type occurred via internet banking from withdrawal institution 151 to deposit institution 143. Can you tell me the probability that this is a suspicious transaction?"
+    },
+    {
+      "case_id": "st_pf_047",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "68000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 70000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 15,
+            "sender_bank": 134,
+            "receiver_bank": 146,
+            "fund_type": 1,
+            "media_type": 6,
+            "amount": 68000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 15,
+            "sender_bank": 134,
+            "receiver_bank": 146,
+            "fund_type": 1,
+            "media_type": 6,
+            "amount": 70000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_047",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "68000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 70000000",
+      "before": "거래시간대 15, 출금사 134, 입금사 146, 자금구분 1(급여), 매체구분 6(기타), 거래금액 6800만원 거래의 사기 확률을 XGBoost로 예측해줘",
+      "after": "거래시간대 15, 출금사 134, 입금사 146, 자금구분 1(급여), 매체구분 6(기타), 거래금액 7000만원 거래의 사기 확률을 XGBoost로 예측해줘"
+    },
+    {
+      "case_id": "st_pf_047",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "68000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 70000000",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 15,
+            "sender_bank": 134,
+            "receiver_bank": 146,
+            "fund_type": 1,
+            "media_type": 6,
+            "amount": 68000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 15,
+            "sender_bank": 134,
+            "receiver_bank": 146,
+            "fund_type": 1,
+            "media_type": 6,
+            "amount": 70000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_047",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "68000000 is not one of the 48 amounts HOFINET holds, so the described transaction cannot exist; 868fd28 R3 maps it to the nearest, 70000000",
+      "before": "Please use XGBoost to predict the fraud probability of a transaction with time slot 15, withdrawal institution 134, deposit institution 146, fund type 1 (salary), media type 6 (other), and an amount of 68 million won.",
+      "after": "Please use XGBoost to predict the fraud probability of a transaction with time slot 15, withdrawal institution 134, deposit institution 146, fund type 1 (salary), media type 6 (other), and an amount of 70 million won."
+    },
+    {
+      "case_id": "st_pf_048",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 129,
+            "receiver_bank": 151,
+            "fund_type": 4,
+            "media_type": 7,
+            "amount": 200000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 129,
+            "receiver_bank": 151,
+            "fund_type": 0,
+            "media_type": 7,
+            "amount": 200000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_048",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "이 거래가 수상한지 판단해줘 — 새벽 4시에 대량이체 매체를 통해 출금사 129에서 입금사 151로 무려 2억원이 넘는 금액이 타행 자동이체로 이동했어",
+      "after": "이 거래가 수상한지 판단해줘 — 새벽 4시에 대량이체 매체를 통해 출금사 129에서 입금사 151로 2억원이 일반 자금(자금구분 0)으로 이동했어"
+    },
+    {
+      "case_id": "st_pf_048",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 129,
+            "receiver_bank": 151,
+            "fund_type": 4,
+            "media_type": 7,
+            "amount": 200000000
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "predict_fraud",
+        "tools_must_include": [
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "predict_fraud": {
+            "time_slot": 3,
+            "sender_bank": 129,
+            "receiver_bank": 151,
+            "fund_type": 0,
+            "media_type": 7,
+            "amount": 200000000
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_048",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003/D12",
+      "why": "fund type 4 carries no fraud label anywhere in HOFINET, so a fraud question about it has no possible answer; 868fd28 R7 moves it to 0 (일반)",
+      "before": "Please assess whether this transaction is suspicious — at 4 AM, over 200 million won moved from withdrawal institution 129 to deposit institution 151 as an inter-bank auto transfer via bulk transfer.",
+      "after": "Please assess whether this transaction is suspicious — at 4 AM, 200 million won moved from withdrawal institution 129 to deposit institution 151 as general funds (fund type 0) via bulk transfer."
+    }
+  ]
+}
