@@ -132,6 +132,9 @@ def main(argv: list[str] | None = None) -> int:
                     help="leave cases without a run record out of the aggregates (default: score them as failures)")
     args = ap.parse_args(argv)
 
+    if sqlglot_version() is None:
+        print("warning: sqlglot is not installed, so SQL conditions fall back to the regex reader; "
+              "install the pin in _experiments/scripts/scoring/requirements.txt", file=sys.stderr)
     bench = load_benchmark(args.benchmark)
     ctx = build_context(args.tools_schema, execute_sql=not args.no_sql_exec,
                         use_catalog=not args.no_catalog, sql_timeout=args.sql_timeout)
