@@ -205,7 +205,8 @@
       ],
       "param_checks": {
         "detect_ctr_candidates": {
-          "mode": "high_value"
+          "mode": "high_value",
+          "threshold": 50000000
         }
       }
     },
@@ -394,7 +395,7 @@
   },
   {
     "id": "st_ctr_025",
-    "question": "CTR 보고 누락 위험이 있는 패턴을 찾아줘",
+    "question": "보고 기준 미만으로 쪼개 CTR 보고를 피한 구조화 패턴을 찾아줘",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
@@ -719,7 +720,7 @@
   },
   {
     "id": "st_ctr_042",
-    "question": "CTR 보고 누락 리스크를 최소화하기 위해 2024년 전체 기간의 고액거래와 구조화 의심 거래를 각각 탐지해서 리스트로 만들어줘",
+    "question": "CTR 보고 누락 리스크를 줄이기 위해 2024년 전체 기간의 고액거래 CTR 대상을 탐지해서 리스트로 만들어줘",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
@@ -727,6 +728,7 @@
       ],
       "param_checks": {
         "detect_ctr_candidates": {
+          "mode": "high_value",
           "date_from": 20240101,
           "date_to": 20241231
         }

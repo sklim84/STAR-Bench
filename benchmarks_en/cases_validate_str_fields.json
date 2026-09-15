@@ -1,14 +1,37 @@
 [
   {
     "id": "st_strv_001",
-    "question": "Please check if all the required fields in the STR draft are filled out.",
+    "question": "Please check whether every required field of this STR draft is filled in: {\"Header\": {\"ReportingDate\": \"20241231\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 134}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000024638\", \"ReceivingAccountNumber\": \"9000000004383302\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20241201-20241231\", \"TransactionCount\": 14, \"TransactionChannel\": \"Internet Banking\", \"TotalAmount_KRW\": 48000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Split Transaction\"}, \"VII_Narrative\": {}}",
     "expected": {
       "primary_tool": "validate_str_fields",
       "tools_must_include": [
         "validate_str_fields"
       ],
       "param_checks": {
-        "validate_str_fields": {}
+        "validate_str_fields": {
+          "str_draft": {
+            "Header": {
+              "ReportingDate": "20241231"
+            },
+            "I_ReportingInstitution": {
+              "WithdrawalInstitutionCode": 134
+            },
+            "II_Transactor": {
+              "WithdrawalAccountNumber": "9000000000024638",
+              "ReceivingAccountNumber": "9000000004383302"
+            },
+            "III_TransactionDetails": {
+              "TransactionPeriod": "20241201-20241231",
+              "TransactionCount": 14,
+              "TransactionChannel": "Internet Banking",
+              "TotalAmount_KRW": 48000000
+            },
+            "VI_TransactionType": {
+              "PrimarySuspicionType": "Split Transaction"
+            },
+            "VII_Narrative": {}
+          }
+        }
       }
     },
     "difficulty": "easy",
@@ -16,25 +39,76 @@
   },
   {
     "id": "st_strv_002",
-    "question": "Please verify if any required items are missing from this draft STR report.",
+    "question": "Please verify whether any required item is missing from this draft STR report: {\"Header\": {\"ReportingDate\": \"20241115\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 118}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000021321\", \"ReceivingAccountNumber\": \"9000000000017070\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20241101-20241115\", \"TransactionCount\": 9, \"TotalAmount_KRW\": 27000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Concurrent Multiple Transactions\"}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"Nine transfers of the same amount within two weeks.\"}}",
     "expected": {
       "primary_tool": "validate_str_fields",
       "tools_must_include": [
         "validate_str_fields"
       ],
-      "param_checks": {}
+      "param_checks": {
+        "validate_str_fields": {
+          "str_draft": {
+            "Header": {
+              "ReportingDate": "20241115"
+            },
+            "I_ReportingInstitution": {
+              "WithdrawalInstitutionCode": 118
+            },
+            "II_Transactor": {
+              "WithdrawalAccountNumber": "9000000000021321",
+              "ReceivingAccountNumber": "9000000000017070"
+            },
+            "III_TransactionDetails": {
+              "TransactionPeriod": "20241101-20241115",
+              "TransactionCount": 9,
+              "TotalAmount_KRW": 27000000
+            },
+            "VI_TransactionType": {
+              "PrimarySuspicionType": "Concurrent Multiple Transactions"
+            },
+            "VII_Narrative": {
+              "SuspicionJudgmentReason": "Nine transfers of the same amount within two weeks."
+            }
+          }
+        }
+      }
     },
     "difficulty": "easy"
   },
   {
     "id": "st_strv_003",
-    "question": "Please check if the required fields are filled out according to the suspicious transaction report format.",
+    "question": "Please check whether this draft carries the required fields of the suspicious transaction report form: {\"Header\": {\"ReportingDate\": \"20240930\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 123}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000019300\", \"ReceivingAccountNumber\": \"9000000000022564\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20240901-20240930\", \"TransactionCount\": 21, \"TransactionChannel\": \"Mobile Phone\", \"TotalAmount_KRW\": 63000000}, \"VI_TransactionType\": {}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"Funds received from 21 accounts were withdrawn the same day.\"}}",
     "expected": {
       "primary_tool": "validate_str_fields",
       "tools_must_include": [
         "validate_str_fields"
       ],
-      "param_checks": {}
+      "param_checks": {
+        "validate_str_fields": {
+          "str_draft": {
+            "Header": {
+              "ReportingDate": "20240930"
+            },
+            "I_ReportingInstitution": {
+              "WithdrawalInstitutionCode": 123
+            },
+            "II_Transactor": {
+              "WithdrawalAccountNumber": "9000000000019300",
+              "ReceivingAccountNumber": "9000000000022564"
+            },
+            "III_TransactionDetails": {
+              "TransactionPeriod": "20240901-20240930",
+              "TransactionCount": 21,
+              "TransactionChannel": "Mobile Phone",
+              "TotalAmount_KRW": 63000000
+            },
+            "VI_TransactionType": {},
+            "VII_Narrative": {
+              "SuspicionJudgmentReason": "Funds received from 21 accounts were withdrawn the same day."
+            }
+          }
+        }
+      }
     },
     "difficulty": "medium"
   }

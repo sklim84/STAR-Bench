@@ -1,10 +1,11 @@
 [
   {
     "id": "st_mp_001",
-    "question": "Please retrieve the suspicious transactions from the most recent quarter.",
+    "question": "Please look up the definition of that term in the AML glossary.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "medium",
     "note": "missing_params: '최근 분기'가 어느 시기인지 불명확 — 질문 유도 기대"
@@ -14,7 +15,8 @@
     "question": "Please analyze the network of the specific account.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "easy",
     "note": "missing_params: 계좌 번호 미지정"
@@ -24,17 +26,19 @@
     "question": "Please check the transactions of that financial institution.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "easy",
     "note": "missing_params: '그' 지시어로 참조 대상 불명"
   },
   {
     "id": "st_mp_004",
-    "question": "Please provide the statistics on suspicious transactions from last week.",
+    "question": "Please find the FIU suspicious-transaction reference types for that keyword.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "medium",
     "note": "missing_params: '저번주' 날짜 범위 불명확 (YYYYMMDD 변환 필요)"
@@ -44,7 +48,15 @@
     "question": "Please evaluate the accounts with a high risk level.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true,
+      "alternatives": [
+        {
+          "tools_must_include": [
+            "rank_risky_transactions"
+          ]
+        }
+      ]
     },
     "difficulty": "medium",
     "note": "missing_params: 평가할 계좌 번호 미지정"
@@ -54,7 +66,8 @@
     "question": "Please retrieve the profile for that account.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "easy",
     "note": "missing_params: 계좌 참조 불명"
@@ -64,7 +77,8 @@
     "question": "Please compare the two periods.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "easy",
     "note": "missing_params: period_a, period_b 미지정"
@@ -74,7 +88,8 @@
     "question": "Please show me the report for the relevant institution.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "easy",
     "note": "missing_params: bank_id 미지정"
@@ -84,7 +99,8 @@
     "question": "Please analyze the smurfing direction.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "medium",
     "note": "missing_params: inbound/outbound 미지정"
@@ -94,7 +110,8 @@
     "question": "Please provide a detailed summary of specific types of suspicious transactions.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "medium",
     "note": "missing_params: fraud_type(1~7) 미지정"
@@ -104,27 +121,34 @@
     "question": "Please find the shortest path between the withdrawal account and the deposit account.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "easy",
     "note": "missing_params: account_a, account_b 미지정"
   },
   {
     "id": "st_mp_012",
-    "question": "Please rank the number of high-risk transactions.",
+    "question": "Please rank the high-risk transactions by risk.",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {}
     },
     "difficulty": "medium",
     "note": "missing_params: top_k 미지정 (간접 표현)"
   },
   {
     "id": "st_mp_013",
-    "question": "Show me the reactivation cases of dormant accounts detected at that time.",
+    "question": "Please show the alerts for reactivated dormant accounts.",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation"
+      ],
+      "param_checks": {}
     },
     "difficulty": "hard",
     "note": "missing_params: '그때' 기간 불명"
@@ -134,27 +158,30 @@
     "question": "Please check the monitoring alerts for the relevant rules.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "easy",
     "note": "missing_params: rule_id 미지정"
   },
   {
     "id": "st_mp_015",
-    "question": "Please query the CTR for high-value transactions exceeding that amount.",
+    "question": "Please check whether that draft carries the required STR items.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "medium",
     "note": "missing_params: threshold 미지정"
   },
   {
     "id": "st_mp_016",
-    "question": "Please analyze the trends for that period.",
+    "question": "Please compare the change in suspicious transactions between that period and the preceding period of equal length.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "easy",
     "note": "missing_params: date_from, date_to 미지정"
@@ -164,7 +191,8 @@
     "question": "Please predict the likelihood of that type of suspicious transaction.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "hard",
     "note": "missing_params: predict_fraud는 거래 속성 6개 필요 — 모두 미지정"
@@ -174,17 +202,21 @@
     "question": "Please analyze the transaction flow between those two accounts.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "easy",
     "note": "missing_params: account_a, account_b 미지정"
   },
   {
     "id": "st_mp_019",
-    "question": "Please analyze the risk level for that channel.",
+    "question": "Please analyze and compare the risk of every channel.",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "analyze_channel_risk",
+      "tools_must_include": [
+        "analyze_channel_risk"
+      ],
+      "param_checks": {}
     },
     "difficulty": "medium",
     "note": "missing_params: 채널/매체 구분 미지정"
@@ -194,7 +226,8 @@
     "question": "Please retrieve the profile for that deposit account.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "easy",
     "note": "missing_params: account_id 미지정"
@@ -203,8 +236,11 @@
     "id": "st_mp_021",
     "question": "Please detect recently reactivated dormant accounts.",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation"
+      ],
+      "param_checks": {}
     },
     "difficulty": "medium",
     "note": "missing_params: dormant_days, 기간 등 불명확"
@@ -214,17 +250,21 @@
     "question": "Please detect that pattern type.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "easy",
     "note": "missing_params: pattern_type(ring/layering/funnel 등) 미지정"
   },
   {
     "id": "st_mp_023",
-    "question": "Please analyze the flow of funds between the two institutions.",
+    "question": "Please analyze the institution pairs where the fund flow between institutions is concentrated.",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "analyze_cross_institution_flow",
+      "tools_must_include": [
+        "analyze_cross_institution_flow"
+      ],
+      "param_checks": {}
     },
     "difficulty": "medium",
     "note": "missing_params: 기관 지정 불명"
@@ -234,17 +274,19 @@
     "question": "Please detect a smurfing network of that scale.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "hard",
     "note": "missing_params: min_counterparts, direction 등 미지정"
   },
   {
     "id": "st_mp_025",
-    "question": "Please check the inter-institutional flow at that point in time.",
+    "question": "Please check the suspicious transaction report of that institution from that point on.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "expect_clarification": true
     },
     "difficulty": "medium",
     "note": "missing_params: date_from, date_to 미지정"

@@ -205,7 +205,8 @@
       ],
       "param_checks": {
         "detect_ctr_candidates": {
-          "mode": "high_value"
+          "mode": "high_value",
+          "threshold": 50000000
         }
       }
     },
@@ -394,7 +395,7 @@
   },
   {
     "id": "st_ctr_025",
-    "question": "Please identify patterns that pose a risk of missing CTR reporting.",
+    "question": "Please find structuring patterns that avoided CTR reporting by splitting below the reporting threshold.",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
@@ -719,7 +720,7 @@
   },
   {
     "id": "st_ctr_042",
-    "question": "Please detect and create a list of high-value transactions and structured suspicious transactions for the entire year of 2024 to minimize the risk of missing CTR reports.",
+    "question": "Please detect and list the high-value CTR candidates over the whole of 2024 to reduce the risk of missing a CTR report.",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
@@ -727,6 +728,7 @@
       ],
       "param_checks": {
         "detect_ctr_candidates": {
+          "mode": "high_value",
           "date_from": 20240101,
           "date_to": 20241231
         }

@@ -1,14 +1,37 @@
 [
   {
     "id": "st_strv_001",
-    "question": "STR 초안의 필수 필드가 모두 채워졌는지 점검해줘",
+    "question": "다음 STR 초안의 필수 필드가 모두 채워졌는지 점검해줘: {\"Header\": {\"ReportingDate\": \"20241231\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 134}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000024638\", \"ReceivingAccountNumber\": \"9000000004383302\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20241201-20241231\", \"TransactionCount\": 14, \"TransactionChannel\": \"Internet Banking\", \"TotalAmount_KRW\": 48000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Split Transaction\"}, \"VII_Narrative\": {}}",
     "expected": {
       "primary_tool": "validate_str_fields",
       "tools_must_include": [
         "validate_str_fields"
       ],
       "param_checks": {
-        "validate_str_fields": {}
+        "validate_str_fields": {
+          "str_draft": {
+            "Header": {
+              "ReportingDate": "20241231"
+            },
+            "I_ReportingInstitution": {
+              "WithdrawalInstitutionCode": 134
+            },
+            "II_Transactor": {
+              "WithdrawalAccountNumber": "9000000000024638",
+              "ReceivingAccountNumber": "9000000004383302"
+            },
+            "III_TransactionDetails": {
+              "TransactionPeriod": "20241201-20241231",
+              "TransactionCount": 14,
+              "TransactionChannel": "Internet Banking",
+              "TotalAmount_KRW": 48000000
+            },
+            "VI_TransactionType": {
+              "PrimarySuspicionType": "Split Transaction"
+            },
+            "VII_Narrative": {}
+          }
+        }
       }
     },
     "difficulty": "easy",
@@ -16,25 +39,76 @@
   },
   {
     "id": "st_strv_002",
-    "question": "이 STR 보고서 초안에 필수 항목이 누락되었는지 검증해줘",
+    "question": "다음 STR 보고서 초안에 필수 항목이 누락되었는지 검증해줘: {\"Header\": {\"ReportingDate\": \"20241115\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 118}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000021321\", \"ReceivingAccountNumber\": \"9000000000017070\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20241101-20241115\", \"TransactionCount\": 9, \"TotalAmount_KRW\": 27000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Concurrent Multiple Transactions\"}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"Nine transfers of the same amount within two weeks.\"}}",
     "expected": {
       "primary_tool": "validate_str_fields",
       "tools_must_include": [
         "validate_str_fields"
       ],
-      "param_checks": {}
+      "param_checks": {
+        "validate_str_fields": {
+          "str_draft": {
+            "Header": {
+              "ReportingDate": "20241115"
+            },
+            "I_ReportingInstitution": {
+              "WithdrawalInstitutionCode": 118
+            },
+            "II_Transactor": {
+              "WithdrawalAccountNumber": "9000000000021321",
+              "ReceivingAccountNumber": "9000000000017070"
+            },
+            "III_TransactionDetails": {
+              "TransactionPeriod": "20241101-20241115",
+              "TransactionCount": 9,
+              "TotalAmount_KRW": 27000000
+            },
+            "VI_TransactionType": {
+              "PrimarySuspicionType": "Concurrent Multiple Transactions"
+            },
+            "VII_Narrative": {
+              "SuspicionJudgmentReason": "Nine transfers of the same amount within two weeks."
+            }
+          }
+        }
+      }
     },
     "difficulty": "easy"
   },
   {
     "id": "st_strv_003",
-    "question": "의심거래보고서 양식에 맞게 필수 필드가 기재되었는지 확인해줘",
+    "question": "다음 초안이 의심거래보고서 양식의 필수 필드를 갖췄는지 확인해줘: {\"Header\": {\"ReportingDate\": \"20240930\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 123}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000019300\", \"ReceivingAccountNumber\": \"9000000000022564\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20240901-20240930\", \"TransactionCount\": 21, \"TransactionChannel\": \"Mobile Phone\", \"TotalAmount_KRW\": 63000000}, \"VI_TransactionType\": {}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"Funds received from 21 accounts were withdrawn the same day.\"}}",
     "expected": {
       "primary_tool": "validate_str_fields",
       "tools_must_include": [
         "validate_str_fields"
       ],
-      "param_checks": {}
+      "param_checks": {
+        "validate_str_fields": {
+          "str_draft": {
+            "Header": {
+              "ReportingDate": "20240930"
+            },
+            "I_ReportingInstitution": {
+              "WithdrawalInstitutionCode": 123
+            },
+            "II_Transactor": {
+              "WithdrawalAccountNumber": "9000000000019300",
+              "ReceivingAccountNumber": "9000000000022564"
+            },
+            "III_TransactionDetails": {
+              "TransactionPeriod": "20240901-20240930",
+              "TransactionCount": 21,
+              "TransactionChannel": "Mobile Phone",
+              "TotalAmount_KRW": 63000000
+            },
+            "VI_TransactionType": {},
+            "VII_Narrative": {
+              "SuspicionJudgmentReason": "Funds received from 21 accounts were withdrawn the same day."
+            }
+          }
+        }
+      }
     },
     "difficulty": "medium"
   }
