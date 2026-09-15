@@ -126,6 +126,17 @@ def render_multiturn_records(scenario: dict, ctx: ScoringContext, setting: str) 
     return records, problems
 
 
+def _catalog_problems(checks: list[dict]) -> list[dict]:
+    """Gold free-string values that select no catalog row at all."""
+    out = []
+    for group in checks:
+        for res in group["results"]:
+            if res.get("gold_empty_result"):
+                out.append({"kind": "gold_value_returns_no_catalog_rows", "blocking": False,
+                            "detail": f"{group['tool']}.{res['check']} = {res['expected']!r} finds nothing"})
+    return out
+
+
 def _failed_checks(checks: list[dict]) -> list[dict]:
     out = []
     for group in checks:
@@ -140,6 +151,7 @@ def run_single(bench, ctx: ScoringContext) -> dict:
     for case_id, case in bench.cases.items():
         record, problems = render_single_record(case, ctx)
         result = score_case(case, record, ctx, category=bench.category_of(case_id))
+        problems = problems + _catalog_problems(result["checks"])
         blocking = [p for p in problems if p["blocking"]]
         perfect = (result["error_type"] == "correct" and not blocking)
         rows.append({
@@ -158,6 +170,8 @@ def run_multiturn(bench, ctx: ScoringContext, setting: str) -> dict:
     for case_id, scenario in bench.cases.items():
         records, problems = render_multiturn_records(scenario, ctx, setting)
         result = score_scenario(scenario, records, ctx, setting=setting)
+        for t in result["turns"]:
+            problems += [dict(p, turn=t["turn"]) for p in _catalog_problems(t["checks"])]
         bad_turns = []
         for turn in result["turns"]:
             failed = _failed_checks(turn["checks"])
