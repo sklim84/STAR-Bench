@@ -77,7 +77,8 @@ def _round_record(idx: int, result, calls: list[CallRecord],
         idx=idx, finish_reason=result.finish_reason, content=result.content,
         reasoning_chars=result.reasoning_chars, usage=result.usage,
         tool_calls=calls, executed=executed, error=result.error,
-        attempts=result.attempts, elapsed_s=result.elapsed_s)
+        attempts=result.attempts, elapsed_s=result.elapsed_s,
+        provider=result.provider, served_model=result.served_model)
 
 
 # ---------------------------------------------------------------------------

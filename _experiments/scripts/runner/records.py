@@ -86,6 +86,8 @@ class RoundRecord:
     attempts: int = 1
     elapsed_s: float | None = None
     serialized_from: int | None = None   # D21: index of the parallel round this turn was split from
+    provider: str | None = None          # gateway that served the request (L5-014)
+    served_model: str | None = None      # model id the gateway reports having used
 
     def to_dict(self) -> dict:
         out = {
@@ -103,6 +105,9 @@ class RoundRecord:
             out["elapsed_s"] = round(self.elapsed_s, 3)
         if self.serialized_from is not None:
             out["serialized_from"] = self.serialized_from
+        for key in ("provider", "served_model"):
+            if getattr(self, key) is not None:
+                out[key] = getattr(self, key)
         return out
 
 
