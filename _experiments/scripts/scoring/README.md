@@ -105,7 +105,8 @@ so `"Monthly"` matches `"monthly"`. A numeric string matches a numeric gold valu
 78432), while a formatted one (`"78,432"`) or a differently formatted date (`"2024-01-01"` against
 20240101) does not (L4-019). A list-valued gold argument is compared as set recall of the gold items,
 so an extra item does not cost anything and a missing one costs proportionally. An object argument is
-compared key by key.
+compared key by key. A list or object sent as a JSON string is parsed first, because the tool layer
+accepts it that way.
 
 **SQL conditions.** Predicates are read with sqlglot (pinned, see `requirements.txt`) from every
 WHERE and HAVING clause of the statement, including subqueries and CTEs, but only along AND-only

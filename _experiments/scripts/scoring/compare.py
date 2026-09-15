@@ -130,6 +130,12 @@ def deep_equal(actual: Any, expected: Any, prop: dict | None = None) -> bool:
 def compare_value(actual: Any, expected: Any, prop: dict | None = None) -> tuple[float, str]:
     """Score in [0, 1] and a reason. Lists score as set recall of the gold items."""
     prop = prop or {}
+    if isinstance(expected, (list, dict)) and isinstance(actual, str):
+        # A serialised array or object is what the tool layer itself accepts.
+        try:
+            actual = json.loads(actual)
+        except (json.JSONDecodeError, ValueError):
+            pass
     if isinstance(expected, list):
         if not isinstance(actual, list):
             return 0.0, f"expected a list, got {actual!r}"

@@ -386,3 +386,9 @@ def test_length_finish_reason_on_the_last_round_is_a_length_stop(ctx):
     rec = record([])
     rec["rounds"][0]["finish_reason"] = "length"
     assert score_case(NET, rec, ctx)["error_type"] == "length_stop"
+
+
+def test_serialised_list_argument_is_accepted(ctx):
+    c = case("generate_str", checks={"generate_str": {"aml_patterns": ["분할거래"]}}, case_id="str_list")
+    r = score_case(c, record([call("generate_str", {"summary": "x", "aml_patterns": '["분할거래"]'})]), ctx)
+    assert r["a"] == 1.0, "the tool layer parses a serialised array, so scoring does too"
