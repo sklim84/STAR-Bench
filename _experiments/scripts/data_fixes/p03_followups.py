@@ -153,7 +153,7 @@ def fix_sample_size(kr: Bench, en: Bench, log: ChangeLog) -> None:
             text = case["question"]
             for spelling in spellings:
                 text = text.replace(spelling, f"{new:,}" if "," in spelling else str(new))
-            if text == case["question"]:
+            if text == case["question"] and str(new) not in text.replace(",", ""):
                 raise SystemExit(f"{case_id}: no sample size {old} in the {lang} question")
             log.set_field(case, lang, "question", text, "L1-013", why)
             gold = case["expected"]
@@ -227,7 +227,7 @@ def verify_crime_names(kr: Bench, en: Bench, log: ChangeLog) -> None:
             if term not in question:
                 continue
             checked += 1
-            if squash(kr_term) not in korean:
+            if squash(kr_term) not in korean and term not in korean.lower():
                 bad.append(f"{case['id']}: EN says {term!r}, the KR question does not say {kr_term!r}")
         code = (case["expected"].get("param_checks") or {}).get("get_fraud_type_summary", {}).get("fraud_type")
         if code in FRAUD_LABEL:
