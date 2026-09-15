@@ -1,181 +1,128 @@
 #!/usr/bin/env python3
-"""main.tex tab:overall (메인 대표 모델 테이블) LaTeX 생성.
+"""main.tex tab:overall 의 단일턴 열(h, r, p, a, o) 생성.
 
-results_kr (29 모델) + results_mt_oracle (29 모델)에서 KR baseline + multiturn 결과
-추출하여 LaTeX rows 생성.
+results_kr/eval 에서 본문 28설정 코호트의 overall 지표를 읽어, 원고 표와 같은 순서·표기로
+행을 만든다. 열마다 1위는 \\textbf, 2위는 \\underline 으로 표시한다(원고 캡션 규칙).
 
-대표 모델 선정 기준:
-- 한국어 특화 모델 그룹: Kanana-2-30B, EXAONE-4.0-32B, A.X-4.0, A.X-4.0-Light
-- 계열별 대표 (think/nothink는 nothink 우선):
-  - Qwen: Qwen3.6-27B, Qwen3.6-35B-A3B, Qwen3.5-27B__nothink, Qwen3.5-4B__nothink
-  - Llama: Llama-3.2-3B, Llama-3.3-70B
-  - Mistral: Ministral-3-3B, Mistral-Small-24B
-  - Microsoft: Phi-4-mini
-  - Hermes: Hermes-3-Llama-3.1-8B
-  - Salesforce: xLAM-2-3b, Llama-xLAM-2-70b
-  - Google: Gemma-4-E4B, Gemma-4-31B
-  - openai: gpt-oss-20b__nothink, gpt-oss-120b__nothink
-  - DragonLLM: Llama-Open-Finance-8B, Qwen-Open-Finance-R-8B
+멀티턴 열(h-bar, a-bar, c)은 여기서 만들지 않는다. 원고의 멀티턴 열은 results_mt_oracle 을
+재채점한 값이라(원고 커밋 9f9b448) 이 스크립트가 읽는 overall 과 다르다.
+
+2026-09-15 개정: 금키 재실행(results_kr, 커밋 4bddc4c) 반영. 이전 판은 T 설정 4개가 빠진
+24행이었고, eval 의 model 필드 표기(원래 이름 / sanitize 이름)가 섞이면서 CSV 조회가
+어긋났다. 표기는 _norm 으로 맞춘다.
+
+출력: _experiments/results_RQ1/main_table_single_turn.{tex,csv}
 """
+import csv
 import json
 from pathlib import Path
 
-EVAL_DIR = Path('_experiments/results_kr/eval')
-MT_DIR = Path('_experiments/results_mt_oracle/eval')
+_SB = Path(__file__).resolve().parents[2]
+EVAL_DIR = _SB / '_experiments' / 'results_kr' / 'eval'
+OUT_DIR = _SB / '_experiments' / 'results_RQ1'
 
-# 대표 모델 + 표시 순서 (계열 그룹화)
-DISPLAY_ORDER = [
-    # 한국어 특화 (krmodel)
-    ('skt/A.X-4.0-Light', 'A.X-4.0-Light (7B)', 'kr'),
-    ('skt/A.X-4.0', 'A.X-4.0 (72B)', 'kr'),
-    ('LGAI-EXAONE/EXAONE-4.0-1.2B', 'EXAONE-4.0-1.2B', 'kr'),
-    ('LGAI-EXAONE/EXAONE-4.0-32B', 'EXAONE-4.0-32B', 'kr'),
-    ('kakaocorp/kanana-2-30b-a3b-instruct', 'Kanana-2-30B', 'kr_check'),
-    ('kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink', 'Kanana-2-Think (NT)', 'kr_check'),
-    # DragonLLM Finance
-    ('DragonLLM/Llama-Open-Finance-8B', 'Llama-Finance-8B', 'finance'),
-    ('DragonLLM/Qwen-Open-Finance-R-8B', 'Qwen-Finance-R-8B', 'finance'),
-    # Hermes
-    ('NousResearch/Hermes-3-Llama-3.1-8B', 'Hermes-3-8B', 'general'),
-    # gpt-oss
-    ('openai/gpt-oss-20b__nothink', 'gpt-oss-20B (NT)', 'general'),
-    ('openai/gpt-oss-120b__nothink', 'gpt-oss-120B (NT)', 'general'),
-    # Llama
-    ('meta-llama/Llama-3.2-3B-Instruct', 'Llama-3.2-3B', 'general'),
-    ('meta-llama/Llama-3.3-70B-Instruct', 'Llama-3.3-70B', 'general'),
-    # Mistral
-    ('mistralai/Ministral-3-3B-Instruct-2512', 'Ministral-3-3B', 'general'),
-    ('mistralai/Mistral-Small-3.2-24B-Instruct-2506', 'Mistral-Small-24B', 'general'),
-    # Microsoft
-    ('microsoft/Phi-4-mini-instruct', 'Phi-4-mini', 'general'),
-    # Qwen
-    ('Qwen/Qwen3.5-4B__nothink', 'Qwen3.5-4B (NT)', 'general'),
-    ('Qwen/Qwen3.5-27B__nothink', 'Qwen3.5-27B (NT)', 'general'),
-    ('Qwen/Qwen3.6-27B', 'Qwen3.6-27B', 'general'),
-    ('Qwen/Qwen3.6-35B-A3B', 'Qwen3.6-35B-A3B', 'general'),
-    # xLAM
-    ('Salesforce/xLAM-2-3b-fc-r', 'xLAM-2-3B', 'general'),
-    ('Salesforce/Llama-xLAM-2-70b-fc-r', 'xLAM-2-70B', 'general'),
-    # Gemma
-    ('google/gemma-4-E4B-it', 'Gemma-4-E4B', 'general'),
-    ('google/gemma-4-31B-it', 'Gemma-4-31B', 'general_check'),
+# (eval model id, 원고 표기, 원고 그룹) — 원고 table/tab-exp-oveall.tex 의 행 순서
+ROWS = [
+    ('skt/A.X-4.0-Light', 'A.X-4.0-Light (7B)', 'Korean-Specialized'),
+    ('skt/A.X-4.0', 'A.X-4.0 (72B)', 'Korean-Specialized'),
+    ('LGAI-EXAONE/EXAONE-4.0-1.2B', 'EXAONE-4.0-1.2B', 'Korean-Specialized'),
+    ('LGAI-EXAONE/EXAONE-4.0-32B', 'EXAONE-4.0-32B', 'Korean-Specialized'),
+    ('kakaocorp/kanana-2-30b-a3b-instruct', 'Kanana-2-Instruct', 'Korean-Specialized'),
+    ('kakaocorp/kanana-2-30b-a3b-thinking-2601', 'Kanana-2-Think', 'Korean-Specialized'),
+    ('DragonLLM/Llama-Open-Finance-8B', 'Llama-Open-Finance-8B', 'Finance-Specialized'),
+    ('DragonLLM/Qwen-Open-Finance-R-8B', 'Qwen-Open-Finance-R-8B', 'Finance-Specialized'),
+    ('openai/gpt-oss-20b__nothink', 'gpt-oss-20B (NT)', 'General-Purpose'),
+    ('openai/gpt-oss-20b__think', 'gpt-oss-20B (T)', 'General-Purpose'),
+    ('openai/gpt-oss-120b__nothink', 'gpt-oss-120B (NT)', 'General-Purpose'),
+    ('openai/gpt-oss-120b__think', 'gpt-oss-120B (T)', 'General-Purpose'),
+    ('meta-llama/Llama-3.2-3B-Instruct', 'Llama-3.2-3B', 'General-Purpose'),
+    ('meta-llama/Llama-3.3-70B-Instruct', 'Llama-3.3-70B', 'General-Purpose'),
+    ('NousResearch/Hermes-3-Llama-3.1-8B', 'Hermes-3-8B', 'General-Purpose'),
+    ('mistralai/Ministral-3-3B-Instruct-2512', 'Ministral-3-3B', 'General-Purpose'),
+    ('mistralai/Mistral-Small-3.2-24B-Instruct-2506', 'Mistral-Small-24B', 'General-Purpose'),
+    ('microsoft/Phi-4-mini-instruct', 'Phi-4-mini', 'General-Purpose'),
+    ('Qwen/Qwen3.5-4B__nothink', 'Qwen3.5-4B (NT)', 'General-Purpose'),
+    ('Qwen/Qwen3.5-4B__think', 'Qwen3.5-4B (T)', 'General-Purpose'),
+    ('Qwen/Qwen3.5-27B__nothink', 'Qwen3.5-27B (NT)', 'General-Purpose'),
+    ('Qwen/Qwen3.5-27B__think', 'Qwen3.5-27B (T)', 'General-Purpose'),
+    ('Qwen/Qwen3.6-27B', 'Qwen3.6-27B', 'General-Purpose'),
+    ('Qwen/Qwen3.6-35B-A3B', 'Qwen3.6-35B-A3B', 'General-Purpose'),
+    ('Salesforce/xLAM-2-3b-fc-r', 'xLAM-2-3B', 'General-Purpose'),
+    ('Salesforce/Llama-xLAM-2-70b-fc-r', 'xLAM-2-70B', 'General-Purpose'),
+    ('google/gemma-4-E4B-it', 'Gemma-4-E4B', 'General-Purpose'),
+    ('google/gemma-4-31B-it', 'Gemma-4-31B', 'General-Purpose'),
 ]
 
-# 평가 이상치 의심 모델 (h≈0.126, cases 빈값 패턴) — 결과는 표에 두되 주석 표시
-CHECK_NEEDED = {
-    'kakaocorp/kanana-2-30b-a3b-instruct',
-    'kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink',
-    'google/gemma-4-31B-it',
-}
+COLS = [
+    ('h', 'primary_tool_hit_rate'),
+    ('r', 'avg_tool_recall'),
+    ('p', 'avg_tool_precision'),
+    ('a', 'avg_param_accuracy'),
+    ('o', 'avg_order_score'),
+]
 
-def _norm_model_key(name):
+
+def _norm(name):
     """슬래시·마침표를 언더스코어로 정규화."""
-    if not name: return name
     return name.replace('/', '_').replace('.', '_')
 
+
 def load_kr():
-    """eval JSON 로드 — model 필드 형식 차이(슬래시/언더스코어) 정규화."""
+    """eval JSON 로드. think 플래그가 있는데 접미사가 없으면 붙인다."""
     out = {}
     for f in sorted(EVAL_DIR.glob('eval_*.json')):
         d = json.load(f.open())
         mid = d.get('model_id') or d.get('model')
         think = d.get('think')
-        if think is True and not mid.endswith('__think'): mid = f'{mid}__think'
-        elif think is False and not mid.endswith('__nothink'): mid = f'{mid}__nothink'
-        out[_norm_model_key(mid)] = d.get('overall', {})
+        if think is True and not mid.endswith('__think'):
+            mid = f'{mid}__think'
+        elif think is False and not mid.endswith('__nothink'):
+            mid = f'{mid}__nothink'
+        out[_norm(mid)] = d.get('overall', {})
     return out
 
-def load_mt():
-    out = {}
-    for f in MT_DIR.glob('multiturn_*.json'):
-        d = json.load(f.open())
-        mid = d.get('model_id') or d.get('model')
-        think = d.get('think')
-        if think is True and not mid.endswith('__think'): mid = f'{mid}__think'
-        elif think is False and not mid.endswith('__nothink'): mid = f'{mid}__nothink'
-        out[_norm_model_key(mid)] = d.get('overall', {})
-    return out
 
-def fmt(v, decimals=3):
-    if v is None: return '--'
-    return f'{v:.{decimals}f}'
+def fmt(v):
+    """원고 표기: 소수 셋째 자리, 앞자리 0 생략(.544)."""
+    return f'{v:.3f}'.lstrip('0') if v is not None else '--'
+
+
+def rank_marks(values):
+    """열 하나의 값 목록 -> 표시 목록. 반올림한 값이 1위와 같으면 모두 굵게, 2위 값은 밑줄."""
+    shown = sorted({fmt(v) for v in values}, reverse=True)
+    first, second = shown[0], (shown[1] if len(shown) > 1 else None)
+    marks = []
+    for v in values:
+        s = fmt(v)
+        marks.append(f'\\textbf{{{s}}}' if s == first else f'\\underline{{{s}}}' if s == second else s)
+    return marks
+
 
 def main():
     kr = load_kr()
-    mt = load_mt()
+    missing = [mid for mid, _, _ in ROWS if _norm(mid) not in kr]
+    if missing:
+        raise SystemExit(f'results_kr/eval 에 없는 설정: {missing}')
 
-    rows = []
-    last_group = None
-    for model_id, display_name, group in DISPLAY_ORDER:
-        key = _norm_model_key(model_id)
-        if key not in kr:
-            print(f'WARN: {model_id} not in KR')
-            continue
-        kr_m = kr[key]
-        mt_m = mt.get(key, {})
+    table = {key: [kr[_norm(mid)].get(key) for mid, _, _ in ROWS] for _, key in COLS}
+    marked = {key: rank_marks(vals) for key, vals in table.items()}
 
-        # group 구분선 (\midrule)
-        # check 그룹은 별도 midrule로 분리하지 않고 같은 그룹 내 끝에 배치
-        normal_group = group.replace('_check', '')
-        if last_group is not None and normal_group != last_group.replace('_check', ''):
-            rows.append('\\midrule')
-        last_group = group
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    lines = []
+    for i, (mid, name, group) in enumerate(ROWS):
+        cells = ' & '.join(marked[key][i] for _, key in COLS)
+        lines.append(f'{name:<24s} & {cells} \\\\')
+    (OUT_DIR / 'main_table_single_turn.tex').write_text('\n'.join(lines) + '\n')
 
-        if normal_group == 'kr':
-            name = f'\\krmodel{{{display_name}}}'
-        else:
-            name = display_name
-
-        # 평가 이상치 의심 모델은 위에 LaTeX 주석으로 표시
-        if model_id in CHECK_NEEDED:
-            rows.append(f'% [확인 필요] {display_name}: 평가 이상치(h≈0.126, cases 빈값 패턴) 의심 — 추후 재실험 예정')
-
-        h = kr_m.get('primary_tool_hit_rate')
-        r = kr_m.get('avg_tool_recall')
-        p = kr_m.get('avg_tool_precision')
-        a = kr_m.get('avg_param_accuracy')
-        o = kr_m.get('avg_order_score')
-        h_bar = mt_m.get('avg_tool_hit')
-        a_bar = mt_m.get('avg_param_accuracy')
-        c = mt_m.get('scenario_complete_rate')
-
-        row = (f'{name:<30s} & {fmt(h)} & {fmt(r)} & {fmt(p)} & '
-               f'{fmt(a)} & {fmt(o)} & {fmt(h_bar)} & {fmt(a_bar)} & {fmt(c)} \\\\')
-        rows.append(row)
-
-    # LaTeX table body
-    print('=== LaTeX rows ===')
-    for r in rows:
-        print(r)
-
-    # 파일 저장
-    out_dir = Path('_experiments/results_RQ1')
-    out_dir.mkdir(exist_ok=True, parents=True)
-    with (out_dir / 'main_table_rows.tex').open('w') as f:
-        f.write('\n'.join(rows) + '\n')
-
-    # CSV 형식 저장
-    import csv
-    with (out_dir / 'main_table_data.csv').open('w', newline='') as f:
+    with (OUT_DIR / 'main_table_single_turn.csv').open('w', newline='') as f:
         w = csv.writer(f)
-        w.writerow(['model_id', 'display_name', 'group',
-                    'h', 'r', 'p', 'a', 'o', 'h_bar', 'a_bar', 'c'])
-        for model_id, display_name, group in DISPLAY_ORDER:
-            if model_id not in kr: continue
-            kr_m = kr[model_id]
-            mt_m = mt.get(model_id, {})
-            w.writerow([model_id, display_name, group,
-                        kr_m.get('avg_primary_tool_hit'),
-                        kr_m.get('avg_tool_recall'),
-                        kr_m.get('avg_tool_precision'),
-                        kr_m.get('avg_param_accuracy'),
-                        kr_m.get('avg_order_score'),
-                        mt_m.get('avg_tool_hit'),
-                        mt_m.get('avg_param_accuracy'),
-                        mt_m.get('scenario_complete_rate')])
+        w.writerow(['model_id', 'display_name', 'group'] + [c for c, _ in COLS])
+        for i, (mid, name, group) in enumerate(ROWS):
+            w.writerow([mid, name, group] + [round(table[key][i], 4) for _, key in COLS])
 
-    print(f'\nGenerated {len(rows)} lines')
-    print(f'Saved to: results_RQ1/main_table_rows.tex')
+    print('\n'.join(lines))
+    print(f'\n{len(ROWS)} rows -> {OUT_DIR / "main_table_single_turn.tex"}')
+
 
 if __name__ == '__main__':
     main()

@@ -33,6 +33,7 @@ EXCLUDE_MODELS = {
     "Salesforce_Llama-xLAM-2-8b-fc-r", "Salesforce_xLAM-2-1b-fc-r",
     "Salesforce_xLAM-2-32b-fc-r",
     "kakaocorp/kanana-2-30b-a3b-instruct-2601",
+    "meta-llama/Llama-3.1-8B-Instruct",  # RQ5 금융특화 base 비교용으로만 추가(2026-09-09). 본문 28설정 코호트 밖
 }
 
 # 표기 정규화 전용 (safe 파일명 -> 논문 표기). 코호트 선택에는 쓰지 않는다.
@@ -59,6 +60,11 @@ _CANONICAL_NAMES = {
 
 
 _SAFE_TO_CANONICAL = {m.replace('/', '_').replace('.', '_'): m for m in _CANONICAL_NAMES}
+# eval 의 model 필드는 원래 이름(Qwen/Qwen3-8B)과 sanitize 이름(Qwen_Qwen3-8B)이 섞여 있다.
+# EXCLUDE_MODELS 는 두 표기가 섞여 있어, 원시 문자열로 비교하면 원래 이름으로 된 eval 이
+# 제외되지 않고 코호트가 28 에서 37 로 늘어난다(2026-09-15). 한 표기로 맞춰 비교한다.
+_EXCLUDE_SAFE = {m.replace('/', '_').replace('.', '_') for m in EXCLUDE_MODELS}
+def _excluded(m): return m.replace('/', '_').replace('.', '_') in _EXCLUDE_SAFE
 def _canonicalize(m): return _SAFE_TO_CANONICAL.get(m, m)
 # ── 집계: expected_tool -> called_tool -> count ───────────────────────────────
 conf = defaultdict(lambda: defaultdict(int))
@@ -69,7 +75,7 @@ for fn in sorted(os.listdir(EVAL_DIR)):
         continue
     with open(os.path.join(EVAL_DIR, fn)) as f:
         d = json.load(f)
-    if d["model"] in EXCLUDE_MODELS or _canonicalize(d["model"]) in EXCLUDE_MODELS:
+    if _excluded(d["model"]):
         continue
     n_models_used += 1
     for cat, cat_data in d["by_category"].items():
