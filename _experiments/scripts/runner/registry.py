@@ -29,7 +29,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 __all__ = ["ServingConfig", "CONFIGS", "by_id", "main_table_configs", "vllm_args",
-           "client_kwargs", "config_block", "TEMPLATE_DIR", "UnpinnedRevision"]
+           "client_kwargs", "chat_options", "config_block", "TEMPLATE_DIR", "UnpinnedRevision"]
 
 _SCRIPTS = Path(__file__).resolve().parents[1]
 TEMPLATE_DIR = _SCRIPTS / "chat_templates"
@@ -88,6 +88,9 @@ class ServingConfig:
     gpu_memory_utilization: float = 0.90
     extra_args: tuple[str, ...] = ()
     tool_parser_plugin: str | None = None
+    # Templates trained on one call per assistant turn. The runner sends parallel
+    # calls as consecutive single-call turns for these (D21, L5-005).
+    serialize_parallel_calls: bool = False
     needs_four_gpu_host: bool = False
     smoke_required: str | None = None     # what a GPU smoke test must confirm
     notes: str = ""
@@ -103,6 +106,11 @@ class ServingConfig:
     @property
     def revision(self) -> str | None:
         return _revisions().get(self.model)
+
+    @property
+    def reasoning_history_key(self) -> str | None:
+        """Key the chat template reads a previous turn's reasoning back from (C2-004)."""
+        return "reasoning_content" if self.reasoning_parser else None
 
     @property
     def is_reasoning(self) -> bool:
@@ -160,7 +168,7 @@ CONFIGS: tuple[ServingConfig, ...] = (
     _cfg(config_id="dragon-llama-fin", label="Llama-Open-Finance-8B",
          model="DragonLLM/Llama-Open-Finance-8B", group="Finance-Specialized",
          parser="llama3_json", tp=1, tp_80g=1, chat_template="llama3_tools.jinja",
-         max_model_len_e2e=CONTEXT),
+         serialize_parallel_calls=True, max_model_len_e2e=CONTEXT),
     _cfg(config_id="dragon-qwen-fin", label="Qwen-Open-Finance-R-8B",
          model="DragonLLM/Qwen-Open-Finance-R-8B", group="Finance-Specialized",
          parser="hermes", tp=1, tp_80g=1, reasoning_mode="always_on",
@@ -194,12 +202,14 @@ CONFIGS: tuple[ServingConfig, ...] = (
          max_model_len_e2e=CONTEXT_E2E, notes="MXFP4 weights"),
     _cfg(config_id="llama-3.2-3b", label="Llama-3.2-3B", model="meta-llama/Llama-3.2-3B-Instruct",
          group="General-Purpose", parser="llama3_json", tp=1, tp_80g=1,
-         chat_template="llama3_tools.jinja", max_model_len_e2e=CONTEXT_E2E,
+         chat_template="llama3_tools.jinja", serialize_parallel_calls=True,
+         max_model_len_e2e=CONTEXT_E2E,
          notes="C2-007, L5-005: repaired template, and the runner serialises parallel calls"),
     _cfg(config_id="llama-3.3-70b", label="Llama-3.3-70B", model="meta-llama/Llama-3.3-70B-Instruct",
          group="General-Purpose", parser="llama3_json", tp=4, tp_80g=2,
-         chat_template="llama3_tools.jinja", gpu_memory_utilization=0.95,
-         needs_four_gpu_host=True, max_model_len_e2e=CONTEXT_E2E),
+         chat_template="llama3_tools.jinja", serialize_parallel_calls=True,
+         gpu_memory_utilization=0.95, needs_four_gpu_host=True,
+         max_model_len_e2e=CONTEXT_E2E),
     _cfg(config_id="hermes-3-8b", label="Hermes-3-8B", model="NousResearch/Hermes-3-Llama-3.1-8B",
          group="General-Purpose", parser="hermes", tp=1, tp_80g=1,
          max_model_len_e2e=CONTEXT),
@@ -318,6 +328,27 @@ def client_kwargs(cfg: ServingConfig) -> dict:
     elif cfg.reasoning_control == "reasoning_effort":
         out["reasoning_effort"] = "high" if cfg.reasoning_mode == "effort_high" else "low"
     return out
+
+
+def chat_options(cfg: ServingConfig, *, timeout_s: float = 300.0, max_retries: int = 2,
+                 provider: dict | None = None, served_model_name: str | None = None):
+    """The `client.ChatOptions` for this configuration."""
+    from .client import ChatOptions
+
+    kwargs = client_kwargs(cfg)
+    return ChatOptions(
+        model=served_model_name or cfg.model,
+        max_tokens=kwargs["max_tokens"],
+        temperature=kwargs["temperature"],
+        seed=kwargs["seed"],
+        chat_template_kwargs=kwargs.get("chat_template_kwargs"),
+        reasoning_effort=kwargs.get("reasoning_effort"),
+        reasoning_history_key=cfg.reasoning_history_key,
+        serialize_parallel_calls=cfg.serialize_parallel_calls,
+        max_retries=max_retries,
+        timeout_s=timeout_s,
+        provider=provider,
+    )
 
 
 def config_block(cfg: ServingConfig, *, setting: str = "single",
