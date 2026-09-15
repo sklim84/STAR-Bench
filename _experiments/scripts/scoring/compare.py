@@ -258,6 +258,9 @@ def score_call(tool: str, checks: dict, call: Call | None, ctx: ScoringContext,
         if call is None:
             match.checks.append({"check": key, "expected": expected, "applicable": True,
                                  "score": 0.0, "passed": False, "reason": "tool not called"})
+        elif call.args_unavailable:
+            match.checks.append({"check": key, "expected": expected, "applicable": False, "score": 0.0,
+                                 "passed": False, "reason": "legacy record kept no arguments"})
         elif not call.args_ok:
             match.checks.append({"check": key, "expected": expected, "applicable": True, "score": 0.0,
                                  "passed": False, "reason": f"arguments are not a JSON object: {call.arguments!r}"[:300]})

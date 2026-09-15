@@ -57,7 +57,8 @@ def candidates(case: dict) -> list[Candidate]:
 
 def _score_candidate(cand: Candidate, view: RunView, ctx: ScoringContext) -> dict:
     if cand.kind in ("abstain", "clarification"):
-        ok = 1 if (not view.calls and answer_text_ok(view.final_text)) else 0
+        answered = not view.calls and (view.text_unavailable or answer_text_ok(view.final_text))
+        ok = 1 if answered else 0
         out = tool_metrics([], view.calls)
         out.update(h=ok, a=None, n_checks=0, o=None, checks=[],
                    abstain_ok=bool(ok) if cand.kind == "abstain" else None,

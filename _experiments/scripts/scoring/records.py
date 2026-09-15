@@ -27,6 +27,7 @@ class Call:
     valid_json: bool | None = None
     name_artifact: bool = False
     executed: dict | None = None
+    args_unavailable: bool = False  # legacy record that kept only the tool name
 
     @property
     def args(self) -> dict:
@@ -40,6 +41,7 @@ class RunView:
     final_text: str = ""
     error: dict | None = None
     stop_reason: str | None = None
+    text_unavailable: bool = False  # legacy record that kept no final text
 
     @property
     def length_stop(self) -> bool:
@@ -107,15 +109,18 @@ def view_record(record: dict) -> RunView:
                 order=order, round_idx=r_idx, id=tc.get("id"), name=name, name_raw=tc.get("name"),
                 arguments=args, args_ok=ok, source=tc.get("source"), valid_json=tc.get("valid_json"),
                 name_artifact=artifact, executed=ex,
+                args_unavailable=tc.get("arguments_recorded") is False,
             ))
             order += 1
     if "final_text" in record:
         final_text = record.get("final_text") or ""
     else:
         final_text = last_content
+    legacy = record.get("legacy") or {}
     return RunView(
         record=record, calls=calls, final_text=final_text if isinstance(final_text, str) else "",
         error=record.get("error"), stop_reason=record.get("stop_reason"),
+        text_unavailable=legacy.get("final_text_recorded") is False,
     )
 
 
