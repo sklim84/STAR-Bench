@@ -1,0 +1,59 @@
+{#- Phi-4-mini tool template, repaired (C2-018, D21).
+    Changes against _experiments/scripts/tool_chat_template_phi4_mini.jinja:
+      * the tool-result branch tested role "tools"; the API sends "tool", so no
+        tool result ever reached the model through that branch. Both are accepted.
+      * previous assistant calls were rendered as a bare {"name": ..., "arguments": ...}
+        object while the system text demands the functools[...] list; they are now
+        rendered in the format the model is asked to produce.
+      * arguments arrive as a JSON string from the API and as an object from a
+        replay; both are emitted as JSON instead of a Python repr.
+      * an assistant message that carries text as well as calls keeps its text
+        (C2-010). #}
+{%- if messages and messages[0]['role'] == 'system' %}
+    {%- set system_message = messages[0]['content']|trim %}
+    {%- set messages = messages[1:] %}
+{%- else %}
+    {%- set system_message = "You are a helpful assistant." %}
+{%- endif %}
+<|system|>
+{{ system_message }}
+{% if tools %}
+In addition to plain text responses, you can choose to call one or more of the provided functions.
+
+Use the following rule to decide when to call a function:
+  * if the response can be generated from your internal knowledge (e.g., as in the case of queries like "What is the capital of Poland?"), do so
+  * if you need external information that can be obtained by calling one or more of the provided functions, generate a function calls
+
+If you decide to call functions:
+  * prefix function calls with functools marker (no closing marker required)
+  * all function calls should be generated in a single JSON list formatted as functools[{"name": [function name], "arguments": [function arguments as JSON]}, ...]
+  * follow the provided JSON schema. Do not hallucinate arguments or values. Do to blindly copy values from the provided samples
+  * respect the argument type formatting. E.g., if the type is number and format is float, write value 7 as 7.0
+  * make sure you pick the right functions that match the user intent
+{% for t in tools %}
+        {{- t | tojson(indent=4) }}
+        {{- "\n\n" }}
+    {%- endfor %}
+{%- endif %}<|end|>
+{%- for message in messages %}
+    {%- if message.role == "tool" or message.role == "tools" %}
+<|tool|>
+{"result": {{ message.content if message.content is string else (message.content | tojson) }}}<|end|>
+    {%- elif message.tool_calls is defined and message.tool_calls %}
+<|assistant|>
+{% if message.content %}
+{{ message.content }}
+{% endif %}
+functools[
+        {%- for call in message.tool_calls %}
+            {{- '{"name": "' + call.function.name + '", "arguments": ' }}
+            {{- call.function.arguments if call.function.arguments is string else (call.function.arguments | tojson) }}
+            {{- '}' }}
+            {%- if not loop.last %}, {% endif %}
+        {%- endfor %}
+        {{- ']' }}<|end|>
+    {%- elif message.role != "system" %}
+<|{{ message.role }}|>
+{{ message.content }}<|end|>
+    {%- endif %}
+{%- endfor %}<|assistant|>
