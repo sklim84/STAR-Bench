@@ -231,9 +231,10 @@ def _check(key: str, expected: Any, call: Call, args: dict, schema: ToolSchema |
             missing = [k for k in kws if str(k) not in result]
             return done(not missing, f"result lacks {missing}", evidence=how)
         count = _row_count(result)
-        if count is None:
-            return done(False, "result has no row list or total_count", evidence=how)
-        ok = count >= expected if key == "result_row_count_min" else count <= expected
+        bound = _as_number(expected)
+        if count is None or bound is None:
+            return done(False, f"row count {count!r} or gold bound {expected!r} is not a number", evidence=how)
+        ok = count >= bound if key == "result_row_count_min" else count <= bound
         return done(ok, f"row count {count} vs {key}={expected}", evidence=how)
 
     if key not in args:
@@ -253,6 +254,10 @@ def score_call(tool: str, checks: dict, call: Call | None, ctx: ScoringContext,
     overrides = overrides or {}
     schema = ctx.schemas.get(tool)
     match = SpecMatch(tool=tool, call=call)
+    if not isinstance(checks, dict):
+        match.checks.append({"check": "gold", "expected": checks, "applicable": True, "score": 0.0,
+                             "passed": False, "reason": f"gold checks for {tool} are not an object"})
+        return match
     for key in checked_keys(tool, checks):
         expected = checks[key]
         ov = overrides.get(key, {})

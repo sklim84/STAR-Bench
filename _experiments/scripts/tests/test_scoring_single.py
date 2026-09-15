@@ -392,3 +392,15 @@ def test_serialised_list_argument_is_accepted(ctx):
     c = case("generate_str", checks={"generate_str": {"aml_patterns": ["분할거래"]}}, case_id="str_list")
     r = score_case(c, record([call("generate_str", {"summary": "x", "aml_patterns": '["분할거래"]'})]), ctx)
     assert r["a"] == 1.0, "the tool layer parses a serialised array, so scoring does too"
+
+
+def test_malformed_gold_checks_do_not_crash(ctx):
+    c = case("analyze_network", checks={"analyze_network": ["account_id", 78432]}, case_id="badgold")
+    r = score_case(c, record([call("analyze_network", {"account_id": 78432})]), ctx)
+    assert r["a"] == 0.0 and "not an object" in r["checks"][0]["results"][0]["reason"]
+
+
+def test_malformed_gold_row_bound_does_not_crash(ctx):
+    c = case("query_transactions", checks={"query_transactions": {"result_row_count_min": "many"}}, case_id="badrows")
+    r = score_case(c, record([call("query_transactions", {"sql": "SELECT 1"}, result=[{"1": 1}])]), ctx)
+    assert r["a"] == 0.0
