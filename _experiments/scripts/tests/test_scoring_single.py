@@ -162,28 +162,47 @@ def test_non_default_gold_value_still_needs_the_argument(ctx):
 
 # --- L1-019: free-string catalog arguments compared by their result set ------
 
-@pytest.mark.parametrize("gold,model,passes", [
-    ("Non-face-to-face", "non-face-to-face", True),
-    ("Non-face-to-face", " NON-FACE-TO-FACE ", True),
-    ("others' names", "Others' Names", True),
-    ("virtual asset", "virtual assets", False),
-    ("structuring", "split", False),
-])
-def test_fiu_keyword_uses_the_catalog_rows(ctx, gold, model, passes):
+def _fiu_score(ctx, gold, model):
     c = case("lookup_fiu_reference_types", checks={"lookup_fiu_reference_types": {"keyword": gold}}, case_id="fiu")
-    r = score_case(c, record([call("lookup_fiu_reference_types", {"keyword": model})]), ctx)
-    assert (r["a"] == 1.0) is passes
+    return score_case(c, record([call("lookup_fiu_reference_types", {"keyword": model})]), ctx)["a"]
+
+
+def _keyword_with_rows(ctx, candidates):
+    return next((k for k in candidates if ctx.catalog.rows("lookup_fiu_reference_types", k)), None)
+
+
+def test_fiu_keyword_variants_that_select_the_same_rows_pass(ctx):
+    gold = _keyword_with_rows(ctx, ["Non-face-to-face", "structuring", "corporate", "cash", "account"])
+    assert gold, "the FIU catalog returned nothing for any probe keyword"
+    for variant in (gold.lower(), gold.upper(), f"  {gold}  "):
+        assert ctx.catalog.rows("lookup_fiu_reference_types", variant) == \
+               ctx.catalog.rows("lookup_fiu_reference_types", gold)
+        assert _fiu_score(ctx, gold, variant) == 1.0, f"{variant!r} selects the gold rows"
+
+
+def test_fiu_keyword_that_selects_other_rows_fails(ctx):
+    gold = _keyword_with_rows(ctx, ["Non-face-to-face", "structuring", "corporate", "cash", "account"])
+    other = next(k for k in ["zzz-not-in-catalog", "virtual assets", "split", "corporate"]
+                 if ctx.catalog.rows("lookup_fiu_reference_types", k) !=
+                 ctx.catalog.rows("lookup_fiu_reference_types", gold))
+    assert _fiu_score(ctx, gold, other) == 0.0
 
 
 def test_glossary_term_uses_the_catalog_entry(ctx):
-    c = case("get_aml_glossary", checks={"get_aml_glossary": {"term": "EDD"}}, case_id="gl")
-    assert score_case(c, record([call("get_aml_glossary", {"term": "edd"})]), ctx)["a"] == 1.0
-    assert score_case(c, record([call("get_aml_glossary", {"term": "SDD"})]), ctx)["a"] == 0.0
+    term = next((t for t in ["EDD", "CDD", "STR", "CTR"] if ctx.catalog.rows("get_aml_glossary", t)), None)
+    assert term, "the glossary returned nothing for any probe term"
+    other = next(t for t in ["SDD", "PEP", "FATF", "zzz"]
+                 if ctx.catalog.rows("get_aml_glossary", t) != ctx.catalog.rows("get_aml_glossary", term))
+    c = case("get_aml_glossary", checks={"get_aml_glossary": {"term": term}}, case_id="gl")
+    assert score_case(c, record([call("get_aml_glossary", {"term": term.lower()})]), ctx)["a"] == 1.0
+    assert score_case(c, record([call("get_aml_glossary", {"term": other})]), ctx)["a"] == 0.0
 
 
 def test_gold_value_without_catalog_rows_falls_back_to_string_equality(ctx):
-    c = case("get_aml_glossary", checks={"get_aml_glossary": {"term": "구조화"}}, case_id="gl_kr")
-    r = score_case(c, record([call("get_aml_glossary", {"term": "구조화"})]), ctx)
+    missing = "zzz-not-in-the-glossary"
+    assert not ctx.catalog.rows("get_aml_glossary", missing)
+    c = case("get_aml_glossary", checks={"get_aml_glossary": {"term": missing}}, case_id="gl_missing")
+    r = score_case(c, record([call("get_aml_glossary", {"term": missing})]), ctx)
     flags = r["checks"][0]["results"][0]
     assert r["a"] == 1.0 and flags.get("gold_empty_result") is True
 

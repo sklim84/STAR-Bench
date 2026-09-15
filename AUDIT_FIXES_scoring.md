@@ -30,7 +30,7 @@ into the paper).
 |---|---|---|---|
 | L4-020 | non-dict arguments and non-numeric values are failed checks, never exceptions | `scoring/compare.py` (`score_call`), `scoring/records.py` | `test_scoring_single.py::test_list_arguments_are_a_failed_check_not_an_exception`, `::test_unparsable_argument_string_is_a_failed_check`, `::test_non_numeric_hops_is_a_failed_check` |
 | L4-029 | Harmony channel suffix and `functions.` prefix stripped for scoring, raw name reported as a parser artefact | `scoring/records.py` (`normalize_tool_name`) | `::test_harmony_channel_suffix_is_stripped_and_flagged`, `::test_recipient_prefix_is_stripped` |
-| L1-019 | FIU `keyword` and glossary `term` compared by the catalog rows they select, imported from the platform through `_platform.py` | `scoring/catalog.py` | `::test_fiu_keyword_uses_the_catalog_rows` (5 cases), `::test_glossary_term_uses_the_catalog_entry`, `::test_gold_value_without_catalog_rows_falls_back_to_string_equality`. Case and spacing variants that select the same rows pass; a plural such as `virtual assets` selects nothing under the catalog's substring matching and fails. |
+| L1-019 | FIU `keyword` and glossary `term` compared by the catalog rows they select, imported from the platform through `_platform.py` | `scoring/catalog.py` | `::test_fiu_keyword_variants_that_select_the_same_rows_pass`, `::test_fiu_keyword_that_selects_other_rows_fails`, `::test_glossary_term_uses_the_catalog_entry`, `::test_gold_value_without_catalog_rows_falls_back_to_string_equality`. The tests read the catalog rather than hard-coding its content, so a catalog change in WS-A does not break them. Case and spacing variants pass; a value that selects different rows (a plural such as `virtual assets`, which the catalog's substring matching does not find) fails. |
 | L1-017 | schema defaults filled before comparison, defaults read from the tool schema | `scoring/compare.py` (`fill_defaults`), `scoring/schema.py` | `::test_omitted_argument_that_equals_the_schema_default_passes`, `::test_non_default_gold_value_still_needs_the_argument` |
 | L4-015 | `sql_conditions` matched against the WHERE and HAVING predicates with sqlglot 30.18.0 plus a conservative regex fallback; `sql_valid` from the recorded executed result or by read-only execution through the platform tool; one rule for single-turn and multi-turn | `scoring/sql.py` | `test_scoring_sql.py` (23 tests), `test_scoring_single.py::test_single_digit_keyword_in_unrelated_sql_does_not_pass`, `::test_select_1_plus_unrelated_valid_sql_does_not_pass`, `::test_sql_valid_is_executed_when_the_run_did_not_record_a_result` |
 | L4-008 | all checks of one tool on the same call, best call chosen, two gold specs never share a call | `scoring/compare.py` (`match_specs`) | `::test_checks_are_not_split_across_calls`, `::test_best_call_is_picked`, `test_scoring_multiturn.py::test_two_gold_calls_of_one_tool_take_two_model_calls` |
@@ -136,7 +136,7 @@ WS-D and WS-E (data):
 ## Running the tests
 
 ```
-python -m pytest _experiments/scripts/tests -q     # 115 tests
+python -m pytest _experiments/scripts/tests -q     # 112 tests
 ```
 
 They need `sqlglot` and the platform checkout. The one test that executes SQL skips itself when the
