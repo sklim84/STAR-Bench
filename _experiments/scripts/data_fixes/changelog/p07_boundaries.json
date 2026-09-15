@@ -1,0 +1,1293 @@
+{
+  "pass": "p07_boundaries",
+  "description": "D11: a discriminating cue in every question where two tools overlapped (L1-002 ... L1-011).",
+  "n_changes": 134,
+  "n_cases": 66,
+  "by_issue": {
+    "L1-002": 4,
+    "L1-003": 24,
+    "L1-004": 2,
+    "L1-005": 14,
+    "L1-006": 8,
+    "L1-007": 12,
+    "L1-008": 24,
+    "L1-009": 14,
+    "L1-010": 20,
+    "L1-011": 12
+  },
+  "notes": [
+    "cases per issue: L1-002 2, L1-003 12, L1-004 1, L1-005 6, L1-006 4, L1-007 6, L1-008 12, L1-009 7, L1-010 10, L1-011 6"
+  ],
+  "changes": [
+    {
+      "case_id": "st_ap_005",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-002",
+      "why": "the as-is sentence is the one score_account_risk answers, so 96% of the configurations called that tool and h was .04; the graph cue leaves one gold",
+      "before": "계좌 9000000000017070의 위험도 점수를 산출해줘",
+      "after": "계좌 9000000000017070의 위험도 점수를 그래프 DB 기반으로 산출해줘"
+    },
+    {
+      "case_id": "st_ap_005",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-002",
+      "why": "the as-is sentence is the one score_account_risk answers, so 96% of the configurations called that tool and h was .04; the graph cue leaves one gold",
+      "before": "Please calculate the risk score for account 9000000000017070.",
+      "after": "Please compute the risk score for account 9000000000017070 from the transfer graph."
+    },
+    {
+      "case_id": "st_ap_035",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-002",
+      "why": "same overlap as st_ap_005 (h .07, 93% chose score_account_risk)",
+      "before": "계좌 9000000001372521의 AML 위험 점수를 계산해줘",
+      "after": "계좌 9000000001372521의 AML 위험 점수를 그래프 분석으로 계산해줘"
+    },
+    {
+      "case_id": "st_ap_035",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-002",
+      "why": "same overlap as st_ap_005 (h .07, 93% chose score_account_risk)",
+      "before": "Please calculate the AML risk score for account 9000000001372521.",
+      "after": "Please compute the AML risk score for account 9000000001372521 with graph analysis."
+    },
+    {
+      "case_id": "st_ap_003",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "both tools described mule accounts, so the boundary was invisible; the funnel questions now state the few outgoing counterparties that define the pattern",
+      "before": "대포통장(funnel) 패턴을 탐지해줘",
+      "after": "입금 상대는 많고 출금 상대는 소수인 funnel(집금) 계좌 패턴을 탐지해줘"
+    },
+    {
+      "case_id": "st_ap_003",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "both tools described mule accounts, so the boundary was invisible; the funnel questions now state the few outgoing counterparties that define the pattern",
+      "before": "Please detect mule account (funnel) patterns.",
+      "after": "Please detect funnel (collection) account patterns: many incoming counterparties and only a few outgoing ones."
+    },
+    {
+      "case_id": "st_ap_008",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "71% chose detect_smurfing_network because the sentence named no outgoing side; the funnel condition is now explicit",
+      "before": "다수의 계좌에서 돈을 받아 소수 계좌로 집중시키는 대포통장 패턴을 탐지해줘",
+      "after": "다수의 계좌에서 돈을 받아 소수의 계좌로만 내보내는 funnel 계좌를 탐지해줘"
+    },
+    {
+      "case_id": "st_ap_008",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "71% chose detect_smurfing_network because the sentence named no outgoing side; the funnel condition is now explicit",
+      "before": "Please detect the mule account pattern of receiving money from multiple accounts and concentrating it into a few accounts.",
+      "after": "Please detect funnel accounts that receive from many accounts and forward to only a few accounts."
+    },
+    {
+      "case_id": "st_ap_012",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "54% chose detect_smurfing_network; the outgoing condition is now explicit",
+      "before": "보이스피싱에 자주 쓰이는 대포통장 계좌를 찾아줘. 입금 계좌가 많고 출금은 집중되는 구조야",
+      "after": "보이스피싱 자금이 모이는 계좌를 찾아줘. 입금 상대는 많고 출금은 소수 계좌로만 나가는 구조야"
+    },
+    {
+      "case_id": "st_ap_012",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "54% chose detect_smurfing_network; the outgoing condition is now explicit",
+      "before": "Please identify mule accounts that are frequently used for voice phishing. These accounts typically have a high number of deposits and concentrated withdrawals.",
+      "after": "Please identify accounts where voice phishing proceeds are collected: many incoming counterparties and outgoing transfers to only a few accounts."
+    },
+    {
+      "case_id": "st_ap_017",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "79% chose detect_smurfing_network; naming funnel and the outgoing condition leaves one gold",
+      "before": "자금세탁 형태 중 대포통장(다수 입금·소수 출금) 패턴을 탐지해줘",
+      "after": "자금세탁 형태 중 다수 입금·소수 출금 구조의 funnel 계좌 패턴을 탐지해줘"
+    },
+    {
+      "case_id": "st_ap_017",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "79% chose detect_smurfing_network; naming funnel and the outgoing condition leaves one gold",
+      "before": "Among money laundering typologies, please detect the mule account pattern (many deposits, few withdrawals).",
+      "after": "Among money laundering typologies, please detect funnel accounts with many incoming and few outgoing counterparties."
+    },
+    {
+      "case_id": "st_ap_023",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "same funnel/smurfing overlap",
+      "before": "금융사기에 활용되는 대포통장 패턴 20건을 탐지해줘",
+      "after": "금융사기에 쓰이는 funnel(다수 입금·소수 출금) 계좌 패턴 20건을 탐지해줘"
+    },
+    {
+      "case_id": "st_ap_023",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "same funnel/smurfing overlap",
+      "before": "Please detect 20 patterns of mule accounts used in financial fraud.",
+      "after": "Please detect 20 funnel account patterns (many incoming, few outgoing counterparties) used in financial fraud."
+    },
+    {
+      "case_id": "st_ap_028",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "same funnel/smurfing overlap",
+      "before": "자금세탁 의심 계좌 중 입금이 분산되고 출금이 집중되는 계좌를 탐지해줘",
+      "after": "자금세탁 의심 계좌 중 입금 상대는 분산되고 출금은 소수 계좌로만 나가는 funnel 계좌를 탐지해줘"
+    },
+    {
+      "case_id": "st_ap_028",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "same funnel/smurfing overlap",
+      "before": "Please identify accounts with suspicious money laundering activity where deposits are dispersed and withdrawals are concentrated.",
+      "after": "Please identify funnel accounts with suspicious money laundering activity where the incoming counterparties are dispersed and the outgoing ones are only a few."
+    },
+    {
+      "case_id": "st_ap_036",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "same funnel/smurfing overlap",
+      "before": "대포통장 의심 계좌를 25건 탐지해줘",
+      "after": "입금 상대가 많고 출금 상대가 소수인 funnel 의심 계좌를 25건 탐지해줘"
+    },
+    {
+      "case_id": "st_ap_036",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "same funnel/smurfing overlap",
+      "before": "Please identify 25 suspicious accounts related to mule accounts.",
+      "after": "Please identify 25 suspected funnel accounts with many incoming and few outgoing counterparties."
+    },
+    {
+      "case_id": "st_ap_039",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "75% chose detect_smurfing_network; the outgoing condition is now explicit",
+      "before": "여러 출처에서 소규모로 입금받아 한 계좌로 집결시키는 집금책 계좌를 탐지해줘",
+      "after": "여러 출처에서 소규모로 입금받아 소수 계좌로만 내보내는 집금책 funnel 계좌를 탐지해줘"
+    },
+    {
+      "case_id": "st_ap_039",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "75% chose detect_smurfing_network; the outgoing condition is now explicit",
+      "before": "Please identify accounts that are used as collection accounts, receiving small deposits from multiple sources and consolidating them into one account.",
+      "after": "Please identify collection (funnel) accounts that receive small deposits from many sources and forward them to only a few accounts."
+    },
+    {
+      "case_id": "st_smurf_040",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "the as-is sentence ('collects and then forwards in one go') describes funnel, not the inbound counterparty count the gold tool measures",
+      "before": "계좌 9000000004388166이 여러 계좌에서 소액을 수집한 뒤 한 번에 이체하는 자금 세탁 허브인지 분석해줘",
+      "after": "계좌 9000000004388166이 여러 계좌에서 자금을 수집하는지, 유입 거래 상대 수 기준으로 분석해줘"
+    },
+    {
+      "case_id": "st_smurf_040",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "the as-is sentence ('collects and then forwards in one go') describes funnel, not the inbound counterparty count the gold tool measures",
+      "before": "Please analyze whether account 9000000004388166 is a money laundering hub that collects small amounts from multiple accounts and then transfers them all at once.",
+      "after": "Please analyze whether account 9000000004388166 collects funds from many accounts, by its number of incoming counterparties."
+    },
+    {
+      "case_id": "st_smurf_015",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "the counterparty threshold is what separates smurfing from funnel",
+      "before": "많은 계좌에서 자금을 받아 모으는 허브 계좌를 찾아줘",
+      "after": "유입 거래 상대가 5곳 이상인 자금 집결 계좌를 찾아줘"
+    },
+    {
+      "case_id": "st_smurf_015",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "the counterparty threshold is what separates smurfing from funnel",
+      "before": "Please identify the hub accounts that are receiving funds from multiple accounts.",
+      "after": "Please identify accounts that collect funds from five or more distinct sending accounts."
+    },
+    {
+      "case_id": "st_smurf_037",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "'consolidating into a single account' read as funnel",
+      "before": "보이스피싱 조직이 피해자에게서 소액으로 나눠 받아 한 계좌에 모으는 패턴을 탐지해줘",
+      "after": "보이스피싱 조직이 피해자 여러 명에게서 나눠 받는 구조를, 유입 거래 상대 수 기준으로 탐지해줘"
+    },
+    {
+      "case_id": "st_smurf_037",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "'consolidating into a single account' read as funnel",
+      "before": "Please detect the pattern of voice phishing organizations collecting small amounts from victims and consolidating them into a single account.",
+      "after": "Please detect the structure in which a voice phishing group receives split payments from many victims, by the number of incoming counterparties."
+    },
+    {
+      "case_id": "st_smurf_041",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "the counterparty count makes the smurfing tool the only fit",
+      "before": "불법 도박 사이트 정산 계좌처럼 수십 개 계좌에서 자금을 받는 집결 구조를 탐지해줘",
+      "after": "불법 도박 사이트 정산 계좌처럼 유입 거래 상대가 수십 곳인 집결 계좌를 탐지해줘"
+    },
+    {
+      "case_id": "st_smurf_041",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003",
+      "why": "the counterparty count makes the smurfing tool the only fit",
+      "before": "Please detect a concentration structure where funds are received from dozens of accounts, similar to settlement accounts for illegal gambling sites.",
+      "after": "Please detect collection accounts with dozens of incoming counterparties, like the settlement accounts of illegal gambling sites."
+    },
+    {
+      "case_id": "st_ctr_031",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-004",
+      "why": "the word smurfing pointed at detect_smurfing_network, whose name and description carry it (h .04, 82% chose that tool)",
+      "before": "스머핑 의심 거래를 탐지해줘",
+      "after": "같은 날 보고 기준 미만으로 쪼갠 구조화(structuring) 의심 거래를 탐지해줘"
+    },
+    {
+      "case_id": "st_ctr_031",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-004",
+      "why": "the word smurfing pointed at detect_smurfing_network, whose name and description carry it (h .04, 82% chose that tool)",
+      "before": "Please detect suspicious transactions related to smurfing.",
+      "after": "Please detect suspected structuring: transactions split below the reporting threshold on the same day."
+    },
+    {
+      "case_id": "st_gs_031",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-005",
+      "why": "a single type's count is what get_fraud_type_summary returns; the question now asks for the distribution, which only get_statistics gives",
+      "before": "심야/새벽 대량 거래 유형의 이상거래가 전체에서 몇 건이야?",
+      "after": "이상거래 유형별 건수 분포를 보여주고 가장 적게 발생한 유형이 무엇인지 알려줘"
+    },
+    {
+      "case_id": "st_gs_031",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-005",
+      "why": "a single type's count is what get_fraud_type_summary returns; the question now asks for the distribution, which only get_statistics gives",
+      "before": "How many suspicious transactions of the 'late-night/early-morning bulk transactions' type are there in total?",
+      "after": "Please show the distribution of suspicious transactions by fraud type and say which type occurs least often."
+    },
+    {
+      "case_id": "st_gs_035",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-005",
+      "why": "HOFINET has no 'other' fraud type, and a share of the total needs the distribution and the total that only get_statistics returns",
+      "before": "전체 이상거래 중 기타 유형이 차지하는 비율은?",
+      "after": "이상거래 유형별 분포에서 심야/새벽 대량 거래 유형(유형7)이 차지하는 비율을 알려줘"
+    },
+    {
+      "case_id": "st_gs_035",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-005",
+      "why": "HOFINET has no 'other' fraud type, and a share of the total needs the distribution and the total that only get_statistics returns",
+      "before": "What percentage of the total suspicious transactions is accounted for by other types?",
+      "after": "In the distribution of suspicious transactions by fraud type, what share does the late-night/early-morning bulk transaction type (type 7) hold?"
+    },
+    {
+      "case_id": "st_gs_046",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-005",
+      "why": "comparing two types needs the distribution, not one type's summary",
+      "before": "다중거래의 동시 요청과 갑작스러운 거래패턴의 변화 중 어느 유형이 더 많이 발생했어?",
+      "after": "이상거래 유형별 분포에서 다중거래의 동시 요청과 갑작스러운 거래패턴의 변화 중 어느 쪽이 더 많은지 알려줘"
+    },
+    {
+      "case_id": "st_gs_046",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-005",
+      "why": "comparing two types needs the distribution, not one type's summary",
+      "before": "Which type occurred more often, concurrent multiple transactions or sudden change in transaction pattern?",
+      "after": "In the distribution by fraud type, which occurs more often, concurrent multiple transactions or a sudden change in transaction pattern?"
+    },
+    {
+      "case_id": "st_gs_049",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-005",
+      "why": "a share of the total needs the distribution and the total",
+      "before": "분할 거래 유형의 이상거래는 전체 이상거래 중 몇 건이야?",
+      "after": "이상거래 유형별 분포에서 분할 거래 유형(유형3)이 차지하는 비중을 알려줘"
+    },
+    {
+      "case_id": "st_gs_049",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-005",
+      "why": "a share of the total needs the distribution and the total",
+      "before": "How many of all suspicious transactions are of the split transaction type?",
+      "after": "In the distribution by fraud type, what share does the split transaction type (type 3) hold?"
+    },
+    {
+      "case_id": "st_gs_050",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-005",
+      "why": "a single type's count was answerable by either tool",
+      "before": "거액 입금 후 당일 인출 관련 이상거래가 얼마나 탐지됐어?",
+      "after": "이상거래 유형별 분포에서 거액 입금 후 당일 인출 유형(유형5)이 차지하는 비중을 알려줘"
+    },
+    {
+      "case_id": "st_gs_050",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-005",
+      "why": "a single type's count was answerable by either tool",
+      "before": "How many suspicious transactions related to same-day withdrawal after a large deposit were detected?",
+      "after": "In the distribution by fraud type, what share does the same-day withdrawal after a large deposit type (type 5) hold?"
+    },
+    {
+      "case_id": "st_gs_040",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-005",
+      "why": "get_statistics returns no dates at all, so it could not answer the question it was gold for; the quarterly trend carries the period labels",
+      "before": "데이터에 포함된 분기 수와 기간 범위를 알려줘",
+      "after": "데이터에 포함된 분기별 거래 추이를 보여줘서 분기 수와 기간 범위를 확인해줘"
+    },
+    {
+      "case_id": "st_gs_040",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-005",
+      "why": "get_statistics returns no dates at all, so it could not answer the question it was gold for; the quarterly trend carries the period labels",
+      "before": {
+        "primary_tool": "get_statistics",
+        "tools_must_include": [
+          "get_statistics"
+        ],
+        "param_checks": {}
+      },
+      "after": {
+        "primary_tool": "get_trend_analysis",
+        "tools_must_include": [
+          "get_trend_analysis"
+        ],
+        "param_checks": {
+          "get_trend_analysis": {
+            "unit": "quarterly"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_gs_040",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-005",
+      "why": "get_statistics returns no dates at all, so it could not answer the question it was gold for; the quarterly trend carries the period labels",
+      "before": "Please provide the number of quarters included in the data and the range of the period.",
+      "after": "Please show the quarterly transaction trend of the data so I can see how many quarters it covers and over what period."
+    },
+    {
+      "case_id": "st_gs_040",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-005",
+      "why": "get_statistics returns no dates at all, so it could not answer the question it was gold for; the quarterly trend carries the period labels",
+      "before": {
+        "primary_tool": "get_statistics",
+        "tools_must_include": [
+          "get_statistics"
+        ],
+        "param_checks": {}
+      },
+      "after": {
+        "primary_tool": "get_trend_analysis",
+        "tools_must_include": [
+          "get_trend_analysis"
+        ],
+        "param_checks": {
+          "get_trend_analysis": {
+            "unit": "quarterly"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_gfs_009",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-006",
+      "why": "the tool returns five recent distinct dates, not a frequency by date, so 'mainly on which dates' sent 43% to query_transactions",
+      "before": "분할 거래 이상거래가 주로 어떤 날짜에 발생했어?",
+      "after": "분할 거래(유형3) 이상거래가 최근 발생한 날짜를 알려줘"
+    },
+    {
+      "case_id": "st_gfs_009",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-006",
+      "why": "the tool returns five recent distinct dates, not a frequency by date, so 'mainly on which dates' sent 43% to query_transactions",
+      "before": "On which dates do suspicious transactions of the 'split transaction' type mainly occur?",
+      "after": "Please give the most recent dates on which split transactions (type 3) occurred."
+    },
+    {
+      "case_id": "st_gfs_036",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-006",
+      "why": "comparing one type's average against the other types needs a call per type; the question now stays inside what one call returns",
+      "before": "갑작스러운 거래패턴의 변화 거래의 평균 거래금액은 다른 유형 대비 어때?",
+      "after": "갑작스러운 거래패턴의 변화(유형1) 이상거래의 평균 거래금액과 상위 관련 금융회사를 알려줘"
+    },
+    {
+      "case_id": "st_gfs_036",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-006",
+      "why": "comparing one type's average against the other types needs a call per type; the question now stays inside what one call returns",
+      "before": "How does the average transaction amount of sudden change in transaction pattern transactions compare with other types?",
+      "after": "Please give the average transaction amount and the top associated institutions for suspicious transactions of the sudden change in transaction pattern type (type 1)."
+    },
+    {
+      "case_id": "st_gfs_037",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-006",
+      "why": "get_fraud_type_summary returns one type's count but not the fraud total, so the share of all suspicious transactions can only come from get_statistics; this also settles the contradiction with st_gs_017",
+      "before": {
+        "primary_tool": "get_fraud_type_summary",
+        "tools_must_include": [
+          "get_fraud_type_summary"
+        ],
+        "param_checks": {
+          "get_fraud_type_summary": {
+            "fraud_type": 2
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "get_statistics",
+        "tools_must_include": [
+          "get_statistics"
+        ],
+        "param_checks": {}
+      }
+    },
+    {
+      "case_id": "st_gfs_037",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-006",
+      "why": "get_fraud_type_summary returns one type's count but not the fraud total, so the share of all suspicious transactions can only come from get_statistics; this also settles the contradiction with st_gs_017",
+      "before": {
+        "primary_tool": "get_fraud_type_summary",
+        "tools_must_include": [
+          "get_fraud_type_summary"
+        ],
+        "param_checks": {
+          "get_fraud_type_summary": {
+            "fraud_type": 2
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "get_statistics",
+        "tools_must_include": [
+          "get_statistics"
+        ],
+        "param_checks": {}
+      }
+    },
+    {
+      "case_id": "st_gfs_038",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-006",
+      "why": "the tool returns no channel at all, so the as-is question about the medium could not be answered by its own gold",
+      "before": "거액 입금 후 당일 인출(유형5) 이상거래가 주로 사용하는 금융 매체가 뭐야?",
+      "after": "거액 입금 후 당일 인출(유형5) 이상거래가 집중된 상위 금융회사를 알려줘"
+    },
+    {
+      "case_id": "st_gfs_038",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-006",
+      "why": "the tool returns no channel at all, so the as-is question about the medium could not be answered by its own gold",
+      "before": "What financial medium is mainly used in suspicious transactions of the 'same-day withdrawal after a large deposit' type (Type 5)?",
+      "after": "Please give the top institutions where suspicious transactions of the same-day withdrawal after a large deposit type (type 5) are concentrated."
+    },
+    {
+      "case_id": "st_gir_007",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-007",
+      "why": "naming one fraud type made get_fraud_type_summary(fraud_type, bank_id) the exact fit; the question now asks for the institution's overall report",
+      "before": "bank_id 156 금융회사의 갑작스러운 거래패턴의 변화 관련 이상거래가 많은지 종합 현황을 보고해줘",
+      "after": "bank_id 156 금융회사의 이상거래 종합 현황을 유형 분포까지 포함해 보고해줘"
+    },
+    {
+      "case_id": "st_gir_007",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-007",
+      "why": "naming one fraud type made get_fraud_type_summary(fraud_type, bank_id) the exact fit; the question now asks for the institution's overall report",
+      "before": "Please report the overall status of the financial institution with bank_id 156, including whether it has many suspicious transactions of the sudden change in transaction pattern type.",
+      "after": "Please report the overall suspicious transaction status of the institution with bank_id 156, including its distribution by fraud type."
+    },
+    {
+      "case_id": "st_gir_011",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-007",
+      "why": "same overlap (32% chose get_fraud_type_summary)",
+      "before": "출금 금융회사 번호가 106인 기관의 다중거래의 동시 요청 및 분할 거래 관련 이상거래 현황을 종합 분석해줘",
+      "after": "출금 금융회사 번호가 106인 기관의 이상거래 종합 현황을 기관 리포트로 분석해줘"
+    },
+    {
+      "case_id": "st_gir_011",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-007",
+      "why": "same overlap (32% chose get_fraud_type_summary)",
+      "before": "Please comprehensively analyze the suspicious transaction status of concurrent multiple transactions and split transactions for the institution whose withdrawal financial institution number is 106.",
+      "after": "Please analyze the overall suspicious transaction status of the institution whose withdrawal institution number is 106 with the institution report."
+    },
+    {
+      "case_id": "st_gir_020",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-007",
+      "why": "same overlap (50% chose get_fraud_type_summary)",
+      "before": "금융기관 135번이 다중거래의 동시 요청 관련 거래가 많은지 확인해줘",
+      "after": "금융기관 135번의 이상거래 종합 현황을 기관 리포트로 확인해줘"
+    },
+    {
+      "case_id": "st_gir_020",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-007",
+      "why": "same overlap (50% chose get_fraud_type_summary)",
+      "before": "Please check whether financial institution 135 has many transactions of the concurrent multiple transactions type.",
+      "after": "Please check the overall suspicious transaction status of financial institution 135 with the institution report."
+    },
+    {
+      "case_id": "st_gir_023",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-007",
+      "why": "same overlap (46% chose get_fraud_type_summary)",
+      "before": "금융회사 145번에서 갑작스러운 거래패턴의 변화 의심 거래가 얼마나 발생했는지 종합 분석해줘",
+      "after": "금융회사 145번의 이상거래 종합 현황과 상대 기관 분포를 분석해줘"
+    },
+    {
+      "case_id": "st_gir_023",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-007",
+      "why": "same overlap (46% chose get_fraud_type_summary)",
+      "before": "Please comprehensively analyze how many suspicious transactions of the sudden change in transaction pattern type occurred at financial institution 145.",
+      "after": "Please analyze the overall suspicious transaction status of financial institution 145 and its distribution of counterpart institutions."
+    },
+    {
+      "case_id": "st_gir_037",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-007",
+      "why": "same overlap (43% chose get_fraud_type_summary)",
+      "before": "bank_id 117번 기관의 다중거래의 동시 요청 및 거액 입금 후 당일 인출 관련 이상거래 현황을 확인해줘",
+      "after": "bank_id 117번 기관의 이상거래 종합 현황을 출금·입금 양방향으로 확인해줘"
+    },
+    {
+      "case_id": "st_gir_037",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-007",
+      "why": "same overlap (43% chose get_fraud_type_summary)",
+      "before": "Please check the suspicious transaction status of concurrent multiple transactions and same-day withdrawal after a large deposit for the institution with bank_id 117.",
+      "after": "Please check the overall suspicious transaction status of the institution with bank_id 117 on both the sending and the receiving side."
+    },
+    {
+      "case_id": "st_gir_039",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-007",
+      "why": "same overlap (50% chose get_fraud_type_summary)",
+      "before": "금융회사 124번에서 갑작스러운 거래패턴의 변화 및 분할 거래 이상거래가 집중적으로 발생하고 있는지 확인해줘",
+      "after": "금융회사 124번의 이상거래가 어느 유형에 집중되는지 기관 종합 리포트로 확인해줘"
+    },
+    {
+      "case_id": "st_gir_039",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-007",
+      "why": "same overlap (50% chose get_fraud_type_summary)",
+      "before": "Please check whether suspicious transactions of the sudden change in transaction pattern and split transaction types are concentrated at financial institution 124.",
+      "after": "Please check which fraud types the suspicious transactions of financial institution 124 concentrate in, using the overall institution report."
+    },
+    {
+      "case_id": "st_mon_004",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "R003 is the repeated-identical-amount rule (D18), and the as-is wording 'fixed amount pattern' matched neither the rule nor any tool",
+      "before": "정액 거래 패턴을 탐지해줘",
+      "after": "모니터링 규칙으로 같은 금액을 반복해서 송금한 계좌 알림을 확인해줘"
+    },
+    {
+      "case_id": "st_mon_004",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "R003 is the repeated-identical-amount rule (D18), and the as-is wording 'fixed amount pattern' matched neither the rule nor any tool",
+      "before": "Please detect fixed transaction patterns.",
+      "after": "Please check the monitoring alerts for accounts that sent the same amount repeatedly."
+    },
+    {
+      "case_id": "st_mon_012",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "'exact multiples of 1,000,000 won' is a SQL filter, not rule R003; h was 0 of 28 and every configuration called query_transactions",
+      "before": "정확히 100만원 단위로 거래한 계좌를 찾아줘",
+      "after": "모니터링 규칙 R003으로 동일한 금액을 세 번 이상 반복 송금한 계좌를 찾아줘"
+    },
+    {
+      "case_id": "st_mon_012",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "'exact multiples of 1,000,000 won' is a SQL filter, not rule R003; h was 0 of 28 and every configuration called query_transactions",
+      "before": "Please find the accounts that have transacted in exact multiples of 1,000,000 won.",
+      "after": "Please use monitoring rule R003 to find accounts that sent the same amount three or more times."
+    },
+    {
+      "case_id": "st_mon_033",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "R003 counts repeated identical amounts (D18), not a regular schedule",
+      "before": "고정된 금액으로 반복 거래하는 계좌를 찾아줘",
+      "after": "모니터링 알림 기준으로 동일한 금액을 반복 송금하는 계좌를 찾아줘"
+    },
+    {
+      "case_id": "st_mon_033",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "R003 counts repeated identical amounts (D18), not a regular schedule",
+      "before": "Please identify accounts that are making repetitive transactions of fixed amounts.",
+      "after": "Please find accounts that repeatedly send an identical amount, by the monitoring alert rule."
+    },
+    {
+      "case_id": "st_mon_040",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "R003 counts repeated identical amounts (D18), not a regular schedule",
+      "before": "일정 금액을 정기적으로 반복 송금하는 의심 패턴을 탐지해줘",
+      "after": "모니터링 규칙으로 같은 금액을 세 번 이상 반복 송금하는 의심 계좌를 탐지해줘"
+    },
+    {
+      "case_id": "st_mon_040",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "R003 counts repeated identical amounts (D18), not a regular schedule",
+      "before": "Please detect any suspicious patterns of regularly recurring transfers of a specific amount.",
+      "after": "Please use the monitoring rules to detect suspicious accounts that send the same amount three or more times."
+    },
+    {
+      "case_id": "st_mon_006",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "'a sudden change in transaction pattern' is also the name of fraud type 1, so 57% chose a fraud-type tool; the rule cue separates them",
+      "before": "거래 패턴이 급변한 계좌를 탐지해줘",
+      "after": "모니터링 규칙으로 거래량이 급증한 계좌 알림을 탐지해줘"
+    },
+    {
+      "case_id": "st_mon_006",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "'a sudden change in transaction pattern' is also the name of fraud type 1, so 57% chose a fraud-type tool; the rule cue separates them",
+      "before": "Please identify accounts with sudden changes in transaction patterns.",
+      "after": "Please use the monitoring rules to detect alerts for accounts whose transaction volume rose sharply."
+    },
+    {
+      "case_id": "st_mon_024",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "same overlap with fraud type 1 (71% chose another tool)",
+      "before": "2023년 하반기에 거래 행태가 급변한 계좌를 찾아줘",
+      "after": "2023년 하반기에 거래량이 급증한 계좌를 모니터링 규칙 알림으로 찾아줘"
+    },
+    {
+      "case_id": "st_mon_024",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "same overlap with fraud type 1 (71% chose another tool)",
+      "before": "Please identify accounts that exhibited sudden changes in transaction behavior in the second half of 2023.",
+      "after": "Please find accounts whose transaction volume rose sharply in the second half of 2023 through the monitoring rule alerts."
+    },
+    {
+      "case_id": "st_mon_036",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "same overlap with fraud type 1 (43% chose another tool)",
+      "before": "단기간 내에 거래 패턴이 크게 바뀐 계좌를 탐지해줘",
+      "after": "단기간에 거래량이 급증한 계좌를 모니터링 규칙 알림으로 탐지해줘"
+    },
+    {
+      "case_id": "st_mon_036",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "same overlap with fraud type 1 (43% chose another tool)",
+      "before": "Please identify accounts that have experienced significant changes in transaction patterns within a short period.",
+      "after": "Please detect accounts whose transaction volume rose sharply within a short period through the monitoring rule alerts."
+    },
+    {
+      "case_id": "st_mon_013",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "'large amounts at night' is also the name of fraud type 7, so the rule's own threshold and slots are now in the question",
+      "before": "밤에 큰 금액을 거래한 건을 찾아줘",
+      "after": "심야 시간대에 500만원 이상 거래가 발생한 모니터링 규칙 알림을 찾아줘"
+    },
+    {
+      "case_id": "st_mon_013",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "'large amounts at night' is also the name of fraud type 7, so the rule's own threshold and slots are now in the question",
+      "before": "Please find the transactions involving large amounts that occurred at night.",
+      "after": "Please find the monitoring rule alerts for transactions of 5,000,000 won or more in the night time slots."
+    },
+    {
+      "case_id": "st_mon_017",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "same overlap with fraud type 7 (46% chose another tool)",
+      "before": "새벽 시간대에 이뤄진 대규모 자금 이동을 확인해줘",
+      "after": "심야·새벽 시간대 대량 거래 모니터링 규칙 알림을 확인해줘"
+    },
+    {
+      "case_id": "st_mon_017",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "same overlap with fraud type 7 (46% chose another tool)",
+      "before": "Please check for large-scale fund transfers that occurred during the early morning hours.",
+      "after": "Please check the monitoring rule alerts for bulk transactions in the late-night and early-morning time slots."
+    },
+    {
+      "case_id": "st_mon_005",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "the as-is sentence was a SQL aggregation (h .29); the rule's own condition is now in the question",
+      "before": "특정 기관에 거래가 집중된 계좌를 찾아줘",
+      "after": "거래의 절반 이상이 한 입금 기관으로 몰린 계좌를 모니터링 규칙 알림으로 찾아줘"
+    },
+    {
+      "case_id": "st_mon_005",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "the as-is sentence was a SQL aggregation (h .29); the rule's own condition is now in the question",
+      "before": "Please identify accounts with a concentration of transactions at a specific financial institution.",
+      "after": "Please find accounts that send at least half of their transactions to one receiving institution, through the monitoring rule alerts."
+    },
+    {
+      "case_id": "st_mon_010",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "'several transactions on the same day' was also the CTR structuring case st_ctr_012; R002's own threshold separates them",
+      "before": "같은 날 여러 번 거래한 의심 계좌를 찾아줘",
+      "after": "하루에 10건 이상 거래한 계좌를 모니터링 규칙 알림으로 찾아줘"
+    },
+    {
+      "case_id": "st_mon_010",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "'several transactions on the same day' was also the CTR structuring case st_ctr_012; R002's own threshold separates them",
+      "before": "Please identify suspicious accounts that have conducted multiple transactions on the same day.",
+      "after": "Please find accounts with 10 or more transactions on one day through the monitoring rule alerts."
+    },
+    {
+      "case_id": "st_ctr_012",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "the counterpart of st_mon_010: this one is the CTR structuring case",
+      "before": "동일계좌가 같은 날 여러 건으로 나눠서 거래한 경우를 찾아줘",
+      "after": "동일 계좌가 같은 날 보고 기준 미만으로 나눠서 거래한 구조화 의심 건을 찾아줘"
+    },
+    {
+      "case_id": "st_ctr_012",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-008",
+      "why": "the counterpart of st_mon_010: this one is the CTR structuring case",
+      "before": "Please find instances where the same account has conducted multiple transactions on the same day.",
+      "after": "Please find suspected structuring where one account split its transactions below the reporting threshold on the same day."
+    },
+    {
+      "case_id": "st_grap_028",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-009",
+      "why": "'receiving from multiple accounts' is what detect_smurfing_network counts; the profile's own return values (top senders and sending banks) are now asked for",
+      "before": "계좌 9000000004260440가 여러 계좌에서 자금을 수취하는 패턴이 있어?",
+      "after": "계좌 9000000004260440의 수취 프로파일에서 주요 송금인과 출처 금융기관을 확인해줘"
+    },
+    {
+      "case_id": "st_grap_028",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-009",
+      "why": "'receiving from multiple accounts' is what detect_smurfing_network counts; the profile's own return values (top senders and sending banks) are now asked for",
+      "before": "Is there a pattern of account 9000000004260440 receiving funds from multiple accounts?",
+      "after": "Please check the main senders and their sending institutions in the receiving profile of account 9000000004260440."
+    },
+    {
+      "case_id": "st_grap_037",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-009",
+      "why": "same overlap with the smurfing counterparty count",
+      "before": "입금계좌 9000000004410697으로 소액 다건 입금이 반복되는지 분석해줘",
+      "after": "입금계좌 9000000004410697의 수취 프로파일에서 소액 다건 입금의 주요 송금인을 확인해줘"
+    },
+    {
+      "case_id": "st_grap_037",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-009",
+      "why": "same overlap with the smurfing counterparty count",
+      "before": "Please analyze whether there are multiple small deposits being made repeatedly to account 9000000004410697.",
+      "after": "Please check the main senders behind the repeated small deposits in the receiving profile of account 9000000004410697."
+    },
+    {
+      "case_id": "st_grap_038b",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-009",
+      "why": "57% chose detect_smurfing_network for the as-is sentence",
+      "before": "계좌 9000000004260440에 짧은 기간 동안 여러 계좌에서 입금이 집중되는지 확인해줘",
+      "after": "계좌 9000000004260440의 수취 프로파일에서 최근 입금 상대와 출처 기관 분포를 확인해줘"
+    },
+    {
+      "case_id": "st_grap_038b",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-009",
+      "why": "57% chose detect_smurfing_network for the as-is sentence",
+      "before": "Please check if there are multiple deposits concentrated in a short period from various accounts to account 9000000004260440.",
+      "after": "Please check the recent senders and the distribution of their institutions in the receiving profile of account 9000000004260440."
+    },
+    {
+      "case_id": "st_grap_040",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-009",
+      "why": "same overlap with the smurfing counterparty count",
+      "before": "계좌 9000000000029571에 다수의 출처로부터 단기간에 집중적인 자금 유입이 발생하는지 분석하여 자금세탁 단계(placement/layering)를 파악해줘",
+      "after": "계좌 9000000000029571의 수취 프로파일에서 송금인 수와 출처 기관 분포를 확인해 자금 유입 구조를 판단해줘"
+    },
+    {
+      "case_id": "st_grap_040",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-009",
+      "why": "same overlap with the smurfing counterparty count",
+      "before": "Please analyze whether there is a concentrated influx of funds from multiple sources into account 9000000000029571 over a short period of time to identify the money laundering stage (placement/layering).",
+      "after": "Please judge the inflow structure of account 9000000000029571 from the number of senders and the distribution of their institutions in its receiving profile."
+    },
+    {
+      "case_id": "st_smurf_029",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-009",
+      "why": "50% chose get_receiving_account_profile for the as-is sentence; the counterparty threshold is the smurfing tool's own condition",
+      "before": "계좌 9000000000026712의 자금 유입 네트워크 구조를 분석해줘",
+      "after": "계좌 9000000000026712로 자금을 보낸 거래 상대가 5곳 이상인지 스머핑 네트워크로 확인해줘"
+    },
+    {
+      "case_id": "st_smurf_029",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-009",
+      "why": "50% chose get_receiving_account_profile for the as-is sentence; the counterparty threshold is the smurfing tool's own condition",
+      "before": "Please analyze the funding inflow network structure for account 9000000000026712.",
+      "after": "Please check with the smurfing network whether five or more distinct counterparties sent funds to account 9000000000026712."
+    },
+    {
+      "case_id": "st_gap_016",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-009",
+      "why": "'analyze this account' carried no cue for any particular tool",
+      "before": "계좌 9000000004256150을 분석해줘",
+      "after": "계좌 9000000004256150의 거래 통계 프로파일을 조회해줘"
+    },
+    {
+      "case_id": "st_gap_016",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-009",
+      "why": "'analyze this account' carried no cue for any particular tool",
+      "before": "Please analyze account 9000000004256150.",
+      "after": "Please look up the transaction statistics profile of account 9000000004256150."
+    },
+    {
+      "case_id": "st_an_027",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-009",
+      "why": "'counterparties of the account' is also the profile's top-counterparty list, so 68% chose get_account_profile; the network cue leaves one gold",
+      "before": "계좌 9000000004256150의 거래 상대방을 분석해줘",
+      "after": "계좌 9000000004256150의 거래 네트워크에서 연결된 상대 계좌를 분석해줘"
+    },
+    {
+      "case_id": "st_an_027",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-009",
+      "why": "'counterparties of the account' is also the profile's top-counterparty list, so 68% chose get_account_profile; the network cue leaves one gold",
+      "before": "Please analyze the counterparty for account 9000000004256150.",
+      "after": "Please analyze the connected counterpart accounts in the transaction network of account 9000000004256150."
+    },
+    {
+      "case_id": "st_ctr_003",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "'show transactions over 10 million won' was a plain SQL request (39% chose query_transactions)",
+      "before": "1000만원 이상 거래 내역을 보여줘",
+      "after": "CTR 보고 대상인 1000만원 이상 고액거래를 탐지해줘"
+    },
+    {
+      "case_id": "st_ctr_003",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "'show transactions over 10 million won' was a plain SQL request (39% chose query_transactions)",
+      "before": "Show me the transaction history for amounts over 10,000,000 won.",
+      "after": "Please detect high-value transactions of 10,000,000 won or more that are subject to CTR reporting."
+    },
+    {
+      "case_id": "st_ctr_004",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "'split transaction' is the official name of HOFINET fraud type 3, so 50% chose a fraud-type tool; CTR cases now say structuring",
+      "before": "분할거래 의심 건을 탐지해줘",
+      "after": "보고 기준 미만으로 쪼갠 구조화(structuring) 의심 건을 탐지해줘"
+    },
+    {
+      "case_id": "st_ctr_004",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "'split transaction' is the official name of HOFINET fraud type 3, so 50% chose a fraud-type tool; CTR cases now say structuring",
+      "before": "Please detect suspicious split transactions.",
+      "after": "Please detect suspected structuring: transactions split below the reporting threshold."
+    },
+    {
+      "case_id": "st_ctr_009",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "same naming clash with fraud type 3 (46% chose another tool)",
+      "before": "2024년 상반기 분할거래 의심 건을 탐지해줘",
+      "after": "2024년 상반기에 보고 기준 미만으로 쪼갠 구조화 의심 건을 탐지해줘"
+    },
+    {
+      "case_id": "st_ctr_009",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "same naming clash with fraud type 3 (46% chose another tool)",
+      "before": "Please detect suspicious split transactions for the first half of 2024.",
+      "after": "Please detect suspected structuring below the reporting threshold in the first half of 2024."
+    },
+    {
+      "case_id": "st_ctr_021",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "same naming clash with fraud type 3",
+      "before": "5000만원 기준으로 분할거래 의심 건을 탐지해줘",
+      "after": "5000만원 보고 기준 아래로 쪼갠 구조화 의심 건을 탐지해줘"
+    },
+    {
+      "case_id": "st_ctr_021",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "same naming clash with fraud type 3",
+      "before": "Please detect suspicious split transactions based on a threshold of 50 million won.",
+      "after": "Please detect suspected structuring below a reporting threshold of 50 million won."
+    },
+    {
+      "case_id": "st_ctr_036",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "same naming clash with fraud type 3",
+      "before": "3000만원 기준 분할거래 의심 건을 찾아줘",
+      "after": "3000만원 보고 기준 아래로 쪼갠 구조화 의심 건을 찾아줘"
+    },
+    {
+      "case_id": "st_ctr_036",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "same naming clash with fraud type 3",
+      "before": "Please find suspicious transactions that involve split transactions based on a threshold of 30 million won.",
+      "after": "Please find suspected structuring below a reporting threshold of 30 million won."
+    },
+    {
+      "case_id": "st_mtool_029",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "same naming clash with fraud type 3",
+      "before": "분할거래 의심 건을 탐지하고 심야대량거래 알림도 확인해줘",
+      "after": "보고 기준 미만으로 쪼갠 구조화 의심 건을 탐지하고 심야 대량 거래 모니터링 알림도 확인해줘"
+    },
+    {
+      "case_id": "st_mtool_029",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "same naming clash with fraud type 3",
+      "before": "Please detect any suspicious split transactions and also check for late-night bulk transaction alerts.",
+      "after": "Please detect suspected structuring below the reporting threshold and also check the nighttime bulk transaction monitoring alerts."
+    },
+    {
+      "case_id": "st_mtool_038",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "same naming clash with fraud type 3",
+      "before": "CTR 대상 분할거래를 탐지하고, 입금계좌 9000000000022515의 프로파일을 조회해줘",
+      "after": "CTR 대상 구조화 의심 건을 탐지하고, 입금계좌 9000000000022515의 수취 프로파일을 조회해줘"
+    },
+    {
+      "case_id": "st_mtool_038",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "same naming clash with fraud type 3",
+      "before": "Please detect the split transactions subject to CTR and query the profile for the deposit account 9000000000022515.",
+      "after": "Please detect suspected structuring subject to CTR and look up the receiving profile of deposit account 9000000000022515."
+    },
+    {
+      "case_id": "st_mtool_055",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "same naming clash with fraud type 3",
+      "before": "CTR 분할거래를 탐지하고, 2023년 4분기와 2024년 1분기 이상거래를 비교해줘",
+      "after": "CTR 구조화 의심 건을 탐지하고, 2023년 4분기와 2024년 1분기 이상거래를 비교해줘"
+    },
+    {
+      "case_id": "st_mtool_055",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "same naming clash with fraud type 3",
+      "before": "Please detect CTR split transactions and compare the suspicious transactions from the fourth quarter of 2023 with those from the first quarter of 2024.",
+      "after": "Please detect suspected CTR structuring and compare the suspicious transactions of the fourth quarter of 2023 with those of the first quarter of 2024."
+    },
+    {
+      "case_id": "st_mtool_065",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "same naming clash with fraud type 3",
+      "before": "고액거래 CTR 대상을 탐지하고, 분할거래 의심 건도 함께 확인해줘",
+      "after": "고액거래 CTR 대상을 탐지하고, 보고 기준 미만 구조화 의심 건도 함께 확인해줘"
+    },
+    {
+      "case_id": "st_mtool_065",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "same naming clash with fraud type 3",
+      "before": "Please identify high-value transaction CTR targets and also check for any suspicious split transactions.",
+      "after": "Please detect high-value CTR candidates and also check for suspected structuring below the reporting threshold."
+    },
+    {
+      "case_id": "st_mtool_074",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "same naming clash with fraud type 3",
+      "before": "분할거래 의심 건을 탐지하고, 고액거래도 함께 조회해줘",
+      "after": "보고 기준 미만 구조화 의심 건을 탐지하고, 고액거래도 함께 조회해줘"
+    },
+    {
+      "case_id": "st_mtool_074",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-010",
+      "why": "same naming clash with fraud type 3",
+      "before": "Please detect suspicious split transactions and also query for high-value transactions.",
+      "after": "Please detect suspected structuring below the reporting threshold and also query the high-value transactions."
+    },
+    {
+      "case_id": "st_qt_019",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-011",
+      "why": "the same aggregation is analyze_channel_risk's own output; the SQL cue separates the two files' cases",
+      "before": "매체구분별 이상거래 건수를 집계해줘",
+      "after": "SQL로 매체구분별 이상거래 건수를 집계해줘"
+    },
+    {
+      "case_id": "st_qt_019",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-011",
+      "why": "the same aggregation is analyze_channel_risk's own output; the SQL cue separates the two files' cases",
+      "before": "Please provide the count of suspicious transactions categorized by medium type.",
+      "after": "Please aggregate the suspicious transaction count by media type with SQL."
+    },
+    {
+      "case_id": "st_qt_022",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-011",
+      "why": "the same aggregation is get_trend_analysis's own output",
+      "before": "2023년에 발생한 이상거래의 월별 건수를 조회해줘",
+      "after": "SQL로 2023년에 발생한 이상거래의 월별 건수를 조회해줘"
+    },
+    {
+      "case_id": "st_qt_022",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-011",
+      "why": "the same aggregation is get_trend_analysis's own output",
+      "before": "Please provide the monthly count of suspicious transactions that occurred in 2023.",
+      "after": "Please query the monthly count of suspicious transactions that occurred in 2023 with SQL."
+    },
+    {
+      "case_id": "st_qt_038",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-011",
+      "why": "the counts alone are get_statistics's output; the SQL cue and the sort keep one gold",
+      "before": "이상거래 유형별로 거래 건수와 총 금액을 함께 조회하고 총 금액 기준 내림차순으로 정렬해줘",
+      "after": "SQL로 이상거래 유형별 거래 건수와 총 금액을 조회하고 총 금액 기준 내림차순으로 정렬해줘"
+    },
+    {
+      "case_id": "st_qt_038",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-011",
+      "why": "the counts alone are get_statistics's output; the SQL cue and the sort keep one gold",
+      "before": "Please retrieve the transaction count and total amount for each type of suspicious transaction, and sort the results in descending order based on the total amount.",
+      "after": "Please query the transaction count and total amount per fraud type with SQL and sort them in descending order of total amount."
+    },
+    {
+      "case_id": "st_qt_053",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-011",
+      "why": "the same ratio is get_statistics's output",
+      "before": "이상거래 유형별 거래 건수 비율(전체 이상거래 대비 %)을 계산해줘",
+      "after": "SQL로 이상거래 유형별 거래 건수 비율(전체 이상거래 대비 %)을 계산해줘"
+    },
+    {
+      "case_id": "st_qt_053",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-011",
+      "why": "the same ratio is get_statistics's output",
+      "before": "Please calculate the percentage of transaction counts by type of suspicious transaction (compared to the total number of suspicious transactions).",
+      "after": "Please calculate the share of each fraud type in all suspicious transactions (in percent) with SQL."
+    },
+    {
+      "case_id": "st_acr_007",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-011",
+      "why": "the as-is sentence was a one-channel count that query_transactions answers (h .29, 19 of 28 called it)",
+      "before": "인터넷뱅킹에서 이상거래가 얼마나 발생해?",
+      "after": "채널별 위험도 분석으로 인터넷뱅킹 채널의 이상거래 건수와 비중을 알려줘"
+    },
+    {
+      "case_id": "st_acr_007",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-011",
+      "why": "the as-is sentence was a one-channel count that query_transactions answers (h .29, 19 of 28 called it)",
+      "before": "How many suspicious transactions have occurred in internet banking?",
+      "after": "Please give the suspicious transaction count and share of the internet banking channel from the channel risk analysis."
+    },
+    {
+      "case_id": "st_acr_019",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-011",
+      "why": "the as-is sentence named no channel analysis (h .14)",
+      "before": "어느 매체에서 자금세탁이 주로 발생해?",
+      "after": "채널별 위험도를 비교해서 이상거래 비중이 가장 높은 매체를 알려줘"
+    },
+    {
+      "case_id": "st_acr_019",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-011",
+      "why": "the as-is sentence named no channel analysis (h .14)",
+      "before": "Which channels are primarily associated with money laundering?",
+      "after": "Please compare the risk by channel and say which medium has the highest share of suspicious transactions."
+    }
+  ]
+}

@@ -361,7 +361,7 @@
   },
   {
     "id": "st_gs_031",
-    "question": "심야/새벽 대량 거래 유형의 이상거래가 전체에서 몇 건이야?",
+    "question": "이상거래 유형별 건수 분포를 보여주고 가장 적게 발생한 유형이 무엇인지 알려줘",
     "expected": {
       "primary_tool": "get_statistics",
       "tools_must_include": [
@@ -409,7 +409,7 @@
   },
   {
     "id": "st_gs_035",
-    "question": "전체 이상거래 중 기타 유형이 차지하는 비율은?",
+    "question": "이상거래 유형별 분포에서 심야/새벽 대량 거래 유형(유형7)이 차지하는 비율을 알려줘",
     "expected": {
       "primary_tool": "get_statistics",
       "tools_must_include": [
@@ -471,13 +471,17 @@
   },
   {
     "id": "st_gs_040",
-    "question": "데이터에 포함된 분기 수와 기간 범위를 알려줘",
+    "question": "데이터에 포함된 분기별 거래 추이를 보여줘서 분기 수와 기간 범위를 확인해줘",
     "expected": {
-      "primary_tool": "get_statistics",
+      "primary_tool": "get_trend_analysis",
       "tools_must_include": [
-        "get_statistics"
+        "get_trend_analysis"
       ],
-      "param_checks": {}
+      "param_checks": {
+        "get_trend_analysis": {
+          "unit": "quarterly"
+        }
+      }
     },
     "difficulty": "medium"
   },
@@ -544,7 +548,7 @@
   },
   {
     "id": "st_gs_046",
-    "question": "다중거래의 동시 요청과 갑작스러운 거래패턴의 변화 중 어느 유형이 더 많이 발생했어?",
+    "question": "이상거래 유형별 분포에서 다중거래의 동시 요청과 갑작스러운 거래패턴의 변화 중 어느 쪽이 더 많은지 알려줘",
     "expected": {
       "primary_tool": "get_statistics",
       "tools_must_include": [
@@ -617,7 +621,7 @@
   },
   {
     "id": "st_gs_049",
-    "question": "분할 거래 유형의 이상거래는 전체 이상거래 중 몇 건이야?",
+    "question": "이상거래 유형별 분포에서 분할 거래 유형(유형3)이 차지하는 비중을 알려줘",
     "expected": {
       "primary_tool": "get_statistics",
       "tools_must_include": [
@@ -629,7 +633,7 @@
   },
   {
     "id": "st_gs_050",
-    "question": "거액 입금 후 당일 인출 관련 이상거래가 얼마나 탐지됐어?",
+    "question": "이상거래 유형별 분포에서 거액 입금 후 당일 인출 유형(유형5)이 차지하는 비중을 알려줘",
     "expected": {
       "primary_tool": "get_statistics",
       "tools_must_include": [

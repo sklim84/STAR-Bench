@@ -361,7 +361,7 @@
   },
   {
     "id": "st_gs_031",
-    "question": "How many suspicious transactions of the 'late-night/early-morning bulk transactions' type are there in total?",
+    "question": "Please show the distribution of suspicious transactions by fraud type and say which type occurs least often.",
     "expected": {
       "primary_tool": "get_statistics",
       "tools_must_include": [
@@ -409,7 +409,7 @@
   },
   {
     "id": "st_gs_035",
-    "question": "What percentage of the total suspicious transactions is accounted for by other types?",
+    "question": "In the distribution of suspicious transactions by fraud type, what share does the late-night/early-morning bulk transaction type (type 7) hold?",
     "expected": {
       "primary_tool": "get_statistics",
       "tools_must_include": [
@@ -471,13 +471,17 @@
   },
   {
     "id": "st_gs_040",
-    "question": "Please provide the number of quarters included in the data and the range of the period.",
+    "question": "Please show the quarterly transaction trend of the data so I can see how many quarters it covers and over what period.",
     "expected": {
-      "primary_tool": "get_statistics",
+      "primary_tool": "get_trend_analysis",
       "tools_must_include": [
-        "get_statistics"
+        "get_trend_analysis"
       ],
-      "param_checks": {}
+      "param_checks": {
+        "get_trend_analysis": {
+          "unit": "quarterly"
+        }
+      }
     },
     "difficulty": "medium"
   },
@@ -544,7 +548,7 @@
   },
   {
     "id": "st_gs_046",
-    "question": "Which type occurred more often, concurrent multiple transactions or sudden change in transaction pattern?",
+    "question": "In the distribution by fraud type, which occurs more often, concurrent multiple transactions or a sudden change in transaction pattern?",
     "expected": {
       "primary_tool": "get_statistics",
       "tools_must_include": [
@@ -617,7 +621,7 @@
   },
   {
     "id": "st_gs_049",
-    "question": "How many of all suspicious transactions are of the split transaction type?",
+    "question": "In the distribution by fraud type, what share does the split transaction type (type 3) hold?",
     "expected": {
       "primary_tool": "get_statistics",
       "tools_must_include": [
@@ -629,7 +633,7 @@
   },
   {
     "id": "st_gs_050",
-    "question": "How many suspicious transactions related to same-day withdrawal after a large deposit were detected?",
+    "question": "In the distribution by fraud type, what share does the same-day withdrawal after a large deposit type (type 5) hold?",
     "expected": {
       "primary_tool": "get_statistics",
       "tools_must_include": [

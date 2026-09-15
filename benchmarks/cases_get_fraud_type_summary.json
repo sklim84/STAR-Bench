@@ -131,7 +131,7 @@
   },
   {
     "id": "st_gfs_009",
-    "question": "분할 거래 이상거래가 주로 어떤 날짜에 발생했어?",
+    "question": "분할 거래(유형3) 이상거래가 최근 발생한 날짜를 알려줘",
     "expected": {
       "primary_tool": "get_fraud_type_summary",
       "tools_must_include": [
@@ -606,7 +606,7 @@
   },
   {
     "id": "st_gfs_036",
-    "question": "갑작스러운 거래패턴의 변화 거래의 평균 거래금액은 다른 유형 대비 어때?",
+    "question": "갑작스러운 거래패턴의 변화(유형1) 이상거래의 평균 거래금액과 상위 관련 금융회사를 알려줘",
     "expected": {
       "primary_tool": "get_fraud_type_summary",
       "tools_must_include": [
@@ -625,21 +625,17 @@
     "id": "st_gfs_037",
     "question": "신규 수신처 거래(유형2) 이상거래가 전체 이상거래에서 차지하는 비중은?",
     "expected": {
-      "primary_tool": "get_fraud_type_summary",
+      "primary_tool": "get_statistics",
       "tools_must_include": [
-        "get_fraud_type_summary"
+        "get_statistics"
       ],
-      "param_checks": {
-        "get_fraud_type_summary": {
-          "fraud_type": 2
-        }
-      }
+      "param_checks": {}
     },
     "difficulty": "medium"
   },
   {
     "id": "st_gfs_038",
-    "question": "거액 입금 후 당일 인출(유형5) 이상거래가 주로 사용하는 금융 매체가 뭐야?",
+    "question": "거액 입금 후 당일 인출(유형5) 이상거래가 집중된 상위 금융회사를 알려줘",
     "expected": {
       "primary_tool": "get_fraud_type_summary",
       "tools_must_include": [
