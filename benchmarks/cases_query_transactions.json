@@ -11,7 +11,7 @@
         "query_transactions": {
           "sql_contains": [
             "134",
-            "이상거래여부"
+            "is_fraud"
           ],
           "sql_valid": true
         }
@@ -40,7 +40,7 @@
   },
   {
     "id": "st_qt_003",
-    "question": "ATM(매체구분 2)으로 발생한 이상거래를 조회해줘",
+    "question": "인터넷뱅킹(매체구분 2)으로 발생한 이상거래를 조회해줘",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -49,7 +49,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "매체구분",
+            "media_type",
             "2"
           ],
           "sql_valid": true
@@ -69,7 +69,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "거래금액",
+            "amount",
             "10000000"
           ],
           "sql_valid": true
@@ -90,7 +90,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "거래시간대",
+            "time_slot",
             "3"
           ],
           "sql_valid": true
@@ -110,7 +110,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "자금구분",
+            "fund_type",
             "4"
           ],
           "sql_valid": true
@@ -130,7 +130,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "출금계좌일련번호",
+            "sender_acc",
             "1234567890"
           ],
           "sql_valid": true
@@ -150,7 +150,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "출금금융회사일련번호",
+            "sender_bank",
             "GROUP BY"
           ],
           "sql_valid": true
@@ -170,9 +170,9 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "이상거래유형",
+            "fraud_type",
             "AVG",
-            "거래금액"
+            "amount"
           ],
           "sql_valid": true
         }
@@ -191,9 +191,9 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "이상거래유형",
+            "fraud_type",
             "3",
-            "거래금액"
+            "amount"
           ],
           "sql_valid": true
         }
@@ -203,7 +203,7 @@
   },
   {
     "id": "st_qt_011",
-    "question": "인터넷뱅킹(매체구분 4)을 통한 이상거래 중 거래금액 합계가 가장 큰 출금계좌 5개를 알려줘",
+    "question": "휴대전화(매체구분 4)를 통한 이상거래 중 거래금액 합계가 가장 큰 출금계좌 5개를 알려줘",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -212,9 +212,9 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "매체구분",
+            "media_type",
             "4",
-            "출금계좌일련번호"
+            "sender_acc"
           ],
           "sql_valid": true
         }
@@ -233,7 +233,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "거래일자"
+            "date"
           ],
           "sql_valid": true
         }
@@ -243,7 +243,7 @@
   },
   {
     "id": "st_qt_013",
-    "question": "갑작스러운 거래패턴의 변화(유형 1)과 다중거래의 동시 요청(유형 4) 이상거래를 함께 조회해줘",
+    "question": "갑작스러운 거래패턴의 변화(유형 1)와 다중거래의 동시 요청(유형 4) 이상거래를 함께 조회해줘",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -252,7 +252,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "이상거래유형"
+            "fraud_type"
           ],
           "sql_valid": true
         }
@@ -263,7 +263,7 @@
   },
   {
     "id": "st_qt_014",
-    "question": "입금금융회사 201로 들어온 이상거래 중 최근 20건을 보여줘",
+    "question": "입금금융회사 119로 들어온 이상거래 중 최근 20건을 보여줘",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -272,8 +272,8 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "입금금융회사일련번호",
-            "201"
+            "receiver_bank",
+            "119"
           ],
           "sql_valid": true
         }
@@ -292,7 +292,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "거래시간대",
+            "time_slot",
             "GROUP BY"
           ],
           "sql_valid": true
@@ -312,7 +312,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "이상거래유형",
+            "fraud_type",
             "1"
           ],
           "sql_valid": true
@@ -332,7 +332,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "입금계좌일련번호",
+            "receiver_acc",
             "9876543210"
           ],
           "sql_valid": true
@@ -352,7 +352,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "거래금액",
+            "amount",
             "50000000"
           ],
           "sql_valid": true
@@ -372,7 +372,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "매체구분",
+            "media_type",
             "GROUP BY"
           ],
           "sql_valid": true
@@ -383,7 +383,7 @@
   },
   {
     "id": "st_qt_020",
-    "question": "출금사 305에서 분할 거래(이상거래유형 3) 거래 중 거래금액 합계가 가장 큰 계좌를 찾아줘",
+    "question": "출금사 118에서 분할 거래(이상거래유형 3) 거래 중 거래금액 합계가 가장 큰 계좌를 찾아줘",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -392,9 +392,9 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "이상거래유형",
+            "fraud_type",
             "3",
-            "305"
+            "118"
           ],
           "sql_valid": true
         }
@@ -404,7 +404,7 @@
   },
   {
     "id": "st_qt_021",
-    "question": "인터넷뱅킹(매체구분 4)을 통한 이체(자금구분 4) 이상거래를 조회해줘",
+    "question": "휴대전화(매체구분 4)를 통한 이체(자금구분 4) 이상거래를 조회해줘",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -413,8 +413,8 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "매체구분",
-            "자금구분"
+            "media_type",
+            "fund_type"
           ],
           "sql_valid": true
         }
@@ -433,7 +433,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "거래일자"
+            "date"
           ],
           "sql_valid": true
         }
@@ -452,9 +452,9 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "출금금융회사일련번호",
+            "sender_bank",
             "SUM",
-            "거래금액"
+            "amount"
           ],
           "sql_valid": true
         }
@@ -464,7 +464,7 @@
   },
   {
     "id": "st_qt_024",
-    "question": "야간(거래시간대 22 이상)에 발생한 이상거래 건수를 조회해줘",
+    "question": "야간(거래시간대 21)에 발생한 이상거래 건수를 조회해줘",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -473,7 +473,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "거래시간대"
+            "time_slot"
           ],
           "sql_valid": true
         }
@@ -492,9 +492,9 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "이상거래유형",
+            "fraud_type",
             "5",
-            "거래금액"
+            "amount"
           ],
           "sql_valid": true
         }
@@ -504,7 +504,7 @@
   },
   {
     "id": "st_qt_026",
-    "question": "입금금융회사 305로 이체된 이상거래를 거래금액 내림차순으로 조회해줘",
+    "question": "입금금융회사 122로 이체된 이상거래를 거래금액 내림차순으로 조회해줘",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -513,8 +513,8 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "입금금융회사일련번호",
-            "305"
+            "receiver_bank",
+            "122"
           ],
           "sql_valid": true
         }
@@ -573,7 +573,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "이상거래유형",
+            "fraud_type",
             "3"
           ],
           "sql_valid": true
@@ -584,7 +584,7 @@
   },
   {
     "id": "st_qt_028",
-    "question": "출금금융회사 100에서 발생한 거래를 조회해줘",
+    "question": "출금금융회사 128에서 발생한 거래를 조회해줘",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -593,8 +593,8 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "출금금융회사일련번호",
-            "100"
+            "sender_bank",
+            "128"
           ],
           "sql_valid": true
         }
@@ -613,7 +613,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "입금계좌일련번호",
+            "receiver_acc",
             "1234567890"
           ],
           "sql_valid": true
@@ -633,7 +633,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "거래금액",
+            "amount",
             "1000000"
           ],
           "sql_valid": true
@@ -653,7 +653,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "이상거래유형",
+            "fraud_type",
             "2"
           ],
           "sql_valid": true
@@ -664,7 +664,7 @@
   },
   {
     "id": "st_qt_032",
-    "question": "자금구분 1(입금) 이상거래를 조회해줘",
+    "question": "자금구분 1(급여) 이상거래를 조회해줘",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -673,7 +673,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "자금구분",
+            "fund_type",
             "1"
           ],
           "sql_valid": true
@@ -693,7 +693,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "거래일자"
+            "date"
           ],
           "sql_valid": true
         }
@@ -712,7 +712,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "입금금융회사일련번호",
+            "receiver_bank",
             "GROUP BY"
           ],
           "sql_valid": true
@@ -732,7 +732,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "출금계좌일련번호",
+            "sender_acc",
             "GROUP BY"
           ],
           "sql_valid": true
@@ -752,9 +752,9 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "이상거래유형",
+            "fraud_type",
             "1",
-            "거래금액"
+            "amount"
           ],
           "sql_valid": true
         }
@@ -764,7 +764,7 @@
   },
   {
     "id": "st_qt_037",
-    "question": "모바일(매체구분 3)과 인터넷뱅킹(매체구분 4)을 통한 이상거래를 함께 조회해줘",
+    "question": "전화뱅킹(매체구분 3)과 휴대전화(매체구분 4)를 통한 이상거래를 함께 조회해줘",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -773,7 +773,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "매체구분"
+            "media_type"
           ],
           "sql_valid": true
         }
@@ -793,9 +793,9 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "이상거래유형",
+            "fraud_type",
             "GROUP BY",
-            "거래금액"
+            "amount"
           ],
           "sql_valid": true
         }
@@ -814,9 +814,9 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "출금금융회사일련번호",
+            "sender_bank",
             "134",
-            "거래금액"
+            "amount"
           ],
           "sql_valid": true
         }
@@ -835,8 +835,8 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "출금계좌일련번호",
-            "거래일자",
+            "sender_acc",
+            "date",
             "GROUP BY"
           ],
           "sql_valid": true
@@ -856,7 +856,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "거래일자",
+            "date",
             "GROUP BY"
           ],
           "sql_valid": true
@@ -876,7 +876,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "이상거래여부"
+            "is_fraud"
           ],
           "sql_valid": true
         }
@@ -895,7 +895,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "거래금액",
+            "amount",
             "50000"
           ],
           "sql_valid": true
@@ -936,7 +936,7 @@
   },
   {
     "id": "st_qt_044",
-    "question": "출금금융회사 201에서 발생한 거래를 거래일자 내림차순으로 15건 조회해줘",
+    "question": "출금금융회사 123에서 발생한 거래를 거래일자 내림차순으로 15건 조회해줘",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -945,8 +945,8 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "출금금융회사일련번호",
-            "201"
+            "sender_bank",
+            "123"
           ],
           "sql_valid": true
         }
@@ -965,7 +965,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "거래금액",
+            "amount",
             "10000000",
             "50000000"
           ],
@@ -987,8 +987,8 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "이상거래유형",
-            "6"
+            "fraud_type",
+            "7"
           ],
           "sql_valid": true
         }
@@ -1007,7 +1007,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "이상거래유형",
+            "fraud_type",
             "AVG",
             "MAX",
             "GROUP BY"
@@ -1029,8 +1029,8 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "거래일자",
-            "이상거래유형"
+            "date",
+            "fraud_type"
           ],
           "sql_valid": true
         }
@@ -1050,8 +1050,8 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "입금계좌일련번호",
-            "이상거래유형",
+            "receiver_acc",
+            "fraud_type",
             "GROUP BY",
             "HAVING"
           ],
@@ -1073,7 +1073,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "거래금액",
+            "amount",
             "CASE"
           ],
           "sql_valid": true
@@ -1094,7 +1094,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "출금금융회사일련번호",
+            "sender_bank",
             "GROUP BY"
           ],
           "sql_valid": true
@@ -1115,8 +1115,8 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "출금계좌일련번호",
-            "거래일자",
+            "sender_acc",
+            "date",
             "GROUP BY",
             "HAVING"
           ],
@@ -1138,7 +1138,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "이상거래유형",
+            "fraud_type",
             "GROUP BY"
           ],
           "sql_valid": true
@@ -1170,7 +1170,7 @@
         "query_transactions": {
           "sql_contains": [
             "134",
-            "이상거래여부"
+            "is_fraud"
           ],
           "sql_valid": true
         }
@@ -1190,7 +1190,7 @@
         "query_transactions": {
           "sql_contains": [
             "134",
-            "이상거래여부"
+            "is_fraud"
           ],
           "sql_valid": true
         }
@@ -1210,7 +1210,7 @@
         "query_transactions": {
           "sql_contains": [
             "134",
-            "이상거래여부"
+            "is_fraud"
           ],
           "sql_valid": true
         }
@@ -1230,7 +1230,7 @@
         "query_transactions": {
           "sql_contains": [
             "134",
-            "이상거래여부"
+            "is_fraud"
           ],
           "sql_valid": true
         }
@@ -1250,7 +1250,7 @@
         "query_transactions": {
           "sql_contains": [
             "134",
-            "이상거래여부"
+            "is_fraud"
           ],
           "sql_valid": true
         }

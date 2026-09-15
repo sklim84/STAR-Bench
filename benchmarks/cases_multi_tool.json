@@ -40,7 +40,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "이상거래여부"
+            "is_fraud"
           ],
           "sql_valid": true
         }
@@ -71,7 +71,7 @@
   },
   {
     "id": "st_mtool_004",
-    "question": "거래시간대 3, 출금사 134, 입금사 119, 이체, ATM, 1000만원 거래의 이상거래 확률을 예측하고, 해당 출금계좌 1234567890의 네트워크도 분석해줘",
+    "question": "거래시간대 3, 출금사 134, 입금사 119, 타행 자동이체, 인터넷뱅킹, 1000만원 거래의 이상거래 확률을 예측하고, 해당 출금계좌 1234567890의 네트워크도 분석해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -115,7 +115,7 @@
   },
   {
     "id": "st_mtool_006",
-    "question": "출금금융회사 134의 이상거래 데이터를 조회하고 이상거래 확률도 하나 예측해줘. 거래시간대 9, 입금사 201, 이체, 인터넷뱅킹, 500만원 조건으로.",
+    "question": "출금금융회사 134의 이상거래 데이터를 조회하고 이상거래 확률도 하나 예측해줘. 거래시간대 9, 입금사 119, 타행 자동이체, 인터넷뱅킹, 500만원 조건으로.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -181,7 +181,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "201"
+            "123"
           ],
           "sql_valid": true
         },
@@ -268,7 +268,7 @@
         },
         "query_transactions": {
           "sql_contains": [
-            "이상거래유형"
+            "fraud_type"
           ],
           "sql_valid": true
         }
@@ -303,7 +303,7 @@
   },
   {
     "id": "st_mtool_013",
-    "question": "금융회사 156의 현황 리포트를 확인하고, 분할 거래 패턴도 탐지해줘",
+    "question": "금융회사 156의 현황 리포트를 확인하고, 대포통장 패턴도 탐지해줘",
     "expected": {
       "primary_tool": "get_institution_report",
       "tools_must_include": [
@@ -368,7 +368,7 @@
         },
         "query_transactions": {
           "sql_contains": [
-            "이상거래유형"
+            "fraud_type"
           ],
           "sql_valid": true
         }
@@ -408,7 +408,7 @@
   },
   {
     "id": "st_mtool_017",
-    "question": "금융회사 73의 이상거래 현황 리포트를 확인하고, 해당 기관 거래를 SQL로 조회해줘",
+    "question": "금융회사 147의 이상거래 현황 리포트를 확인하고, 해당 기관 거래를 SQL로 조회해줘",
     "expected": {
       "primary_tool": "get_institution_report",
       "tools_must_include": [
@@ -421,11 +421,11 @@
       ],
       "param_checks": {
         "get_institution_report": {
-          "bank_id": 73
+          "bank_id": 147
         },
         "query_transactions": {
           "sql_contains": [
-            "73"
+            "147"
           ],
           "sql_valid": true
         }
@@ -435,7 +435,7 @@
   },
   {
     "id": "st_mtool_018",
-    "question": "갑작스러운 거래패턴의 변화(유형1) 이상거래 요약을 확인하고, 거래시간대 3, 출금사 118, 입금사 119, 이체, PC뱅킹, 1200만원 거래의 이상거래 확률도 예측해줘",
+    "question": "갑작스러운 거래패턴의 변화(유형1) 이상거래 요약을 확인하고, 거래시간대 3, 출금사 118, 입금사 119, 타행 자동이체, PC뱅킹, 1200만원 거래의 이상거래 확률도 예측해줘",
     "expected": {
       "primary_tool": "get_fraud_type_summary",
       "tools_must_include": [
@@ -460,7 +460,7 @@
   },
   {
     "id": "st_mtool_019",
-    "question": "분할 거래 패턴을 탐지하고, 계좌 9876543210의 프로파일을 조회하고, 해당 계좌의 네트워크도 분석해줘",
+    "question": "대포통장 패턴을 탐지하고, 계좌 9876543210의 프로파일을 조회하고, 해당 계좌의 네트워크도 분석해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -539,7 +539,7 @@
   },
   {
     "id": "st_mtool_022",
-    "question": "거액 입금 후 당일 인출 이상거래(유형5) 요약을 확인하고, 출금금융회사 201의 종합 리포트도 생성해줘",
+    "question": "거액 입금 후 당일 인출 이상거래(유형5) 요약을 확인하고, 출금금융회사 123의 종합 리포트도 생성해줘",
     "expected": {
       "primary_tool": "get_fraud_type_summary",
       "tools_must_include": [
@@ -551,7 +551,7 @@
           "fraud_type": 5
         },
         "get_institution_report": {
-          "bank_id": 201
+          "bank_id": 123
         }
       }
     },
@@ -585,7 +585,7 @@
   },
   {
     "id": "st_mtool_024",
-    "question": "전체 이상거래 통계, 금융회사 305 리포트, 분할 거래 이상거래 현황을 순서대로 분석해줘",
+    "question": "전체 이상거래 통계, 금융회사 118 리포트, 분할 거래 이상거래 현황을 순서대로 분석해줘",
     "expected": {
       "primary_tool": "get_statistics",
       "tools_must_include": [
@@ -600,7 +600,7 @@
       ],
       "param_checks": {
         "get_institution_report": {
-          "bank_id": 305
+          "bank_id": 118
         },
         "get_fraud_type_summary": {
           "fraud_type": 3
@@ -632,7 +632,7 @@
   },
   {
     "id": "st_mtool_026",
-    "question": "금융회사 89 리포트를 확인하고, 해당 기관 이상거래를 SQL로 조회하고, 거래시간대 0, 출금사 158, 입금사 134, 이체, PC뱅킹, 2000만원 거래의 사기 확률도 예측해줘",
+    "question": "금융회사 158 리포트를 확인하고, 해당 기관 이상거래를 SQL로 조회하고, 거래시간대 0, 출금사 158, 입금사 134, 타행 자동이체, PC뱅킹, 2000만원 거래의 사기 확률도 예측해줘",
     "expected": {
       "primary_tool": "get_institution_report",
       "tools_must_include": [
@@ -647,11 +647,11 @@
       ],
       "param_checks": {
         "get_institution_report": {
-          "bank_id": 89
+          "bank_id": 158
         },
         "query_transactions": {
           "sql_contains": [
-            "89"
+            "158"
           ],
           "sql_valid": true
         },
@@ -975,7 +975,7 @@
   },
   {
     "id": "st_mtool_039",
-    "question": "스머핑 네트워크를 탐지하고, 분할 거래 패턴도 함께 탐지해줘",
+    "question": "스머핑 네트워크를 탐지하고, 대포통장 패턴도 함께 탐지해줘",
     "expected": {
       "primary_tool": "detect_smurfing_network",
       "tools_must_include": [
@@ -1095,7 +1095,7 @@
   },
   {
     "id": "st_mtool_044",
-    "question": "기관간 자금 흐름을 분석하고, 월별 이상거래 추세도 확인하고, 금융회사 201과 134 사이의 고액거래 CTR도 탐지해줘",
+    "question": "기관간 자금 흐름을 분석하고, 월별 이상거래 추세도 확인하고, 금융회사 123과 134 사이의 고액거래 CTR도 탐지해줘",
     "expected": {
       "primary_tool": "analyze_cross_institution_flow",
       "tools_must_include": [
@@ -1277,7 +1277,7 @@
   },
   {
     "id": "st_mtool_051",
-    "question": "월별 이상거래 추세를 분석하고, 금융회사 305의 현황 리포트를 확인하고, 입금계좌 7777777777의 프로파일도 조회해줘",
+    "question": "월별 이상거래 추세를 분석하고, 금융회사 118의 현황 리포트를 확인하고, 입금계좌 7777777777의 프로파일도 조회해줘",
     "expected": {
       "primary_tool": "get_trend_analysis",
       "tools_must_include": [
@@ -1295,7 +1295,7 @@
           "unit": "monthly"
         },
         "get_institution_report": {
-          "bank_id": 305
+          "bank_id": 118
         },
         "get_receiving_account_profile": {
           "account_id": 7777777777
@@ -1494,7 +1494,7 @@
   },
   {
     "id": "st_mtool_059",
-    "question": "계좌 1111111111의 네트워크를 2-hop으로 분석하고, 분할 거래 패턴도 탐지해줘",
+    "question": "계좌 1111111111의 네트워크를 2-hop으로 분석하고, 대포통장 패턴도 탐지해줘",
     "expected": {
       "primary_tool": "analyze_network",
       "tools_must_include": [
@@ -1762,7 +1762,7 @@
   },
   {
     "id": "st_mtool_072",
-    "question": "거래시간대 21, 출금사 134, 입금사 119, 이체, ATM, 300만원 조건으로 이상거래 확률을 예측하고, 전체 통계도 보여줘",
+    "question": "거래시간대 21, 출금사 134, 입금사 119, 타행 자동이체, 인터넷뱅킹, 300만원 조건으로 이상거래 확률을 예측하고, 전체 통계도 보여줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -2038,7 +2038,7 @@
   },
   {
     "id": "st_mtool_086",
-    "question": "출금금융회사 140의 이상거래를 조회하고, 예측 확률도 구해줘. 거래시간대 12, 입금사 122, 이체, 모바일, 200만원.",
+    "question": "출금금융회사 107의 이상거래를 조회하고, 예측 확률도 구해줘. 거래시간대 12, 입금사 122, 타행 자동이체, 모바일, 200만원.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -2048,7 +2048,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "140"
+            "107"
           ],
           "sql_valid": true
         },
@@ -2056,7 +2056,7 @@
           "time_slot": 12,
           "sender_bank": 107,
           "receiver_bank": 122,
-          "fund_type": 0,
+          "fund_type": 4,
           "media_type": 4,
           "amount": 2000000
         }
@@ -2093,7 +2093,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "6"
+            "7"
           ],
           "sql_valid": true
         },

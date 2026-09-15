@@ -41,7 +41,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "이상거래여부"
+            "is_fraud"
           ],
           "sql_valid": true
         }
@@ -74,7 +74,7 @@
   },
   {
     "id": "st_mtool_004",
-    "question": "Please predict the likelihood of a suspicious transaction for a transfer of 10,000,000 won during time period 3, with withdrawal source 134 and deposit source 201, and also analyze the network of the withdrawal account 1234567890.",
+    "question": "Please predict the fraud probability of a 10,000,000 won inter-bank auto transfer via internet banking with time slot 3, withdrawal institution 134, and deposit institution 119, and also analyze the network of withdrawal account 1234567890.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -120,7 +120,7 @@
   },
   {
     "id": "st_mtool_006",
-    "question": "Please query the suspicious transaction data for withdrawal financial institution 134 and also predict the likelihood of a suspicious transaction. The conditions are transaction time period 9, deposit source 201, transfer, internet banking, and a transaction amount of 5,000,000 won.",
+    "question": "Please query the suspicious transaction data of withdrawal financial institution 134 and also predict one fraud probability under these conditions: time slot 9, deposit institution 119, inter-bank auto transfer, internet banking, 5,000,000 won.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -172,7 +172,7 @@
   },
   {
     "id": "st_mtool_008",
-    "question": "Please analyze the overall status of suspicious transactions, query the withdrawal transactions from financial institution 123, and predict the most suspicious transaction using AI. The transaction time frame is 0, the withdrawal institution is 201, the deposit institution is 305, the type is withdrawal, the channel is branch, and the transaction amount is 8,000,000 won.",
+    "question": "Please get the overall status of suspicious transactions, query the transactions of withdrawal financial institution 123, and then use AI to predict the most suspicious transaction: time slot 0, withdrawal institution 123, deposit institution 122, general, PC banking, 8,000,000 won.",
     "expected": {
       "primary_tool": "get_statistics",
       "tools_must_include": [
@@ -188,7 +188,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "201"
+            "123"
           ],
           "sql_valid": true
         },
@@ -261,7 +261,7 @@
   },
   {
     "id": "st_mtool_011",
-    "question": "Please check the summary of suspicious transactions related to voice phishing (Type 4) and query the relevant transactions using SQL.",
+    "question": "Please check the summary of suspicious transactions related to concurrent multiple transactions (Type 4) and query the related transactions using SQL.",
     "expected": {
       "primary_tool": "get_fraud_type_summary",
       "tools_must_include": [
@@ -278,7 +278,7 @@
         },
         "query_transactions": {
           "sql_contains": [
-            "이상거래유형"
+            "fraud_type"
           ],
           "sql_valid": true
         }
@@ -382,7 +382,7 @@
         },
         "query_transactions": {
           "sql_contains": [
-            "이상거래유형"
+            "fraud_type"
           ],
           "sql_valid": true
         }
@@ -424,7 +424,7 @@
   },
   {
     "id": "st_mtool_017",
-    "question": "Please check the report on suspicious transactions for financial institution 73 and query the transactions for that institution using SQL.",
+    "question": "Please check the report on suspicious transactions for financial institution 147 and query the transactions for that institution using SQL.",
     "expected": {
       "primary_tool": "get_institution_report",
       "tools_must_include": [
@@ -437,11 +437,11 @@
       ],
       "param_checks": {
         "get_institution_report": {
-          "bank_id": 73
+          "bank_id": 147
         },
         "query_transactions": {
           "sql_contains": [
-            "73"
+            "147"
           ],
           "sql_valid": true
         }
@@ -452,7 +452,7 @@
   },
   {
     "id": "st_mtool_018",
-    "question": "Please check the summary of suspicious transactions related to money laundering (Type 1) and predict the likelihood of suspicious transactions for the following: transaction time frame 3, withdrawal source 305, deposit source 201, transfer, PC banking, and a transaction amount of 12 million won.",
+    "question": "Please check the summary of sudden change in transaction pattern (Type 1) suspicious transactions and also predict the fraud probability of a 12 million won transaction with time slot 3, withdrawal institution 118, deposit institution 119, inter-bank auto transfer, and PC banking.",
     "expected": {
       "primary_tool": "get_fraud_type_summary",
       "tools_must_include": [
@@ -534,7 +534,7 @@
   },
   {
     "id": "st_mtool_021",
-    "question": "Please compare the third and fourth quarters of 2023, check the overall statistics for suspicious transactions, and summarize the status of voice phishing suspicious transactions.",
+    "question": "Please compare the third and fourth quarters of 2023, check the overall suspicious transaction statistics, and summarize the status of suspicious transactions related to concurrent multiple transactions.",
     "expected": {
       "primary_tool": "compare_periods",
       "tools_must_include": [
@@ -560,7 +560,7 @@
   },
   {
     "id": "st_mtool_022",
-    "question": "Please check the summary of suspicious transactions related to illegal gambling (Type 5) and generate a comprehensive report for withdrawal financial institution 201.",
+    "question": "Please check the summary of suspicious transactions related to same-day withdrawal after a large deposit (Type 5) and also generate a comprehensive report for withdrawal financial institution 123.",
     "expected": {
       "primary_tool": "get_fraud_type_summary",
       "tools_must_include": [
@@ -572,7 +572,7 @@
           "fraud_type": 5
         },
         "get_institution_report": {
-          "bank_id": 201
+          "bank_id": 123
         }
       }
     },
@@ -608,7 +608,7 @@
   },
   {
     "id": "st_mtool_024",
-    "question": "Please analyze the overall suspicious transaction statistics, the financial institution 305 report, and the status of suspicious transactions related to mule accounts in order.",
+    "question": "Please analyze, in order, the overall suspicious transaction statistics, the report for financial institution 118, and the status of suspicious transactions of the 'split transaction' type.",
     "expected": {
       "primary_tool": "get_statistics",
       "tools_must_include": [
@@ -623,7 +623,7 @@
       ],
       "param_checks": {
         "get_institution_report": {
-          "bank_id": 305
+          "bank_id": 118
         },
         "get_fraud_type_summary": {
           "fraud_type": 3
@@ -657,7 +657,7 @@
   },
   {
     "id": "st_mtool_026",
-    "question": "Please check the report for financial institution 158, query the suspicious transactions for that institution using SQL, and also predict the fraud probability for transactions with a transaction time of 0, withdrawal source 89, deposit source 134, transfer, PC banking, and a transaction amount of 20 million won.",
+    "question": "Please check the report for financial institution 158, query that institution's suspicious transactions with SQL, and also predict the fraud probability of a 20 million won transaction with time slot 0, withdrawal institution 158, deposit institution 134, inter-bank auto transfer, and PC banking.",
     "expected": {
       "primary_tool": "get_institution_report",
       "tools_must_include": [
@@ -672,11 +672,11 @@
       ],
       "param_checks": {
         "get_institution_report": {
-          "bank_id": 89
+          "bank_id": 158
         },
         "query_transactions": {
           "sql_contains": [
-            "89"
+            "158"
           ],
           "sql_valid": true
         },
@@ -923,7 +923,7 @@
   },
   {
     "id": "st_mtool_035",
-    "question": "Please analyze the monthly trends of suspicious transactions and summarize the status of money laundering (Type 1) suspicious transactions.",
+    "question": "Please analyze the monthly trends of suspicious transactions and summarize the status of suspicious transactions related to sudden change in transaction pattern (Type 1).",
     "expected": {
       "primary_tool": "get_trend_analysis",
       "tools_must_include": [
@@ -1142,7 +1142,7 @@
   },
   {
     "id": "st_mtool_044",
-    "question": "Please analyze the inter-institutional fund flows, check the monthly trends of suspicious transactions, and detect high-value transaction CTRs between financial institutions 201 and 134.",
+    "question": "Please analyze the inter-institutional fund flows, check the monthly trends of suspicious transactions, and detect high-value transaction CTRs between financial institutions 123 and 134.",
     "expected": {
       "primary_tool": "analyze_cross_institution_flow",
       "tools_must_include": [
@@ -1333,7 +1333,7 @@
   },
   {
     "id": "st_mtool_051",
-    "question": "Please analyze the monthly trends of suspicious transactions, check the status report for financial institution 305, and also retrieve the profile for deposit account 7777777777.",
+    "question": "Please analyze the monthly trends of suspicious transactions, check the status report for financial institution 118, and also retrieve the profile for deposit account 7777777777.",
     "expected": {
       "primary_tool": "get_trend_analysis",
       "tools_must_include": [
@@ -1351,7 +1351,7 @@
           "unit": "monthly"
         },
         "get_institution_report": {
-          "bank_id": 305
+          "bank_id": 118
         },
         "get_receiving_account_profile": {
           "account_id": 7777777777
@@ -1645,7 +1645,7 @@
   },
   {
     "id": "st_mtool_063",
-    "question": "Please query the suspicious transactions related to voice phishing (Type 4) and rank the top 10 by risk level.",
+    "question": "Please query the suspicious transactions related to concurrent multiple transactions (Type 4) and rank the top 10 by risk level.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1772,7 +1772,7 @@
   },
   {
     "id": "st_mtool_069",
-    "question": "Please query the suspicious transactions of type (3) related to mule accounts and analyze the network of account 1212121212.",
+    "question": "Please query the suspicious transactions of the split transaction type (3) and analyze the network of account 1212121212.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1841,7 +1841,7 @@
   },
   {
     "id": "st_mtool_072",
-    "question": "Please predict the likelihood of a suspicious transaction based on the following criteria: transaction time frame 21, withdrawal source 134, deposit source 201, transfer type, ATM, and transaction amount of 3,000,000 won. Also, provide the overall statistics.",
+    "question": "Please predict the fraud probability under these conditions: time slot 21, withdrawal institution 134, deposit institution 119, inter-bank auto transfer, internet banking, 3,000,000 won, and also show the overall statistics.",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -1864,7 +1864,7 @@
   },
   {
     "id": "st_mtool_073",
-    "question": "Please analyze the monthly trends of suspicious transactions and also check the summary for suspicious transaction type 1 (money laundering).",
+    "question": "Please analyze the monthly trends of suspicious transactions and also check the summary for suspicious transaction type 1 (sudden change in transaction pattern).",
     "expected": {
       "primary_tool": "get_trend_analysis",
       "tools_must_include": [
@@ -2047,7 +2047,7 @@
   },
   {
     "id": "st_mtool_082",
-    "question": "Please check the summary of suspicious transactions related to illegal gambling (Type 5) and retrieve 20 transactions of that type.",
+    "question": "Please check the summary of suspicious transactions related to same-day withdrawal after a large deposit (Type 5) and retrieve 20 transactions of that type.",
     "expected": {
       "primary_tool": "get_fraud_type_summary",
       "tools_must_include": [
@@ -2131,7 +2131,7 @@
   },
   {
     "id": "st_mtool_086",
-    "question": "Please query the suspicious transactions for withdrawal financial institution 107 and also calculate the prediction probability. The transaction time frame is 12, the deposit source is 305, the type is transfer, mobile, and the transaction amount is 2,000,000 won.",
+    "question": "Please query the suspicious transactions of withdrawal financial institution 107 and also get the prediction probability: time slot 12, deposit institution 122, inter-bank auto transfer, mobile, 2,000,000 won.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -2141,7 +2141,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "140"
+            "107"
           ],
           "sql_valid": true
         },
@@ -2149,7 +2149,7 @@
           "time_slot": 12,
           "sender_bank": 107,
           "receiver_bank": 122,
-          "fund_type": 0,
+          "fund_type": 4,
           "media_type": 4,
           "amount": 2000000
         }
@@ -2178,7 +2178,7 @@
   },
   {
     "id": "st_mtool_088",
-    "question": "Please query the suspicious transactions related to (type 7) of similar receipt and also perform a monthly trend analysis.",
+    "question": "Please query suspicious transactions of the 'late-night/early-morning bulk transactions' type (type 7) and also perform a monthly trend analysis.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -2188,7 +2188,7 @@
       "param_checks": {
         "query_transactions": {
           "sql_contains": [
-            "6"
+            "7"
           ],
           "sql_valid": true
         },
