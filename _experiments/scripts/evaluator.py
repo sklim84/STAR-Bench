@@ -12,6 +12,9 @@ fixed metrics rather than the pre-audit ones:
 
     h, r, p, a, o, f1_tools, abstain_ok, clarification_ok, error_type, error_flag
 
+Pass ``final_text``: without it every abstention and clarification case fails,
+because D19 requires an answer and not merely the absence of a tool call.
+
 The pre-audit keys (``primary_tool_hit``, ``tool_recall``, ``tool_precision``,
 ``param_accuracy``, ``order_score``, the weighted ``score``) are gone on
 purpose: p and o were 1.0 for a model that called nothing, a was 1.0 for a case

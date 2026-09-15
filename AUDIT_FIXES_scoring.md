@@ -97,6 +97,42 @@ python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks \
     --out _experiments/dataset_fix_20260915/impl/gold_selftest_benchmarks.json
 ```
 
+## What the other streams must provide
+
+WS-C (runners), so that the scorer can do its work:
+
+- One JSONL record per case, and per turn for multi-turn, with `run_id`, `case_id`, `turn`,
+  `setting`, `config` and `provenance` as Contract 2 spells them. The scorer copies `config` and
+  `provenance` from the first record of a run into the eval file.
+- Per round: `tool_calls` with `id`, `name`, `arguments_raw`, `arguments`, `source`, `valid_json`,
+  and `executed` entries carrying `tool_call_id`, `name`, `arguments`, `result`, `error`. The
+  `tool_call_id` link is what lets a check read the result of the call it is scoring; without ids the
+  scorer falls back to position within the round.
+- `final_text` on every record. D19 scoring of abstention and clarification needs it, and a run
+  without it scores every such case as a failure.
+- `finish_reason` per round and `stop_reason` per record, so `length_stop` is distinguishable from a
+  model that simply stopped, and `error` with a type when the run failed, so calls made before the
+  error keep their credit (D21).
+- The tool names as the server returned them. The scorer strips serving artefacts itself and reports
+  them; it cannot report what the runner has already rewritten.
+- Fresh output directories. The scorer never reads old checkpoints, and `legacy.py` exists only for
+  regression comparison.
+
+WS-D and WS-E (data):
+
+- `expected.reference_calls.<tool>.sql` for every case that expects `query_transactions`, and
+  `sql_conditions` instead of `sql_contains`. Without it no gold call can be rendered and the gold
+  self-test cannot clear the case.
+- Gold argument keys must be schema properties (`period1_start` and not `period_a_start`), and a gold
+  call should pin every required argument so it can be executed.
+- Multi-turn `context_ref` must point at an argument the gold call of that turn actually takes, and
+  its `key` must resolve inside the source turn's `tool_result`; `key` may be a path such as
+  `alerts[0].account_id`. References to `generate_str.fraud_probability` are not scored.
+- Free-string catalog values must select at least one catalog row, otherwise the check degrades to
+  string equality.
+- Alternatives go in `expected.alternatives`, either `{"abstain": true}` or a
+  `{tools_must_include, param_checks}` block.
+
 ## Running the tests
 
 ```
