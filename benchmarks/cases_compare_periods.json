@@ -831,8 +831,11 @@
     "id": "st_cp_irr_002",
     "question": "기간 비교 말고 전체 이상거래 현황을 보고 싶어",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "get_statistics",
+      "tools_must_include": [
+        "get_statistics"
+      ],
+      "param_checks": {}
     },
     "difficulty": "easy",
     "note": "irrelevance: 전체 현황 조회는 get_statistics가 적합 — compare_periods 불필요, 도구를 호출해도 wrong_func에 해당"
@@ -879,10 +882,19 @@
   },
   {
     "id": "st_cp_irr_007",
-    "question": "2024년 전체 이상거래 현황을 요약해줘",
+    "question": "2024년 한 해의 이상거래 현황을 월별 추이로 요약해줘",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "get_trend_analysis",
+      "tools_must_include": [
+        "get_trend_analysis"
+      ],
+      "param_checks": {
+        "get_trend_analysis": {
+          "unit": "monthly",
+          "date_from": 20240101,
+          "date_to": 20241231
+        }
+      }
     },
     "difficulty": "easy",
     "note": "irrelevance: 전체 현황 요약은 get_statistics가 적합 — compare_periods(두 기간 비교)와 다른 요청"

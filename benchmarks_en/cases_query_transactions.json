@@ -906,10 +906,13 @@
   },
   {
     "id": "st_qt_irr_005",
-    "question": "Please summarize the statistics of suspicious transaction types from the HOFINET data.",
+    "question": "Please summarize the total transaction count and the suspicious transaction ratio of HOFINET.",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "get_statistics",
+      "tools_must_include": [
+        "get_statistics"
+      ],
+      "param_checks": {}
     },
     "difficulty": "easy",
     "note": "irrelevance: 집계 통계 요청은 get_statistics가 더 적합 — SQL 직접 실행 불필요"
@@ -928,8 +931,15 @@
     "id": "st_qt_irr_007",
     "question": "Please analyze the transaction network for account 9000000000036484.",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "analyze_network",
+      "tools_must_include": [
+        "analyze_network"
+      ],
+      "param_checks": {
+        "analyze_network": {
+          "account_id": 9000000000036484
+        }
+      }
     },
     "difficulty": "easy",
     "note": "irrelevance: 네트워크 분석 요청 — query_transactions가 아닌 analyze_network 필요"

@@ -964,17 +964,31 @@
     "question": "오늘 발생한 전체 거래의 이상거래 건수를 통계로 보여줘",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "alternatives": [
+        {
+          "tools_must_include": [
+            "get_statistics"
+          ]
+        }
+      ]
     },
     "difficulty": "easy",
     "note": "irrelevance: 통계 조회는 get_statistics나 query_transactions가 적합 — predict_fraud 도구 범위 밖"
   },
   {
     "id": "st_pf_irr_007",
-    "question": "계좌 9000000000036484의 거래 내역을 조회해줘",
+    "question": "계좌 9000000000036484의 거래 통계 프로파일을 조회해줘",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "get_account_profile",
+      "tools_must_include": [
+        "get_account_profile"
+      ],
+      "param_checks": {
+        "get_account_profile": {
+          "account_id": 9000000000036484
+        }
+      }
     },
     "difficulty": "easy",
     "note": "irrelevance: 거래 내역 조회는 query_transactions나 get_account_profile이 적합 — predict_fraud는 예측 도구"

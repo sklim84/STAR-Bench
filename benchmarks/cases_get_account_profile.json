@@ -750,17 +750,31 @@
     "question": "오늘 전체 거래에서 이상거래 비율이 어떻게 돼?",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "alternatives": [
+        {
+          "tools_must_include": [
+            "get_statistics"
+          ]
+        }
+      ]
     },
     "difficulty": "easy",
     "note": "irrelevance: 전체 통계 조회는 get_statistics가 적합 — 특정 계좌 프로파일 조회가 아님"
   },
   {
     "id": "st_gap_irr_007",
-    "question": "고객확인제도(CDD)에서 강화 고객 확인이 필요한 경우를 설명해줘",
+    "question": "강화된 고객확인(EDD)이 무엇이고 언제 필요한지 용어집에서 확인해줘",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "get_aml_glossary",
+      "tools_must_include": [
+        "get_aml_glossary"
+      ],
+      "param_checks": {
+        "get_aml_glossary": {
+          "term": "EDD"
+        }
+      }
     },
     "difficulty": "easy",
     "note": "irrelevance: AML 법규·절차 안내 — 계좌 프로파일 조회 도구와 무관"

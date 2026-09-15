@@ -742,8 +742,19 @@
     "id": "st_gir_irr_006",
     "question": "Please identify the financial institution with the highest number of suspicious transactions.",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "query_transactions",
+      "tools_must_include": [
+        "query_transactions"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "sender_bank",
+            "is_fraud"
+          ],
+          "sql_valid": true
+        }
+      }
     },
     "difficulty": "easy",
     "note": "irrelevance (parameter removal): 특정 bank_id 없음 — get_institution_report는 단일 기관 조회, 순위 파악은 rank_risky_transactions 또는 query_transactions가 적합"

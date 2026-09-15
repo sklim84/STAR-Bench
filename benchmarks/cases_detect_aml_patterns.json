@@ -755,8 +755,15 @@
     "id": "st_ap_irr_002",
     "question": "금융정보분석원(FIU)에 의심거래보고서(STR)를 제출해야 하는 기준 금액이 얼마야?",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "get_aml_glossary",
+      "tools_must_include": [
+        "get_aml_glossary"
+      ],
+      "param_checks": {
+        "get_aml_glossary": {
+          "term": "STR"
+        }
+      }
     },
     "difficulty": "easy",
     "note": "irrelevance: STR 관련 도메인이지만 법적 기준 안내는 그래프 패턴 탐지 도구 범위 밖"
@@ -795,8 +802,11 @@
     "id": "st_ap_irr_006",
     "question": "전체 거래 데이터에서 이상거래 비율이 얼마야?",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "get_statistics",
+      "tools_must_include": [
+        "get_statistics"
+      ],
+      "param_checks": {}
     },
     "difficulty": "easy",
     "note": "irrelevance: 통계 조회는 get_statistics가 적합 — detect_aml_patterns 도구 범위 밖"
@@ -805,8 +815,19 @@
     "id": "st_ap_irr_007",
     "question": "계좌 9000000000017070의 거래 내역을 SQL로 조회해줘",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "query_transactions",
+      "tools_must_include": [
+        "query_transactions"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "sender_acc",
+            "9000000000017070"
+          ],
+          "sql_valid": true
+        }
+      }
     },
     "difficulty": "easy",
     "note": "irrelevance: SQL 거래 조회는 query_transactions가 적합 — AML 패턴 탐지 도구와 다른 기능"

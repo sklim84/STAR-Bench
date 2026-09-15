@@ -964,17 +964,31 @@
     "question": "Please provide the statistics on the number of suspicious transactions for all transactions that occurred today.",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "alternatives": [
+        {
+          "tools_must_include": [
+            "get_statistics"
+          ]
+        }
+      ]
     },
     "difficulty": "easy",
     "note": "irrelevance: 통계 조회는 get_statistics나 query_transactions가 적합 — predict_fraud 도구 범위 밖"
   },
   {
     "id": "st_pf_irr_007",
-    "question": "Please retrieve the transaction history for account 9000000000036484.",
+    "question": "Please look up the transaction statistics profile of account 9000000000036484.",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "get_account_profile",
+      "tools_must_include": [
+        "get_account_profile"
+      ],
+      "param_checks": {
+        "get_account_profile": {
+          "account_id": 9000000000036484
+        }
+      }
     },
     "difficulty": "easy",
     "note": "irrelevance: 거래 내역 조회는 query_transactions나 get_account_profile이 적합 — predict_fraud는 예측 도구"

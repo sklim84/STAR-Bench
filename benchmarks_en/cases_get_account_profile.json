@@ -750,17 +750,31 @@
     "question": "What is the ratio of suspicious transactions in today's total transactions?",
     "expected": {
       "primary_tool": "",
-      "tools_must_include": []
+      "tools_must_include": [],
+      "alternatives": [
+        {
+          "tools_must_include": [
+            "get_statistics"
+          ]
+        }
+      ]
     },
     "difficulty": "easy",
     "note": "irrelevance: 전체 통계 조회는 get_statistics가 적합 — 특정 계좌 프로파일 조회가 아님"
   },
   {
     "id": "st_gap_irr_007",
-    "question": "Please explain the situations in which enhanced customer due diligence (CDD) is required.",
+    "question": "Please look up in the glossary what enhanced due diligence (EDD) is and when it is required.",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "get_aml_glossary",
+      "tools_must_include": [
+        "get_aml_glossary"
+      ],
+      "param_checks": {
+        "get_aml_glossary": {
+          "term": "EDD"
+        }
+      }
     },
     "difficulty": "easy",
     "note": "irrelevance: AML 법규·절차 안내 — 계좌 프로파일 조회 도구와 무관"

@@ -1,0 +1,1462 @@
+{
+  "pass": "p06_relevance",
+  "description": "D10: what a no-tool request is, the 16 mislabels, the 14 defensible-either-way cases and the glossary catalog (L1-001, L6-009, L3-011).",
+  "n_changes": 80,
+  "n_cases": 34,
+  "by_issue": {
+    "L1-001/D10": 54,
+    "L6-009/D10": 24,
+    "L3-011": 2
+  },
+  "notes": [
+    "14 mislabelled abstention cases became tool cases (the other 2 of the 16 are missing-parameter cases, fixed in the clarification pass)",
+    "8 defensible-either-way cases keep the abstention gold and accept the tool answer as an alternative (the other 6 of the 14 are missing-parameter cases)",
+    "12 glossary and FIU questions now ask for catalog content"
+  ],
+  "changes": [
+    {
+      "case_id": "st_an_irr_006",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "get_statistics returns the fraud type distribution the question asks for; 20 of 28 configurations called a tool and were scored wrong",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_statistics",
+        "tools_must_include": [
+          "get_statistics"
+        ],
+        "param_checks": {}
+      }
+    },
+    {
+      "case_id": "st_an_irr_006",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "get_statistics returns the fraud type distribution the question asks for; 20 of 28 configurations called a tool and were scored wrong",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_statistics",
+        "tools_must_include": [
+          "get_statistics"
+        ],
+        "param_checks": {}
+      }
+    },
+    {
+      "case_id": "st_cp_irr_002",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "'the overall status instead of a period comparison' is exactly the get_statistics output (24 of 28 called it); the case's own note said so",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_statistics",
+        "tools_must_include": [
+          "get_statistics"
+        ],
+        "param_checks": {}
+      }
+    },
+    {
+      "case_id": "st_cp_irr_002",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "'the overall status instead of a period comparison' is exactly the get_statistics output (24 of 28 called it); the case's own note said so",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_statistics",
+        "tools_must_include": [
+          "get_statistics"
+        ],
+        "param_checks": {}
+      }
+    },
+    {
+      "case_id": "st_cp_irr_007",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-001/D10",
+      "why": "get_statistics cannot filter by year, so the year in the question makes this a trend request; 27 of 28 configurations called a tool",
+      "before": "2024년 전체 이상거래 현황을 요약해줘",
+      "after": "2024년 한 해의 이상거래 현황을 월별 추이로 요약해줘"
+    },
+    {
+      "case_id": "st_cp_irr_007",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "get_statistics cannot filter by year, so the year in the question makes this a trend request; 27 of 28 configurations called a tool",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_trend_analysis",
+        "tools_must_include": [
+          "get_trend_analysis"
+        ],
+        "param_checks": {
+          "get_trend_analysis": {
+            "unit": "monthly",
+            "date_from": 20240101,
+            "date_to": 20241231
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_cp_irr_007",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-001/D10",
+      "why": "get_statistics cannot filter by year, so the year in the question makes this a trend request; 27 of 28 configurations called a tool",
+      "before": "Please summarize the status of suspicious transactions for the entire year of 2024.",
+      "after": "Please summarize the suspicious transactions of the whole of 2024 as a monthly trend."
+    },
+    {
+      "case_id": "st_cp_irr_007",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "get_statistics cannot filter by year, so the year in the question makes this a trend request; 27 of 28 configurations called a tool",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_trend_analysis",
+        "tools_must_include": [
+          "get_trend_analysis"
+        ],
+        "param_checks": {
+          "get_trend_analysis": {
+            "unit": "monthly",
+            "date_from": 20240101,
+            "date_to": 20241231
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_ap_irr_006",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "get_statistics returns fraud_ratio_percent directly (26 of 28 called it)",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_statistics",
+        "tools_must_include": [
+          "get_statistics"
+        ],
+        "param_checks": {}
+      }
+    },
+    {
+      "case_id": "st_ap_irr_006",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "get_statistics returns fraud_ratio_percent directly (26 of 28 called it)",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_statistics",
+        "tools_must_include": [
+          "get_statistics"
+        ],
+        "param_checks": {}
+      }
+    },
+    {
+      "case_id": "st_ap_irr_007",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the question asks for a SQL query over one account, which is what query_transactions is for (24 of 28 called it)",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_contains": [
+              "sender_acc",
+              "9000000000017070"
+            ],
+            "sql_valid": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_ap_irr_007",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the question asks for a SQL query over one account, which is what query_transactions is for (24 of 28 called it)",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_contains": [
+              "sender_acc",
+              "9000000000017070"
+            ],
+            "sql_valid": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_gir_irr_006",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "ranking institutions by fraud count is a GROUP BY over sender_bank; the case's own note said query_transactions suits it",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_contains": [
+              "sender_bank",
+              "is_fraud"
+            ],
+            "sql_valid": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_gir_irr_006",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "ranking institutions by fraud count is a GROUP BY over sender_bank; the case's own note said query_transactions suits it",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_contains": [
+              "sender_bank",
+              "is_fraud"
+            ],
+            "sql_valid": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_gs_irr_004",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "a network analysis of one account is analyze_network (27 of 28 called it); the note said so",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "analyze_network",
+        "tools_must_include": [
+          "analyze_network"
+        ],
+        "param_checks": {
+          "analyze_network": {
+            "account_id": 9000000004388203
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_gs_irr_004",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "a network analysis of one account is analyze_network (27 of 28 called it); the note said so",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "analyze_network",
+        "tools_must_include": [
+          "analyze_network"
+        ],
+        "param_checks": {
+          "analyze_network": {
+            "account_id": 9000000004388203
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_irr_007",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-001/D10",
+      "why": "the account's history is what get_account_profile returns; the as-is wording split the configurations between two tools, so the question now names the profile",
+      "before": "계좌 9000000000036484의 거래 내역을 조회해줘",
+      "after": "계좌 9000000000036484의 거래 통계 프로파일을 조회해줘"
+    },
+    {
+      "case_id": "st_pf_irr_007",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the account's history is what get_account_profile returns; the as-is wording split the configurations between two tools, so the question now names the profile",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_account_profile",
+        "tools_must_include": [
+          "get_account_profile"
+        ],
+        "param_checks": {
+          "get_account_profile": {
+            "account_id": 9000000000036484
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_pf_irr_007",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-001/D10",
+      "why": "the account's history is what get_account_profile returns; the as-is wording split the configurations between two tools, so the question now names the profile",
+      "before": "Please retrieve the transaction history for account 9000000000036484.",
+      "after": "Please look up the transaction statistics profile of account 9000000000036484."
+    },
+    {
+      "case_id": "st_pf_irr_007",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the account's history is what get_account_profile returns; the as-is wording split the configurations between two tools, so the question now names the profile",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_account_profile",
+        "tools_must_include": [
+          "get_account_profile"
+        ],
+        "param_checks": {
+          "get_account_profile": {
+            "account_id": 9000000000036484
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_qt_irr_005",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-001/D10",
+      "why": "the case's own note said get_statistics suits it; the wording now differs from st_an_irr_006, which asks for the distribution by type",
+      "before": "HOFINET 데이터의 이상거래 유형별 통계를 요약해줘",
+      "after": "HOFINET 전체 거래 건수와 이상거래 비율을 요약해줘"
+    },
+    {
+      "case_id": "st_qt_irr_005",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the case's own note said get_statistics suits it; the wording now differs from st_an_irr_006, which asks for the distribution by type",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_statistics",
+        "tools_must_include": [
+          "get_statistics"
+        ],
+        "param_checks": {}
+      }
+    },
+    {
+      "case_id": "st_qt_irr_005",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-001/D10",
+      "why": "the case's own note said get_statistics suits it; the wording now differs from st_an_irr_006, which asks for the distribution by type",
+      "before": "Please summarize the statistics of suspicious transaction types from the HOFINET data.",
+      "after": "Please summarize the total transaction count and the suspicious transaction ratio of HOFINET."
+    },
+    {
+      "case_id": "st_qt_irr_005",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the case's own note said get_statistics suits it; the wording now differs from st_an_irr_006, which asks for the distribution by type",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_statistics",
+        "tools_must_include": [
+          "get_statistics"
+        ],
+        "param_checks": {}
+      }
+    },
+    {
+      "case_id": "st_qt_irr_007",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "a network analysis of one account is analyze_network (27 of 28 called it); the note said so",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "analyze_network",
+        "tools_must_include": [
+          "analyze_network"
+        ],
+        "param_checks": {
+          "analyze_network": {
+            "account_id": 9000000000036484
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_qt_irr_007",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "a network analysis of one account is analyze_network (27 of 28 called it); the note said so",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "analyze_network",
+        "tools_must_include": [
+          "analyze_network"
+        ],
+        "param_checks": {
+          "analyze_network": {
+            "account_id": 9000000000036484
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_sar_irr_007",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "PEP is in the glossary and its entry answers the definition and the handling rule, so under D10 this is a glossary case like its twin st_gl_005",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_aml_glossary",
+        "tools_must_include": [
+          "get_aml_glossary"
+        ],
+        "param_checks": {
+          "get_aml_glossary": {
+            "term": "PEP"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_sar_irr_007",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "PEP is in the glossary and its entry answers the definition and the handling rule, so under D10 this is a glossary case like its twin st_gl_005",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_aml_glossary",
+        "tools_must_include": [
+          "get_aml_glossary"
+        ],
+        "param_checks": {
+          "get_aml_glossary": {
+            "term": "PEP"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_gap_irr_007",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-001/D10",
+      "why": "the glossary entry for EDD states when it applies; under D10 a listed term is a glossary case, and the question now names the term instead of CDD",
+      "before": "고객확인제도(CDD)에서 강화 고객 확인이 필요한 경우를 설명해줘",
+      "after": "강화된 고객확인(EDD)이 무엇이고 언제 필요한지 용어집에서 확인해줘"
+    },
+    {
+      "case_id": "st_gap_irr_007",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the glossary entry for EDD states when it applies; under D10 a listed term is a glossary case, and the question now names the term instead of CDD",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_aml_glossary",
+        "tools_must_include": [
+          "get_aml_glossary"
+        ],
+        "param_checks": {
+          "get_aml_glossary": {
+            "term": "EDD"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_gap_irr_007",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-001/D10",
+      "why": "the glossary entry for EDD states when it applies; under D10 a listed term is a glossary case, and the question now names the term instead of CDD",
+      "before": "Please explain the situations in which enhanced customer due diligence (CDD) is required.",
+      "after": "Please look up in the glossary what enhanced due diligence (EDD) is and when it is required."
+    },
+    {
+      "case_id": "st_gap_irr_007",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the glossary entry for EDD states when it applies; under D10 a listed term is a glossary case, and the question now names the term instead of CDD",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_aml_glossary",
+        "tools_must_include": [
+          "get_aml_glossary"
+        ],
+        "param_checks": {
+          "get_aml_glossary": {
+            "term": "EDD"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_ctr_irr_002",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the glossary entry for CTR carries the 30-day deadline the question asks for",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_aml_glossary",
+        "tools_must_include": [
+          "get_aml_glossary"
+        ],
+        "param_checks": {
+          "get_aml_glossary": {
+            "term": "CTR"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_ctr_irr_002",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the glossary entry for CTR carries the 30-day deadline the question asks for",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_aml_glossary",
+        "tools_must_include": [
+          "get_aml_glossary"
+        ],
+        "param_checks": {
+          "get_aml_glossary": {
+            "term": "CTR"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_ap_irr_002",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the glossary entry for STR states that the threshold was abolished in Aug 2013, which is the answer to the question",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_aml_glossary",
+        "tools_must_include": [
+          "get_aml_glossary"
+        ],
+        "param_checks": {
+          "get_aml_glossary": {
+            "term": "STR"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_ap_irr_002",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the glossary entry for STR states that the threshold was abolished in Aug 2013, which is the answer to the question",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "get_aml_glossary",
+        "tools_must_include": [
+          "get_aml_glossary"
+        ],
+        "param_checks": {
+          "get_aml_glossary": {
+            "term": "STR"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_gap_irr_006",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the statistic is in scope but 'today' lies outside the data range, so reporting no data and declining are both defensible; abstaining stays the primary gold and the tool answer is accepted as an alternative",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "",
+        "tools_must_include": [],
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "get_statistics"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_gap_irr_006",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the statistic is in scope but 'today' lies outside the data range, so reporting no data and declining are both defensible; abstaining stays the primary gold and the tool answer is accepted as an alternative",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "",
+        "tools_must_include": [],
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "get_statistics"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_pf_irr_006",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "same out-of-range 'today' as st_gap_irr_006; 25 of 28 called get_statistics; abstaining stays the primary gold and the tool answer is accepted as an alternative",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "",
+        "tools_must_include": [],
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "get_statistics"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_pf_irr_006",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "same out-of-range 'today' as st_gap_irr_006; 25 of 28 called get_statistics; abstaining stays the primary gold and the tool answer is accepted as an alternative",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "",
+        "tools_must_include": [],
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "get_statistics"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_sar_irr_002",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the glossary entry gives the definition and names FATF Recommendation 1, a partial answer to 'the international standard'; abstaining stays the primary gold and the tool answer is accepted as an alternative",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "",
+        "tools_must_include": [],
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "get_aml_glossary"
+            ],
+            "param_checks": {
+              "get_aml_glossary": {
+                "term": "RBA"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_sar_irr_002",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the glossary entry gives the definition and names FATF Recommendation 1, a partial answer to 'the international standard'; abstaining stays the primary gold and the tool answer is accepted as an alternative",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "",
+        "tools_must_include": [],
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "get_aml_glossary"
+            ],
+            "param_checks": {
+              "get_aml_glossary": {
+                "term": "RBA"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_sar_irr_005",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the glossary entry lists three elements of CDD, not the four steps the question asks for; abstaining stays the primary gold and the tool answer is accepted as an alternative",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "",
+        "tools_must_include": [],
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "get_aml_glossary"
+            ],
+            "param_checks": {
+              "get_aml_glossary": {
+                "term": "CDD"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_sar_irr_005",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the glossary entry lists three elements of CDD, not the four steps the question asks for; abstaining stays the primary gold and the tool answer is accepted as an alternative",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "",
+        "tools_must_include": [],
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "get_aml_glossary"
+            ],
+            "param_checks": {
+              "get_aml_glossary": {
+                "term": "CDD"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_grap_irr_001",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the glossary entry gives the definition and the legal source but not the obligations in full; abstaining stays the primary gold and the tool answer is accepted as an alternative",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "",
+        "tools_must_include": [],
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "get_aml_glossary"
+            ],
+            "param_checks": {
+              "get_aml_glossary": {
+                "term": "CDD"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_grap_irr_001",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the glossary entry gives the definition and the legal source but not the obligations in full; abstaining stays the primary gold and the tool answer is accepted as an alternative",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "",
+        "tools_must_include": [],
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "get_aml_glossary"
+            ],
+            "param_checks": {
+              "get_aml_glossary": {
+                "term": "CDD"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_smurf_irr_005",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the glossary defines layering but holds no entry for smurfing, so the tool answers half; abstaining stays the primary gold and the tool answer is accepted as an alternative",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "",
+        "tools_must_include": [],
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "get_aml_glossary"
+            ],
+            "param_checks": {
+              "get_aml_glossary": {
+                "term": "Layering"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_smurf_irr_005",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the glossary defines layering but holds no entry for smurfing, so the tool answers half; abstaining stays the primary gold and the tool answer is accepted as an alternative",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "",
+        "tools_must_include": [],
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "get_aml_glossary"
+            ],
+            "param_checks": {
+              "get_aml_glossary": {
+                "term": "Layering"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_acr_irr_006",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the FIU catalog returns nine non-face-to-face suspicious transaction types, close to but not the same as the question's 'types of financial fraud'; abstaining stays the primary gold and the tool answer is accepted as an alternative",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "",
+        "tools_must_include": [],
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "lookup_fiu_reference_types"
+            ],
+            "param_checks": {
+              "lookup_fiu_reference_types": {
+                "keyword": "Non-face-to-face"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_acr_irr_006",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the FIU catalog returns nine non-face-to-face suspicious transaction types, close to but not the same as the question's 'types of financial fraud'; abstaining stays the primary gold and the tool answer is accepted as an alternative",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "",
+        "tools_must_include": [],
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "lookup_fiu_reference_types"
+            ],
+            "param_checks": {
+              "lookup_fiu_reference_types": {
+                "keyword": "Non-face-to-face"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_smurf_irr_004",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the glossary defines structuring but says nothing about how FATF regulates it; abstaining stays the primary gold and the tool answer is accepted as an alternative",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "",
+        "tools_must_include": [],
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "get_aml_glossary"
+            ],
+            "param_checks": {
+              "get_aml_glossary": {
+                "term": "Structuring"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_smurf_irr_004",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the glossary defines structuring but says nothing about how FATF regulates it; abstaining stays the primary gold and the tool answer is accepted as an alternative",
+      "before": {
+        "primary_tool": "",
+        "tools_must_include": []
+      },
+      "after": {
+        "primary_tool": "",
+        "tools_must_include": [],
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "get_aml_glossary"
+            ],
+            "param_checks": {
+              "get_aml_glossary": {
+                "term": "Structuring"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_gl_001",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: a request for a term the glossary holds is a tool case, so the question asks for the entry the catalog stores (definition and source) rather than for a general explanation a model can give from memory (L6-009)",
+      "before": "CDD가 뭐야?",
+      "after": "AML 용어집에서 CDD 항목의 정의와 출처를 찾아줘"
+    },
+    {
+      "case_id": "st_gl_001",
+      "lang": "en",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: a request for a term the glossary holds is a tool case, so the question asks for the entry the catalog stores (definition and source) rather than for a general explanation a model can give from memory (L6-009)",
+      "before": "What is CDD?",
+      "after": "Please find the definition and the source of the CDD entry in the AML glossary."
+    },
+    {
+      "case_id": "st_gl_002",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: a request for a term the glossary holds is a tool case, so the question asks for the entry the catalog stores (definition and source) rather than for a general explanation a model can give from memory (L6-009)",
+      "before": "STR이 무엇인지 설명해줘",
+      "after": "AML 용어집에 등록된 STR의 정의와 출처를 알려줘"
+    },
+    {
+      "case_id": "st_gl_002",
+      "lang": "en",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: a request for a term the glossary holds is a tool case, so the question asks for the entry the catalog stores (definition and source) rather than for a general explanation a model can give from memory (L6-009)",
+      "before": "Can you explain what an STR is?",
+      "after": "Please give the definition and the source of STR as the AML glossary records it."
+    },
+    {
+      "case_id": "st_gl_003",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: a request for a term the glossary holds is a tool case, so the question asks for the entry the catalog stores (definition and source) rather than for a general explanation a model can give from memory (L6-009)",
+      "before": "CTR 제도에 대해 알려줘",
+      "after": "AML 용어집에서 CTR 항목을 찾아 보고 기준과 기한을 확인해줘"
+    },
+    {
+      "case_id": "st_gl_003",
+      "lang": "en",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: a request for a term the glossary holds is a tool case, so the question asks for the entry the catalog stores (definition and source) rather than for a general explanation a model can give from memory (L6-009)",
+      "before": "Please provide information about the CTR system.",
+      "after": "Please look up the CTR entry in the AML glossary and check its reporting threshold and deadline."
+    },
+    {
+      "case_id": "st_gl_004",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: a request for a term the glossary holds is a tool case, so the question asks for the entry the catalog stores (definition and source) rather than for a general explanation a model can give from memory (L6-009)",
+      "before": "RBA 위험기반접근법이 뭔가요?",
+      "after": "AML 용어집에 등록된 RBA의 정의와 근거 문서를 조회해줘"
+    },
+    {
+      "case_id": "st_gl_004",
+      "lang": "en",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: a request for a term the glossary holds is a tool case, so the question asks for the entry the catalog stores (definition and source) rather than for a general explanation a model can give from memory (L6-009)",
+      "before": "What is the RBA (Risk-Based Approach)?",
+      "after": "Please look up the definition of RBA in the AML glossary and the document it cites."
+    },
+    {
+      "case_id": "st_gl_005",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: a request for a term the glossary holds is a tool case, so the question asks for the entry the catalog stores (definition and source) rather than for a general explanation a model can give from memory (L6-009)",
+      "before": "PEP는 무엇을 의미하는가?",
+      "after": "AML 용어집에서 PEP 항목의 정의와 출처를 확인해줘"
+    },
+    {
+      "case_id": "st_gl_005",
+      "lang": "en",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: a request for a term the glossary holds is a tool case, so the question asks for the entry the catalog stores (definition and source) rather than for a general explanation a model can give from memory (L6-009)",
+      "before": "What does PEP stand for?",
+      "after": "Please check the definition and the source of the PEP entry in the AML glossary."
+    },
+    {
+      "case_id": "st_gl_006",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: a request for a term the glossary holds is a tool case, so the question asks for the entry the catalog stores (definition and source) rather than for a general explanation a model can give from memory (L6-009)",
+      "before": "EDD와 SDD의 차이를 알려줘",
+      "after": "AML 용어집의 EDD 항목과 SDD 항목을 비교해서 차이를 설명해줘"
+    },
+    {
+      "case_id": "st_gl_006",
+      "lang": "en",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: a request for a term the glossary holds is a tool case, so the question asks for the entry the catalog stores (definition and source) rather than for a general explanation a model can give from memory (L6-009)",
+      "before": "Please explain the difference between EDD and SDD.",
+      "after": "Please compare the EDD entry with the SDD entry in the AML glossary and explain the difference."
+    },
+    {
+      "case_id": "st_gl_007",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: a request for a term the glossary holds is a tool case, so the question asks for the entry the catalog stores (definition and source) rather than for a general explanation a model can give from memory (L6-009)",
+      "before": "FIU가 무엇인지 설명해줘",
+      "after": "AML 용어집에서 FIU 항목의 정의와 출처를 찾아줘"
+    },
+    {
+      "case_id": "st_gl_007",
+      "lang": "en",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: a request for a term the glossary holds is a tool case, so the question asks for the entry the catalog stores (definition and source) rather than for a general explanation a model can give from memory (L6-009)",
+      "before": "Can you explain what an FIU is?",
+      "after": "Please find the definition and the source of the FIU entry in the AML glossary."
+    },
+    {
+      "case_id": "st_gl_008",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: a request for a term the glossary holds is a tool case, so the question asks for the entry the catalog stores (definition and source) rather than for a general explanation a model can give from memory (L6-009)",
+      "before": "구조화(Structuring)가 뭔지 AML 관점에서 설명해줘",
+      "after": "AML 용어집에서 구조화(Structuring) 항목의 정의와 출처를 확인해줘"
+    },
+    {
+      "case_id": "st_gl_008",
+      "lang": "en",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: a request for a term the glossary holds is a tool case, so the question asks for the entry the catalog stores (definition and source) rather than for a general explanation a model can give from memory (L6-009)",
+      "before": "Please explain what structuring is from an AML perspective.",
+      "after": "Please check the definition and the source of the Structuring entry in the AML glossary."
+    },
+    {
+      "case_id": "st_fiu_002",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: the question names the FIU reference-type catalog, so the answer has to come from lookup_fiu_reference_types rather than from general knowledge",
+      "before": "심야 시간대 대량거래 관련 FIU 의심거래 참고유형을 찾아줘",
+      "after": "심야 시간대 대량거래에 해당하는 FIU 의심거래 참고유형을 catalog에서 찾아줘"
+    },
+    {
+      "case_id": "st_fiu_002",
+      "lang": "en",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: the question names the FIU reference-type catalog, so the answer has to come from lookup_fiu_reference_types rather than from general knowledge",
+      "before": "Please find the reference types of suspicious transactions related to large transactions during late-night hours for the FIU.",
+      "after": "Please find the FIU suspicious-transaction reference types for bulk transactions during late-night hours."
+    },
+    {
+      "case_id": "st_fiu_003",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: the question names the FIU reference-type catalog, so the answer has to come from lookup_fiu_reference_types rather than from general knowledge",
+      "before": "은행업 비대면 거래 의심거래 유형을 조회해줘",
+      "after": "은행업 비대면 거래에 해당하는 FIU 의심거래 참고유형 목록을 조회해줘"
+    },
+    {
+      "case_id": "st_fiu_003",
+      "lang": "en",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: the question names the FIU reference-type catalog, so the answer has to come from lookup_fiu_reference_types rather than from general knowledge",
+      "before": "Please query the types of suspicious transactions for non-face-to-face banking transactions.",
+      "after": "Please look up the list of FIU suspicious-transaction reference types for non-face-to-face banking transactions."
+    },
+    {
+      "case_id": "st_fiu_006",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: the question names the FIU reference-type catalog, so the answer has to come from lookup_fiu_reference_types rather than from general knowledge",
+      "before": "휴면 계좌나 장기 미사용 계좌 관련 의심거래 참고유형을 검색해줘",
+      "after": "휴면 계좌나 장기 미사용 계좌에 해당하는 FIU 의심거래 참고유형을 검색해줘"
+    },
+    {
+      "case_id": "st_fiu_006",
+      "lang": "en",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: the question names the FIU reference-type catalog, so the answer has to come from lookup_fiu_reference_types rather than from general knowledge",
+      "before": "Please search for suspicious transaction reference types related to dormant accounts or long-term inactive accounts.",
+      "after": "Please search the FIU suspicious-transaction reference types for dormant or long-unused accounts."
+    },
+    {
+      "case_id": "st_fiu_008",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: the question names the FIU reference-type catalog, so the answer has to come from lookup_fiu_reference_types rather than from general knowledge",
+      "before": "법인과 대표자 개인계좌 간 거래 의심 유형을 찾아줘",
+      "after": "법인과 대표자 개인계좌 간 거래에 해당하는 FIU 의심거래 참고유형을 찾아줘"
+    },
+    {
+      "case_id": "st_fiu_008",
+      "lang": "en",
+      "field": "question",
+      "issue": "L6-009/D10",
+      "why": "D10: the question names the FIU reference-type catalog, so the answer has to come from lookup_fiu_reference_types rather than from general knowledge",
+      "before": "Please identify the suspicious transaction types between corporate accounts and the personal accounts of representatives.",
+      "after": "Please find the FIU suspicious-transaction reference types for transactions between a corporation and the personal account of its representative."
+    },
+    {
+      "case_id": "st_gl_008",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L3-011",
+      "why": "the gold term '구조화' returns \"Term '구조화' not found\": the catalog holds 13 English terms and no Korean alias, so the gold now uses Structuring",
+      "before": {
+        "primary_tool": "get_aml_glossary",
+        "tools_must_include": [
+          "get_aml_glossary"
+        ],
+        "param_checks": {
+          "get_aml_glossary": {
+            "term": "구조화"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "get_aml_glossary",
+        "tools_must_include": [
+          "get_aml_glossary"
+        ],
+        "param_checks": {
+          "get_aml_glossary": {
+            "term": "Structuring"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_gl_006",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the question compares the EDD and SDD entries, so looking up either one is a correct call; the case note said so but the gold could not express it",
+      "before": {
+        "primary_tool": "get_aml_glossary",
+        "tools_must_include": [
+          "get_aml_glossary"
+        ],
+        "param_checks": {
+          "get_aml_glossary": {
+            "term": "EDD"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "get_aml_glossary",
+        "tools_must_include": [
+          "get_aml_glossary"
+        ],
+        "param_checks": {
+          "get_aml_glossary": {
+            "term": "EDD"
+          }
+        },
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "get_aml_glossary"
+            ],
+            "param_checks": {
+              "get_aml_glossary": {
+                "term": "SDD"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_gl_008",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L3-011",
+      "why": "the gold term '구조화' returns \"Term '구조화' not found\": the catalog holds 13 English terms and no Korean alias, so the gold now uses Structuring",
+      "before": {
+        "primary_tool": "get_aml_glossary",
+        "tools_must_include": [
+          "get_aml_glossary"
+        ],
+        "param_checks": {
+          "get_aml_glossary": {
+            "term": "구조화"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "get_aml_glossary",
+        "tools_must_include": [
+          "get_aml_glossary"
+        ],
+        "param_checks": {
+          "get_aml_glossary": {
+            "term": "Structuring"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_gl_006",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-001/D10",
+      "why": "the question compares the EDD and SDD entries, so looking up either one is a correct call; the case note said so but the gold could not express it",
+      "before": {
+        "primary_tool": "get_aml_glossary",
+        "tools_must_include": [
+          "get_aml_glossary"
+        ],
+        "param_checks": {
+          "get_aml_glossary": {
+            "term": "EDD"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "get_aml_glossary",
+        "tools_must_include": [
+          "get_aml_glossary"
+        ],
+        "param_checks": {
+          "get_aml_glossary": {
+            "term": "EDD"
+          }
+        },
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "get_aml_glossary"
+            ],
+            "param_checks": {
+              "get_aml_glossary": {
+                "term": "SDD"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
