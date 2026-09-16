@@ -1,10 +1,10 @@
 {
- "generated_at": "2026-09-16T09:12:17+00:00",
+ "generated_at": "2026-09-16T09:28:37+00:00",
  "command": "python -m _experiments.scripts.preflight.run --all --report",
  "ok": false,
  "versions": {
-  "star_bench_commit": "8fd2d13a1c6e87044772f0277eb7e0e070c1cc35",
-  "star_bench_dirty": false,
+  "star_bench_commit": "5cbbdf189f4840ba448e67d8aef101b7cdc448cc",
+  "star_bench_dirty": true,
   "star_bench_root": "/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench",
   "platform_commit": "807560badadcbe608837e2cba408329d01a75585",
   "platform_dirty": false,
@@ -35,7 +35,7 @@
    "ok": false,
    "skipped": false,
    "note": "",
-   "elapsed_s": 1.26,
+   "elapsed_s": 1.29,
    "checks": [
     {
      "name": "evaluation dependency pins",
@@ -75,14 +75,20 @@
     },
     {
      "name": "STAR-Bench commit is recorded and the tree is clean",
-     "ok": true,
-     "detail": "8fd2d13a1c6e, no tracked file modified; warning: 3 untracked file(s) inside the repository (_experiments/human_eval/A.json, _experiments/human_eval/str_eval_items.json, _experiments/human_eval/str_eval_mapping.json)",
+     "ok": false,
+     "detail": "5cbbdf189f48, 2 tracked file(s) modified: _experiments/results_RQ3/str_generation_quality.csv, _experiments/results_RQ3/str_generation_quality.json; the pre-flight report itself is regenerated and uncommitted (2 file(s)); warning: 3 untracked file(s) inside the repository (_experiments/human_eval/A.json, _experiments/human_eval/str_eval_items.json, _experiments/human_eval/str_eval_mapping.json)",
      "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.preflight._probe",
      "data": {
-      "star_bench_commit": "8fd2d13a1c6e87044772f0277eb7e0e070c1cc35",
-      "star_bench_dirty": false,
-      "modified": [],
-      "report_files_modified": [],
+      "star_bench_commit": "5cbbdf189f4840ba448e67d8aef101b7cdc448cc",
+      "star_bench_dirty": true,
+      "modified": [
+       "_experiments/results_RQ3/str_generation_quality.csv",
+       "_experiments/results_RQ3/str_generation_quality.json"
+      ],
+      "report_files_modified": [
+       "_experiments/scripts/preflight/reports/preflight_report.json",
+       "_experiments/scripts/preflight/reports/preflight_report.md"
+      ],
       "untracked_count": 3,
       "untracked": [
        "_experiments/human_eval/A.json",
@@ -210,30 +216,30 @@
    "ok": true,
    "skipped": false,
    "note": "",
-   "elapsed_s": 76.4,
+   "elapsed_s": 65.24,
    "checks": [
     {
      "name": "platform test suite",
      "ok": true,
-     "detail": "496 passed, 14 skipped, 2 deselected in 21.05s",
+     "detail": "496 passed, 14 skipped, 2 deselected in 12.94s",
      "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m pytest -rs -q"
     },
     {
      "name": "scoring test suite",
      "ok": true,
-     "detail": "178 passed in 1.15s",
+     "detail": "178 passed in 1.14s",
      "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m pytest -rs -q _experiments/scripts/tests"
     },
     {
      "name": "runner test suite",
      "ok": true,
-     "detail": "145 passed in 43.32s",
+     "detail": "152 passed in 42.22s",
      "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m pytest -rs -q _experiments/scripts/tests_runner"
     },
     {
      "name": "pre-flight test suite",
      "ok": true,
-     "detail": "70 passed in 6.99s",
+     "detail": "70 passed in 5.85s",
      "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m pytest -rs -q _experiments/scripts/tests_preflight"
     },
     {
@@ -251,7 +257,7 @@
    "ok": true,
    "skipped": false,
    "note": "",
-   "elapsed_s": 11.03,
+   "elapsed_s": 8.98,
    "checks": [
     {
      "name": "single-turn linter",
@@ -269,7 +275,7 @@
      "name": "2026-09 expansion cases",
      "ok": true,
      "detail": "143 new cases, 151 gold calls executed, 0 problems",
-     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.data_fixes.new_cases.verify --gate --out /tmp/tmpey22evrc.json"
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.data_fixes.new_cases.verify --gate --out /tmp/tmp5b2gqlcy.json"
     },
     {
      "name": "Korean and English carry the same cases and the same gold",
@@ -342,13 +348,13 @@
    "ok": true,
    "skipped": false,
    "note": "",
-   "elapsed_s": 46.63,
+   "elapsed_s": 30.62,
    "checks": [
     {
      "name": "gold self-test on benchmarks",
      "ok": true,
      "detail": "single-turn gold self-test: 1258/1258 perfect",
-     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks --out /tmp/tmppoteh3p9.json",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks --out /tmp/tmp3cw7d1fc.json",
      "data": {
       "defects": []
      }
@@ -357,7 +363,7 @@
      "name": "gold self-test on benchmarks_en",
      "ok": true,
      "detail": "single-turn gold self-test: 1258/1258 perfect",
-     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks_en --out /tmp/tmpcfs8yska.json",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks_en --out /tmp/tmp19hub5gn.json",
      "data": {
       "defects": []
      }
@@ -366,7 +372,7 @@
      "name": "gold self-test on benchmarks_multiturn",
      "ok": true,
      "detail": "multi-turn gold self-test (oracle): 50/50 perfect; multi-turn gold self-test (e2e): 50/50 perfect",
-     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks_multiturn --out /tmp/tmp64hvuhhs.json",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks_multiturn --out /tmp/tmpkcvwlotf.json",
      "data": {
       "defects": []
      }
@@ -375,7 +381,7 @@
      "name": "gold self-test on benchmarks_multiturn_en",
      "ok": true,
      "detail": "multi-turn gold self-test (oracle): 50/50 perfect; multi-turn gold self-test (e2e): 50/50 perfect",
-     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks_multiturn_en --out /tmp/tmpw9i67gvb.json",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks_multiturn_en --out /tmp/tmpoit09e87.json",
      "data": {
       "defects": []
      }
