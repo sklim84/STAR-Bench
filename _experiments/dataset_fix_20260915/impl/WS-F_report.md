@@ -47,17 +47,17 @@ minutes and touches no GPU.
 the generated `impl/preflight_report.md`:
 
 ```
-[FAIL] gate 1 environment            7/8 checks     2.8s
-[PASS] gate 2 code tests             5/5 checks    65.6s
-[PASS] gate 3 benchmark data         9/9 checks    11.3s
-[PASS] gate 4 gold answers           9/9 checks    47.9s
+[FAIL] gate 1 environment            7/8 checks     1.3s
+[PASS] gate 2 code tests             5/5 checks    57.5s
+[PASS] gate 3 benchmark data         9/9 checks    11.6s
+[PASS] gate 4 gold answers           9/9 checks    45.4s
 [PASS] gate 5 serving readiness      5/5 checks     0.1s
 [SKIP] gate 6 canary run             0/0 checks     0.0s
 
 FAILED: gate 1 environment
 ```
 
-About two minutes, 36 checks, one failure. Provenance of that run:
+116 seconds, 36 checks, one failure. Provenance of that run:
 platform `1309117`, parquet `88a393845b4f`, database `a93ebc65ac33`, model
 `96c9c16e632d`, platform prompt `ad90f2e7bc74`, platform tools `06bc60620eb3`,
 `streamlit_stubbed` true, both working trees clean.
