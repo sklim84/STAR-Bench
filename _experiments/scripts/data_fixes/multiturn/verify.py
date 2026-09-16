@@ -162,6 +162,21 @@ def check_sizes(kr: list[dict], fail):
                 fail(f"{sc['id']} turn {turn['turn']}: result of {size} chars would be truncated")
 
 
+def narrative_coverage(kr: list[dict]) -> dict:
+    """§VII section coverage of the gold STR summaries, with the analysis script's patterns."""
+    import importlib.util
+
+    path = Path(__file__).resolve().parents[2] / "RQ_str_generation_quality.py"
+    spec = importlib.util.spec_from_file_location("rq_str_quality", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    rows = [module.section_coverage(call["arguments"]["summary"])
+            for sc in kr for turn in sc["turns"] for call in turn.get("tool_calls") or []
+            if call["name"] == "generate_str"]
+    return {"n": len(rows),
+            **{key: round(sum(r[key] for r in rows) / len(rows), 4) for key in rows[0]}}
+
+
 def distribution(kr: list[dict]) -> dict:
     tools = Counter()
     kinds = Counter()
@@ -202,7 +217,9 @@ def main() -> int:
     check_entities(kr, en, accounts, senders, receivers, fail)
     check_sizes(kr, fail)
 
-    print(json.dumps(distribution(kr), ensure_ascii=False, indent=1))
+    report = distribution(kr)
+    report["str_narrative_coverage"] = narrative_coverage(kr)
+    print(json.dumps(report, ensure_ascii=False, indent=1))
     if problems:
         print(f"\n{len(problems)} problems")
         for p in problems:
