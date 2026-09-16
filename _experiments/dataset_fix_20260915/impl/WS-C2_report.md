@@ -39,17 +39,23 @@ repositories, 2026-09-16. Nothing under `benchmarks*/` or
 | `gen_tools_kr --check` | `tools_kr.py` is up to date (23 tools) |
 | `preflight.run --all --report` | gate 1 FAIL 8/9 (the 26 unpinned model revisions, the intended red gate), gate 2 PASS 5/5, gate 3 PASS 9/9, gate 4 PASS 10/10, gate 5 PASS 6/6, gate 6 SKIP |
 
-Gate 1 also fails its "the tree is clean" check while another stream has
-uncommitted edits in the same checkout, and gate 4's new freshness check fails
-while the benchmark data has moved since the self-test reports were written.
-Both are true of a shared working tree mid-session, and both clear by
-regenerating the four reports once the data stream's last commit has landed:
+The run above was made while the data stream was editing `benchmarks*/` in the
+same checkout, so two further checks failed on that and not on anything here:
+gate 1's "the tree is clean" (their uncommitted files) and gate 4's new
+freshness check (the benchmark hash moved after the reports were written; the
+counts it compares were identical, 1258/1258 and 50/50 with 0 defects). The
+committed `impl/preflight_report.md` is therefore left as WS-F wrote it on a
+clean tree; it predates the three checks added here (the SQL parser check in
+gate 1, the report-freshness check in gate 4, the concurrency-deviation check in
+gate 5). Regenerate it, and the four self-test reports, once the data stream's
+last commit has landed:
 
 ```
 for b in benchmarks benchmarks_en benchmarks_multiturn benchmarks_multiturn_en; do
   python -m _experiments.scripts.scoring.gold_selftest --benchmark $b \
       --out _experiments/dataset_fix_20260915/impl/gold_selftest_$b.json
 done
+python -m _experiments.scripts.preflight.run --all --report
 ```
 
 Gate 1's one failure is the same one the closeout recorded; the pin check inside
