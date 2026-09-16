@@ -2668,7 +2668,7 @@
   },
   {
     "id": "st_mtool_106",
-    "question": "아래 STR 초안의 필수 항목을 검증하고, 초안의 의심 유형인 분할 거래에 대응하는 FIU 참고유형도 찾아줘: {\"Header\": {\"ReportingDate\": \"20220630\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 159}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000039222\", \"ReceivingAccountNumber\": \"9000000000888766\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20220605-20220625\", \"TransactionCount\": 4, \"TransactionChannel\": \"Bulk Transfer\", \"TotalAmount_KRW\": 16000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Split Transaction\"}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"4 transfers totalling 16,000,000 KRW were sent to the same receiving account between 20220605 and 20220625, each one below the reporting threshold.\"}}",
+    "question": "아래 STR 초안의 필수 항목을 검증하고, 초안이 기술한 structuring에 해당하는 FIU 참고유형도 찾아줘: {\"Header\": {\"ReportingDate\": \"20220630\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 159}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000039222\", \"ReceivingAccountNumber\": \"9000000000888766\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20220605-20220625\", \"TransactionCount\": 4, \"TransactionChannel\": \"Bulk Transfer\", \"TotalAmount_KRW\": 16000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Split Transaction\"}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"4 transfers totalling 16,000,000 KRW were sent to the same receiving account between 20220605 and 20220625, each one below the reporting threshold.\"}}",
     "expected": {
       "primary_tool": "validate_str_fields",
       "tools_must_include": [
@@ -2711,7 +2711,7 @@
         "lookup_fiu_reference_types"
       ]
     },
-    "difficulty": "hard",
+    "difficulty": "medium",
     "note": "Expects validate_str_fields (str_draft as given in the question), lookup_fiu_reference_types (keyword=structuring); called in the order validate_str_fields -> lookup_fiu_reference_types.",
     "source": "2026-09 expansion"
   },

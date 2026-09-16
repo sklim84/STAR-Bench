@@ -524,7 +524,7 @@ SCENARIOS: list[S] = [
           tool="get_account_profile", args={"account_id": "{dacc}"},
           bind={"tot": R(2, "total_count"), "fr": R(2, "fraud_ratio_percent"),
                 "tamt": R(2, "total_amount"), "media": R(2, "top_media[0]")}),
-        T(kr="재활성화된 2024년 12월에 분할거래 의심 건이 있었는지 CTR 기준으로 확인해줘.",
+        T(kr="재활성화된 2024년 12월에 structuring 의심 건이 있었는지 CTR 기준으로 확인해줘.",
           en="Check with the CTR structuring rule whether December 2024 shows structuring candidates.",
           tool="detect_ctr_candidates",
           args={"mode": "structuring", "date_from": 20241201, "date_to": 20241231},

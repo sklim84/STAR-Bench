@@ -1,12 +1,18 @@
 """Run every single-turn data-fix pass in order, then the linter and the gold self-test.
 
-    python -m _experiments.scripts.data_fixes.run_all                 # re-check a finished tree
     python -m _experiments.scripts.data_fixes.run_all --from 574c077  # reproduce from the snapshot
 
 `--from <commit>` restores `benchmarks/` and `benchmarks_en/` from that commit first,
 so the whole sequence replays from the pre-audit data and the result can be diffed
-against the committed one. Without it the passes run over the current tree: those
-that are already applied report zero changes, so this doubles as a consistency check.
+against the committed one, which is what "no hand edits" means. It is the only
+supported way to run the sequence: without it `p01_apply_v3` stops on the first case
+whose question is no longer the fix table's as-is value, which is the guard that keeps
+an old fix table from overwriting a later pass. To re-check a finished tree, run the
+verifiers instead (`lint_benchmarks`, `verify_gold_calls`, `scoring.gold_selftest`,
+`new_cases.verify --gate`).
+
+Every input the sequence reads lives in `inputs/` and is tracked, so a clean clone can
+replay it.
 
 `new_cases.author` (WS-G) is one of the steps: the 143 expansion cases have to exist
 before the domain-review passes that were written on them, and before `p11_difficulty`
@@ -45,6 +51,9 @@ PASSES = [
     "new_cases.author",
     # domain review (2026-09-16)
     "p20_terminology", "p21_phrasing", "p22_clarification_audit",
+    # closeout verification (2026-09-16): what the independent read found afterwards
+    "p23_terminology_residue", "p24_risk_score_tails", "p25_catalog_gold",
+    "p26_closeout_nits",
     "p11_difficulty", "p12_notes",
 ]
 

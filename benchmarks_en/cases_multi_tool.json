@@ -2293,7 +2293,7 @@
   },
   {
     "id": "st_mtool_084",
-    "question": "Please rank the top 20 high-risk transactions and analyze the network of account 9000000000034076.",
+    "question": "Please rank 20 high-risk transactions, and also run a network analysis on account 9000000000034076.",
     "expected": {
       "primary_tool": "rank_risky_transactions",
       "tools_must_include": [
@@ -2668,7 +2668,7 @@
   },
   {
     "id": "st_mtool_106",
-    "question": "Please validate the required fields of the STR draft below, and find the FIU reference type that corresponds to split transactions, the suspicion type the draft records: {\"Header\": {\"ReportingDate\": \"20220630\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 159}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000039222\", \"ReceivingAccountNumber\": \"9000000000888766\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20220605-20220625\", \"TransactionCount\": 4, \"TransactionChannel\": \"Bulk Transfer\", \"TotalAmount_KRW\": 16000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Split Transaction\"}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"4 transfers totalling 16,000,000 KRW were sent to the same receiving account between 20220605 and 20220625, each one below the reporting threshold.\"}}",
+    "question": "Please validate the required fields of the STR draft below, and find the FIU reference type for the structuring the draft describes: {\"Header\": {\"ReportingDate\": \"20220630\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 159}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000039222\", \"ReceivingAccountNumber\": \"9000000000888766\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20220605-20220625\", \"TransactionCount\": 4, \"TransactionChannel\": \"Bulk Transfer\", \"TotalAmount_KRW\": 16000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Split Transaction\"}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"4 transfers totalling 16,000,000 KRW were sent to the same receiving account between 20220605 and 20220625, each one below the reporting threshold.\"}}",
     "expected": {
       "primary_tool": "validate_str_fields",
       "tools_must_include": [
@@ -2711,7 +2711,7 @@
         "lookup_fiu_reference_types"
       ]
     },
-    "difficulty": "hard",
+    "difficulty": "medium",
     "note": "Expects validate_str_fields (str_draft as given in the question), lookup_fiu_reference_types (keyword=structuring); called in the order validate_str_fields -> lookup_fiu_reference_types.",
     "source": "2026-09 expansion"
   },

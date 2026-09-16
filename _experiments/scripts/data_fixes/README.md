@@ -5,9 +5,14 @@ pass in this package. The data files carry no hand edits: restoring the two dire
 the pre-audit commit and running `run_all.py` reproduces the committed files byte for byte.
 
 ```bash
-python -m _experiments.scripts.data_fixes.run_all                 # re-check a finished tree
 python -m _experiments.scripts.data_fixes.run_all --from 574c077  # replay from the snapshot
 ```
+
+`--from` is how the round is replayed and how the claim above is checked. Without it the
+sequence stops at `p01_apply_v3`, which refuses to run once the data no longer carries the
+fix table's as-is values, which is the whole point of that guard. Use the individual
+verifiers to re-check a finished tree: `lint_benchmarks`, `verify_gold_calls`,
+`scoring.gold_selftest`, `new_cases.verify --gate`.
 
 `--from` writes the snapshot into the working tree only and resets the index straight back to
 HEAD. `git checkout <commit> -- <path>` also stages what it restores, and on a shared branch
@@ -26,7 +31,7 @@ left eight notes naming a value their own gold no longer carried.
 
 | pass | register issue | what it does |
 |---|---|---|
-| `p01_apply_v3` | K4 | Applies the approved fix table v3 (`dataset_fix_20260915/fix_table_data.json`): 170 KR questions, 220 EN questions, 105 gold blocks. Refuses to run if an as-is value no longer matches the table. |
+| `p01_apply_v3` | K4 | Applies the approved fix table v3 (`inputs/fix_table_data.json`): 170 KR questions, 220 EN questions, 105 gold blocks. Refuses to run if an as-is value no longer matches the table. |
 | `p02_dedupe` | L1-023, D09 | Deletes the 143 `*_ex01..08` cases, which repeated the question and the gold of the `*_001` case of the same file. 1,258 to 1,115 cases. Writes `changelog/p02_composition.json`. |
 | `p03_followups` | L1-012, L1-013, L1-025, L1-027, L1-028 | `period_a_*` gold keys that are not schema properties, sample sizes over the schema maximum, EN questions that changed a tool or a parameter, the stale `question_ko` copies, requests HOFINET cannot answer, conditions the gold tool cannot apply. |
 | `p04_accounts` | L3-007, D03 | Replays `account_map.json`: every invented account id becomes a real HOFINET account that plays the same role. |
@@ -45,6 +50,10 @@ left eight notes naming a value their own gold no longer carried.
 | `p20_terminology` | review ask A | One spelling per pattern term (ring, layering, funnel, structuring, smurfing) in both arms. |
 | `p21_phrasing` | review asks C, D | Schema spellings out of the questions, and the phrasings the domain review flagged. |
 | `p22_clarification_audit` | review ask B | Re-derives every `expect_clarification` case against D19 and checks it against the tool schema. Changes no data. |
+| `p23_terminology_residue` | L1-010 | The terminology collision `p20` left in `st_fiu_001` and `st_mtool_106`, and one residue screen (`terminology.py`) over all four benchmark directories. |
+| `p24_risk_score_tails` | C1-003 | The five English questions `p14` left ungrammatical. |
+| `p25_catalog_gold` | L1-019 | Every FIU keyword and glossary term the gold pins, checked against the platform catalog: it selects rows, and the same rows however it is capitalised. Changes no data. |
+| `p26_closeout_nits` | L1-016, L1-023, L2-015 | Five English near-duplicate pairs the round created, `st_acif_034`'s over-pinned `min_transactions`, two English fluency nits. |
 | `p13_lint_fixes` | C1-011 | Whatever the linter reported after all the other passes had run. |
 | `p11_difficulty` | L1-022, D23 | Relabels difficulty by an explicit rule. Writes `changelog/p11_difficulty_scores.json` with the points per case. |
 | `p12_notes` | L1-026 | Regenerates every note from the final gold. |
@@ -65,3 +74,9 @@ left eight notes naming a value their own gold no longer carried.
 The passes are plain Python and need nothing but the standard library. `build_account_map.py`,
 `lint_benchmarks.py` (without `--no-db`) and `verify_gold_calls.py` need `duckdb`, `pandas`,
 `networkx` and the companion platform checkout (`STAR_BENCH_WEB`, or a sibling directory).
+`p25_catalog_gold` reads the platform's catalog module but no database, and it reports
+itself skipped when the platform is not importable.
+
+Every input a pass reads but does not derive is tracked in `inputs/`, so a clean clone can
+replay the round; see `inputs/README.md`. `TERMINOLOGY.md` is the pattern-term convention
+the questions follow and `terminology.py` is its executable copy.

@@ -18,6 +18,14 @@ What it asserts:
 * Every stored `tool_result` is still exactly what the platform returns for that
   turn's gold call, so the injected history cannot drift from the tool layer (D03).
 * No tool result is large enough to be truncated before it reaches the model.
+* One spelling per AML pattern term in every turn, and no turn that names HOFINET
+  fraud type 3 where its own gold calls a `structuring` tool, or the other way
+  round (`data_fixes/terminology.py`, L1-010). `p20_terminology`'s own screen ran
+  over the single-turn arms only, which is how three turns kept 분할거래 for a
+  `detect_ctr_candidates(mode='structuring')` gold.
+* Every FIU keyword and glossary term a gold pins selects at least one catalog
+  row, and the same rows however it is capitalised, so its spelling cannot decide
+  the score (L1-019).
 """
 
 from __future__ import annotations
@@ -32,6 +40,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
     __package__ = "_experiments.scripts.data_fixes.multiturn"
 
+from .. import terminology
 from .build import KR_DIR, EN_DIR, FILENAME, resolve_path
 from .spec import CHECK_ONLY, KO_SOURCE
 
@@ -220,6 +229,45 @@ def check_results_are_live(kr: list[dict], fail):
                          f"{call['name']} returns")
 
 
+# The arguments the scorer resolves through the platform catalog (scoring/catalog.py).
+CATALOG_ARGS = {"lookup_fiu_reference_types": ("keyword",), "get_aml_glossary": ("term",)}
+
+
+def check_terminology(kr: list[dict], en: list[dict], fail):
+    """One spelling per pattern, and no structuring / fraud-type-3 collision (L1-010)."""
+    for problem in terminology.screen_multiturn(kr, "kr") + terminology.screen_multiturn(en, "en"):
+        fail(problem)
+
+
+def check_catalog_gold(kr: list[dict], fail):
+    """A catalog-valued gold cannot be decided by how it is capitalised (L1-019)."""
+    from src.features.aml_reference import get_aml_glossary, lookup_fiu_reference_types
+
+    def rows(tool: str, value: str) -> frozenset:
+        if tool == "lookup_fiu_reference_types":
+            return frozenset((r["industry"], r["category"], r["no"])
+                             for r in lookup_fiu_reference_types(value, None))
+        found = get_aml_glossary(value)
+        return frozenset() if found is None else frozenset({found["term"]})
+
+    for sc in kr:
+        for turn in sc["turns"]:
+            for call in turn.get("tool_calls") or []:
+                args = call.get("arguments") or {}
+                for key in CATALOG_ARGS.get(call["name"], ()):
+                    if key not in args:
+                        continue
+                    value = args[key]
+                    where = f"{sc['id']} turn {turn['turn']}: {call['name']}({value!r})"
+                    if not isinstance(value, str) or not rows(call["name"], value):
+                        fail(f"{where} selects no catalog row")
+                        continue
+                    selected = rows(call["name"], value)
+                    for variant in (value.lower(), value.upper(), value.title()):
+                        if rows(call["name"], variant) != selected:
+                            fail(f"{where}: {variant!r} selects a different row set")
+
+
 def check_sizes(kr: list[dict], fail):
     for sc in kr:
         for turn in sc["turns"]:
@@ -286,6 +334,8 @@ def main() -> int:
     check_gold(kr, schemas, fail)
     check_entities(kr, en, accounts, senders, receivers, fail)
     check_results_are_live(kr, fail)
+    check_terminology(kr, en, fail)
+    check_catalog_gold(kr, fail)
     check_sizes(kr, fail)
 
     report = distribution(kr)

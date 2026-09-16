@@ -1,0 +1,153 @@
+{
+  "pass": "p26_closeout_nits",
+  "description": "The low-severity closeout findings: five English near-duplicate pairs, one over-pinned argument, two fluency nits (F9, F10, F11).",
+  "n_changes": 8,
+  "n_cases": 7,
+  "by_issue": {
+    "L1-023": 4,
+    "L2-015": 2,
+    "L1-016": 2
+  },
+  "notes": [
+    "English pairs at or above 0.72 Jaccard: 78 (83 before this pass, 78 before the 2026-09-16 round).",
+    "The five pairs the round created are now 0.44 to 0.62, and no reworded question is within the limit of any other question."
+  ],
+  "changes": [
+    {
+      "case_id": "st_rrt_006",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-023",
+      "why": "p14 rewrote these onto one phrase and created an English near-duplicate pair (closeout verification F9).",
+      "before": "Please rank the top 50 suspicious transactions by risk score from a sample of 1000 cases.",
+      "after": "Please rank the 50 riskiest of a 1000-case sample by suspicious-transaction risk score."
+    },
+    {
+      "case_id": "st_rrt_016",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-023",
+      "why": "p14 rewrote these onto one phrase and created an English near-duplicate pair (closeout verification F9).",
+      "before": "Please extract the top 10 transactions with the highest suspicious-transaction risk score from a sample of 500 cases.",
+      "after": "Out of a 500-record sample, please extract the 10 transactions whose suspicious-transaction risk score is highest."
+    },
+    {
+      "case_id": "st_rrt_019",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-023",
+      "why": "p14 rewrote these onto one phrase and created an English near-duplicate pair (closeout verification F9).",
+      "before": "Please extract the top 30 suspicious transactions by risk score from a sample of 1500 cases.",
+      "after": "From a sample of 1500 transactions, please pull out the Top 30 by suspicious-transaction risk score."
+    },
+    {
+      "case_id": "st_mtool_084",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-023",
+      "why": "p14 rewrote these onto one phrase and created an English near-duplicate pair (closeout verification F9).",
+      "before": "Please rank the top 20 high-risk transactions and analyze the network of account 9000000000034076.",
+      "after": "Please rank 20 high-risk transactions, and also run a network analysis on account 9000000000034076."
+    },
+    {
+      "case_id": "st_an_irr_002",
+      "lang": "en",
+      "field": "question",
+      "issue": "L2-015",
+      "why": "English fluency, found in the closeout's fresh 50-pair read (F11).",
+      "before": "Does the first three digits of the account number represent the financial institution code?",
+      "after": "Do the first three digits of the account number represent the financial institution code?"
+    },
+    {
+      "case_id": "st_strv_005",
+      "lang": "en",
+      "field": "question",
+      "issue": "L2-015",
+      "why": "English fluency, found in the closeout's fresh 50-pair read (F11).",
+      "before": "This STR draft also fills in the reporting officer and the transactor details. Please check it for missing required fields before it is filed: {\"Header\": {\"ReportingDate\": \"20240331\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 157, \"InstitutionName\": \"Reporting Bank\", \"MLROName\": \"Reporting Officer\", \"OfficerName\": \"AML Analyst\", \"OfficerPhone\": \"02-0000-0000\"}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000037352\", \"ReceivingAccountNumber\": \"9000000002338227\", \"Name\": \"Account Holder\", \"IdType\": \"Resident Registration Number\", \"IdNumber\": \"000000-0000000\", \"Nationality\": \"KR\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20240301-20240313\", \"TransactionCount\": 5, \"TransactionChannel\": \"Other\", \"TotalAmount_KRW\": 370000000, \"TransactionType\": \"Wire Transfer\"}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Sudden Change in Transaction Pattern\"}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"5 transfers totalling 370,000,000 KRW left the account between 20240301 and 20240313, far above its usual volume for the channel.\", \"OverallOpinion\": \"Recommended for reporting to the FIU.\", \"SuspicionIntensity_1to5\": 4}}",
+      "after": "This STR draft has the reporting officer and the transactor's details filled in as well. Please check it for missing required fields before it is filed: {\"Header\": {\"ReportingDate\": \"20240331\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 157, \"InstitutionName\": \"Reporting Bank\", \"MLROName\": \"Reporting Officer\", \"OfficerName\": \"AML Analyst\", \"OfficerPhone\": \"02-0000-0000\"}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000037352\", \"ReceivingAccountNumber\": \"9000000002338227\", \"Name\": \"Account Holder\", \"IdType\": \"Resident Registration Number\", \"IdNumber\": \"000000-0000000\", \"Nationality\": \"KR\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20240301-20240313\", \"TransactionCount\": 5, \"TransactionChannel\": \"Other\", \"TotalAmount_KRW\": 370000000, \"TransactionType\": \"Wire Transfer\"}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Sudden Change in Transaction Pattern\"}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"5 transfers totalling 370,000,000 KRW left the account between 20240301 and 20240313, far above its usual volume for the channel.\", \"OverallOpinion\": \"Recommended for reporting to the FIU.\", \"SuspicionIntensity_1to5\": 4}}"
+    },
+    {
+      "case_id": "st_acif_034",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-016",
+      "why": "min_transactions defaults to 10, so 'without any conditions' has to pin a value; 0 and 1 both say no condition and the tool answers identically, so both are accepted (closeout verification F10).",
+      "before": {
+        "primary_tool": "analyze_cross_institution_flow",
+        "tools_must_include": [
+          "analyze_cross_institution_flow"
+        ],
+        "param_checks": {
+          "analyze_cross_institution_flow": {
+            "min_transactions": 1
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "analyze_cross_institution_flow",
+        "tools_must_include": [
+          "analyze_cross_institution_flow"
+        ],
+        "param_checks": {
+          "analyze_cross_institution_flow": {
+            "min_transactions": 1
+          }
+        },
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "analyze_cross_institution_flow"
+            ],
+            "param_checks": {
+              "analyze_cross_institution_flow": {
+                "min_transactions": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_acif_034",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-016",
+      "why": "min_transactions defaults to 10, so 'without any conditions' has to pin a value; 0 and 1 both say no condition and the tool answers identically, so both are accepted (closeout verification F10).",
+      "before": {
+        "primary_tool": "analyze_cross_institution_flow",
+        "tools_must_include": [
+          "analyze_cross_institution_flow"
+        ],
+        "param_checks": {
+          "analyze_cross_institution_flow": {
+            "min_transactions": 1
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "analyze_cross_institution_flow",
+        "tools_must_include": [
+          "analyze_cross_institution_flow"
+        ],
+        "param_checks": {
+          "analyze_cross_institution_flow": {
+            "min_transactions": 1
+          }
+        },
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "analyze_cross_institution_flow"
+            ],
+            "param_checks": {
+              "analyze_cross_institution_flow": {
+                "min_transactions": 0
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

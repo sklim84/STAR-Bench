@@ -29,6 +29,12 @@ Checks, per benchmark directory:
   obsolete_name       a question naming an official fraud type does not name a different one
   duplicate_question  no two cases in one language ask the same question
   kr_en_parity        the two directories hold the same ids, gold, difficulty and notes
+  terminology         one spelling per pattern term, and a question whose gold selects the
+                      structuring pattern does not name HOFINET fraud type 3, or the other
+                      way round (`terminology.py`, L1-010)
+  catalog_gold        an FIU keyword or glossary term the gold pins selects at least one
+                      catalog row, and the same rows however it is capitalised, so its
+                      spelling cannot decide the score (L1-019)
 """
 
 from __future__ import annotations
@@ -44,6 +50,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
     __package__ = "_experiments.scripts.data_fixes"
 
+from . import terminology
 from .common import Bench, EN, KR, dump_json
 
 SENDER_BANKS = {102, 103, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120,
@@ -122,6 +129,45 @@ def known_accounts(ids: set[int]):
     return {int(v) for v in rows["acc"].tolist()}
 
 
+# The arguments the scorer resolves through the platform catalog (scoring/catalog.py).
+CATALOG_ARGS = {"lookup_fiu_reference_types": ("keyword",), "get_aml_glossary": ("term",)}
+
+
+def catalog_rows():
+    """The platform's catalog lookups, or None when the platform is not importable."""
+    try:
+        from _experiments.scripts._platform import ensure_platform_on_path  # noqa: PLC0415
+
+        ensure_platform_on_path()
+        from src.features.aml_reference import (  # noqa: PLC0415
+            get_aml_glossary,
+            lookup_fiu_reference_types,
+        )
+    except Exception:
+        return None
+
+    def rows(tool: str, value: str) -> frozenset:
+        if tool == "lookup_fiu_reference_types":
+            return frozenset((r["industry"], r["category"], r["no"])
+                             for r in lookup_fiu_reference_types(value, None))
+        found = get_aml_glossary(value)
+        return frozenset() if found is None else frozenset({found["term"]})
+
+    return rows
+
+
+def catalog_problems(rows, tool: str, value) -> list[str]:
+    if not isinstance(value, str):
+        return [f"{tool}: gold {value!r} is not a string"]
+    selected = rows(tool, value)
+    if not selected:
+        return [f"{tool}({value!r}) selects no catalog row"]
+    return [f"{tool}({value!r}): {variant!r} selects a different row set, so the spelling "
+            f"decides the score"
+            for variant in (value.lower(), value.upper(), value.title())
+            if rows(tool, variant) != selected]
+
+
 def check_value(report: Report, case_id: str, lang: str, tool: str, key: str, value) -> None:
     if key in ("sender_bank",) and value not in SENDER_BANKS:
         report.add("hofinet_value", case_id, lang, f"{tool}.{key}={value} is not a HOFINET sender bank")
@@ -198,6 +244,28 @@ def check_spec(report: Report, schemas, case_id: str, lang: str, spec: dict, lab
                 report.add("required_enum", case_id, lang,
                            f"{label}{tool}.{key}={value!r} is not one of {prop['enum']}")
             check_value(report, case_id, lang, tool, key, value)
+
+
+def lint_terminology(bench: Bench, report: Report) -> None:
+    """One spelling per pattern, and no structuring / fraud-type-3 collision (L1-010)."""
+    for _, case in bench.cases():
+        for hit in terminology.screen_text(case["question"], bench.lang,
+                                           list(terminology.single_turn_calls(case))):
+            report.add("terminology", case["id"], bench.lang, hit)
+
+
+def lint_catalog_gold(bench: Bench, rows, report: Report) -> None:
+    """An FIU keyword or glossary term the gold pins cannot be decided by its case (L1-019)."""
+    if rows is None:
+        return
+    for _, case in bench.cases():
+        for tool, checks in (case["expected"].get("param_checks") or {}).items():
+            if not isinstance(checks, dict):
+                continue
+            for key in CATALOG_ARGS.get(tool, ()):
+                if key in checks:
+                    for detail in catalog_problems(rows, tool, checks[key]):
+                        report.add("catalog_gold", case["id"], bench.lang, detail)
 
 
 def lint(bench: Bench, schemas, accounts, report: Report) -> None:
@@ -315,9 +383,16 @@ def main(argv: list[str] | None = None) -> int:
         if accounts is None:
             report.skipped.append("account existence not checked (no HOFINET database)")
 
+    rows = catalog_rows()
+    if rows is None:
+        report.skipped.append("catalog-valued gold not checked (platform not importable)")
+
     lint(kr, schemas, accounts, report)
     lint(en, schemas, accounts, report)
     lint_parity(kr, en, report)
+    for bench in (kr, en):
+        lint_terminology(bench, report)
+        lint_catalog_gold(bench, rows, report)
 
     payload = {"benchmark": args.benchmark, "benchmark_en": args.benchmark_en,
                "n_cases": kr.n_cases(), "n_violations": len(report.violations),
