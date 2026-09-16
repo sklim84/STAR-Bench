@@ -93,3 +93,55 @@ def test_an_advisory_is_not_a_defect():
     body = {"oracle": {"defects": [], "advisories": [{"case_id": "st_y"}]},
             "e2e": {"defects": [], "advisories": []}}
     assert gold._defects(body) == []
+
+
+# ---------------------------------------------------------------------------
+# Gate 2: a skipped test is not a passing test
+# ---------------------------------------------------------------------------
+
+from _experiments.scripts.preflight import code_tests  # noqa: E402
+
+_JINJA_SKIP = ("SKIPPED [1] _experiments/scripts/tests_runner/test_templates.py:11: "
+               "could not import 'jinja2': No module named 'jinja2'")
+_NEO4J_SKIP = ("SKIPPED [8] tests/test_graph_db.py:31: neo4j driver not installed "
+               "(optional: the tool layer never needs it)")
+
+
+def test_a_skip_for_a_missing_package_is_not_allowed():
+    found = code_tests.unexplained_skips(_JINJA_SKIP + "\n1 passed, 1 skipped in 0.1s\n")
+    assert [w for _c, w, _r in found] == ["_experiments/scripts/tests_runner/test_templates.py:11"]
+
+
+def test_the_release_skips_are_allowed():
+    assert code_tests.unexplained_skips(_NEO4J_SKIP + "\n1 passed, 8 skipped\n") == []
+
+
+def test_every_allowed_reason_says_why():
+    for entry in code_tests.allowed_reasons():
+        assert entry["reason_contains"].strip()
+        assert entry["why"].strip()
+
+
+def test_a_suite_that_skips_for_a_missing_package_fails_the_check(monkeypatch):
+    from _experiments.scripts.preflight import gate
+
+    def fake_run_command(argv, **kwargs):
+        return gate.CommandRun(" ".join(argv), 0, "1 passed, 1 skipped in 0.1s\n"
+                               + _JINJA_SKIP + "\n", "", 0.1)
+
+    monkeypatch.setattr(code_tests, "run_command", fake_run_command)
+    check = code_tests._pytest(gate.Context(), "runner test suite", ["-q"])
+    assert not check.ok, "an exit status of 0 with a skipped test must not pass gate 2"
+    assert "test_templates.py" in check.detail
+
+
+def test_a_suite_with_only_allowed_skips_passes_the_check(monkeypatch):
+    from _experiments.scripts.preflight import gate
+
+    def fake_run_command(argv, **kwargs):
+        return gate.CommandRun(" ".join(argv), 0, "495 passed, 8 skipped in 1s\n"
+                               + _NEO4J_SKIP + "\n", "", 0.1)
+
+    monkeypatch.setattr(code_tests, "run_command", fake_run_command)
+    check = code_tests._pytest(gate.Context(), "platform test suite", ["-q"])
+    assert check.ok
