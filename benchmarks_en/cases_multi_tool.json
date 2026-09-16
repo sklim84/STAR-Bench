@@ -38,8 +38,8 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "조회 후 네트워크 분석 체인"
+    "difficulty": "hard",
+    "note": "Expects query_transactions (must restrict sender_bank = 134 and is_fraud = 1; the SQL must run without an error), analyze_network (account_id=9000000000017028); called in the order query_transactions -> analyze_network. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_002",
@@ -72,8 +72,8 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "통계 → 조회 체인. query_transactions SQL에 이상거래여부 조건 포함 여부만 검증 (기관 ID는 통계 결과에 의존)"
+    "difficulty": "hard",
+    "note": "Expects get_statistics, query_transactions (must restrict is_fraud = 1; the SQL must run without an error); called in the order get_statistics -> query_transactions. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_003",
@@ -93,7 +93,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects analyze_network (account_id=9000000000024638), detect_aml_patterns (pattern_type=ring)."
   },
   {
     "id": "st_mtool_004",
@@ -118,7 +119,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects predict_fraud (time_slot=3; sender_bank=134; receiver_bank=119; amount=10000000; fund_type=0; media_type=2), analyze_network (account_id=9000000000024638)."
   },
   {
     "id": "st_mtool_005",
@@ -139,7 +141,8 @@
         }
       }
     },
-    "difficulty": "easy"
+    "difficulty": "hard",
+    "note": "Expects get_statistics, detect_aml_patterns (pattern_type=ring); called in the order get_statistics -> detect_aml_patterns."
   },
   {
     "id": "st_mtool_006",
@@ -181,7 +184,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects query_transactions (must restrict sender_bank = 134 and is_fraud = 1; the SQL must run without an error), predict_fraud (time_slot=9; fund_type=0; media_type=2; amount=5000000; sender_bank=134; receiver_bank=119). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_007",
@@ -214,7 +218,8 @@
         }
       }
     },
-    "difficulty": "hard"
+    "difficulty": "hard",
+    "note": "Expects query_transactions (must restrict sender_acc = 9000000000036484; the SQL must run without an error), detect_aml_patterns (pattern_type=risk_score; account_id=9000000000036484). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_008",
@@ -262,7 +267,8 @@
         }
       }
     },
-    "difficulty": "hard"
+    "difficulty": "hard",
+    "note": "Expects get_statistics, query_transactions (must restrict sender_bank = 123 and is_fraud = 1; the SQL must run without an error), predict_fraud (time_slot=0; sender_bank=123; receiver_bank=122; fund_type=0; media_type=1; amount=8000000); called in the order get_statistics -> query_transactions -> predict_fraud. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_009",
@@ -286,7 +292,8 @@
         }
       }
     },
-    "difficulty": "hard"
+    "difficulty": "hard",
+    "note": "Expects detect_aml_patterns (pattern_type=layering), analyze_network (account_id=9000000000017070); called in the order detect_aml_patterns -> analyze_network."
   },
   {
     "id": "st_mtool_010",
@@ -328,7 +335,7 @@
       }
     },
     "difficulty": "hard",
-    "note": "3개 도구 체인"
+    "note": "Expects query_transactions (must restrict sender_bank = 134 and is_fraud = 1; the SQL must run without an error), analyze_network (account_id=9000000000024638), detect_aml_patterns (pattern_type=ring). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_011",
@@ -364,8 +371,8 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "유형 요약 → SQL 조회 체인"
+    "difficulty": "hard",
+    "note": "Expects get_fraud_type_summary (fraud_type=4), query_transactions (must restrict fraud_type = 4; the SQL must run without an error); called in the order get_fraud_type_summary -> query_transactions. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_012",
@@ -389,7 +396,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects get_account_profile (account_id=9000000000029571), analyze_network (account_id=9000000000029571); called in the order get_account_profile -> analyze_network."
   },
   {
     "id": "st_mtool_013",
@@ -413,7 +421,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects get_institution_report (bank_id=156), detect_aml_patterns (pattern_type=funnel); called in the order get_institution_report -> detect_aml_patterns."
   },
   {
     "id": "st_mtool_014",
@@ -434,7 +443,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects get_statistics, rank_risky_transactions (top_k=10); called in the order get_statistics -> rank_risky_transactions."
   },
   {
     "id": "st_mtool_015",
@@ -473,7 +483,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects compare_periods (period1_start=20240101; period1_end=20240331; period2_start=20240401; period2_end=20240630), query_transactions (must restrict fraud_type = 4; the SQL must run without an error); called in the order compare_periods -> query_transactions. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_016",
@@ -503,7 +514,7 @@
       }
     },
     "difficulty": "hard",
-    "note": "3개 도구 체인: 프로파일 → 네트워크 → 패턴 탐지"
+    "note": "Expects get_account_profile (account_id=9000000000017070), analyze_network (account_id=9000000000017070), detect_aml_patterns (pattern_type=ring); called in the order get_account_profile -> analyze_network -> detect_aml_patterns."
   },
   {
     "id": "st_mtool_017",
@@ -544,7 +555,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects get_institution_report (bank_id=147), query_transactions (must restrict sender_bank = 147 and is_fraud = 1; the SQL must run without an error); called in the order get_institution_report -> query_transactions. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_018",
@@ -569,7 +581,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects get_fraud_type_summary (fraud_type=1), predict_fraud (time_slot=3; sender_bank=118; receiver_bank=119; fund_type=0; media_type=1; amount=10000000)."
   },
   {
     "id": "st_mtool_019",
@@ -599,7 +612,7 @@
       }
     },
     "difficulty": "hard",
-    "note": "3개 도구 체인: 패턴 탐지 → 프로파일 → 네트워크"
+    "note": "Expects detect_aml_patterns (pattern_type=funnel), get_account_profile (account_id=9000000000036484), analyze_network (account_id=9000000000036484); called in the order detect_aml_patterns -> get_account_profile -> analyze_network."
   },
   {
     "id": "st_mtool_020",
@@ -623,7 +636,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects rank_risky_transactions (top_k=20), analyze_network (account_id=9000000000024638); called in the order rank_risky_transactions -> analyze_network."
   },
   {
     "id": "st_mtool_021",
@@ -648,7 +662,7 @@
       }
     },
     "difficulty": "hard",
-    "note": "3개 도구 체인"
+    "note": "Expects compare_periods (period1_start=20230701; period1_end=20230930; period2_start=20231001; period2_end=20231231), get_statistics, get_fraud_type_summary (fraud_type=4)."
   },
   {
     "id": "st_mtool_022",
@@ -668,7 +682,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects get_fraud_type_summary (fraud_type=5), get_institution_report (bank_id=123)."
   },
   {
     "id": "st_mtool_023",
@@ -694,7 +709,8 @@
         }
       }
     },
-    "difficulty": "hard"
+    "difficulty": "hard",
+    "note": "Expects detect_aml_patterns (pattern_type=shortest_path; account_a=9000000000034017; account_b=9000000000017070), get_account_profile (account_id=9000000000034017); called in the order detect_aml_patterns -> get_account_profile."
   },
   {
     "id": "st_mtool_024",
@@ -721,7 +737,7 @@
       }
     },
     "difficulty": "hard",
-    "note": "3개 도구 체인"
+    "note": "Expects get_statistics, get_institution_report (bank_id=118), get_fraud_type_summary (fraud_type=3); called in the order get_statistics -> get_institution_report -> get_fraud_type_summary."
   },
   {
     "id": "st_mtool_025",
@@ -741,7 +757,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects analyze_network (account_id=9000000000029571), rank_risky_transactions (top_k=20)."
   },
   {
     "id": "st_mtool_026",
@@ -793,7 +810,7 @@
       }
     },
     "difficulty": "hard",
-    "note": "3개 도구 체인: 기관 리포트 → SQL 조회 → 사기 예측"
+    "note": "Expects get_institution_report (bank_id=158), query_transactions (must restrict sender_bank = 158 and is_fraud = 1; the SQL must run without an error), predict_fraud (time_slot=0; sender_bank=158; receiver_bank=134; fund_type=1; media_type=1; amount=20000000); called in the order get_institution_report -> query_transactions -> predict_fraud. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_irr_001",
@@ -803,7 +820,7 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "irrelevance: 시스템 구성 질문 — AML 분석 도구 호출 불필요"
+    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
   },
   {
     "id": "st_mtool_irr_002",
@@ -813,7 +830,7 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "irrelevance: 외부 DB 저장은 지원되지 않는 기능 — 도구 호출 불필요"
+    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
   },
   {
     "id": "st_mtool_irr_003",
@@ -823,7 +840,7 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "irrelevance: 시스템 연동 방법 문의 — AML 분석 도구 실행과 무관"
+    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
   },
   {
     "id": "st_mtool_irr_004",
@@ -833,7 +850,7 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "irrelevance: 교육·자격증 안내 — AML 분석 도구 호출과 무관"
+    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
   },
   {
     "id": "st_mtool_027",
@@ -853,8 +870,8 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "CTR + 위험평가 체인"
+    "difficulty": "hard",
+    "note": "Expects detect_ctr_candidates (mode=high_value), score_account_risk (account_id=9000000000024638)."
   },
   {
     "id": "st_mtool_028",
@@ -874,8 +891,8 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "모니터링 + 네트워크 체인"
+    "difficulty": "hard",
+    "note": "Expects detect_monitoring_alerts (rule_id=all), analyze_network (account_id=9000000000036484)."
   },
   {
     "id": "st_mtool_029",
@@ -895,8 +912,8 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "CTR + 모니터링 체인"
+    "difficulty": "hard",
+    "note": "Expects detect_ctr_candidates (mode=structuring), detect_monitoring_alerts (rule_id=R001)."
   },
   {
     "id": "st_mtool_030",
@@ -917,7 +934,7 @@
       }
     },
     "difficulty": "medium",
-    "note": "위험평가 + 프로파일 체인"
+    "note": "Expects score_account_risk (account_id=9000000000017070), get_account_profile (account_id=9000000000017070)."
   },
   {
     "id": "st_mtool_031",
@@ -942,7 +959,7 @@
       }
     },
     "difficulty": "hard",
-    "note": "3개 신규 도구 체인"
+    "note": "Expects detect_ctr_candidates (mode=high_value), detect_monitoring_alerts (rule_id=all), score_account_risk (account_id=9000000000029571)."
   },
   {
     "id": "st_mtool_032",
@@ -972,7 +989,7 @@
       }
     },
     "difficulty": "hard",
-    "note": "위험평가 + 네트워크 + AML 패턴 체인"
+    "note": "Expects score_account_risk (account_id=9000000000034017), analyze_network (account_id=9000000000034017), detect_aml_patterns (pattern_type=ring); called in the order score_account_risk -> analyze_network -> detect_aml_patterns."
   },
   {
     "id": "st_mtool_033",
@@ -993,8 +1010,8 @@
         }
       }
     },
-    "difficulty": "easy",
-    "note": "휴면계좌 탐지 → 네트워크 분석 체인"
+    "difficulty": "medium",
+    "note": "Expects detect_dormant_reactivation, analyze_network (account_id=9000000000034076); called in the order detect_dormant_reactivation -> analyze_network."
   },
   {
     "id": "st_mtool_034",
@@ -1011,8 +1028,8 @@
         }
       }
     },
-    "difficulty": "easy",
-    "note": "스머핑 탐지 + 통계 체인"
+    "difficulty": "medium",
+    "note": "Expects detect_smurfing_network (direction=inbound), get_statistics."
   },
   {
     "id": "st_mtool_035",
@@ -1036,8 +1053,8 @@
         }
       }
     },
-    "difficulty": "easy",
-    "note": "추세분석 → 이상거래유형 요약 체인"
+    "difficulty": "hard",
+    "note": "Expects get_trend_analysis (unit=monthly), get_fraud_type_summary (fraud_type=1); called in the order get_trend_analysis -> get_fraud_type_summary."
   },
   {
     "id": "st_mtool_036",
@@ -1058,8 +1075,8 @@
         }
       }
     },
-    "difficulty": "easy",
-    "note": "기관간 흐름 분석 → 기관 리포트 체인"
+    "difficulty": "medium",
+    "note": "Expects analyze_cross_institution_flow, get_institution_report (bank_id=134); called in the order analyze_cross_institution_flow -> get_institution_report."
   },
   {
     "id": "st_mtool_037",
@@ -1077,7 +1094,7 @@
       }
     },
     "difficulty": "medium",
-    "note": "채널위험 분석 + 계좌 위험도 평가 체인"
+    "note": "Expects analyze_channel_risk, score_account_risk (account_id=9000000000026712)."
   },
   {
     "id": "st_mtool_038",
@@ -1101,8 +1118,8 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "CTR 분할거래 탐지 → 입금계좌 프로파일 체인"
+    "difficulty": "hard",
+    "note": "Expects detect_ctr_candidates (mode=structuring), get_receiving_account_profile (account_id=9000000000022515); called in the order detect_ctr_candidates -> get_receiving_account_profile."
   },
   {
     "id": "st_mtool_039",
@@ -1123,7 +1140,7 @@
       }
     },
     "difficulty": "medium",
-    "note": "스머핑 탐지 + AML 대포통장 패턴 체인"
+    "note": "Expects detect_smurfing_network (direction=inbound), detect_aml_patterns (pattern_type=funnel)."
   },
   {
     "id": "st_mtool_040",
@@ -1140,8 +1157,8 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "추세분석 → 기관간 흐름 체인"
+    "difficulty": "hard",
+    "note": "Expects get_trend_analysis (unit=quarterly), analyze_cross_institution_flow."
   },
   {
     "id": "st_mtool_041",
@@ -1179,8 +1196,8 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "휴면계좌 탐지 → 위험도 평가 → SQL 조회 3개 체인"
+    "difficulty": "hard",
+    "note": "Expects detect_dormant_reactivation, score_account_risk (account_id=9000000004388166), query_transactions (must restrict sender_acc = 9000000004388166; the SQL must run without an error); called in the order detect_dormant_reactivation -> score_account_risk -> query_transactions. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_042",
@@ -1207,7 +1224,7 @@
       }
     },
     "difficulty": "hard",
-    "note": "채널위험 + CTR + 스머핑 3개 신규 도구 체인"
+    "note": "Expects analyze_channel_risk, detect_ctr_candidates (mode=high_value), detect_smurfing_network (direction=inbound); called in the order analyze_channel_risk -> detect_ctr_candidates -> detect_smurfing_network."
   },
   {
     "id": "st_mtool_043",
@@ -1237,7 +1254,7 @@
       }
     },
     "difficulty": "hard",
-    "note": "입금계좌 프로파일 → 위험도 평가 → AML 레이어링 패턴 3개 체인"
+    "note": "Expects get_receiving_account_profile (account_id=9000000000043931), score_account_risk (account_id=9000000000043931), detect_aml_patterns (pattern_type=layering); called in the order get_receiving_account_profile -> score_account_risk -> detect_aml_patterns."
   },
   {
     "id": "st_mtool_044",
@@ -1264,7 +1281,7 @@
       }
     },
     "difficulty": "hard",
-    "note": "기관간 흐름 + 추세분석 + CTR 탐지 3개 신규 도구 체인"
+    "note": "Expects analyze_cross_institution_flow, get_trend_analysis (unit=monthly), detect_ctr_candidates (mode=high_value); called in the order analyze_cross_institution_flow -> get_trend_analysis -> detect_ctr_candidates."
   },
   {
     "id": "st_mtool_irr_005",
@@ -1274,7 +1291,7 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "irrelevance: 파일 내보내기(엑셀 export)는 지원되지 않는 기능 — 도구 호출 불필요"
+    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
   },
   {
     "id": "st_mtool_irr_006",
@@ -1284,7 +1301,7 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "irrelevance: 외부 규제 문서 요약 요청 — AML 분석 데이터 도구 호출과 무관"
+    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
   },
   {
     "id": "st_mtool_045",
@@ -1305,8 +1322,8 @@
         }
       }
     },
-    "difficulty": "easy",
-    "note": "휴면계좌 탐지 → 스머핑 탐지 체인"
+    "difficulty": "medium",
+    "note": "Expects detect_dormant_reactivation, detect_smurfing_network (direction=inbound); called in the order detect_dormant_reactivation -> detect_smurfing_network."
   },
   {
     "id": "st_mtool_046",
@@ -1323,8 +1340,8 @@
         }
       }
     },
-    "difficulty": "easy",
-    "note": "채널위험 분석 → 분기별 추세 체인"
+    "difficulty": "hard",
+    "note": "Expects analyze_channel_risk, get_trend_analysis (unit=quarterly)."
   },
   {
     "id": "st_mtool_047",
@@ -1348,8 +1365,8 @@
         }
       }
     },
-    "difficulty": "easy",
-    "note": "입금계좌 프로파일 → 출금계좌 프로파일 비교 체인"
+    "difficulty": "medium",
+    "note": "Expects get_receiving_account_profile (account_id=9000000000029571), get_account_profile (account_id=9000000000029571); called in the order get_receiving_account_profile -> get_account_profile."
   },
   {
     "id": "st_mtool_048",
@@ -1371,7 +1388,7 @@
       }
     },
     "difficulty": "medium",
-    "note": "기관간 흐름 → 위험 거래 랭킹 체인"
+    "note": "Expects analyze_cross_institution_flow, rank_risky_transactions (top_k=15); called in the order analyze_cross_institution_flow -> rank_risky_transactions."
   },
   {
     "id": "st_mtool_049",
@@ -1401,7 +1418,7 @@
       }
     },
     "difficulty": "hard",
-    "note": "위험도 → 네트워크 → 입금계좌 프로파일 3개 체인"
+    "note": "Expects score_account_risk (account_id=9000000000034076), analyze_network (account_id=9000000000034076), get_receiving_account_profile (account_id=9000000000034076); called in the order score_account_risk -> analyze_network -> get_receiving_account_profile."
   },
   {
     "id": "st_mtool_050",
@@ -1422,8 +1439,8 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "CTR 탐지 → 전체 통계 체인"
+    "difficulty": "hard",
+    "note": "Expects detect_ctr_candidates (mode=high_value), get_statistics; called in the order detect_ctr_candidates -> get_statistics."
   },
   {
     "id": "st_mtool_051",
@@ -1453,7 +1470,7 @@
       }
     },
     "difficulty": "hard",
-    "note": "추세분석 → 기관 리포트 → 입금계좌 프로파일 3개 체인"
+    "note": "Expects get_trend_analysis (unit=monthly), get_institution_report (bank_id=118), get_receiving_account_profile (account_id=9000000000026712); called in the order get_trend_analysis -> get_institution_report -> get_receiving_account_profile."
   },
   {
     "id": "st_mtool_052",
@@ -1478,7 +1495,7 @@
       }
     },
     "difficulty": "medium",
-    "note": "스머핑 탐지 → 계좌 위험도 평가 체인"
+    "note": "Expects detect_smurfing_network (direction=inbound), score_account_risk (account_id=9000000004388203); called in the order detect_smurfing_network -> score_account_risk."
   },
   {
     "id": "st_mtool_053",
@@ -1508,7 +1525,7 @@
       }
     },
     "difficulty": "hard",
-    "note": "모니터링 → 출금계좌 프로파일 → 입금계좌 프로파일 3개 체인"
+    "note": "Expects detect_monitoring_alerts (rule_id=all), get_account_profile (account_id=9000000000024638), get_receiving_account_profile (account_id=9000000000024638); called in the order detect_monitoring_alerts -> get_account_profile -> get_receiving_account_profile."
   },
   {
     "id": "st_mtool_054",
@@ -1522,7 +1539,7 @@
       "param_checks": {}
     },
     "difficulty": "medium",
-    "note": "채널위험 + 기관간 흐름 분석 체인"
+    "note": "Expects analyze_channel_risk, analyze_cross_institution_flow."
   },
   {
     "id": "st_mtool_055",
@@ -1545,8 +1562,8 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "CTR 분할거래 탐지 → 기간 비교 체인"
+    "difficulty": "hard",
+    "note": "Expects detect_ctr_candidates (mode=structuring), compare_periods (period1_start=20231001; period1_end=20231231; period2_start=20240101; period2_end=20240331)."
   },
   {
     "id": "st_mtool_056",
@@ -1582,8 +1599,8 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "입금계좌 프로파일 → SQL 거래 조회 체인"
+    "difficulty": "hard",
+    "note": "Expects get_receiving_account_profile (account_id=9000000000034017), query_transactions (must restrict receiver_acc = 9000000000034017; the SQL must run without an error); called in the order get_receiving_account_profile -> query_transactions. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_057",
@@ -1610,7 +1627,7 @@
       }
     },
     "difficulty": "hard",
-    "note": "휴면계좌 탐지 → 계좌 위험도 → 모니터링 알림 3개 체인"
+    "note": "Expects detect_dormant_reactivation, score_account_risk (account_id=9000000000017070), detect_monitoring_alerts (rule_id=all); called in the order detect_dormant_reactivation -> score_account_risk -> detect_monitoring_alerts."
   },
   {
     "id": "st_mtool_irr_007",
@@ -1620,7 +1637,7 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "irrelevance: 외부 기관 직접 보고는 지원 기능이 아님 — AML 분석 도구 호출과 무관"
+    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
   },
   {
     "id": "st_mtool_irr_008",
@@ -1630,7 +1647,7 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "irrelevance: 내부자 거래 탐지는 지원하지 않는 도메인 — 정의된 AML 도구 범위 외"
+    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
   },
   {
     "id": "st_mtool_058",
@@ -1651,7 +1668,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects get_trend_analysis (unit=quarterly), get_statistics; called in the order get_trend_analysis -> get_statistics."
   },
   {
     "id": "st_mtool_059",
@@ -1672,7 +1690,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects analyze_network (account_id=9000000000043931; hops at least 2), detect_aml_patterns (pattern_type=funnel)."
   },
   {
     "id": "st_mtool_060",
@@ -1692,7 +1711,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_monitoring_alerts (rule_id=R001), score_account_risk (account_id=9000000000029571)."
   },
   {
     "id": "st_mtool_061",
@@ -1708,8 +1728,8 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "2회 호출 기대 (inbound + outbound) — tools_must_include에 2회 포함 시 recall 처리"
+    "difficulty": "easy",
+    "note": "Expects detect_smurfing_network (direction=inbound)."
   },
   {
     "id": "st_mtool_062",
@@ -1746,7 +1766,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects query_transactions (must restrict sender_bank = 150 and is_fraud = 1; the SQL must run without an error), get_institution_report (bank_id=150). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_063",
@@ -1778,7 +1799,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects query_transactions (must restrict fraud_type = 4; the SQL must run without an error), rank_risky_transactions (top_k=10). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_064",
@@ -1801,7 +1823,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects compare_periods (period1_start=20240101; period1_end=20240331; period2_start=20240401; period2_end=20240630), get_trend_analysis (unit=monthly)."
   },
   {
     "id": "st_mtool_065",
@@ -1817,8 +1840,8 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "2회 호출 기대 (high_value + structuring)"
+    "difficulty": "medium",
+    "note": "Expects detect_ctr_candidates (mode=high_value)."
   },
   {
     "id": "st_mtool_066",
@@ -1838,7 +1861,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects get_account_profile (account_id=9000000004388166), get_receiving_account_profile (account_id=9000000004388166)."
   },
   {
     "id": "st_mtool_067",
@@ -1857,7 +1881,8 @@
       ],
       "param_checks": {}
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects get_statistics, analyze_channel_risk, analyze_cross_institution_flow; called in the order get_statistics -> analyze_channel_risk -> analyze_cross_institution_flow."
   },
   {
     "id": "st_mtool_068",
@@ -1897,7 +1922,8 @@
         }
       ]
     },
-    "difficulty": "hard"
+    "difficulty": "hard",
+    "note": "Expects detect_aml_patterns (pattern_type=shortest_path; account_a=9000000000022515; account_b=9000000000026712), score_account_risk (account_id=9000000000022515). Also accepted: detect_aml_patterns (pattern_type=shortest_path; account_a=9000000000022515; account_b=9000000000026712), score_account_risk (account_id=9000000000026712)."
   },
   {
     "id": "st_mtool_069",
@@ -1929,7 +1955,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects query_transactions (must restrict fraud_type = 3; the SQL must run without an error), analyze_network (account_id=9000000000106920). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_070",
@@ -1966,7 +1993,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects get_institution_report (bank_id=102), query_transactions (must restrict sender_bank = 102 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_071",
@@ -1986,7 +2014,8 @@
         }
       }
     },
-    "difficulty": "hard"
+    "difficulty": "medium",
+    "note": "Expects detect_dormant_reactivation (dormant_days=90), detect_smurfing_network (direction=inbound)."
   },
   {
     "id": "st_mtool_072",
@@ -2008,7 +2037,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects predict_fraud (time_slot=21; sender_bank=134; receiver_bank=119; fund_type=0; media_type=2; amount=3000000), get_statistics."
   },
   {
     "id": "st_mtool_073",
@@ -2028,7 +2058,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects get_trend_analysis (unit=monthly), get_fraud_type_summary (fraud_type=1)."
   },
   {
     "id": "st_mtool_074",
@@ -2044,7 +2075,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_ctr_candidates (mode=structuring)."
   },
   {
     "id": "st_mtool_075",
@@ -2060,8 +2092,8 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "2회 호출 기대 (R003 + R004) — tools_must_include 확장 가능"
+    "difficulty": "easy",
+    "note": "Expects detect_monitoring_alerts (rule_id=R003)."
   },
   {
     "id": "st_mtool_076",
@@ -2082,7 +2114,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects get_account_profile (account_id=9000000004228844), detect_aml_patterns (pattern_type=risk_score; account_id=9000000004228844)."
   },
   {
     "id": "st_mtool_077",
@@ -2102,7 +2135,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_smurfing_network (direction=outbound), rank_risky_transactions (top_k=5)."
   },
   {
     "id": "st_mtool_078",
@@ -2125,7 +2159,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects compare_periods (period1_start=20230101; period1_end=20230630; period2_start=20230701; period2_end=20231231), get_trend_analysis (unit=quarterly)."
   },
   {
     "id": "st_mtool_079",
@@ -2145,7 +2180,8 @@
         }
       }
     },
-    "difficulty": "hard"
+    "difficulty": "hard",
+    "note": "Expects get_receiving_account_profile (account_id=9000000000010657), detect_aml_patterns (pattern_type=ring)."
   },
   {
     "id": "st_mtool_080",
@@ -2162,7 +2198,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects analyze_channel_risk, get_institution_report (bank_id=120)."
   },
   {
     "id": "st_mtool_081",
@@ -2196,7 +2233,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects analyze_cross_institution_flow, query_transactions (must restrict sender_bank = 134 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_082",
@@ -2228,7 +2266,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects get_fraud_type_summary (fraud_type=5), query_transactions (must restrict fraud_type = 5; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_083",
@@ -2249,7 +2288,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects analyze_network (account_id=9000000000005714; hops at most 1), detect_aml_patterns (pattern_type=layering)."
   },
   {
     "id": "st_mtool_084",
@@ -2266,8 +2306,8 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "analyze_network account_id는 rank 결과에 의존"
+    "difficulty": "medium",
+    "note": "Expects rank_risky_transactions (top_k=20), analyze_network."
   },
   {
     "id": "st_mtool_085",
@@ -2284,7 +2324,8 @@
         }
       }
     },
-    "difficulty": "hard"
+    "difficulty": "hard",
+    "note": "Expects detect_monitoring_alerts (rule_id=all), get_statistics."
   },
   {
     "id": "st_mtool_086",
@@ -2326,7 +2367,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects query_transactions (must restrict sender_bank = 107 and is_fraud = 1; the SQL must run without an error), predict_fraud (time_slot=12; sender_bank=107; receiver_bank=122; fund_type=3; media_type=4; amount=2000000). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_087",
@@ -2342,8 +2384,8 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "3회 호출 기대 — 최소 1회 정확하면 부분 점수"
+    "difficulty": "easy",
+    "note": "Expects score_account_risk (account_id=9000000000028452)."
   },
   {
     "id": "st_mtool_088",
@@ -2375,7 +2417,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects query_transactions (must restrict fraud_type = 7; the SQL must run without an error), get_trend_analysis (unit=monthly). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   },
   {
     "id": "st_mtool_089",
@@ -2391,8 +2434,8 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "2회 호출 기대 (ring + layering)"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=ring)."
   },
   {
     "id": "st_mtool_090",
@@ -2409,7 +2452,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects detect_ctr_candidates (mode=high_value), analyze_cross_institution_flow."
   },
   {
     "id": "st_mtool_091",
@@ -2422,7 +2466,8 @@
       ],
       "param_checks": {}
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_dormant_reactivation, analyze_channel_risk."
   },
   {
     "id": "st_mtool_092",
@@ -2443,6 +2488,7 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "hard",
+    "note": "Expects get_statistics, get_trend_analysis (unit=monthly); called in the order get_statistics -> get_trend_analysis."
   }
 ]
