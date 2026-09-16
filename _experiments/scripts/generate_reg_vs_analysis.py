@@ -11,24 +11,14 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-# === relocated to star-bench/_experiments/scripts/; figures saved to BOTH star-bench and paper ===
+# Figures are written inside this repository only; the manuscript copy is one
+# explicit step (_figure_out, R2C-007).
+import sys as _sys
 from pathlib import Path as _P
-_SB = _P(__file__).resolve().parents[2]            # star-bench root
-_WS = _SB.parent                                    # workspace root
-SB_FIG = _SB / "_experiments" / "figures"
-PAPER_FIG = _WS / "STAR-Bench-manu" / "figures"   # 논문 저장소의 그림 폴더
-SB_FIG.mkdir(parents=True, exist_ok=True); PAPER_FIG.mkdir(parents=True, exist_ok=True)
-import matplotlib.pyplot as _pltD
-from matplotlib.figure import Figure as _FigD
-__osf, __ofsf = _pltD.savefig, _FigD.savefig
-def __dual_plt(fname, *a, **k):
-    _n = _P(str(fname)).name
-    __osf(str(SB_FIG / _n), *a, **k); __osf(str(PAPER_FIG / _n), *a, **k)
-def __dual_fig(self, fname, *a, **k):
-    _n = _P(str(fname)).name
-    __ofsf(self, str(SB_FIG / _n), *a, **k); __ofsf(self, str(PAPER_FIG / _n), *a, **k)
-_pltD.savefig = __dual_plt; _FigD.savefig = __dual_fig
-# === end relocation header ===
+_sys.path.insert(0, str(_P(__file__).resolve().parent))
+from _figure_out import install as _install_figure_out
+_SB = _P(__file__).resolve().parents[2]
+SB_FIG = _install_figure_out()
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -124,7 +114,12 @@ ax.set_xticks(x)
 ax.set_xticklabels(labels, rotation=90, ha="center", fontsize=6.5)
 ax.tick_params(axis="y", labelsize=8)
 ax.set_ylabel("Mean tool hit $h$", fontsize=8)
-ax.set_ylim(0.25, 0.95)
+# The limits follow the data: a fixed 0.95 top clipped the highest marker
+# (Gemma-4-31B analysis h = .955) in half (L6-048).
+low = min(reg.min(), ana.min())
+high = max(reg.max(), ana.max())
+pad = max(0.02, (high - low) * 0.08)
+ax.set_ylim(max(0.0, low - pad), min(1.0, high + pad))
 ax.set_xlim(-0.7, len(rows) - 0.3)
 ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
