@@ -156,11 +156,17 @@ def _provenance_checks(info: dict, command: str) -> list[Check]:
     return checks
 
 
-# The two files this command itself writes with `--report`. A run that
-# regenerates the report leaves them modified, which is not the kind of dirty
-# tree this check is about; it still says so.
-REPORT_FILES = ("_experiments/scripts/preflight/reports/preflight_report.md",
-                "_experiments/scripts/preflight/reports/preflight_report.json")
+def _report_files() -> tuple[str, ...]:
+    """The files this command itself writes with `--report`, as git names them.
+
+    A run that regenerates the report leaves them modified, which is not the kind
+    of dirty tree this check is about; it still says so rather than hiding it.
+    """
+    from . import report
+    from .gate import STAR_BENCH_ROOT
+
+    return tuple(str(path.relative_to(STAR_BENCH_ROOT))
+                 for path in (report.REPORT_PATH, report.JSON_PATH))
 
 
 def _star_bench_tree(info: dict, command: str) -> Check:
@@ -174,8 +180,9 @@ def _star_bench_tree(info: dict, command: str) -> Check:
     """
     commit = info.get("star_bench_commit")
     status = info.get("star_bench_status") or {}
-    modified = [m for m in status.get("modified") or [] if m not in REPORT_FILES]
-    report_only = [m for m in status.get("modified") or [] if m in REPORT_FILES]
+    report_files = _report_files()
+    modified = [m for m in status.get("modified") or [] if m not in report_files]
+    report_only = [m for m in status.get("modified") or [] if m in report_files]
     untracked = status.get("untracked") or []
     if not status.get("readable"):
         # No git status to read: fall back to what the record itself carries.
