@@ -26,7 +26,12 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
 MT_DIR = Path("_experiments/results_mt_oracle/eval")
-OUT_DIR = Path("_experiments/figures")
+# ARCHIVED (R2C-007): this script wrote fig_turnwise_line.png, the name
+# fig:multiturn builds from, with a six-model plot. Its output now goes to an
+# archive directory; generate_new_figures.py owns that figure.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from _figure_out import install as _install_figure_out
+OUT_DIR = _install_figure_out("archive")
 
 TARGETS = [
     ("mistralai/Mistral-Small-3.2-24B-Instruct-2506", "Mistral-Small-24B", "#E15759", "v", "--"),

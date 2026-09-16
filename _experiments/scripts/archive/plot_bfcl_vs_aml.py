@@ -1,14 +1,33 @@
 """BFCL v4 vs AML-Bench 상관 scatter plot 생성.
 
-입력: /tmp/bfcl_aml_paired.json
-출력: _experiments/figures/fig_bfcl_vs_aml.png (그리고 pdf)
+ARCHIVED (R2C-007, D14): the BFCL comparison is out of the paper, and this
+script wrote fig_bfcl_vs_aml.png under the name the manuscript used from a
+different pairing. Output goes to _experiments/figures/archive/, and the input
+path is an argument rather than a fixed /tmp file.
+
+입력: --pairs <json> (기본값 $BFCL_PAIRS)
+출력: _experiments/figures/archive/fig_bfcl_vs_aml.png (그리고 pdf)
 """
 import json
+import os
+import sys
+from pathlib import Path
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-with open('/tmp/bfcl_aml_paired.json') as f:
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from _figure_out import install as _install_figure_out
+_ARCHIVE = _install_figure_out("archive")
+
+_pairs = os.environ.get("BFCL_PAIRS")
+for _arg in sys.argv[1:]:
+    if _arg.startswith("--pairs="):
+        _pairs = _arg.split("=", 1)[1]
+if not _pairs:
+    raise SystemExit("pass --pairs <json> or set $BFCL_PAIRS; this script is archived")
+
+with open(_pairs) as f:
     data = json.load(f)
 
 pairs = data['pairs']

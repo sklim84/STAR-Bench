@@ -3,24 +3,17 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-# === relocated to star-bench/_experiments/scripts/; figures saved to BOTH star-bench and paper ===
+# ARCHIVED (R2C-007). This script is superseded; it is kept for provenance and
+# is not part of the regeneration entry point. Its figures go to
+# _experiments/figures/archive/ so a stray run cannot replace a manuscript
+# figure under the name the paper builds from.
+import sys as _sys
 from pathlib import Path as _P
-_SB = _P(__file__).resolve().parents[2]            # star-bench root
-_WS = _SB.parent                                    # workspace root
-SB_FIG = _SB / "_experiments" / "figures"
-PAPER_FIG = _WS / "star-bench-paper" / "figures"
-SB_FIG.mkdir(parents=True, exist_ok=True); PAPER_FIG.mkdir(parents=True, exist_ok=True)
-import matplotlib.pyplot as _pltD
-from matplotlib.figure import Figure as _FigD
-__osf, __ofsf = _pltD.savefig, _FigD.savefig
-def __dual_plt(fname, *a, **k):
-    _n = _P(str(fname)).name
-    __osf(str(SB_FIG / _n), *a, **k); __osf(str(PAPER_FIG / _n), *a, **k)
-def __dual_fig(self, fname, *a, **k):
-    _n = _P(str(fname)).name
-    __ofsf(self, str(SB_FIG / _n), *a, **k); __ofsf(self, str(PAPER_FIG / _n), *a, **k)
-_pltD.savefig = __dual_plt; _FigD.savefig = __dual_fig
-# === end relocation header ===
+_sys.path.insert(0, str(_P(__file__).resolve().parents[1]))
+from _figure_out import install as _install_figure_out
+_SB = _P(__file__).resolve().parents[3]
+_WS = _SB.parent
+SB_FIG = PAPER_FIG = _install_figure_out("archive")
 
 import numpy as np
 from pathlib import Path
