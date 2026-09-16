@@ -93,9 +93,13 @@ def multiturn_benchmark(tmp_path) -> Path:
     return path
 
 
-def base_argv(server, out: Path, *, tools_lang: str = "kr") -> list[str]:
-    """The options every runner test passes: mock endpoint, no environment pins."""
+def base_argv(server, out: Path, *, tools_lang: str = "kr", concurrency: int = 1) -> list[str]:
+    """The options every runner test passes: mock endpoint, no environment pins.
+
+    Concurrency is pinned to 1 here so a scripted response queue lands on the case
+    the test means; the parallel behaviour has its own tests.
+    """
     return ["--model", "mock-model", "--tools-lang", tools_lang,
             "--base-url", server.url, "--out", str(out),
             "--max-model-len", "32768", "--max-tokens", "1024",
-            "--no-env-check", "--max-retries", "0"]
+            "--no-env-check", "--max-retries", "0", "--concurrency", str(concurrency)]

@@ -37,6 +37,9 @@ def add_common_arguments(ap: argparse.ArgumentParser) -> None:
     g.add_argument("--max-tokens", type=int, help="override the output budget")
     g.add_argument("--max-model-len", type=int, help="override the context length for the record")
     g.add_argument("--max-rounds", type=int, default=None, help="tool-calling rounds per case")
+    g.add_argument("--concurrency", type=int, default=registry.CONCURRENCY,
+                   help=f"cases (or scenarios) in flight; turns inside a scenario stay "
+                        f"sequential (default {registry.CONCURRENCY}, 1 runs inline)")
     g.add_argument("--max-retries", type=int, default=2,
                    help="retries per request; a deterministic 4xx is never retried")
     g.add_argument("--allow-unpinned-revision", action="store_true",
@@ -78,6 +81,7 @@ class RunSetup:
 
     def __init__(self, *, args, arm, config_block, chat_options, writer, run_id,
                  query_lang, provenance_block, serving=None):
+        self.concurrency = args.concurrency
         self.args = args
         self.arm = arm
         self.config = config_block
@@ -162,6 +166,9 @@ def resolve(args, *, cases: list[dict], setting: str, query_lang_default: str,
         config["max_tokens"] = args.max_tokens
     if args.max_model_len:
         config["max_model_len"] = args.max_model_len
+    if args.concurrency < 1:
+        raise SystemExit("--concurrency must be at least 1")
+    config["concurrency"] = args.concurrency
 
     config["prompt_variant"] = arm.prompt_variant
     prov = provenance.collect(arm=arm, config=config)
@@ -178,9 +185,9 @@ def resolve(args, *, cases: list[dict], setting: str, query_lang_default: str,
                                    revision=config.get("model_revision"),
                                    max_model_len=config["max_model_len"],
                                    max_tokens=config["max_tokens"])
-        print(f"preflight: {json.dumps(budget.as_dict(), ensure_ascii=False)}")
+        print(f"preflight: {json.dumps(dict(budget.as_dict(), concurrency=args.concurrency), ensure_ascii=False)}")
         preflight.check(budget)
-        prov["preflight"] = budget.as_dict()
+        prov["preflight"] = dict(budget.as_dict(), concurrency=args.concurrency)
     if args.preflight_only:
         raise SystemExit(0)
 
@@ -214,6 +221,14 @@ def select_cases(cases: list[dict], args, *, keys, out_dir: Path) -> list[dict]:
 def keys_of(case: dict, all_keys) -> list[str]:
     prefix = case["id"]
     return [k for k in all_keys if k == prefix or k.startswith(f"{prefix}#")]
+
+
+def client_pool(args, options):
+    """One model client per worker thread, sharing the read-only request options."""
+    from .client import ModelClient
+    from .parallel import ClientPool
+
+    return ClientPool(lambda: ModelClient(open_client(args, options), options))
 
 
 def open_client(args, options):

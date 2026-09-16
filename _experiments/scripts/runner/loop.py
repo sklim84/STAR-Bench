@@ -26,7 +26,7 @@ from .preflight import TOOL_RESULT_TOKENS, truncate
 from .records import CallRecord, ExecutedRecord, RoundRecord, RunRecord
 
 __all__ = ["ToolExecutor", "platform_executor", "run_case", "run_scenario",
-           "MAX_ROUNDS", "MAX_CALLS_PER_ROUND"]
+           "failed_record", "expected_keys", "MAX_ROUNDS", "MAX_CALLS_PER_ROUND"]
 
 MAX_ROUNDS = 5
 MAX_CALLS_PER_ROUND = 8   # L5-024: one case reached 318 calls with no ceiling
@@ -217,6 +217,21 @@ def run_scenario(scenario: dict, *, client: ModelClient, arm, executor: ToolExec
         else:
             messages.extend(_oracle_turns(turn, turn_no))
     return records
+
+
+def failed_record(case_id: str, error: BaseException, *, run_id: str, setting: str,
+                  tools_lang: str, query_lang: str, config: dict, provenance: dict,
+                  turn: int | None = None) -> RunRecord:
+    """A record for a case whose worker raised before it could build its own.
+
+    A worker failure belongs to its own case: the case still gets a line, with the
+    exception on it, and no other worker's record is touched (L5-019).
+    """
+    return RunRecord(
+        run_id=run_id, case_id=case_id, setting=setting, tools_lang=tools_lang,
+        query_lang=query_lang, config=config, provenance=provenance, turn=turn,
+        rounds=[], final_text="", stop_reason="error",
+        error={"type": type(error).__name__, "message": str(error)[:2000], "round": None})
 
 
 def expected_keys(cases: Iterable[dict], *, multiturn: bool) -> list[str]:

@@ -190,6 +190,32 @@ class RecordWriter:
     def count(self) -> int:
         return self._n
 
+    def sort_by(self, order: Iterable[str]) -> int:
+        """Rewrites the file with the records in benchmark order.
+
+        Workers finish out of order, so the file is sorted once at the end and a
+        parallel run produces the same file a serial one does. Keys the order
+        does not name keep their relative position at the end.
+        """
+        index = {key: i for i, key in enumerate(order)}
+        with self._lock:
+            rows = list(read_records(self.path))
+            if not rows:
+                return 0
+
+            def key(row: dict) -> tuple:
+                case_id = row.get("case_id") or ""
+                name = case_id if row.get("turn") is None else f"{case_id}#{row['turn']}"
+                return (index.get(name, len(index)), name, row.get("turn") or 0)
+
+            rows.sort(key=key)
+            with open(self.path, "w", encoding="utf-8") as fh:
+                for row in rows:
+                    fh.write(json.dumps(row, ensure_ascii=False, default=str) + "\n")
+                fh.flush()
+                os.fsync(fh.fileno())
+        return len(rows)
+
     def manifest(self, payload: dict) -> Path:
         path = self.dir / f"{self.run_id}.manifest.json"
         body = dict(payload)

@@ -14,6 +14,11 @@ Old checkpoints are never read: a run writes into a fresh directory, and
 `--resume` skips only the cases that same directory already holds a record for,
 after checking that its contents belong to this benchmark (C2-014, C2-015,
 L5-027).
+
+`--concurrency N` runs N cases at once (default from the registry). Cases share
+nothing: each worker thread builds its own client, and the records are written
+and the file sorted from the calling thread, so the output file is the same one a
+serial run produces. `--concurrency 1` runs inline.
 """
 
 from __future__ import annotations
@@ -27,8 +32,7 @@ from pathlib import Path
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(_PROJECT_ROOT))
 
-from _experiments.scripts.runner import cli, loop, records  # noqa: E402
-from _experiments.scripts.runner.client import ModelClient  # noqa: E402
+from _experiments.scripts.runner import cli, loop, parallel, records  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -67,29 +71,48 @@ def main(argv: list[str] | None = None, *, executor=None) -> int:
     keys = loop.expected_keys(cases, multiturn=False)
     todo = cli.select_cases(cases, args, keys=keys, out_dir=args.out)
 
-    client = ModelClient(cli.open_client(args, setup.chat_options), setup.chat_options)
+    clients = cli.client_pool(args, setup.chat_options)
     executor = executor or loop.platform_executor()
     max_rounds = args.max_rounds or loop.MAX_ROUNDS
+    concurrency = setup.concurrency
 
     setup.writer.manifest({
         "setting": "single", "tools_lang": setup.arm.lang, "query_lang": setup.query_lang,
         "cases_dir": str(args.cases_dir), "n_cases_selected": len(todo),
         "n_cases_benchmark": len(cases), "config": setup.config,
         "provenance": setup.provenance, "max_rounds": max_rounds,
-        "argv": sys.argv[1:],
+        "concurrency": concurrency, "argv": sys.argv[1:],
     })
-    print(f"run {setup.run_id}: {len(todo)} case(s) -> {setup.writer.path}")
+    print(f"run {setup.run_id}: {len(todo)} case(s), concurrency {concurrency} "
+          f"-> {setup.writer.path}")
 
-    for i, case in enumerate(todo, 1):
-        record = loop.run_case(
-            case, client=client, arm=setup.arm, executor=executor, run_id=setup.run_id,
+    def work(case: dict):
+        return loop.run_case(
+            case, client=clients.get(), arm=setup.arm, executor=executor, run_id=setup.run_id,
             config=setup.config, provenance=setup.provenance, query_lang=setup.query_lang,
             max_rounds=max_rounds)
+
+    done = 0
+
+    def collect(case: dict, record, error: BaseException | None) -> None:
+        nonlocal done
+        done += 1
+        if error is not None:
+            # A worker that raised is this case's failure and nobody else's: the
+            # case still gets a record, with the reason (L5-019).
+            record = loop.failed_record(
+                case["id"], error, run_id=setup.run_id, setting="single",
+                tools_lang=setup.arm.lang, query_lang=setup.query_lang,
+                config=setup.config, provenance=setup.provenance)
+            logger.error("case %s raised: %s", case.get("id"), error)
         setup.writer.write(record)
-        if args.verbose or i % 50 == 0:
+        if args.verbose or done % 50 == 0:
             calls = sum(len(r.tool_calls) for r in record.rounds)
-            print(f"  [{i}/{len(todo)}] {case['id']}: {len(record.rounds)} round(s), "
+            print(f"  [{done}/{len(todo)}] {case['id']}: {len(record.rounds)} round(s), "
                   f"{calls} call(s), stop={record.stop_reason}")
+
+    parallel.run_jobs(todo, work, concurrency=concurrency, on_result=collect)
+    setup.writer.sort_by(keys)
 
     summary = records.verify_run_complete(setup.writer.path, keys) if not args.partial else None
     if summary is not None:

@@ -52,12 +52,14 @@ def test_both_halves_of_a_pair_share_every_setting_except_the_mode():
         assert a.reasoning_mode != b.reasoning_mode
 
 
-def test_every_configuration_is_deterministic_and_serial():
+def test_every_configuration_is_deterministic_and_carries_the_default_concurrency():
     for cfg in registry.CONFIGS:
         block = registry.config_block(cfg)
         assert block["temperature"] == 0.0
         assert block["seed"] == registry.SEED
-        assert block["concurrency"] == 1
+        # The registry holds the default; a run records the value it actually used.
+        assert block["concurrency"] == registry.CONCURRENCY
+    assert registry.CONCURRENCY >= 1
 
 
 def test_only_qwen35_and_gpt_oss_have_two_modes():

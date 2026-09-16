@@ -84,12 +84,33 @@ def test_the_korean_query_tool_describes_english_columns(both):
     assert "거래금액 FROM" not in text
 
 
-def test_the_r003_rule_carries_the_agreed_korean_label(both):
+# The Korean labels mirror monitoring.RULE_NAMES, so the label the model reads is
+# the one the tool returns in `rule_name` and the one the questions use (L1-008).
+RULE_LABELS = {
+    "R001": ("Nighttime Bulk Transactions", "심야 대량 거래"),
+    "R002": ("Same-Day Rapid-Fire Transactions", "당일 단기 다발 거래"),
+    "R003": ("Repeated Identical Amounts", "동일 금액 반복 송금"),
+    "R004": ("Institution Concentration", "기관 집중"),
+    "R005": ("Transaction Pattern Change", "거래 패턴 변화"),
+}
+
+
+def test_the_korean_rule_labels_mirror_the_platform_rule_names(both):
     _en, kr = both
     tool = next(t for t in kr.tools if t["function"]["name"] == "detect_monitoring_alerts")
     description = tool["function"]["description"]
-    assert "동일 금액 반복" in description
+    for rule_id, (_english, korean) in RULE_LABELS.items():
+        assert f"{rule_id} {korean}" in description, rule_id
     assert "정액" not in description and "라운드 금액" not in description
+
+
+def test_the_platform_rule_names_are_the_ones_the_korean_arm_mirrors():
+    from _experiments.scripts._platform import ensure_platform_on_path
+
+    ensure_platform_on_path()
+    from src.features.monitoring import RULE_NAMES
+
+    assert RULE_NAMES == {rule: english for rule, (english, _kr) in RULE_LABELS.items()}
 
 
 def test_the_fraud_type_enum_dropped_the_unused_code(both):

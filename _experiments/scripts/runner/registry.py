@@ -6,6 +6,7 @@ tool-call parser, reasoning parser and the single labelled reasoning mode (D05),
 context length, output budget, temperature, seed, concurrency and tensor-parallel
 size (D07). The shell launcher asks this module for the vLLM arguments, so a
 configuration cannot differ between the launcher and the record (L5-017, R1-R3).
+Concurrency is the one field a run may override, and the override is recorded.
 
 Sizing targets the rerun hardware: hosts with 2 or 4 NVIDIA L40S 48 GB cards,
 plus on-demand hosts with 80 GB cards. `tp` is the 48 GB plan and `tp_80g` the
@@ -41,7 +42,11 @@ KANANA_TEMPLATE = "kanana_tool_calls/kanana_tool_calls/lmalign_v1.jinja"
 
 SEED = 20260925
 TEMPERATURE = 0.0
-CONCURRENCY = 1
+# Cases in flight per configuration. The tool layer is thread-safe (per-call
+# DuckDB cursors), so the benchmark runs several cases at once; the rerun does
+# not fit its deadline one request at a time. `--concurrency` overrides it, and
+# the value actually used is what goes into the record and the manifest.
+CONCURRENCY = 8
 CONTEXT = 32768          # D07: every configuration gets at least 32k
 CONTEXT_E2E = 65536      # L5-012: the end-to-end setting reads more tool output
 BUDGET_PLAIN = 8192

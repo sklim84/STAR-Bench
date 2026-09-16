@@ -16,6 +16,9 @@ the schema arm and the provider options apply here too. They did not before, and
 the gpt-oss (T) and (NT) multi-turn rows were in fact the same configuration run
 twice (C2-012). `--tools-lang` makes every main-table column runnable on the
 Korean schema (D17, L6-032).
+
+`--concurrency N` runs N scenarios at once. The turns inside a scenario stay
+sequential, because each one reads the history the previous one produced.
 """
 
 from __future__ import annotations
@@ -29,8 +32,7 @@ from pathlib import Path
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(_PROJECT_ROOT))
 
-from _experiments.scripts.runner import cli, loop, records  # noqa: E402
-from _experiments.scripts.runner.client import ModelClient  # noqa: E402
+from _experiments.scripts.runner import cli, loop, parallel, records  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -70,28 +72,47 @@ def main(argv: list[str] | None = None, *, executor=None) -> int:
     keys = loop.expected_keys(scenarios, multiturn=True)
     todo = cli.select_cases(scenarios, args, keys=keys, out_dir=args.out)
 
-    client = ModelClient(cli.open_client(args, setup.chat_options), setup.chat_options)
+    clients = cli.client_pool(args, setup.chat_options)
     executor = executor or loop.platform_executor()
+    concurrency = setup.concurrency
 
     setup.writer.manifest({
         "setting": args.setting, "tools_lang": setup.arm.lang, "query_lang": setup.query_lang,
         "cases_dir": str(args.cases_dir), "n_scenarios_selected": len(todo),
         "n_scenarios_benchmark": len(scenarios), "n_turns_expected": len(keys),
-        "config": setup.config, "provenance": setup.provenance, "argv": sys.argv[1:],
+        "config": setup.config, "provenance": setup.provenance,
+        "concurrency": concurrency, "argv": sys.argv[1:],
     })
-    print(f"run {setup.run_id}: {len(todo)} scenario(s), {args.setting} -> {setup.writer.path}")
+    print(f"run {setup.run_id}: {len(todo)} scenario(s), {args.setting}, "
+          f"concurrency {concurrency} -> {setup.writer.path}")
 
-    for i, scenario in enumerate(todo, 1):
-        turn_records = loop.run_scenario(
-            scenario, client=client, arm=setup.arm, executor=executor, run_id=setup.run_id,
-            config=setup.config, provenance=setup.provenance, query_lang=setup.query_lang,
-            setting=args.setting)
+    def work(scenario: dict):
+        return loop.run_scenario(
+            scenario, client=clients.get(), arm=setup.arm, executor=executor,
+            run_id=setup.run_id, config=setup.config, provenance=setup.provenance,
+            query_lang=setup.query_lang, setting=args.setting)
+
+    done = 0
+
+    def collect(scenario: dict, turn_records, error: BaseException | None) -> None:
+        nonlocal done
+        done += 1
+        if error is not None:
+            turn_records = [loop.failed_record(
+                scenario["id"], error, run_id=setup.run_id, setting=args.setting,
+                tools_lang=setup.arm.lang, query_lang=setup.query_lang,
+                config=setup.config, provenance=setup.provenance, turn=turn.get("turn"))
+                for turn in scenario.get("turns", [])]
+            logger.error("scenario %s raised: %s", scenario.get("id"), error)
         for record in turn_records:
             setup.writer.write(record)
-        if args.verbose or i % 10 == 0:
+        if args.verbose or done % 10 == 0:
             errors = sum(1 for r in turn_records if r.error)
-            print(f"  [{i}/{len(todo)}] {scenario['id']}: {len(turn_records)} turn(s), "
+            print(f"  [{done}/{len(todo)}] {scenario['id']}: {len(turn_records)} turn(s), "
                   f"{errors} error(s)")
+
+    parallel.run_jobs(todo, work, concurrency=concurrency, on_result=collect)
+    setup.writer.sort_by(keys)
 
     if not args.partial:
         summary = records.verify_run_complete(setup.writer.path, keys)
