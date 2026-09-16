@@ -4,8 +4,16 @@ Predicates are taken from every WHERE and HAVING clause of the statement
 (subqueries and CTEs included), but only along AND-only paths: a comparison
 under OR or NOT (other than NOT col = v) does not restrict the result, so it
 never satisfies a condition. When sqlglot cannot parse the text, a regex
-fallback reads ``col op literal`` terms from the WHERE clause and gives up on any
-clause that contains OR or NOT.
+fallback reads the same atoms from the WHERE clause: it splits on AND at
+parenthesis depth 0, so ``col IN (1, 2)`` and ``col BETWEEN a AND b`` survive
+intact, and it drops a single term it cannot read rather than the whole clause.
+It still gives up on a clause containing OR, because AND binds tighter and a
+term under OR does not restrict the result.
+
+`sqlglot` is pinned in `_experiments/env/requirements-eval.txt` and gate 1
+checks it. Without it the fallback answers, and the fallback is the conservative
+reading of the same predicates: it never reports a condition met that sqlglot
+would report unmet.
 """
 
 from __future__ import annotations
@@ -144,6 +152,7 @@ _RE_LIKE = re.compile(rf"^{_COL}\s+(I?LIKE)\s+{_LIT}$", re.I)
 _RE_CMP = re.compile(rf"^{_COL}\s*(=|!=|<>|>=|<=|>|<)\s*{_LIT}$", re.I)
 _RE_CMP_REV = re.compile(rf"^{_LIT}\s*(=|!=|<>|>=|<=|>|<)\s*{_COL}$", re.I)
 _CLAUSE_END = re.compile(r"\b(GROUP\s+BY|ORDER\s+BY|LIMIT|HAVING|UNION|WINDOW|QUALIFY)\b|;", re.I)
+_RE_NOT = re.compile(r"^NOT\s+(.*)$", re.I | re.S)
 
 
 def _fallback_literal(text: str) -> Any:
@@ -155,6 +164,114 @@ def _fallback_literal(text: str) -> Any:
         return float(text)
 
 
+def _strip_outer_parens(text: str) -> str:
+    """Removes parentheses that wrap the whole term, and only those."""
+    while text.startswith("(") and text.endswith(")"):
+        depth = 0
+        for i, ch in enumerate(text):
+            if ch == "(":
+                depth += 1
+            elif ch == ")":
+                depth -= 1
+                if depth == 0 and i != len(text) - 1:
+                    return text
+        text = text[1:-1].strip()
+    return text
+
+
+def _word_at(text: str, i: int, word: str) -> bool:
+    if text[i: i + len(word)].upper() != word:
+        return False
+    before = text[i - 1: i]
+    after = text[i + len(word): i + len(word) + 1]
+    return not (before.isalnum() or before == "_") and not (after.isalnum() or after == "_")
+
+
+def _split_and(text: str) -> list[str]:
+    """Splits on AND at parenthesis depth 0, outside string literals.
+
+    The AND of a BETWEEN belongs to the BETWEEN, so it does not split: one
+    `BETWEEN` at this depth consumes the next `AND` at this depth.
+    """
+    parts, depth, start, i, between = [], 0, 0, 0, 0
+    while i < len(text):
+        ch = text[i]
+        if ch == "'":
+            i += 1
+            while i < len(text):
+                if text[i] == "'":
+                    if text[i + 1: i + 2] == "'":
+                        i += 2
+                        continue
+                    break
+                i += 1
+            i += 1
+            continue
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+        elif depth == 0 and _word_at(text, i, "BETWEEN"):
+            between += 1
+            i += 7
+            continue
+        elif depth == 0 and _word_at(text, i, "AND"):
+            if between:
+                between -= 1
+            else:
+                parts.append(text[start:i])
+                start = i + 3
+            i += 3
+            continue
+        i += 1
+    parts.append(text[start:])
+    return [p.strip() for p in parts if p.strip()]
+
+
+def _conjuncts_fallback(text: str) -> list[str]:
+    """Every AND-ed term of a clause, parenthesised groups flattened."""
+    out: list[str] = []
+    for part in _split_and(text):
+        stripped = _strip_outer_parens(part)
+        if stripped != part and len(_split_and(stripped)) > 1:
+            out.extend(_conjuncts_fallback(stripped))
+        else:
+            out.append(stripped)
+    return out
+
+
+def _fallback_atom(part: str) -> tuple | None:
+    """One AND-ed term as an atom, or None when it does not restrict the result."""
+    if match := _RE_NOT.match(part):
+        # NOT binds tighter than AND. `NOT col = v` is `col != v`; anything else
+        # under NOT (NOT IN, NOT BETWEEN, NOT (...)) is dropped, the way sqlglot
+        # drops it, and its AND-siblings are kept.
+        inner = _strip_outer_parens(match.group(1).strip())
+        cmp_match = _RE_CMP.match(inner)
+        if cmp_match and cmp_match.group(2) == "=":
+            return (cmp_match.group(1).lower(), "!=", _fallback_literal(cmp_match.group(3)))
+        return None
+    if re.search(r"\bNOT\b", part, re.I):
+        return None                      # col NOT IN (...), col IS NOT NULL
+    if m := _RE_BETWEEN.match(part):
+        return (m.group(1).lower(), "BETWEEN",
+                [_fallback_literal(m.group(2)), _fallback_literal(m.group(3))])
+    if m := _RE_IN.match(part):
+        vals = [v.strip() for v in m.group(2).split(",") if v.strip()]
+        if vals and all(re.fullmatch(_LIT, v) for v in vals):
+            return (m.group(1).lower(), "IN", [_fallback_literal(v) for v in vals])
+        return None
+    if m := _RE_LIKE.match(part):
+        return (m.group(1).lower(), m.group(2).upper(), _fallback_literal(m.group(3)))
+    if m := _RE_CMP.match(part):
+        op = "!=" if m.group(2) == "<>" else m.group(2)
+        return (m.group(1).lower(), op, _fallback_literal(m.group(3)))
+    if m := _RE_CMP_REV.match(part):
+        op = "!=" if m.group(2) == "<>" else m.group(2)
+        return (m.group(3).lower(), _FLIP[op], _fallback_literal(m.group(1)))
+    return None
+
+
 def _atoms_fallback(sql: str) -> list[tuple]:
     text = re.sub(r"--[^\n]*", " ", sql)
     text = re.sub(r"/\*.*?\*/", " ", text, flags=re.S)
@@ -163,26 +280,14 @@ def _atoms_fallback(sql: str) -> list[tuple]:
         body = text[match.end():]
         end = _CLAUSE_END.search(body)
         body = body[: end.start()] if end else body
-        if re.search(r"\b(OR|NOT)\b|\bSELECT\b", body, re.I):
+        if re.search(r"\bOR\b|\bSELECT\b", body, re.I):
+            # AND binds tighter than OR, so a term next to an OR does not
+            # restrict the result on its own.
             continue
-        body = body.strip().strip("()").strip()
-        protected = re.sub(r"\bBETWEEN\s+(\S+)\s+AND\s+", r"BETWEEN \1 _BAND_ ", body, flags=re.I)
-        for part in re.split(r"\bAND\b", protected, flags=re.I):
-            part = part.replace("_BAND_", "AND").strip().strip("()").strip()
-            if m := _RE_BETWEEN.match(part):
-                atoms.append((m.group(1).lower(), "BETWEEN", [_fallback_literal(m.group(2)), _fallback_literal(m.group(3))]))
-            elif m := _RE_IN.match(part):
-                vals = [v.strip() for v in m.group(2).split(",") if v.strip()]
-                if all(re.fullmatch(_LIT, v) for v in vals):
-                    atoms.append((m.group(1).lower(), "IN", [_fallback_literal(v) for v in vals]))
-            elif m := _RE_LIKE.match(part):
-                atoms.append((m.group(1).lower(), m.group(2).upper(), _fallback_literal(m.group(3))))
-            elif m := _RE_CMP.match(part):
-                op = "!=" if m.group(2) == "<>" else m.group(2)
-                atoms.append((m.group(1).lower(), op, _fallback_literal(m.group(3))))
-            elif m := _RE_CMP_REV.match(part):
-                op = "!=" if m.group(2) == "<>" else m.group(2)
-                atoms.append((m.group(3).lower(), _FLIP[op], _fallback_literal(m.group(1))))
+        for part in _conjuncts_fallback(body.strip()):
+            atom = _fallback_atom(part)
+            if atom is not None:
+                atoms.append(atom)
     return atoms
 
 

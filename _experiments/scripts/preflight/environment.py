@@ -30,6 +30,7 @@ def run(ctx: Context) -> GateResult:
     checks.append(_pins(ctx, serving=False))
     if ctx.check_serving_stack:
         checks.append(_pins(ctx, serving=True))
+    checks.append(_sql_parser(ctx))
 
     probe = run_command([ctx.platform_python, "-m", "_experiments.scripts.preflight._probe"],
                         cwd=ctx.root, env=ctx.env, timeout=600)
@@ -53,6 +54,48 @@ def _pins(ctx: Context, *, serving: bool) -> Check:
     name = f"{'serving' if serving else 'evaluation'} dependency pins"
     return Check(name, done.ok, done.tail(6) if not done.ok else done.stdout.strip(),
                  done.command)
+
+
+_SQL_PROBE = (
+    "import json;"
+    "from _experiments.scripts.scoring import sql;"
+    "print(json.dumps({'version': sql.sqlglot_version(), 'pin': sql.SQLGLOT_PIN,"
+    " 'parser': sql.extract_atoms("
+    '"SELECT * FROM hofinet WHERE fraud_type IN (1, 2) AND amount BETWEEN 3 AND 4")[1],'
+    " 'atoms': sql.extract_atoms("
+    '"SELECT * FROM hofinet WHERE fraud_type IN (1, 2) AND amount BETWEEN 3 AND 4")[0]}))'
+)
+
+
+def _sql_parser(ctx: Context) -> Check:
+    """The scorer reads `sql_conditions` with sqlglot; the fallback is the reserve.
+
+    Without sqlglot the gold self-test lost two `query_transactions` cases,
+    because the regex fallback dropped IN lists. Both parsers now read the same
+    atoms, and this check says which one the scoring environment will use and
+    whether it is the pinned version.
+    """
+    done = run_command([ctx.python, "-c", _SQL_PROBE], cwd=ctx.root, env=ctx.env, timeout=300)
+    try:
+        info = json.loads(done.stdout.strip().splitlines()[-1])
+    except (ValueError, IndexError):
+        return Check("the scorer parses SQL with sqlglot", False,
+                     f"the SQL probe produced no JSON: {done.tail(4)}", done.command)
+    atoms = [tuple(a) for a in info["atoms"]]
+    wanted = [("fraud_type", "IN", [1, 2]), ("amount", "BETWEEN", [3, 4])]
+    read_ok = all(tuple(a[:2]) in [(w[0], w[1]) for w in wanted] for a in atoms) and len(atoms) == 2
+    ok = info["version"] == info["pin"] and info["parser"] == "sqlglot" and read_ok
+    if info["version"] is None:
+        detail = ("sqlglot is not installed; the scorer would fall back to the regex parser. "
+                  "Install the evaluation pins (_experiments/env/requirements-eval.txt)")
+    elif info["version"] != info["pin"]:
+        detail = f"sqlglot {info['version']} is installed, {info['pin']} is pinned"
+    elif not read_ok:
+        detail = f"the parser read {atoms} from an IN plus BETWEEN statement"
+    else:
+        detail = f"sqlglot {info['version']}, IN and BETWEEN predicates read"
+    return Check("the scorer parses SQL with sqlglot", ok, detail, done.command,
+                 {"sqlglot_version": info["version"], "parser": info["parser"]})
 
 
 def _platform_checks(info: dict, command: str) -> list[Check]:
