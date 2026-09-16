@@ -7,12 +7,17 @@
 so the whole sequence replays from the pre-audit data and the result can be diffed
 against the committed one. Without it the passes run over the current tree: those
 that are already applied report zero changes, so this doubles as a consistency check.
+
+`new_cases.author` (WS-G) is one of the steps: the 143 expansion cases have to exist
+before the domain-review passes that were written on them, and before `p11_difficulty`
+and `p12_notes` derive their values from the final question and gold.
 """
 
 from __future__ import annotations
 
 import argparse
 import importlib
+import inspect
 import subprocess
 import sys
 from pathlib import Path
@@ -35,6 +40,9 @@ PASSES = [
     # closeout round (2026-09-16)
     "p14_risk_score", "p15_tool_cues", "p16_executable_gold2", "p17_boundary_parity",
     "p18_str_drafts", "p19_sweep_fixes",
+    # The 143 expansion cases (WS-G) are authored here, because the domain review that
+    # follows was written on them and the two difficulty and note passes have to see them.
+    "new_cases.author",
     # domain review (2026-09-16)
     "p20_terminology", "p21_phrasing", "p22_clarification_audit",
     "p11_difficulty", "p12_notes",
@@ -66,7 +74,10 @@ def main(argv: list[str] | None = None) -> int:
     for name in PASSES:
         print(f"\n=== {name} ===")
         module = importlib.import_module(f".{name}", __package__)
-        rc = module.main()
+        # Most passes take no arguments; the ones that parse a command line get an
+        # empty one, or they would read this script's own arguments.
+        takes_argv = bool(inspect.signature(module.main).parameters)
+        rc = module.main([]) if takes_argv else module.main()
         if rc:
             return rc
     if args.skip_checks:

@@ -1,11 +1,498 @@
 {
   "pass": "p18_str_drafts",
   "description": "The three pre-existing validate_str_fields drafts rebuilt from real HOFINET aggregates (L1-014).",
-  "n_changes": 0,
-  "n_cases": 0,
-  "by_issue": {},
+  "n_changes": 12,
+  "n_cases": 3,
+  "by_issue": {
+    "L1-014/D19": 12
+  },
   "notes": [
     "grounding rows 10, 15 and 19 of new_cases/grounding.json; each draft keeps the required field its case was written to miss."
   ],
-  "changes": []
+  "changes": [
+    {
+      "case_id": "st_strv_001",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-014/D19",
+      "why": "the draft stated a period, a count and a total for an account pair that never transacts, at an institution that is not the sender's bank; it is rebuilt from the HOFINET aggregate the same way the 22 expansion drafts are.",
+      "before": "다음 STR 초안의 필수 필드가 모두 채워졌는지 점검해줘: {\"Header\": {\"ReportingDate\": \"20241231\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 134}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000024638\", \"ReceivingAccountNumber\": \"9000000004383302\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20241201-20241231\", \"TransactionCount\": 14, \"TransactionChannel\": \"Internet Banking\", \"TotalAmount_KRW\": 48000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Split Transaction\"}, \"VII_Narrative\": {}}",
+      "after": "다음 STR 초안의 필수 필드가 모두 채워졌는지 점검해줘: {\"Header\": {\"ReportingDate\": \"20240731\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 159}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000041188\", \"ReceivingAccountNumber\": \"9000000003707223\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20240715-20240723\", \"TransactionCount\": 7, \"TransactionChannel\": \"Internet Banking\", \"TotalAmount_KRW\": 28000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Split Transaction\"}, \"VII_Narrative\": {}}"
+    },
+    {
+      "case_id": "st_strv_001",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-014/D19",
+      "why": "the draft stated a period, a count and a total for an account pair that never transacts, at an institution that is not the sender's bank; it is rebuilt from the HOFINET aggregate the same way the 22 expansion drafts are.",
+      "before": {
+        "primary_tool": "validate_str_fields",
+        "tools_must_include": [
+          "validate_str_fields"
+        ],
+        "param_checks": {
+          "validate_str_fields": {
+            "str_draft": {
+              "Header": {
+                "ReportingDate": "20241231"
+              },
+              "I_ReportingInstitution": {
+                "WithdrawalInstitutionCode": 134
+              },
+              "II_Transactor": {
+                "WithdrawalAccountNumber": "9000000000024638",
+                "ReceivingAccountNumber": "9000000004383302"
+              },
+              "III_TransactionDetails": {
+                "TransactionPeriod": "20241201-20241231",
+                "TransactionCount": 14,
+                "TransactionChannel": "Internet Banking",
+                "TotalAmount_KRW": 48000000
+              },
+              "VI_TransactionType": {
+                "PrimarySuspicionType": "Split Transaction"
+              },
+              "VII_Narrative": {}
+            }
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "validate_str_fields",
+        "tools_must_include": [
+          "validate_str_fields"
+        ],
+        "param_checks": {
+          "validate_str_fields": {
+            "str_draft": {
+              "Header": {
+                "ReportingDate": "20240731"
+              },
+              "I_ReportingInstitution": {
+                "WithdrawalInstitutionCode": 159
+              },
+              "II_Transactor": {
+                "WithdrawalAccountNumber": "9000000000041188",
+                "ReceivingAccountNumber": "9000000003707223"
+              },
+              "III_TransactionDetails": {
+                "TransactionPeriod": "20240715-20240723",
+                "TransactionCount": 7,
+                "TransactionChannel": "Internet Banking",
+                "TotalAmount_KRW": 28000000
+              },
+              "VI_TransactionType": {
+                "PrimarySuspicionType": "Split Transaction"
+              },
+              "VII_Narrative": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_strv_001",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-014/D19",
+      "why": "the draft stated a period, a count and a total for an account pair that never transacts, at an institution that is not the sender's bank; it is rebuilt from the HOFINET aggregate the same way the 22 expansion drafts are.",
+      "before": "Please check whether every required field of this STR draft is filled in: {\"Header\": {\"ReportingDate\": \"20241231\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 134}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000024638\", \"ReceivingAccountNumber\": \"9000000004383302\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20241201-20241231\", \"TransactionCount\": 14, \"TransactionChannel\": \"Internet Banking\", \"TotalAmount_KRW\": 48000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Split Transaction\"}, \"VII_Narrative\": {}}",
+      "after": "Please check whether every required field of this STR draft is filled in: {\"Header\": {\"ReportingDate\": \"20240731\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 159}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000041188\", \"ReceivingAccountNumber\": \"9000000003707223\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20240715-20240723\", \"TransactionCount\": 7, \"TransactionChannel\": \"Internet Banking\", \"TotalAmount_KRW\": 28000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Split Transaction\"}, \"VII_Narrative\": {}}"
+    },
+    {
+      "case_id": "st_strv_001",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-014/D19",
+      "why": "the draft stated a period, a count and a total for an account pair that never transacts, at an institution that is not the sender's bank; it is rebuilt from the HOFINET aggregate the same way the 22 expansion drafts are.",
+      "before": {
+        "primary_tool": "validate_str_fields",
+        "tools_must_include": [
+          "validate_str_fields"
+        ],
+        "param_checks": {
+          "validate_str_fields": {
+            "str_draft": {
+              "Header": {
+                "ReportingDate": "20241231"
+              },
+              "I_ReportingInstitution": {
+                "WithdrawalInstitutionCode": 134
+              },
+              "II_Transactor": {
+                "WithdrawalAccountNumber": "9000000000024638",
+                "ReceivingAccountNumber": "9000000004383302"
+              },
+              "III_TransactionDetails": {
+                "TransactionPeriod": "20241201-20241231",
+                "TransactionCount": 14,
+                "TransactionChannel": "Internet Banking",
+                "TotalAmount_KRW": 48000000
+              },
+              "VI_TransactionType": {
+                "PrimarySuspicionType": "Split Transaction"
+              },
+              "VII_Narrative": {}
+            }
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "validate_str_fields",
+        "tools_must_include": [
+          "validate_str_fields"
+        ],
+        "param_checks": {
+          "validate_str_fields": {
+            "str_draft": {
+              "Header": {
+                "ReportingDate": "20240731"
+              },
+              "I_ReportingInstitution": {
+                "WithdrawalInstitutionCode": 159
+              },
+              "II_Transactor": {
+                "WithdrawalAccountNumber": "9000000000041188",
+                "ReceivingAccountNumber": "9000000003707223"
+              },
+              "III_TransactionDetails": {
+                "TransactionPeriod": "20240715-20240723",
+                "TransactionCount": 7,
+                "TransactionChannel": "Internet Banking",
+                "TotalAmount_KRW": 28000000
+              },
+              "VI_TransactionType": {
+                "PrimarySuspicionType": "Split Transaction"
+              },
+              "VII_Narrative": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_strv_002",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-014/D19",
+      "why": "the draft stated a period, a count and a total for an account pair that never transacts, at an institution that is not the sender's bank; it is rebuilt from the HOFINET aggregate the same way the 22 expansion drafts are.",
+      "before": "다음 STR 보고서 초안에 필수 항목이 누락되었는지 검증해줘: {\"Header\": {\"ReportingDate\": \"20241115\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 118}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000021321\", \"ReceivingAccountNumber\": \"9000000000017070\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20241101-20241115\", \"TransactionCount\": 9, \"TotalAmount_KRW\": 27000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Concurrent Multiple Transactions\"}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"Nine transfers of the same amount within two weeks.\"}}",
+      "after": "다음 STR 보고서 초안에 필수 항목이 누락되었는지 검증해줘: {\"Header\": {\"ReportingDate\": \"20221031\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 147}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000021942\", \"ReceivingAccountNumber\": \"9000000002264298\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20221013-20221021\", \"TransactionCount\": 28, \"TotalAmount_KRW\": 1940000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Concurrent Multiple Transactions\"}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"28 transfers totalling 1,940,000,000 KRW to the same receiving account were requested together between 20221013 and 20221021.\"}}"
+    },
+    {
+      "case_id": "st_strv_002",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-014/D19",
+      "why": "the draft stated a period, a count and a total for an account pair that never transacts, at an institution that is not the sender's bank; it is rebuilt from the HOFINET aggregate the same way the 22 expansion drafts are.",
+      "before": {
+        "primary_tool": "validate_str_fields",
+        "tools_must_include": [
+          "validate_str_fields"
+        ],
+        "param_checks": {
+          "validate_str_fields": {
+            "str_draft": {
+              "Header": {
+                "ReportingDate": "20241115"
+              },
+              "I_ReportingInstitution": {
+                "WithdrawalInstitutionCode": 118
+              },
+              "II_Transactor": {
+                "WithdrawalAccountNumber": "9000000000021321",
+                "ReceivingAccountNumber": "9000000000017070"
+              },
+              "III_TransactionDetails": {
+                "TransactionPeriod": "20241101-20241115",
+                "TransactionCount": 9,
+                "TotalAmount_KRW": 27000000
+              },
+              "VI_TransactionType": {
+                "PrimarySuspicionType": "Concurrent Multiple Transactions"
+              },
+              "VII_Narrative": {
+                "SuspicionJudgmentReason": "Nine transfers of the same amount within two weeks."
+              }
+            }
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "validate_str_fields",
+        "tools_must_include": [
+          "validate_str_fields"
+        ],
+        "param_checks": {
+          "validate_str_fields": {
+            "str_draft": {
+              "Header": {
+                "ReportingDate": "20221031"
+              },
+              "I_ReportingInstitution": {
+                "WithdrawalInstitutionCode": 147
+              },
+              "II_Transactor": {
+                "WithdrawalAccountNumber": "9000000000021942",
+                "ReceivingAccountNumber": "9000000002264298"
+              },
+              "III_TransactionDetails": {
+                "TransactionPeriod": "20221013-20221021",
+                "TransactionCount": 28,
+                "TotalAmount_KRW": 1940000000
+              },
+              "VI_TransactionType": {
+                "PrimarySuspicionType": "Concurrent Multiple Transactions"
+              },
+              "VII_Narrative": {
+                "SuspicionJudgmentReason": "28 transfers totalling 1,940,000,000 KRW to the same receiving account were requested together between 20221013 and 20221021."
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_strv_002",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-014/D19",
+      "why": "the draft stated a period, a count and a total for an account pair that never transacts, at an institution that is not the sender's bank; it is rebuilt from the HOFINET aggregate the same way the 22 expansion drafts are.",
+      "before": "Please verify whether any required item is missing from this draft STR report: {\"Header\": {\"ReportingDate\": \"20241115\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 118}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000021321\", \"ReceivingAccountNumber\": \"9000000000017070\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20241101-20241115\", \"TransactionCount\": 9, \"TotalAmount_KRW\": 27000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Concurrent Multiple Transactions\"}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"Nine transfers of the same amount within two weeks.\"}}",
+      "after": "Please verify whether any required item is missing from this draft STR report: {\"Header\": {\"ReportingDate\": \"20221031\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 147}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000021942\", \"ReceivingAccountNumber\": \"9000000002264298\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20221013-20221021\", \"TransactionCount\": 28, \"TotalAmount_KRW\": 1940000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Concurrent Multiple Transactions\"}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"28 transfers totalling 1,940,000,000 KRW to the same receiving account were requested together between 20221013 and 20221021.\"}}"
+    },
+    {
+      "case_id": "st_strv_002",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-014/D19",
+      "why": "the draft stated a period, a count and a total for an account pair that never transacts, at an institution that is not the sender's bank; it is rebuilt from the HOFINET aggregate the same way the 22 expansion drafts are.",
+      "before": {
+        "primary_tool": "validate_str_fields",
+        "tools_must_include": [
+          "validate_str_fields"
+        ],
+        "param_checks": {
+          "validate_str_fields": {
+            "str_draft": {
+              "Header": {
+                "ReportingDate": "20241115"
+              },
+              "I_ReportingInstitution": {
+                "WithdrawalInstitutionCode": 118
+              },
+              "II_Transactor": {
+                "WithdrawalAccountNumber": "9000000000021321",
+                "ReceivingAccountNumber": "9000000000017070"
+              },
+              "III_TransactionDetails": {
+                "TransactionPeriod": "20241101-20241115",
+                "TransactionCount": 9,
+                "TotalAmount_KRW": 27000000
+              },
+              "VI_TransactionType": {
+                "PrimarySuspicionType": "Concurrent Multiple Transactions"
+              },
+              "VII_Narrative": {
+                "SuspicionJudgmentReason": "Nine transfers of the same amount within two weeks."
+              }
+            }
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "validate_str_fields",
+        "tools_must_include": [
+          "validate_str_fields"
+        ],
+        "param_checks": {
+          "validate_str_fields": {
+            "str_draft": {
+              "Header": {
+                "ReportingDate": "20221031"
+              },
+              "I_ReportingInstitution": {
+                "WithdrawalInstitutionCode": 147
+              },
+              "II_Transactor": {
+                "WithdrawalAccountNumber": "9000000000021942",
+                "ReceivingAccountNumber": "9000000002264298"
+              },
+              "III_TransactionDetails": {
+                "TransactionPeriod": "20221013-20221021",
+                "TransactionCount": 28,
+                "TotalAmount_KRW": 1940000000
+              },
+              "VI_TransactionType": {
+                "PrimarySuspicionType": "Concurrent Multiple Transactions"
+              },
+              "VII_Narrative": {
+                "SuspicionJudgmentReason": "28 transfers totalling 1,940,000,000 KRW to the same receiving account were requested together between 20221013 and 20221021."
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_strv_003",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-014/D19",
+      "why": "the draft stated a period, a count and a total for an account pair that never transacts, at an institution that is not the sender's bank; it is rebuilt from the HOFINET aggregate the same way the 22 expansion drafts are.",
+      "before": "다음 초안이 의심거래보고서 양식의 필수 필드를 갖췄는지 확인해줘: {\"Header\": {\"ReportingDate\": \"20240930\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 123}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000019300\", \"ReceivingAccountNumber\": \"9000000000022564\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20240901-20240930\", \"TransactionCount\": 21, \"TransactionChannel\": \"Mobile Phone\", \"TotalAmount_KRW\": 63000000}, \"VI_TransactionType\": {}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"Funds received from 21 accounts were withdrawn the same day.\"}}",
+      "after": "다음 초안이 의심거래보고서 양식의 필수 필드를 갖췄는지 확인해줘: {\"Header\": {\"ReportingDate\": \"20221031\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 159}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000004387158\", \"ReceivingAccountNumber\": \"9000000004415397\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20221010-20221020\", \"TransactionCount\": 2, \"TransactionChannel\": \"Internet Banking\", \"TotalAmount_KRW\": 120000000}, \"VI_TransactionType\": {}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"Funds of 120,000,000 KRW received between 20221010 and 20221020 were moved out again the same day over 2 transfers.\"}}"
+    },
+    {
+      "case_id": "st_strv_003",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-014/D19",
+      "why": "the draft stated a period, a count and a total for an account pair that never transacts, at an institution that is not the sender's bank; it is rebuilt from the HOFINET aggregate the same way the 22 expansion drafts are.",
+      "before": {
+        "primary_tool": "validate_str_fields",
+        "tools_must_include": [
+          "validate_str_fields"
+        ],
+        "param_checks": {
+          "validate_str_fields": {
+            "str_draft": {
+              "Header": {
+                "ReportingDate": "20240930"
+              },
+              "I_ReportingInstitution": {
+                "WithdrawalInstitutionCode": 123
+              },
+              "II_Transactor": {
+                "WithdrawalAccountNumber": "9000000000019300",
+                "ReceivingAccountNumber": "9000000000022564"
+              },
+              "III_TransactionDetails": {
+                "TransactionPeriod": "20240901-20240930",
+                "TransactionCount": 21,
+                "TransactionChannel": "Mobile Phone",
+                "TotalAmount_KRW": 63000000
+              },
+              "VI_TransactionType": {},
+              "VII_Narrative": {
+                "SuspicionJudgmentReason": "Funds received from 21 accounts were withdrawn the same day."
+              }
+            }
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "validate_str_fields",
+        "tools_must_include": [
+          "validate_str_fields"
+        ],
+        "param_checks": {
+          "validate_str_fields": {
+            "str_draft": {
+              "Header": {
+                "ReportingDate": "20221031"
+              },
+              "I_ReportingInstitution": {
+                "WithdrawalInstitutionCode": 159
+              },
+              "II_Transactor": {
+                "WithdrawalAccountNumber": "9000000004387158",
+                "ReceivingAccountNumber": "9000000004415397"
+              },
+              "III_TransactionDetails": {
+                "TransactionPeriod": "20221010-20221020",
+                "TransactionCount": 2,
+                "TransactionChannel": "Internet Banking",
+                "TotalAmount_KRW": 120000000
+              },
+              "VI_TransactionType": {},
+              "VII_Narrative": {
+                "SuspicionJudgmentReason": "Funds of 120,000,000 KRW received between 20221010 and 20221020 were moved out again the same day over 2 transfers."
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_strv_003",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-014/D19",
+      "why": "the draft stated a period, a count and a total for an account pair that never transacts, at an institution that is not the sender's bank; it is rebuilt from the HOFINET aggregate the same way the 22 expansion drafts are.",
+      "before": "Please check whether this draft carries the required fields of the suspicious transaction report form: {\"Header\": {\"ReportingDate\": \"20240930\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 123}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000019300\", \"ReceivingAccountNumber\": \"9000000000022564\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20240901-20240930\", \"TransactionCount\": 21, \"TransactionChannel\": \"Mobile Phone\", \"TotalAmount_KRW\": 63000000}, \"VI_TransactionType\": {}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"Funds received from 21 accounts were withdrawn the same day.\"}}",
+      "after": "Please check whether this draft carries the required fields of the suspicious transaction report form: {\"Header\": {\"ReportingDate\": \"20221031\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 159}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000004387158\", \"ReceivingAccountNumber\": \"9000000004415397\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20221010-20221020\", \"TransactionCount\": 2, \"TransactionChannel\": \"Internet Banking\", \"TotalAmount_KRW\": 120000000}, \"VI_TransactionType\": {}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"Funds of 120,000,000 KRW received between 20221010 and 20221020 were moved out again the same day over 2 transfers.\"}}"
+    },
+    {
+      "case_id": "st_strv_003",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-014/D19",
+      "why": "the draft stated a period, a count and a total for an account pair that never transacts, at an institution that is not the sender's bank; it is rebuilt from the HOFINET aggregate the same way the 22 expansion drafts are.",
+      "before": {
+        "primary_tool": "validate_str_fields",
+        "tools_must_include": [
+          "validate_str_fields"
+        ],
+        "param_checks": {
+          "validate_str_fields": {
+            "str_draft": {
+              "Header": {
+                "ReportingDate": "20240930"
+              },
+              "I_ReportingInstitution": {
+                "WithdrawalInstitutionCode": 123
+              },
+              "II_Transactor": {
+                "WithdrawalAccountNumber": "9000000000019300",
+                "ReceivingAccountNumber": "9000000000022564"
+              },
+              "III_TransactionDetails": {
+                "TransactionPeriod": "20240901-20240930",
+                "TransactionCount": 21,
+                "TransactionChannel": "Mobile Phone",
+                "TotalAmount_KRW": 63000000
+              },
+              "VI_TransactionType": {},
+              "VII_Narrative": {
+                "SuspicionJudgmentReason": "Funds received from 21 accounts were withdrawn the same day."
+              }
+            }
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "validate_str_fields",
+        "tools_must_include": [
+          "validate_str_fields"
+        ],
+        "param_checks": {
+          "validate_str_fields": {
+            "str_draft": {
+              "Header": {
+                "ReportingDate": "20221031"
+              },
+              "I_ReportingInstitution": {
+                "WithdrawalInstitutionCode": 159
+              },
+              "II_Transactor": {
+                "WithdrawalAccountNumber": "9000000004387158",
+                "ReceivingAccountNumber": "9000000004415397"
+              },
+              "III_TransactionDetails": {
+                "TransactionPeriod": "20221010-20221020",
+                "TransactionCount": 2,
+                "TransactionChannel": "Internet Banking",
+                "TotalAmount_KRW": 120000000
+              },
+              "VI_TransactionType": {},
+              "VII_Narrative": {
+                "SuspicionJudgmentReason": "Funds of 120,000,000 KRW received between 20221010 and 20221020 were moved out again the same day over 2 transfers."
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }

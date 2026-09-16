@@ -11,7 +11,7 @@ descriptions and the system prompt are Korean, so a run on this arm executes the
 model's arguments as they arrive, with no key or value rewriting (C2-006,
 L5-015). The response-language rule is the same as in the English arm (D13).
 
-Source: agent.TOOLS @ platform 1309117
+Source: agent.TOOLS @ platform 69a5fc9
 """
 
 from __future__ import annotations
@@ -390,12 +390,12 @@ TOOLS_KR: list[dict] = json.loads(r"""
      },
      "min_inflow": {
       "type": "integer",
-      "description": "funnel: 퍼널이 자금을 받는 서로 다른 계좌의 최소 수(기본 5)",
+      "description": "funnel: funnel 계좌가 자금을 받는 서로 다른 계좌의 최소 수(기본 5)",
       "default": 5
      },
      "max_outflow": {
       "type": "integer",
-      "description": "funnel: 퍼널이 자금을 내보내는 서로 다른 계좌의 최대 수. 내보내는 거래상대가 최소 한 곳은 있어야 한다(기본 5)",
+      "description": "funnel: funnel 계좌가 자금을 내보내는 서로 다른 계좌의 최대 수. 내보내는 거래상대가 최소 한 곳은 있어야 한다(기본 5)",
       "default": 5
      },
      "limit": {
@@ -414,7 +414,7 @@ TOOLS_KR: list[dict] = json.loads(r"""
   "type": "function",
   "function": {
    "name": "detect_ctr_candidates",
-   "description": "고액현금거래보고(CTR) 관련 건을 조회하거나 분할거래 패턴을 탐지한다. mode=high_value: 기준금액(기본 1,000만원) 이상인 단일 거래. mode=structuring: 하루 동안 개별 거래는 기준금액 미만이지만 합계가 기준금액 이상인 계좌.",
+   "description": "고액현금거래보고(CTR) 관련 건을 조회하거나 structuring 패턴을 탐지한다. mode=high_value: 기준금액(기본 1,000만원) 이상인 단일 거래. mode=structuring: 하루 동안 개별 거래는 기준금액 미만이지만 합계가 기준금액 이상인 계좌.",
    "parameters": {
     "type": "object",
     "properties": {

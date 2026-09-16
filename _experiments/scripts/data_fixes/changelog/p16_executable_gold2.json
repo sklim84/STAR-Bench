@@ -1,9 +1,116 @@
 {
   "pass": "p16_executable_gold2",
   "description": "The one gold call that could not be executed now carries its account (L1-016, D19).",
-  "n_changes": 0,
-  "n_cases": 0,
-  "by_issue": {},
+  "n_changes": 6,
+  "n_cases": 1,
+  "by_issue": {
+    "L1-016/D19": 6
+  },
   "notes": [],
-  "changes": []
+  "changes": [
+    {
+      "case_id": "st_mtool_084",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-016/D19",
+      "why": "analyze_network carried no account_id, so the gold call could not be executed; the account the question leaves to the first call's own result is named instead, which keeps the case a two-tool case (L1-016, D19).",
+      "before": "고위험 거래 20건을 랭킹하고, 1위 계좌의 네트워크를 분석해줘",
+      "after": "고위험 거래 20건을 랭킹하고, 계좌 9000000000034076의 네트워크도 분석해줘"
+    },
+    {
+      "case_id": "st_mtool_084",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "analyze_network carried no account_id, so the gold call could not be executed; the account the question leaves to the first call's own result is named instead, which keeps the case a two-tool case (L1-016, D19).",
+      "before": {
+        "primary_tool": "rank_risky_transactions",
+        "tools_must_include": [
+          "rank_risky_transactions",
+          "analyze_network"
+        ],
+        "param_checks": {
+          "rank_risky_transactions": {
+            "top_k": 20
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "rank_risky_transactions",
+        "tools_must_include": [
+          "rank_risky_transactions",
+          "analyze_network"
+        ],
+        "param_checks": {
+          "rank_risky_transactions": {
+            "top_k": 20
+          },
+          "analyze_network": {
+            "account_id": 9000000000034076
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_084",
+      "lang": "kr",
+      "field": "note",
+      "issue": "L1-016/D19",
+      "why": "analyze_network carried no account_id, so the gold call could not be executed; the account the question leaves to the first call's own result is named instead, which keeps the case a two-tool case (L1-016, D19).",
+      "before": "analyze_network account_id는 rank 결과에 의존",
+      "after": "Expects rank_risky_transactions (top_k=20), analyze_network (account_id=9000000000034076)."
+    },
+    {
+      "case_id": "st_mtool_084",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-016/D19",
+      "why": "analyze_network carried no account_id, so the gold call could not be executed; the account the question leaves to the first call's own result is named instead, which keeps the case a two-tool case (L1-016, D19).",
+      "before": "Please rank the top 20 high-risk transactions and analyze the network of the account in first place.",
+      "after": "Please rank the top 20 high-risk transactions and analyze the network of account 9000000000034076."
+    },
+    {
+      "case_id": "st_mtool_084",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "analyze_network carried no account_id, so the gold call could not be executed; the account the question leaves to the first call's own result is named instead, which keeps the case a two-tool case (L1-016, D19).",
+      "before": {
+        "primary_tool": "rank_risky_transactions",
+        "tools_must_include": [
+          "rank_risky_transactions",
+          "analyze_network"
+        ],
+        "param_checks": {
+          "rank_risky_transactions": {
+            "top_k": 20
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "rank_risky_transactions",
+        "tools_must_include": [
+          "rank_risky_transactions",
+          "analyze_network"
+        ],
+        "param_checks": {
+          "rank_risky_transactions": {
+            "top_k": 20
+          },
+          "analyze_network": {
+            "account_id": 9000000000034076
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_084",
+      "lang": "en",
+      "field": "note",
+      "issue": "L1-016/D19",
+      "why": "analyze_network carried no account_id, so the gold call could not be executed; the account the question leaves to the first call's own result is named instead, which keeps the case a two-tool case (L1-016, D19).",
+      "before": "analyze_network account_id는 rank 결과에 의존",
+      "after": "Expects rank_risky_transactions (top_k=20), analyze_network (account_id=9000000000034076)."
+    }
+  ]
 }

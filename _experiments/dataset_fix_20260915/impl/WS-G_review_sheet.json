@@ -156,7 +156,7 @@
             "n_overlapping_tools": 0
           },
           "question_ko": "그 이상거래 유형의 금액 통계와 상위 관련 기관을 알려줘",
-          "question_en": "Please give the amount statistics and the top related institutions for that suspicious transaction type.",
+          "question_en": "Please give the amount statistics for that suspicious transaction type and the financial institutions with the most cases of it.",
           "gold": {
             "primary_tool": "",
             "tools_must_include": [],
@@ -166,8 +166,8 @@
           "rationale": "get_fraud_type_summary cannot run: its required argument fraud_type is unresolved (D19)",
           "note": "Expects a clarification, not a call: a schema-required argument is unresolved in the question (D19).",
           "nearest_existing_question": {
-            "nearest": "st_gfs_016",
-            "similarity": 0.413
+            "nearest": "st_gfs_036",
+            "similarity": 0.366
           }
         },
         {
@@ -220,7 +220,7 @@
             "n_overlapping_tools": 0
           },
           "question_ko": "그 출금 금융회사의 입출금 양방향 현황 리포트를 만들어줘",
-          "question_en": "Please build the outbound and inbound status report for that withdrawal institution.",
+          "question_en": "Please build the report on the outbound and inbound fund flows of that withdrawal institution.",
           "gold": {
             "primary_tool": "",
             "tools_must_include": [],
@@ -231,7 +231,7 @@
           "note": "Expects a clarification, not a call: a schema-required argument is unresolved in the question (D19).",
           "nearest_existing_question": {
             "nearest": "st_acif_014",
-            "similarity": 0.342
+            "similarity": 0.444
           }
         },
         {
@@ -604,7 +604,7 @@
             "n_overlapping_tools": 0
           },
           "question_ko": "그 SQL 쿼리를 실행해서 결과 건수와 상위 행을 보여줘",
-          "question_en": "Please run that SQL query and show the row count and the top rows.",
+          "question_en": "Please run that SQL query and show the number of rows and the transactions at the top of the result.",
           "gold": {
             "primary_tool": "",
             "tools_must_include": [],
@@ -615,7 +615,7 @@
           "note": "Expects a clarification, not a call: a schema-required argument is unresolved in the question (D19).",
           "nearest_existing_question": {
             "nearest": "st_acr_016",
-            "similarity": 0.146
+            "similarity": 0.159
           }
         }
       ]
@@ -1661,7 +1661,7 @@
           "note": "Expects detect_aml_patterns (pattern_type=funnel), get_account_profile (account_id=9000000004374328).",
           "nearest_existing_question": {
             "nearest": "st_ap_008",
-            "similarity": 0.31
+            "similarity": 0.342
           }
         }
       ]
@@ -1744,7 +1744,7 @@
             "n_overlapping_tools": 3
           },
           "question_ko": "보고 기준을 2000만원으로 잡았을 때 그 아래로 나눠 거래한 계좌를 structuring 모드로 탐지해줘",
-          "question_en": "With the reporting threshold set to 20,000,000 KRW, please detect in structuring mode the accounts that split their transactions below it.",
+          "question_en": "With the reporting threshold set to 20,000,000 KRW, please detect the accounts that split their transactions below it.",
           "gold": {
             "primary_tool": "detect_ctr_candidates",
             "tools_must_include": [
@@ -1776,8 +1776,8 @@
           "rationale": "structuring at a threshold no existing case uses",
           "note": "Expects detect_ctr_candidates (mode=structuring; threshold=20000000).",
           "nearest_existing_question": {
-            "nearest": "st_ctr_049",
-            "similarity": 0.276
+            "nearest": "st_ctr_039",
+            "similarity": 0.196
           }
         },
         {
@@ -1889,7 +1889,7 @@
           "note": "Expects detect_ctr_candidates (mode=structuring; date_from=20211001; date_to=20211231).",
           "nearest_existing_question": {
             "nearest": "st_ctr_031",
-            "similarity": 0.491
+            "similarity": 0.449
           }
         },
         {
@@ -1910,7 +1910,7 @@
             "n_overlapping_tools": 3
           },
           "question_ko": "고액거래(high_value) 보고 후보를 상위 50건까지 뽑아줘",
-          "question_en": "Please pull up to the top 50 high_value reporting candidates.",
+          "question_en": "Please pull up to the top 50 high-value reporting candidates.",
           "gold": {
             "primary_tool": "detect_ctr_candidates",
             "tools_must_include": [
@@ -1943,7 +1943,7 @@
           "note": "Expects detect_ctr_candidates (mode=high_value; limit=50).",
           "nearest_existing_question": {
             "nearest": "st_ctr_044",
-            "similarity": 0.239
+            "similarity": 0.314
           }
         },
         {
@@ -2000,8 +2000,8 @@
           "rationale": "structuring with both a threshold and a window",
           "note": "Expects detect_ctr_candidates (mode=structuring; threshold=5000000; date_from=20230401; date_to=20230630).",
           "nearest_existing_question": {
-            "nearest": "st_ctr_004",
-            "similarity": 0.333
+            "nearest": "st_ctr_036",
+            "similarity": 0.483
           }
         }
       ]
@@ -2856,7 +2856,7 @@
             "n_overlapping_tools": 3
           },
           "question_ko": "계좌 9000000004410299로 25곳 이상에서 자금이 유입되는지 inbound 방향으로 확인해줘",
-          "question_en": "Please check in the inbound direction whether funds reach account 9000000004410299 from 25 or more accounts.",
+          "question_en": "Please check whether funds reach account 9000000004410299 from 25 or more accounts.",
           "gold": {
             "primary_tool": "detect_smurfing_network",
             "tools_must_include": [
@@ -2891,7 +2891,7 @@
           "note": "Expects detect_smurfing_network (account_id=9000000004410299; direction=inbound; min_counterparts=25).",
           "nearest_existing_question": {
             "nearest": "st_smurf_023",
-            "similarity": 0.4
+            "similarity": 0.543
           }
         },
         {
@@ -3354,8 +3354,8 @@
           "rationale": "catalog entry the glossary holds; the term is written out",
           "note": "Expects get_aml_glossary (term=Layering).",
           "nearest_existing_question": {
-            "nearest": "st_gl_001",
-            "similarity": 0.463
+            "nearest": "st_gl_008",
+            "similarity": 0.5
           }
         },
         {
@@ -3583,7 +3583,7 @@
           "note": "Expects get_aml_glossary (term=Structuring). Also accepted: get_aml_glossary (term=Layering).",
           "nearest_existing_question": {
             "nearest": "st_gl_008",
-            "similarity": 0.383
+            "similarity": 0.411
           }
         },
         {
@@ -4211,8 +4211,8 @@
           "rationale": "the definition frames the rule run that produces the candidates",
           "note": "Expects get_aml_glossary (term=STR), detect_monitoring_alerts (rule_id=all).",
           "nearest_existing_question": {
-            "nearest": "st_gl_005",
-            "similarity": 0.333
+            "nearest": "st_gl_008",
+            "similarity": 0.353
           }
         }
       ]
@@ -4287,7 +4287,7 @@
           "note": "Expects get_aml_glossary (term=Structuring), detect_smurfing_network (direction=inbound).",
           "nearest_existing_question": {
             "nearest": "st_gl_008",
-            "similarity": 0.273
+            "similarity": 0.288
           }
         }
       ]
@@ -4387,7 +4387,7 @@
           "note": "Expects get_aml_glossary (term=Structuring), lookup_fiu_reference_types (keyword=structuring), detect_ctr_candidates (mode=structuring); called in the order get_aml_glossary -> lookup_fiu_reference_types -> detect_ctr_candidates.",
           "nearest_existing_question": {
             "nearest": "st_mtool_101",
-            "similarity": 0.51
+            "similarity": 0.505
           }
         }
       ]
@@ -4918,7 +4918,7 @@
             "n_overlapping_tools": 1
           },
           "question_ko": "금융회사 151의 입출금 양방향 현황 리포트를 확인하고, 2000건 샘플에서 위험도 상위 30건도 뽑아줘",
-          "question_en": "Please check the outbound and inbound status report of institution 151, and pull the top 30 by risk out of a sample of 2,000 transactions.",
+          "question_en": "Please check the report on the outbound and inbound fund flows of institution 151, and pull the top 30 by risk out of a sample of 2,000 transactions.",
           "gold": {
             "primary_tool": "get_institution_report",
             "tools_must_include": [
@@ -4966,7 +4966,7 @@
           "note": "Expects get_institution_report (bank_id=151), rank_risky_transactions (sample_size=2000; top_k=30).",
           "nearest_existing_question": {
             "nearest": "st_mp_032",
-            "similarity": 0.277
+            "similarity": 0.288
           }
         }
       ]
@@ -6159,7 +6159,7 @@
           "note": "Expects lookup_fiu_reference_types (keyword=structuring), detect_ctr_candidates (mode=structuring); called in the order lookup_fiu_reference_types -> detect_ctr_candidates.",
           "nearest_existing_question": {
             "nearest": "st_mtool_124",
-            "similarity": 0.51
+            "similarity": 0.505
           }
         }
       ]

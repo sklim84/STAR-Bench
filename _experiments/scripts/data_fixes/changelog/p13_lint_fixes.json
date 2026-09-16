@@ -1,21 +1,1156 @@
 {
   "pass": "p13_lint_fixes",
   "description": "Fix what the pre-flight linter reported (C1-011).",
-  "n_changes": 2,
-  "n_cases": 1,
+  "n_changes": 33,
+  "n_cases": 9,
   "by_issue": {
-    "C1-003": 2
+    "C1-011/L1-025": 1,
+    "C1-003": 32
   },
   "notes": [],
   "changes": [
+    {
+      "case_id": "st_gta_017",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-011/L1-025",
+      "why": "the EN question was word for word st_gta_013's, although the KR questions differ ('월별로 거래 추세' against '월간 거래 현황 추이'), so the EN arm held a duplicate the KR arm did not (L1-025, duplicate_question)",
+      "before": "Please analyze the monthly transaction trends.",
+      "after": "Please analyze the trend of the monthly transaction status."
+    },
+    {
+      "case_id": "st_qt_005",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003",
+      "why": "time slot 3 carries 116 transactions in total and none of them is flagged, so the question had no answer; slot 6 carries 495 flagged transactions",
+      "before": "새벽 3시대(거래시간대 3)에 발생한 이상거래를 조회해줘",
+      "after": "오전 6시대(거래시간대 6)에 발생한 이상거래를 조회해줘"
+    },
+    {
+      "case_id": "st_qt_005",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003",
+      "why": "time slot 3 carries 116 transactions in total and none of them is flagged, so the question had no answer; slot 6 carries 495 flagged transactions",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "time_slot",
+                "op": "=",
+                "value": 3
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE time_slot = 3 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "time_slot",
+                "op": "=",
+                "value": 6
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE time_slot = 6 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_qt_005",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003",
+      "why": "time slot 3 carries 116 transactions in total and none of them is flagged, so the question had no answer; slot 6 carries 495 flagged transactions",
+      "before": "Please query the suspicious transactions that occurred around 3 AM (time slot 3).",
+      "after": "Please query the suspicious transactions that occurred in the 6 AM time slot (time slot 6)."
+    },
+    {
+      "case_id": "st_qt_005",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003",
+      "why": "time slot 3 carries 116 transactions in total and none of them is flagged, so the question had no answer; slot 6 carries 495 flagged transactions",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "time_slot",
+                "op": "=",
+                "value": 3
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE time_slot = 3 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "time_slot",
+                "op": "=",
+                "value": 6
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE time_slot = 6 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_qt_014",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003",
+      "why": "institution 119 receives no flagged transaction at all (seven receiving institutions do not); 133 receives 1,831",
+      "before": "입금금융회사 119로 들어온 이상거래 중 최근 20건을 보여줘",
+      "after": "입금금융회사 133으로 들어온 이상거래 중 최근 20건을 보여줘"
+    },
+    {
+      "case_id": "st_qt_014",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003",
+      "why": "institution 119 receives no flagged transaction at all (seven receiving institutions do not); 133 receives 1,831",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "receiver_bank",
+                "op": "=",
+                "value": 119
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, sender_acc, amount FROM hofinet WHERE receiver_bank = 119 AND is_fraud = 1 ORDER BY date DESC LIMIT 20"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "receiver_bank",
+                "op": "=",
+                "value": 133
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, sender_acc, amount FROM hofinet WHERE receiver_bank = 133 AND is_fraud = 1 ORDER BY date DESC LIMIT 20"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_qt_014",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003",
+      "why": "institution 119 receives no flagged transaction at all (seven receiving institutions do not); 133 receives 1,831",
+      "before": "Show me the most recent 20 suspicious transactions that came into deposit financial institution 119.",
+      "after": "Show me the 20 most recent suspicious transactions that came into deposit institution 133."
+    },
+    {
+      "case_id": "st_qt_014",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003",
+      "why": "institution 119 receives no flagged transaction at all (seven receiving institutions do not); 133 receives 1,831",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "receiver_bank",
+                "op": "=",
+                "value": 119
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, sender_acc, amount FROM hofinet WHERE receiver_bank = 119 AND is_fraud = 1 ORDER BY date DESC LIMIT 20"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "receiver_bank",
+                "op": "=",
+                "value": 133
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, sender_acc, amount FROM hofinet WHERE receiver_bank = 133 AND is_fraud = 1 ORDER BY date DESC LIMIT 20"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_qt_020",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003",
+      "why": "institution 118 has no type 3 transaction; 159 has 1,464",
+      "before": "출금사 118에서 분할 거래(이상거래유형 3) 거래 중 거래금액 합계가 가장 큰 계좌를 찾아줘",
+      "after": "출금사 159에서 분할 거래(이상거래유형 3) 거래 중 거래금액 합계가 가장 큰 계좌를 찾아줘"
+    },
+    {
+      "case_id": "st_qt_020",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003",
+      "why": "institution 118 has no type 3 transaction; 159 has 1,464",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "sender_bank",
+                "op": "=",
+                "value": 118
+              },
+              {
+                "column": "fraud_type",
+                "op": "=",
+                "value": 3
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT sender_acc, SUM(amount) AS total_amount FROM hofinet WHERE sender_bank = 118 AND fraud_type = 3 GROUP BY sender_acc ORDER BY total_amount DESC LIMIT 5"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "sender_bank",
+                "op": "=",
+                "value": 159
+              },
+              {
+                "column": "fraud_type",
+                "op": "=",
+                "value": 3
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT sender_acc, SUM(amount) AS total_amount FROM hofinet WHERE sender_bank = 159 AND fraud_type = 3 GROUP BY sender_acc ORDER BY total_amount DESC LIMIT 5"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_qt_020",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003",
+      "why": "institution 118 has no type 3 transaction; 159 has 1,464",
+      "before": "At withdrawal institution 118, please find the account with the largest total transaction amount among split transaction (suspicious transaction type 3) transactions.",
+      "after": "At withdrawal institution 159, please find the account with the largest total amount among the split transaction (type 3) transactions."
+    },
+    {
+      "case_id": "st_qt_020",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003",
+      "why": "institution 118 has no type 3 transaction; 159 has 1,464",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "sender_bank",
+                "op": "=",
+                "value": 118
+              },
+              {
+                "column": "fraud_type",
+                "op": "=",
+                "value": 3
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT sender_acc, SUM(amount) AS total_amount FROM hofinet WHERE sender_bank = 118 AND fraud_type = 3 GROUP BY sender_acc ORDER BY total_amount DESC LIMIT 5"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "sender_bank",
+                "op": "=",
+                "value": 159
+              },
+              {
+                "column": "fraud_type",
+                "op": "=",
+                "value": 3
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT sender_acc, SUM(amount) AS total_amount FROM hofinet WHERE sender_bank = 159 AND fraud_type = 3 GROUP BY sender_acc ORDER BY total_amount DESC LIMIT 5"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_qt_021",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003",
+      "why": "fund type 3 never occurs with mobile phone on a flagged transaction; with other media it occurs 162 times",
+      "before": "휴대전화(매체구분 4)를 통한 기타(자금구분 3) 이상거래를 조회해줘",
+      "after": "기타 매체(매체구분 6)를 통한 기타(자금구분 3) 이상거래를 조회해줘"
+    },
+    {
+      "case_id": "st_qt_021",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003",
+      "why": "fund type 3 never occurs with mobile phone on a flagged transaction; with other media it occurs 162 times",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "media_type",
+                "op": "=",
+                "value": 4
+              },
+              {
+                "column": "fund_type",
+                "op": "=",
+                "value": 3
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE media_type = 4 AND fund_type = 3 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "media_type",
+                "op": "=",
+                "value": 6
+              },
+              {
+                "column": "fund_type",
+                "op": "=",
+                "value": 3
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE media_type = 6 AND fund_type = 3 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_qt_021",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003",
+      "why": "fund type 3 never occurs with mobile phone on a flagged transaction; with other media it occurs 162 times",
+      "before": "Please query the suspicious transactions with fund type 3 (other) made via mobile phone (media type 4).",
+      "after": "Please query the suspicious transactions with fund type 3 (other) made via other media (media type 6)."
+    },
+    {
+      "case_id": "st_qt_021",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003",
+      "why": "fund type 3 never occurs with mobile phone on a flagged transaction; with other media it occurs 162 times",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "media_type",
+                "op": "=",
+                "value": 4
+              },
+              {
+                "column": "fund_type",
+                "op": "=",
+                "value": 3
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE media_type = 4 AND fund_type = 3 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "media_type",
+                "op": "=",
+                "value": 6
+              },
+              {
+                "column": "fund_type",
+                "op": "=",
+                "value": 3
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE media_type = 6 AND fund_type = 3 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_qt_030",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003",
+      "why": "the smallest flagged amount in HOFINET is 2,000,000 won, so 'at most 1,000,000' selects nothing; at most 3,000,000 selects 142",
+      "before": "거래금액이 100만원 이하인 이상거래를 조회해줘",
+      "after": "거래금액이 300만원 이하인 이상거래를 조회해줘"
+    },
+    {
+      "case_id": "st_qt_030",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003",
+      "why": "the smallest flagged amount in HOFINET is 2,000,000 won, so 'at most 1,000,000' selects nothing; at most 3,000,000 selects 142",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "amount",
+                "op": "<=",
+                "value": 1000000
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount <= 1000000 AND is_fraud = 1 ORDER BY amount DESC LIMIT 100"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "amount",
+                "op": "<=",
+                "value": 3000000
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount <= 3000000 AND is_fraud = 1 ORDER BY amount DESC LIMIT 100"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_qt_030",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003",
+      "why": "the smallest flagged amount in HOFINET is 2,000,000 won, so 'at most 1,000,000' selects nothing; at most 3,000,000 selects 142",
+      "before": "Please query for suspicious transactions with a transaction amount of 1,000,000 won or less.",
+      "after": "Please query the suspicious transactions with an amount of 3,000,000 won or less."
+    },
+    {
+      "case_id": "st_qt_030",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003",
+      "why": "the smallest flagged amount in HOFINET is 2,000,000 won, so 'at most 1,000,000' selects nothing; at most 3,000,000 selects 142",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "amount",
+                "op": "<=",
+                "value": 1000000
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount <= 1000000 AND is_fraud = 1 ORDER BY amount DESC LIMIT 100"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "amount",
+                "op": "<=",
+                "value": 3000000
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount <= 3000000 AND is_fraud = 1 ORDER BY amount DESC LIMIT 100"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_qt_043",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003",
+      "why": "the smallest flagged amount is 2,000,000 won, so 'at most 50,000' selects nothing",
+      "before": "이상거래 중 거래금액이 5만원 이하인 소액 이상거래를 조회해줘",
+      "after": "이상거래 중 거래금액이 200만원 이하인 최소 구간 거래를 조회해줘"
+    },
+    {
+      "case_id": "st_qt_043",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003",
+      "why": "the smallest flagged amount is 2,000,000 won, so 'at most 50,000' selects nothing",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "amount",
+                "op": "<=",
+                "value": 50000
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount <= 50000 AND is_fraud = 1 ORDER BY amount LIMIT 100"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "amount",
+                "op": "<=",
+                "value": 2000000
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount <= 2000000 AND is_fraud = 1 ORDER BY amount LIMIT 100"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_qt_043",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003",
+      "why": "the smallest flagged amount is 2,000,000 won, so 'at most 50,000' selects nothing",
+      "before": "Please query for suspicious transactions with a transaction amount of 50,000 won or less.",
+      "after": "Please query the suspicious transactions in the lowest amount band, 2,000,000 won or less."
+    },
+    {
+      "case_id": "st_qt_043",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003",
+      "why": "the smallest flagged amount is 2,000,000 won, so 'at most 50,000' selects nothing",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "amount",
+                "op": "<=",
+                "value": 50000
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount <= 50000 AND is_fraud = 1 ORDER BY amount LIMIT 100"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "amount",
+                "op": "<=",
+                "value": 2000000
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount <= 2000000 AND is_fraud = 1 ORDER BY amount LIMIT 100"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_070",
+      "lang": "kr",
+      "field": "question",
+      "issue": "C1-003",
+      "why": "institution 102 sends no flagged transaction (twelve sending institutions do not); 151 sends 1,699",
+      "before": "금융회사 102의 기관 리포트를 확인하고, 해당 기관 이상거래를 SQL로 조회해줘",
+      "after": "금융회사 151의 기관 리포트를 확인하고, 해당 기관 이상거래를 SQL로 조회해줘"
+    },
+    {
+      "case_id": "st_mtool_070",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003",
+      "why": "institution 102 sends no flagged transaction (twelve sending institutions do not); 151 sends 1,699",
+      "before": {
+        "primary_tool": "get_institution_report",
+        "tools_must_include": [
+          "get_institution_report",
+          "query_transactions"
+        ],
+        "param_checks": {
+          "get_institution_report": {
+            "bank_id": 102
+          },
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "sender_bank",
+                "op": "=",
+                "value": 102
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 102 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "get_institution_report",
+        "tools_must_include": [
+          "get_institution_report",
+          "query_transactions"
+        ],
+        "param_checks": {
+          "get_institution_report": {
+            "bank_id": 151
+          },
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "sender_bank",
+                "op": "=",
+                "value": 151
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 151 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_070",
+      "lang": "en",
+      "field": "question",
+      "issue": "C1-003",
+      "why": "institution 102 sends no flagged transaction (twelve sending institutions do not); 151 sends 1,699",
+      "before": "Please check the institutional report for financial institution 102 and query the suspicious transactions for that institution using SQL.",
+      "after": "Please check the institution report for financial institution 151 and query that institution's suspicious transactions with SQL."
+    },
+    {
+      "case_id": "st_mtool_070",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003",
+      "why": "institution 102 sends no flagged transaction (twelve sending institutions do not); 151 sends 1,699",
+      "before": {
+        "primary_tool": "get_institution_report",
+        "tools_must_include": [
+          "get_institution_report",
+          "query_transactions"
+        ],
+        "param_checks": {
+          "get_institution_report": {
+            "bank_id": 102
+          },
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "sender_bank",
+                "op": "=",
+                "value": 102
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 102 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "get_institution_report",
+        "tools_must_include": [
+          "get_institution_report",
+          "query_transactions"
+        ],
+        "param_checks": {
+          "get_institution_report": {
+            "bank_id": 151
+          },
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "sender_bank",
+                "op": "=",
+                "value": 151
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 151 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
+          }
+        }
+      }
+    },
     {
       "case_id": "st_mtool_086",
       "lang": "kr",
       "field": "question",
       "issue": "C1-003",
       "why": "institution 107 sends no flagged transaction; 133 sends 1,239",
-      "before": "출금금융회사 133의 이상거래를 조회하고, 예측 모델 위험 점수도 구해줘. 거래시간대 12, 출금사 133, 입금사 122, 기타(자금구분 3), 휴대전화(매체구분 4), 200만원.",
+      "before": "출금금융회사 107의 이상거래를 조회하고, 예측 확률도 구해줘. 거래시간대 12, 출금사 107, 입금사 122, 기타(자금구분 3), 휴대전화(매체구분 4), 200만원.",
       "after": "출금금융회사 133의 이상거래를 조회하고, 예측 확률도 구해줘. 거래시간대 12, 출금사 133, 입금사 122, 기타(자금구분 3), 휴대전화(매체구분 4), 200만원."
+    },
+    {
+      "case_id": "st_mtool_086",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "C1-003",
+      "why": "institution 107 sends no flagged transaction; 133 sends 1,239",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "sender_bank",
+                "op": "=",
+                "value": 107
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          },
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 107,
+            "receiver_bank": 122,
+            "fund_type": 3,
+            "media_type": 4,
+            "amount": 2000000
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 107 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "sender_bank",
+                "op": "=",
+                "value": 133
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          },
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 133,
+            "receiver_bank": 122,
+            "fund_type": 3,
+            "media_type": 4,
+            "amount": 2000000
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 133 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
+          }
+        }
+      }
     },
     {
       "case_id": "st_mtool_086",
@@ -23,8 +1158,89 @@
       "field": "question",
       "issue": "C1-003",
       "why": "institution 107 sends no flagged transaction; 133 sends 1,239",
-      "before": "Please query the suspicious transactions of withdrawal financial institution 133 and also get the predicted risk score: time slot 12, withdrawal institution 133, deposit institution 122, other (fund type 3), mobile phone (media type 4), 2,000,000 won.",
+      "before": "Please query the suspicious transactions of withdrawal financial institution 107 and also get the prediction probability: time slot 12, withdrawal institution 107, deposit institution 122, other (fund type 3), mobile phone (media type 4), 2,000,000 won.",
       "after": "Please query the suspicious transactions of withdrawal financial institution 133 and also get the prediction probability: time slot 12, withdrawal institution 133, deposit institution 122, other (fund type 3), mobile phone (media type 4), 2,000,000 won."
+    },
+    {
+      "case_id": "st_mtool_086",
+      "lang": "en",
+      "field": "expected",
+      "issue": "C1-003",
+      "why": "institution 107 sends no flagged transaction; 133 sends 1,239",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "sender_bank",
+                "op": "=",
+                "value": 107
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          },
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 107,
+            "receiver_bank": 122,
+            "fund_type": 3,
+            "media_type": 4,
+            "amount": 2000000
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 107 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions",
+          "predict_fraud"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "sender_bank",
+                "op": "=",
+                "value": 133
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          },
+          "predict_fraud": {
+            "time_slot": 12,
+            "sender_bank": 133,
+            "receiver_bank": 122,
+            "fund_type": 3,
+            "media_type": 4,
+            "amount": 2000000
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 133 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
+          }
+        }
+      }
     }
   ]
 }
