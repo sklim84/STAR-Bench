@@ -391,12 +391,12 @@ TOOLS_KR: list[dict] = json.loads(r"""
      "min_inflow": {
       "type": "integer",
       "description": "퍼널 최소 유입 계좌 수(기본 10)",
-      "default": 10
+      "default": 5
      },
      "max_outflow": {
       "type": "integer",
       "description": "퍼널 최대 유출 계좌 수(기본 3)",
-      "default": 3
+      "default": 5
      },
      "limit": {
       "type": "integer",
@@ -474,7 +474,7 @@ TOOLS_KR: list[dict] = json.loads(r"""
   "type": "function",
   "function": {
    "name": "detect_monitoring_alerts",
-   "description": "규칙 기반 거래 모니터링 규칙을 실행해 경보를 반환한다. R001 심야 대량: 심야 시간대(21, 0, 3)의 500만원 이상 거래. R002 단기 다발: 하루에 10건 이상 거래한 계좌. R003 동일 금액 반복: 같은 금액(200만원 이상)을 3회 이상 보낸 계좌. R004 기관 집중: 거래의 절반 이상을 한 입금 금융회사로 보낸 계좌. R005 패턴 변화: 지정 기간의 거래량이 같은 길이의 직전 기간보다 3배 이상인 계좌. 날짜를 주지 않으면 데이터의 마지막 분기와 그 직전 분기를 비교한다. rule_id='all'은 다섯 규칙을 모두 실행한다. date_from, date_to, account_id는 모든 규칙에 적용된다.",
+   "description": "규칙 기반 거래 모니터링 규칙을 실행해 경보를 반환한다. R001 심야 대량 거래: 심야 시간대(21, 0, 3)의 500만원 이상 거래. R002 당일 단기 다발 거래: 하루에 10건 이상 거래한 계좌. R003 동일 금액 반복 송금: 같은 금액(200만원 이상)을 3회 이상 보낸 계좌. R004 기관 집중: 거래의 절반 이상을 한 입금 금융회사로 보낸 계좌. R005 거래 패턴 변화: 지정 기간의 거래량이 같은 길이의 직전 기간보다 3배 이상인 계좌. 날짜를 주지 않으면 데이터의 마지막 분기와 그 직전 분기를 비교한다. rule_id='all'은 다섯 규칙을 모두 실행한다. date_from, date_to, account_id는 모든 규칙에 적용된다.",
    "parameters": {
     "type": "object",
     "properties": {
