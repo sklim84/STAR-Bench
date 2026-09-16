@@ -198,6 +198,25 @@ def write_markdown(results: list[GateResult], *, command: str, versions: dict,
                      + ", ".join(f"{k} {v}" for k, v in sorted(libraries.items())) + ".")
         lines.append("")
 
+    lines.append("## Numbers in this report that depend on the machine")
+    lines.append("")
+    lines.append("Three of the numbers above move with the environment rather than with the "
+                 "repository, so a report that does not match another one is not by itself a "
+                 "difference in the checkout:")
+    lines.append("")
+    lines.append("- **The platform suite's passed/skipped split** moves with optional packages. "
+                 "`anthropic` installed makes `test_app_dependency_installed[anthropic]` pass "
+                 "instead of skip, so the same tree reads 496 passed / 14 skipped or 495 passed "
+                 "/ 15 skipped. The gate judges unexplained skips against "
+                 "`skips_allowed.json`, never the count.")
+    lines.append("- **Gate 1's dependency-pin check reads this interpreter**, not the "
+                 "repository: a venv one patch release off (scikit-learn 1.9.0 against the "
+                 "pinned 1.9.1) is one more conflict here and none in a pin-clean environment.")
+    lines.append("- **Gate 1's revision check is red on purpose** while "
+                 "`_experiments/scripts/model_revisions.json` is unfilled: whoever downloads a "
+                 "model fills its snapshot revision, and the runner refuses to serve without it.")
+    lines.append("")
+
     lines.append("## Before a rerun")
     lines.append("")
     lines.append("```bash")
