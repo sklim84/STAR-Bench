@@ -1,4 +1,16 @@
 #!/bin/bash
+# SUPERSEDED (V-07). The 2026-05-08 T/NT launcher, kept for provenance only.
+#
+# It drives run_benchmark.sh through `--group <GROUP> --mode kr|en|mt`, an
+# interface that no longer exists: run_benchmark.sh now takes --config <registry
+# id> --mode single|oracle|e2e, so this script exits 2 on its first call. The
+# 2026 rerun is launched with run_master.sh, which reads the registry and the
+# run plan.
+#
+# The cache and temporary paths below are the serving host it was written for
+# (/home/work/kftc_model/...). They are left as they were run, because that is
+# what makes this file a record; nothing in the repository calls it.
+#
 # 2026-05-08 T/NT 정정 재실험 통합 런처
 # 사용법:
 #   GPU별로 nohup 백그라운드 실행:

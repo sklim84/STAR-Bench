@@ -99,3 +99,36 @@ def test_no_tracked_script_embeds_a_checkout_path():
         if here in text or scratch in text:
             offenders.append(name)
     assert offenders == [], f"these tracked scripts carry this checkout's path: {offenders}"
+
+
+# The three directories where a machine's own paths are the record: two remote
+# hosts the round was run on, and the superseded launchers.
+_HOST_PATH_DIRS = ("_experiments/scripts/archive/", "_experiments/scripts/e2e_rerun/",
+                   "_experiments/scripts/goldfix_remote/")
+
+
+def test_only_the_archived_and_remote_scripts_carry_another_machines_home_path():
+    """run_rerun_all.sh sat at the top of scripts/ with a serving host's cache paths (V-07)."""
+    import re
+    import subprocess
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[3]
+    listed = subprocess.run(["git", "-C", str(root), "ls-files", "--", "*.py", "*.sh"],
+                            capture_output=True, text=True, check=False)
+    if listed.returncode != 0:
+        pytest.skip("not a git checkout")
+    # Built rather than written, so this file is not its own counterexample.
+    pattern = re.compile("/" + "home" + "/" + r"[a-z][\w.-]*/")
+    offenders = []
+    for name in listed.stdout.split():
+        path = root / name
+        if not path.is_file() or path == Path(__file__):
+            continue
+        if name.startswith(_HOST_PATH_DIRS):
+            continue
+        if pattern.search(path.read_text(encoding="utf-8", errors="replace")):
+            offenders.append(name)
+    assert offenders == [], (
+        "these tracked scripts hard-code a home directory; make them relative to the checkout "
+        f"or move them under {', '.join(_HOST_PATH_DIRS)}: {offenders}")

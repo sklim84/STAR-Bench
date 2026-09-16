@@ -21,3 +21,9 @@ The manuscript copy is a separate, explicit step:
 ```
 python -m _experiments.scripts.regenerate_analysis --copy-to-manuscript ../STAR-Bench-manu/figures
 ```
+
+## Superseded launchers
+
+| script | why it is here |
+|---|---|
+| `run_rerun_all.sh` | the 2026-05-08 T/NT launcher. It calls `run_benchmark.sh --group <GROUP> --mode kr\|en\|mt`, an interface the rewritten runner does not have, so it exits 2 on its first call, and it hard-codes the serving host's cache and temporary paths (`/home/work/kftc_model/...`). The 2026 rerun is launched with `run_master.sh`, which reads the registry and `preflight/run_plan.json` (V-07). |
