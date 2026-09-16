@@ -7,11 +7,11 @@
   },
   "system_error_rate_max": {
    "value": 0.01,
-   "why": "Share of canary records carrying an error block or stop_reason 'error'. The spec's number. In 2026 Llama-3.2-3B hit 16.1%, Llama-3.1-8B 8.3% and Llama-Open-Finance-8B 7.2% of cases with an api_error that was scored as a zero (L5-019); the runner now records errors explicitly, so anything above 1% of 43 records (one record) means the server or the template is wrong, not the model."
+   "why": "Share of canary records carrying an error block or stop_reason 'error'. The spec's number. In 2026 Llama-3.2-3B hit 16.1%, Llama-3.1-8B 8.3% and Llama-Open-Finance-8B 7.2% of cases with an api_error that was scored as a zero (L5-019); the runner now records errors explicitly, and the canary is 53 records (40 cases plus 13 turns), so a single error trips it: at this size one is already a signal about the server or the template rather than about the model."
   },
   "length_finish_rate_max": {
    "value": 0.02,
-   "why": "Share of records where a round stopped on finish_reason 'length'. The spec's number. A reasoning configuration that runs out of its 16k output budget produces a truncated tool call, which the fallback parser then reads as no call at all (D05, L5-006); 2% of 43 records is one record, so a systematic budget problem trips it and a single long answer does not."
+   "why": "Share of records where a round stopped on finish_reason 'length'. The spec's number. A reasoning configuration that runs out of its 16k output budget produces a truncated tool call, which the fallback parser then reads as no call at all (D05, L5-006); 2% of the canary's 53 records is 1.06, so one long answer passes and two do not, which is where a systematic budget problem starts and a single verbose case stops."
   },
   "fallback_share_max": {
    "value": 0.20,
@@ -23,7 +23,7 @@
   },
   "empty_result_share_floor": {
    "value": 0.15,
-   "why": "Floor for the empty-result gate, so a sample whose gold happens to be all non-empty does not trip on one legitimately empty result. 0.15 of the roughly 55 executed calls in a canary is eight calls."
+   "why": "Floor for the empty-result gate, so a sample whose gold happens to be all non-empty does not trip on one legitimately empty result. A canary executes roughly 40 to 60 calls, so 0.15 is six to nine of them."
   },
   "prompt_headroom_min": {
    "value": 2000,

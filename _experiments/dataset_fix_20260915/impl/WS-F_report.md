@@ -16,6 +16,8 @@ Nothing else was touched: where a gate found a problem it is reported below, not
 | `14676ed` | gate 6 (the canary) and its anomaly thresholds |
 | `b4965ed` | the `run` command, the written report, 41 tests |
 | `bccb6a6` | package README, the repository README section, two reporting fixes |
+| `b81ddfe` | top-level `--help` lists both subcommands |
+| `764eb35` | the canary record count in the threshold sources, this report and the generated `impl/preflight_report.md` |
 
 ## The command
 
@@ -40,7 +42,7 @@ minutes and touches no GPU.
 ## Result of the run
 
 `python -m _experiments.scripts.preflight.run --all --report`, 2026-09-16, on
-`STAR-Bench@bccb6a6` and `STAR-Bench-Web@1309117`:
+`STAR-Bench@764eb35` and `STAR-Bench-Web@1309117`:
 
 ```
 [FAIL] gate 1 environment            7/8 checks     2.8s
@@ -140,7 +142,7 @@ on the Korean arm, and then reads the Contract 2 records.
 |---|---|---|
 | no-tool-call rate | 0.40 of the cases whose gold expects a tool | 2026 Korean arm: median configuration 11.1%, worst three 75.0% (xLAM-2-1b), 52.6% (A.X-4.0-Light), 31.2% (Phi-4-mini, later traced to C2-001) |
 | system-error rate | 0.01 | the spec's number; Llama-3.2-3B hit 16.1% in 2026 and every one was scored as a zero (L5-019) |
-| `finish_reason: length` | 0.02 | the spec's number; one record out of 43 |
+| `finish_reason: length` | 0.02 | the spec's number; one of the canary's 53 records passes, two do not |
 | fallback-parser share | 0.20 of the tool calls | the spec's number; the finance Qwen's calls all came through the fallback parser on the wrong tool parser (L5-010) |
 | empty tool-result share | the sample's own gold empty share + 0.10, floor 0.15 | the baseline is computed from `allow_empty.json` at run time, so ring and layering do not count against the model |
 | prompt headroom | at least 2,000 tokens | the spec's number, measured from the server's own `usage.prompt_tokens` rather than from an estimate |
@@ -178,7 +180,7 @@ layering and the one chained call, and the thresholds file to carry a source for
    the check uses the real tokenizer per model and the number becomes a measurement.
 3. **Run the canary per configuration** against the served model before the column runs. It is
    the only gate that can see a wrong tool-call parser, a reasoning mode that is not applied or
-   a template that eats calls, and it is 43 records.
+   a template that eats calls, and it is 53 records (40 cases plus 13 turns).
 4. **`--serving-stack`** on that host, so the vLLM and torch pins are checked too. On this
    machine the serving stack is deliberately absent and the flag is off by default.
 
