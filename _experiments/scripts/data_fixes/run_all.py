@@ -54,6 +54,7 @@ PASSES = [
     # closeout verification (2026-09-16): what the independent read found afterwards
     "p23_terminology_residue", "p24_risk_score_tails", "p25_catalog_gold",
     "p26_closeout_nits",
+    "p27_clarification_gap",
     "p11_difficulty", "p12_notes",
 ]
 
