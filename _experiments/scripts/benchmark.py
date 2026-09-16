@@ -57,7 +57,7 @@ def load_cases(cases_dir: Path) -> list[dict]:
     return cases
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None, *, executor=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--cases-dir", type=Path, default=_PROJECT_ROOT / "benchmarks",
@@ -76,7 +76,7 @@ def main(argv: list[str] | None = None) -> int:
     todo = cli.select_cases(cases, args, keys=keys, out_dir=args.out)
 
     client = ModelClient(cli.open_client(args, setup.chat_options), setup.chat_options)
-    executor = loop.platform_executor()
+    executor = executor or loop.platform_executor()
     max_rounds = args.max_rounds or loop.MAX_ROUNDS
 
     setup.writer.manifest({

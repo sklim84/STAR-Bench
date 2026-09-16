@@ -47,7 +47,7 @@ def load_scenarios(cases_dir: Path) -> list[dict]:
     return scenarios
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None, *, executor=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--cases-dir", type=Path, default=_PROJECT_ROOT / "benchmarks_multiturn",
@@ -71,7 +71,7 @@ def main(argv: list[str] | None = None) -> int:
     todo = cli.select_cases(scenarios, args, keys=keys, out_dir=args.out)
 
     client = ModelClient(cli.open_client(args, setup.chat_options), setup.chat_options)
-    executor = loop.platform_executor()
+    executor = executor or loop.platform_executor()
 
     setup.writer.manifest({
         "setting": args.setting, "tools_lang": setup.arm.lang, "query_lang": setup.query_lang,

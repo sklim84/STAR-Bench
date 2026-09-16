@@ -16,14 +16,22 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 
-__all__ = ["PromptBudget", "measure", "check"]
+__all__ = ["PromptBudget", "measure", "check", "estimate_tokens", "truncate",
+           "TOOL_RESULT_TOKENS", "MIN_HEADROOM"]
 
-# Bytes per token, measured on the mixed Korean/English prompts of this benchmark
-# under the Qwen and Llama tokenizers. Deliberately pessimistic.
-_UTF8_BYTES_PER_TOKEN = 2.2
+# Bytes per token when no tokenizer can be loaded. Latin text and JSON punctuation
+# run about four bytes to the token; Korean syllables are three UTF-8 bytes and
+# cost one to two tokens each. Both figures are the pessimistic end of what the
+# Qwen, Llama and Mistral tokenizers produce on these prompts.
+_ASCII_BYTES_PER_TOKEN = 3.0
+_WIDE_BYTES_PER_TOKEN = 2.3
 
-# Room a run needs for tool results and the answer on top of the prompt.
-MIN_HEADROOM = 8000
+# Room a run needs on top of the prompt and the output budget: one tool result at
+# the size the runner truncates to, plus slack for the assistant turns around it.
+# Tool results are truncated to the same token count in every arm, so a long
+# result is a bounded cost rather than a context overflow (L5-012).
+TOOL_RESULT_TOKENS = 4000
+MIN_HEADROOM = TOOL_RESULT_TOKENS + 2000
 
 
 @dataclass
@@ -46,6 +54,32 @@ class PromptBudget:
                 "ok": self.ok}
 
 
+def estimate_tokens(text: str) -> int:
+    """Upper-bound token count without a tokenizer, calibrated on these prompts."""
+    return _estimate(text)
+
+
+def truncate(text: str, max_tokens: int = TOOL_RESULT_TOKENS) -> tuple[str, bool]:
+    """Cuts a tool result down to a token budget, identically in every arm.
+
+    Returns the text to send and whether it was cut. The record keeps the full
+    result; only what the model reads is bounded.
+    """
+    if estimate_tokens(text) <= max_tokens:
+        return text, False
+    # Binary search on characters: the byte/token ratio differs by script.
+    low, high = 0, len(text)
+    while low < high:
+        mid = (low + high + 1) // 2
+        if estimate_tokens(text[:mid]) <= max_tokens - 40:
+            low = mid
+        else:
+            high = mid - 1
+    notice = (f"\n... [truncated by the benchmark runner: first {low} of {len(text)} "
+              f"characters, the same limit in every arm]")
+    return text[:low] + notice, True
+
+
 def _tokenizer(model: str, revision: str | None):
     try:
         from transformers import AutoTokenizer
@@ -55,7 +89,10 @@ def _tokenizer(model: str, revision: str | None):
 
 
 def _estimate(text: str) -> int:
-    return int(len(text.encode("utf-8")) / _UTF8_BYTES_PER_TOKEN) + 1
+    raw = text.encode("utf-8")
+    ascii_bytes = sum(1 for b in raw if b < 0x80)
+    wide_bytes = len(raw) - ascii_bytes
+    return int(ascii_bytes / _ASCII_BYTES_PER_TOKEN + wide_bytes / _WIDE_BYTES_PER_TOKEN) + 1
 
 
 def measure(*, arm, cases: list[dict], model: str, revision: str | None,

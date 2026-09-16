@@ -23,6 +23,7 @@ from dataclasses import dataclass
 from typing import Any, Callable, Iterable
 
 from .client import ModelClient
+from .preflight import TOOL_RESULT_TOKENS, truncate
 from .records import CallRecord, ExecutedRecord, RoundRecord, RunRecord
 
 __all__ = ["ToolExecutor", "platform_executor", "run_case", "run_scenario",
@@ -63,12 +64,18 @@ def _execute(executor: ToolExecutor, call: CallRecord) -> ExecutedRecord:
     return ExecutedRecord(call.id, call.name, call.arguments, result, None)
 
 
-def _tool_content(executed: ExecutedRecord) -> str:
+def _tool_content(executed: ExecutedRecord, *, max_tokens: int = TOOL_RESULT_TOKENS) -> str:
+    """What the model reads back. The record keeps the full result (L5-012)."""
     if executed.error is not None:
         return json.dumps({"error": executed.error["message"]}, ensure_ascii=False)
     result = executed.result
-    return result if isinstance(result, str) else json.dumps(result, ensure_ascii=False,
+    text = result if isinstance(result, str) else json.dumps(result, ensure_ascii=False,
                                                              default=str)
+    text, cut = truncate(text, max_tokens)
+    if cut:
+        executed.error = {"type": "result_truncated",
+                          "message": f"sent to the model truncated to about {max_tokens} tokens"}
+    return text
 
 
 def _round_record(idx: int, result, calls: list[CallRecord],
