@@ -1,11 +1,14 @@
 #!/bin/bash
 # OpenRouter 2x2 재실험: 질의 언어 x 도구 정의 언어, 4팔 x (3모델 + Qwen3.5 T/NT)
 set -u
-cd /home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench
-SB=/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad
-PY=$SB/benchvenv/bin/python
-export PYTHONPATH=.
-export BENCH_CONCURRENCY=6
+# The repository root is where this script lives, the way run_benchmark.sh and
+# run_master.sh find it; the interpreter comes from $BENCH_PYTHON (default
+# python3), so no checkout or virtual environment path is baked in (L5-021).
+PROJECT_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+cd "$PROJECT_ROOT"
+PY="${BENCH_PYTHON:-python3}"
+export PYTHONPATH="$PROJECT_ROOT"
+export BENCH_CONCURRENCY="${BENCH_CONCURRENCY:-6}"
 
 ts(){ echo "[$(date +%H:%M:%S)] $*"; }
 

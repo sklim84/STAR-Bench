@@ -1,5 +1,7 @@
-import json, glob, collections
-R="/home/mlp/hgyoo/bubble/codex/star-bench/STAR-Bench/_experiments"
+import json, glob, collections, os, pathlib
+# The repository root is where this file lives; $STAR_BENCH_ROOT overrides it.
+R = str(pathlib.Path(os.environ.get("STAR_BENCH_ROOT")
+                     or pathlib.Path(__file__).resolve().parents[3]) / "_experiments")
 for tag in ["real","oracle"]:
     for f in glob.glob(f"{R}/results_mt_smoke_{tag}/eval/*.json"):
         d=json.load(open(f))

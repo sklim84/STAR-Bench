@@ -1,10 +1,13 @@
 #!/bin/bash
 set -u
-cd /home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench
-SB=/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad
-PY=$SB/benchvenv/bin/python
-export PYTHONPATH=.
-export BENCH_CONCURRENCY=6
+# The repository root is where this script lives, the way run_benchmark.sh and
+# run_master.sh find it; the interpreter comes from $BENCH_PYTHON (default
+# python3), so no checkout or virtual environment path is baked in (L5-021).
+PROJECT_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+cd "$PROJECT_ROOT"
+PY="${BENCH_PYTHON:-python3}"
+export PYTHONPATH="$PROJECT_ROOT"
+export BENCH_CONCURRENCY="${BENCH_CONCURRENCY:-6}"
 ts(){ echo "[$(date +%H:%M:%S)] $*"; }
 PAIR="qwen/qwen3.6-35b-a3b meta-llama/llama-3.2-3b-instruct"
 OSS="openai/gpt-oss-120b openai/gpt-oss-20b"

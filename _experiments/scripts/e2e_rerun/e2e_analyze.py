@@ -1,7 +1,15 @@
-import json, glob, os, collections
-R="/home/mlp/hgyoo/bubble/codex/star-bench/STAR-Bench/_experiments"
+import json, glob, os, collections, pathlib, sys
+# The repository root is where this file lives; a checkout path is a property of
+# the machine and this script was written against one (L5-021). $STAR_BENCH_ROOT
+# overrides it, and --results points the reader at another results directory.
+ROOT = pathlib.Path(os.environ.get("STAR_BENCH_ROOT")
+                    or pathlib.Path(__file__).resolve().parents[3])
+R = str(ROOT / "_experiments")
+for arg in sys.argv[1:]:
+    if arg.startswith("--results="):
+        R = arg.split("=", 1)[1]
 CASES=None
-for p in glob.glob("/home/mlp/hgyoo/bubble/codex/star-bench/STAR-Bench/**/cases_str_workflow.json", recursive=True):
+for p in glob.glob(str(ROOT / "**" / "cases_str_workflow.json"), recursive=True):
     CASES=json.load(open(p)); break
 # generate_str 을 호출하는 45개 시나리오 부분집합
 sub=set()

@@ -71,3 +71,31 @@ def test_a_pin_that_disagrees_with_the_platform_file_is_named(monkeypatch, capsy
     assert code == 1
     err = capsys.readouterr().err
     assert "numpy" in err and "1.26.4" in err
+
+
+# ---------------------------------------------------------------------------
+# L5-021: a tracked script must not carry this checkout's path
+# ---------------------------------------------------------------------------
+
+def test_no_tracked_script_embeds_a_checkout_path():
+    """The OpenRouter drivers baked in a home directory and a scratchpad python."""
+    import subprocess
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[3]
+    listed = subprocess.run(["git", "-C", str(root), "ls-files", "--", "*.py", "*.sh"],
+                            capture_output=True, text=True, check=False)
+    if listed.returncode != 0:
+        pytest.skip("not a git checkout")
+    # Built rather than written, so this file is not its own counterexample.
+    here = str(root).split("/workspace")[0] if "/workspace" in str(root) else str(root)
+    scratch = "claude-" + "1001"
+    offenders = []
+    for name in listed.stdout.split():
+        path = root / name
+        if not path.is_file() or path == Path(__file__):
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        if here in text or scratch in text:
+            offenders.append(name)
+    assert offenders == [], f"these tracked scripts carry this checkout's path: {offenders}"
