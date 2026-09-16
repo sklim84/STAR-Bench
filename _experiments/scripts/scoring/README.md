@@ -172,6 +172,17 @@ reported by category and by difficulty (single-turn) and by sub-category (multi-
 records coverage: how many gold cases had no record (`missing_case_ids`), records with no gold case
 (`unknown_case_ids`), and whether the run is complete.
 
+## Which benchmark a run was scored against
+
+Every record carries `provenance.benchmark_sha256`, the digest of the `cases_*.json` files the run
+was asked about (C1-012). `score_runs.py` compares it with the directory it was given and refuses
+the whole command when they differ, naming both: scoring the Korean arm against `benchmarks_en`
+used to succeed silently and write an eval whose provenance hash and whose gold came from different
+data. The result of that comparison is in every eval file as `meta.scorer.benchmark_check`
+(`match`, `mismatch`, or `not_recorded` for records written before the digest existed, which are
+scored with a warning). `--allow-benchmark-mismatch` scores a mismatch anyway and records the
+override, the status and both hashes in the eval file.
+
 ## Gold self-test
 
 ```

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 from conftest import call, record
 
@@ -79,3 +80,105 @@ def test_multiturn_records_are_grouped_by_scenario_and_turn(tmp_path):
     report = json.loads((out / "eval_model_c.json").read_text(encoding="utf-8"))
     assert report["aggregate"]["n_turns"] == 2 and report["aggregate"]["c"] == {"mean": 1.0, "n": 1}
     assert report["results"][0]["setting"] == "oracle"
+
+
+# ---------------------------------------------------------------------------
+# The records say which benchmark they were run on; the scorer checks it (V-04)
+#
+# Scoring the Korean run against benchmarks_en succeeded silently and wrote an
+# eval whose provenance hash and whose gold came from different data.
+# ---------------------------------------------------------------------------
+
+from _experiments.scripts.scoring.gold import load_benchmark  # noqa: E402
+
+
+def _bench(tmp_path, name="bench", cases=None):
+    path = tmp_path / name
+    path.mkdir()
+    (path / "cases_x.json").write_text(json.dumps(cases or CASES, ensure_ascii=False),
+                                       encoding="utf-8")
+    return path
+
+
+def _run_dir(tmp_path, rows, name="runs"):
+    runs = tmp_path / name
+    runs.mkdir()
+    _write(runs / "model_a.jsonl", rows)
+    return runs
+
+
+def _records(bench_dir, *, sha=None, case_ids=("c1", "c2")):
+    """Records carrying the Contract 2 benchmark digest, as the runner writes it."""
+    digest = sha if sha is not None else load_benchmark(bench_dir).sha256
+    rows = []
+    for case_id in case_ids:
+        rec = record([call("analyze_network", {"account_id": 78432})], case_id=case_id,
+                     run_id="model_a")
+        rec["provenance"] = {"benchmark_dir": Path(bench_dir).name, "benchmark_sha256": digest,
+                             "benchmark_files": 1}
+        rows.append(rec)
+    return rows
+
+
+def test_records_that_name_this_benchmark_are_scored_and_the_check_is_recorded(tmp_path):
+    bench = _bench(tmp_path)
+    runs = _run_dir(tmp_path, _records(bench))
+    out = tmp_path / "eval"
+    assert main(["--runs", str(runs), "--benchmark", str(bench), "--out", str(out),
+                 "--no-sql-exec"]) == 0
+    check = json.loads((out / "eval_model_a.json").read_text(encoding="utf-8"))["meta"]["scorer"]
+    assert check["benchmark_check"]["status"] == "match"
+    assert check["benchmark_check"]["benchmark_sha256"] == load_benchmark(bench).sha256
+    assert "benchmark_mismatch_override" not in check
+
+
+def test_records_from_another_benchmark_are_refused(tmp_path, capsys):
+    """The reported hole: a Korean run scored against benchmarks_en."""
+    kr = _bench(tmp_path, "benchmarks")
+    en = _bench(tmp_path, "benchmarks_en",
+                [dict(c, question="in English") for c in CASES])
+    runs = _run_dir(tmp_path, _records(kr))
+    out = tmp_path / "eval"
+    assert main(["--runs", str(runs), "--benchmark", str(en), "--out", str(out),
+                 "--no-sql-exec"]) == 2
+    err = capsys.readouterr().err
+    assert "refusing to score" in err and "benchmarks" in err
+    assert not list(out.glob("eval_*.json")), "nothing is written when the scorer refuses"
+
+
+def test_a_mixed_record_directory_is_refused(tmp_path):
+    """A directory holding records from two arms is not one run."""
+    kr = _bench(tmp_path, "benchmarks")
+    en = _bench(tmp_path, "benchmarks_en", [dict(c, question="in English") for c in CASES])
+    runs = _run_dir(tmp_path, _records(kr, case_ids=["c1"]) + _records(en, case_ids=["c2"]))
+    assert main(["--runs", str(runs), "--benchmark", str(kr), "--out", str(tmp_path / "eval"),
+                 "--no-sql-exec"]) == 2
+
+
+def test_the_override_flag_scores_and_records_both_hashes(tmp_path):
+    kr = _bench(tmp_path, "benchmarks")
+    en = _bench(tmp_path, "benchmarks_en", [dict(c, question="in English") for c in CASES])
+    runs = _run_dir(tmp_path, _records(kr))
+    out = tmp_path / "eval"
+    assert main(["--runs", str(runs), "--benchmark", str(en), "--out", str(out),
+                 "--no-sql-exec", "--allow-benchmark-mismatch"]) == 0
+    scorer = json.loads((out / "eval_model_a.json").read_text(encoding="utf-8"))["meta"]["scorer"]
+    assert scorer["benchmark_mismatch_override"]["flag"] == "--allow-benchmark-mismatch"
+    assert scorer["benchmark_check"]["status"] == "mismatch"
+    assert scorer["benchmark_check"]["benchmark_sha256"] == load_benchmark(en).sha256
+    recorded = scorer["benchmark_check"]["records"]
+    assert [r["benchmark_dir"] for r in recorded] == ["benchmarks"]
+    assert recorded[0]["benchmark_sha256"] == load_benchmark(kr).sha256
+
+
+def test_records_without_the_digest_are_scored_with_a_warning(tmp_path, capsys):
+    """Records from before C1-012 carry no hash; there is nothing to compare."""
+    bench = _bench(tmp_path)
+    runs = _run_dir(tmp_path, [record([], case_id="c1", run_id="model_a"),
+                               record([], case_id="c2", run_id="model_a")])
+    out = tmp_path / "eval"
+    assert main(["--runs", str(runs), "--benchmark", str(bench), "--out", str(out),
+                 "--no-sql-exec"]) == 0
+    assert "cannot be verified" in capsys.readouterr().err
+    scorer = json.loads((out / "eval_model_a.json").read_text(encoding="utf-8"))["meta"]["scorer"]
+    assert scorer["benchmark_check"]["status"] == "not_recorded"

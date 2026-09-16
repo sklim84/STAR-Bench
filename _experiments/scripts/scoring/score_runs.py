@@ -5,6 +5,14 @@
 
 One eval file per run id, each with per-case (or per-scenario) results and
 aggregates that carry n for every metric.
+
+Every record says which benchmark files the run was asked about
+(`provenance.benchmark_sha256`, C1-012). The scorer compares that with the
+directory it was given and refuses a mismatch: scoring a Korean run against
+`benchmarks_en` used to succeed silently and write an eval whose provenance hash
+and whose gold came from different data (V-04). `--allow-benchmark-mismatch`
+scores it anyway and records the override, the two hashes and the reason in
+every eval file it writes.
 """
 
 from __future__ import annotations
@@ -94,6 +102,40 @@ def score_multiturn_run(records: list[dict], bench: Benchmark, ctx: ScoringConte
     return results, info
 
 
+def benchmark_agreement(records: list[dict], bench: Benchmark) -> dict:
+    """What the records say they were run on, against the gold being scored.
+
+    `status` is `match`, `mismatch` (at least one record names other data) or
+    `not_recorded` (records from before the digest existed; nothing to compare).
+    """
+    recorded: dict[tuple, int] = {}
+    for rec in records:
+        prov = rec.get("provenance") or {}
+        key = (prov.get("benchmark_dir"), prov.get("benchmark_sha256"))
+        recorded[key] = recorded.get(key, 0) + 1
+    hashes = {sha for _dir, sha in recorded if sha}
+    if not hashes:
+        status = "not_recorded"
+    elif hashes == {bench.sha256} and len(recorded) == 1:
+        status = "match"
+    else:
+        status = "mismatch"
+    return {
+        "status": status,
+        "benchmark_root": str(bench.root),
+        "benchmark_sha256": bench.sha256,
+        "records": [{"benchmark_dir": d, "benchmark_sha256": s, "n_records": n}
+                    for (d, s), n in sorted(recorded.items(), key=lambda kv: -kv[1])],
+    }
+
+
+def _agreement_problem(run_id: str, agreement: dict) -> str:
+    named = ", ".join(f"{r['n_records']} record(s) from {r['benchmark_dir']} "
+                      f"{(r['benchmark_sha256'] or 'no hash')[:12]}" for r in agreement["records"])
+    return (f"{run_id}: the records were not run on {Path(agreement['benchmark_root']).name} "
+            f"{agreement['benchmark_sha256'][:12]}: {named}")
+
+
 def _meta(records: list[dict], bench: Benchmark, ctx: ScoringContext, run_id: str) -> dict:
     head = records[0] if records else {}
     return {
@@ -110,6 +152,7 @@ def _meta(records: list[dict], bench: Benchmark, ctx: ScoringContext, run_id: st
             "benchmark_kind": bench.kind,
             "tool_schema_source": ctx.schemas.source,
             "tool_schema_sha256": ctx.schemas.sha256,
+            "benchmark_check": benchmark_agreement(records, bench),
             "sqlglot": sqlglot_version(),
             "sql_execution": ctx.executor is not None,
             "catalog_comparison": ctx.catalog is not None,
@@ -130,6 +173,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--sql-timeout", type=float, default=60.0)
     ap.add_argument("--skip-missing", action="store_true",
                     help="leave cases without a run record out of the aggregates (default: score them as failures)")
+    ap.add_argument("--allow-benchmark-mismatch", action="store_true",
+                    help="score records whose provenance.benchmark_sha256 is not this benchmark "
+                         "directory's; the override and both hashes are recorded in every eval file")
     args = ap.parse_args(argv)
 
     if sqlglot_version() is None:
@@ -149,6 +195,24 @@ def main(argv: list[str] | None = None) -> int:
         print(f"no run records under {args.runs}", file=sys.stderr)
         return 1
 
+    problems = [_agreement_problem(run_id, benchmark_agreement(recs, bench))
+                for run_id, recs in sorted(runs.items())
+                if benchmark_agreement(recs, bench)["status"] == "mismatch"]
+    if problems and not args.allow_benchmark_mismatch:
+        print("refusing to score: the run records name other benchmark data than "
+              f"{args.benchmark}.", file=sys.stderr)
+        for problem in problems:
+            print(f"  - {problem}", file=sys.stderr)
+        print("Score each arm against the directory it was run on, or pass "
+              "--allow-benchmark-mismatch to record the override in the eval files.",
+              file=sys.stderr)
+        return 2
+    for run_id, recs in sorted(runs.items()):
+        if benchmark_agreement(recs, bench)["status"] == "not_recorded":
+            print(f"warning: {run_id}: the records do not carry "
+                  f"provenance.benchmark_sha256, so the benchmark they were run on cannot be "
+                  f"verified", file=sys.stderr)
+
     summary = []
     for run_id, records in sorted(runs.items()):
         if bench.kind == "multiturn":
@@ -161,6 +225,12 @@ def main(argv: list[str] | None = None) -> int:
             agg = aggregate_single(results)
             key = {"h": agg["h"], "a": agg["a"], "f1_tools": agg["f1_tools"], "p_micro": agg["p_micro"]}
         meta = _meta(records, bench, ctx, run_id) | {"coverage": info}
+        if args.allow_benchmark_mismatch:
+            meta["scorer"]["benchmark_mismatch_override"] = {
+                "flag": "--allow-benchmark-mismatch",
+                "status": meta["scorer"]["benchmark_check"]["status"],
+                "note": "scored against a benchmark directory the records do not name",
+            }
         safe = "".join(c if c.isalnum() or c in "-._" else "_" for c in run_id)
         path = out_dir / f"eval_{safe}.json"
         path.write_text(json.dumps({"meta": meta, "aggregate": agg, "results": results},
