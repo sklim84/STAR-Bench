@@ -159,11 +159,18 @@ def resolve(args, *, cases: list[dict], setting: str, query_lang_default: str,
 
     if args.config:
         serving = registry.by_id(args.config)
-        if serving.revision is None and not args.allow_unpinned_revision:
+        gateway = bool(args.served_model_name) and bool(_provider(args))
+        if serving.revision is None and not args.allow_unpinned_revision and not gateway:
             raise SystemExit(
                 f"{serving.config_id}: no snapshot revision is pinned for {serving.model}. Fill "
                 f"_experiments/scripts/model_revisions.json (R2C-003) or pass "
                 f"--allow-unpinned-revision for a smoke run.")
+        if gateway and serving.revision is None:
+            # A gateway serves weights we do not hold, so there is no snapshot to pin.
+            # The identity of the run is the pinned provider plus the model the gateway
+            # reports per round, both of which the record carries (L5-014).
+            print(f"{serving.config_id}: served by a gateway as {args.served_model_name}; "
+                  "the pinned provider stands in for the snapshot revision")
         config = registry.config_block(serving, setting=setting, engine=engine)
         options = registry.chat_options(serving, timeout_s=args.timeout,
                                         max_retries=args.max_retries, provider=_provider(args),
