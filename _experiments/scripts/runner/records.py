@@ -293,10 +293,18 @@ def resume_state(out_dir: Path | str, expected_keys: Iterable[str], *,
 
 
 def verify_run_complete(path: Path | str, expected_keys: Iterable[str]) -> dict:
-    """Checks a finished record file against the case list it claims to cover."""
+    """Checks a finished record file against the case list it claims to cover.
+
+    A directory is checked as a whole (every non-partial file in it), which is
+    what a `--resume` run covers: its own file holds only the cases that were
+    missing.
+    """
+    path = Path(path)
+    sources = [p for p in _record_files(path) if not p.name.endswith(".partial.jsonl")] \
+        if path.is_dir() else [path]
     expected = set(expected_keys)
     seen: dict[str, int] = {}
-    for rec in read_records(path):
+    for rec in (r for source in sources for r in read_records(source)):
         case_id = rec.get("case_id")
         key = case_id if rec.get("turn") is None else f"{case_id}#{rec['turn']}"
         seen[key] = seen.get(key, 0) + 1

@@ -87,11 +87,75 @@ def test_a_case_id_the_benchmark_does_not_have_is_refused(server, single_benchma
                              ["--case-ids", "st_404", "--partial"]), executor=fake_tools)
 
 
-def test_an_incomplete_run_exits_non_zero(server, single_benchmark, tmp_path, fake_tools):
+def test_a_run_that_lost_a_record_is_incomplete_and_exits_non_zero(
+        server, single_benchmark, tmp_path, fake_tools, monkeypatch, capsys):
+    from _experiments.scripts.runner import parallel
+
+    real = parallel.run_jobs
+
+    def drop_the_last_case(items, work, *, concurrency, on_result):
+        real(list(items)[:-1], work, concurrency=concurrency, on_result=on_result)
+
+    monkeypatch.setattr(benchmark.parallel, "run_jobs", drop_the_last_case)
+    server.always(text("끝"))
+    rc = benchmark.main(_argv(server, single_benchmark, tmp_path / "r"), executor=fake_tools)
+    assert rc == 1
+    assert "INCOMPLETE" in capsys.readouterr().out
+
+
+# ---------------------------------------------------------------------------
+# `--limit N` is a mode, not a broken full run
+# ---------------------------------------------------------------------------
+
+def test_a_limited_run_is_complete_against_its_own_cases(server, single_benchmark, tmp_path,
+                                                         fake_tools, capsys):
     server.always(text("끝"))
     rc = benchmark.main(_argv(server, single_benchmark, tmp_path / "r", ["--limit", "2"]),
                         executor=fake_tools)
-    assert rc == 1
+    out = capsys.readouterr().out
+    assert rc == 0, "a smoke run of the first N cases is not an incomplete run"
+    assert "records: 2/2 (complete" in out
+    assert "limited to 2 of 3" in out
+
+
+def test_a_limited_run_records_the_limit_in_its_manifest(server, single_benchmark, tmp_path,
+                                                         fake_tools):
+    server.always(text("끝"))
+    out = tmp_path / "r"
+    benchmark.main(_argv(server, single_benchmark, out, ["--limit", "2"]), executor=fake_tools)
+    manifest = json.loads(next(out.glob("*.manifest.json")).read_text(encoding="utf-8"))
+    assert manifest["limit"] == 2
+    assert manifest["n_cases_run"] == 2
+    assert manifest["n_cases_benchmark"] == 3
+    assert manifest["partial"] is False
+
+
+def test_a_limited_run_covers_the_first_n_cases_of_the_benchmark(server, single_benchmark,
+                                                                 tmp_path, fake_tools):
+    server.always(text("끝"))
+    out = tmp_path / "r"
+    benchmark.main(_argv(server, single_benchmark, out, ["--limit", "2"]), executor=fake_tools)
+    recs = [r for f in sorted(out.glob("*.jsonl")) for r in records.read_records(f)]
+    assert [r["case_id"] for r in recs] == ["st_001", "st_002"]
+
+
+def test_limit_and_case_ids_are_not_combined(server, single_benchmark, tmp_path, fake_tools):
+    server.always(text("끝"))
+    with pytest.raises(SystemExit, match="pass one of them"):
+        benchmark.main(_argv(server, single_benchmark, tmp_path / "r",
+                             ["--limit", "1", "--case-ids", "st_001", "--partial"]),
+                       executor=fake_tools)
+
+
+def test_a_resumed_run_is_complete_when_the_directory_covers_the_benchmark(
+        server, single_benchmark, tmp_path, fake_tools, capsys):
+    server.always(text("끝"))
+    out = tmp_path / "r"
+    benchmark.main(_argv(server, single_benchmark, out, ["--limit", "1"]), executor=fake_tools)
+    capsys.readouterr()
+    rc = benchmark.main(_argv(server, single_benchmark, out, ["--resume"]), executor=fake_tools)
+    assert rc == 0
+    assert "records: 3/3 (complete" in capsys.readouterr().out
 
 
 def test_run_ids_carry_the_arm_the_setting_and_a_timestamp(server, single_benchmark, tmp_path,

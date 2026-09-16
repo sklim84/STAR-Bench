@@ -15,6 +15,10 @@ Old checkpoints are never read: a run writes into a fresh directory, and
 after checking that its contents belong to this benchmark (C2-014, C2-015,
 L5-027).
 
+`--limit N` is a smoke run: the first N cases of the benchmark are the run, and
+the run is verified against those N. It used to be checked against the whole
+benchmark, so every smoke run ended "INCOMPLETE" with exit 1.
+
 `--concurrency N` runs N cases at once (default from the registry). Cases share
 nothing: each worker thread builds its own client, and the records are written
 and the file sorted from the calling thread, so the output file is the same one a
@@ -65,7 +69,8 @@ def main(argv: list[str] | None = None, *, executor=None) -> int:
     logging.basicConfig(level=logging.INFO if args.verbose else logging.WARNING,
                         format="%(asctime)s %(levelname)s %(message)s")
 
-    cases = load_cases(args.cases_dir)
+    benchmark = load_cases(args.cases_dir)
+    cases = cli.apply_limit(benchmark, args)
     query_lang = "en" if args.cases_dir.name.endswith("_en") else "kr"
     setup = cli.resolve(args, cases=cases, setting="single", query_lang_default=query_lang,
                         cases_dir=args.cases_dir)
@@ -81,7 +86,8 @@ def main(argv: list[str] | None = None, *, executor=None) -> int:
     setup.writer.manifest({
         "setting": "single", "tools_lang": setup.arm.lang, "query_lang": setup.query_lang,
         "cases_dir": str(args.cases_dir), "n_cases_selected": len(todo),
-        "n_cases_benchmark": len(cases), "config": setup.config,
+        "n_cases_benchmark": len(benchmark), "n_cases_run": len(cases),
+        "limit": args.limit, "config": setup.config,
         "benchmark_file_hashes": runner_provenance.benchmark_file_hashes(args.cases_dir),
         "provenance": setup.provenance, "max_rounds": max_rounds,
         "concurrency": concurrency, "argv": sys.argv[1:],
@@ -117,10 +123,14 @@ def main(argv: list[str] | None = None, *, executor=None) -> int:
     parallel.run_jobs(todo, work, concurrency=concurrency, on_result=collect)
     setup.writer.sort_by(keys)
 
-    summary = records.verify_run_complete(setup.writer.path, keys) if not args.partial else None
+    # A resumed run's own file holds only the cases that were missing, so the
+    # whole output directory is what covers the case list.
+    verify_target = args.out if args.resume else setup.writer.path
+    summary = records.verify_run_complete(verify_target, keys) if not args.partial else None
     if summary is not None:
+        scope = f", limited to {args.limit} of {len(benchmark)}" if args.limit else ""
         print(f"records: {summary['n_records']}/{summary['n_expected']} "
-              f"({'complete' if summary['complete'] else 'INCOMPLETE'})")
+              f"({'complete' if summary['complete'] else 'INCOMPLETE'}{scope})")
         if summary["missing"]:
             print(f"  missing: {len(summary['missing'])} (first: {summary['missing'][:5]})")
             return 1

@@ -17,7 +17,7 @@ from pathlib import Path
 
 from . import arms, preflight, provenance, records, registry
 
-__all__ = ["add_common_arguments", "resolve", "RunSetup"]
+__all__ = ["add_common_arguments", "resolve", "RunSetup", "apply_limit", "select_cases"]
 
 _ROOT = Path(__file__).resolve().parents[3]
 
@@ -65,7 +65,10 @@ def add_common_arguments(ap: argparse.ArgumentParser) -> None:
     g.add_argument("--case-ids-file", type=Path, help="file of case ids, one per line")
     g.add_argument("--partial", action="store_true",
                    help="this run covers a subset; its records are written to a .partial file")
-    g.add_argument("--limit", type=int, help="run only the first N cases (smoke runs)")
+    g.add_argument("--limit", type=int,
+                   help="smoke run: the first N cases of the benchmark ARE the run. The run is "
+                        "verified against those N, not against the whole benchmark, and the "
+                        "manifest records the limit")
 
     g = ap.add_argument_group("guards")
     g.add_argument("--pin", type=Path, help="JSON file of expected provenance values")
@@ -91,6 +94,27 @@ class RunSetup:
         self.query_lang = query_lang
         self.provenance = provenance_block
         self.serving = serving
+
+
+def apply_limit(cases: list[dict], args) -> list[dict]:
+    """`--limit N` makes the first N cases the run's own case list.
+
+    A limited run used to be checked against the full key list, so it always
+    finished with "INCOMPLETE" and exit 1 and a smoke run could not be told from
+    a broken one. The limit is applied before the expected keys are computed, so
+    a limited run is complete when it covers its own N cases; the manifest and
+    the record count say it was limited.
+    """
+    limit = getattr(args, "limit", None)
+    if not limit:
+        return cases
+    if limit < 1:
+        raise SystemExit("--limit must be at least 1")
+    if getattr(args, "case_ids", None) or getattr(args, "case_ids_file", None):
+        raise SystemExit("--limit and --case-ids select different subsets; pass one of them")
+    limited = cases[:limit]
+    print(f"limit: the first {len(limited)} of {len(cases)} case(s) are this run")
+    return limited
 
 
 def _case_filter(args) -> set[str] | None:
@@ -200,7 +224,7 @@ def resolve(args, *, cases: list[dict], setting: str, query_lang_default: str,
 
 
 def select_cases(cases: list[dict], args, *, keys, out_dir: Path) -> list[dict]:
-    """Applies --case-ids, --limit and --resume to the case list."""
+    """Applies --case-ids and --resume. `--limit` is applied by `apply_limit` first."""
     wanted = _case_filter(args)
     if wanted is not None:
         known = {c["id"] for c in cases}
@@ -209,8 +233,6 @@ def select_cases(cases: list[dict], args, *, keys, out_dir: Path) -> list[dict]:
             raise SystemExit(f"--case-ids names {len(missing)} case(s) the benchmark does not "
                              f"contain: {missing[:5]}")
         cases = [c for c in cases if c["id"] in wanted]
-    if args.limit:
-        cases = cases[:args.limit]
     if args.resume:
         done = records.resume_state(out_dir, keys, allow_partial=args.partial)
         cases = [c for c in cases if not all(k in done for k in keys_of(c, keys))]

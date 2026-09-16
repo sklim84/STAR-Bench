@@ -17,6 +17,9 @@ the gpt-oss (T) and (NT) multi-turn rows were in fact the same configuration run
 twice (C2-012). `--tools-lang` makes every main-table column runnable on the
 Korean schema (D17, L6-032).
 
+`--limit N` is a smoke run: the first N scenarios are the run, and the run is
+verified against their turns rather than against the whole benchmark.
+
 `--concurrency N` runs N scenarios at once. The turns inside a scenario stay
 sequential, because each one reads the history the previous one produced.
 """
@@ -62,7 +65,8 @@ def main(argv: list[str] | None = None, *, executor=None) -> int:
     logging.basicConfig(level=logging.INFO if args.verbose else logging.WARNING,
                         format="%(asctime)s %(levelname)s %(message)s")
 
-    scenarios = load_scenarios(args.cases_dir)
+    benchmark = load_scenarios(args.cases_dir)
+    scenarios = cli.apply_limit(benchmark, args)
     query_lang = "en" if args.cases_dir.name.endswith("_en") else "kr"
     # A scenario's questions are what the model reads; the flat `question` field the
     # preflight uses is the longest turn of the scenario.
@@ -81,7 +85,8 @@ def main(argv: list[str] | None = None, *, executor=None) -> int:
     setup.writer.manifest({
         "setting": args.setting, "tools_lang": setup.arm.lang, "query_lang": setup.query_lang,
         "cases_dir": str(args.cases_dir), "n_scenarios_selected": len(todo),
-        "n_scenarios_benchmark": len(scenarios), "n_turns_expected": len(keys),
+        "n_scenarios_benchmark": len(benchmark), "n_scenarios_run": len(scenarios),
+        "limit": args.limit, "n_turns_expected": len(keys),
         "config": setup.config, "provenance": setup.provenance,
         "benchmark_file_hashes": runner_provenance.benchmark_file_hashes(args.cases_dir),
         "concurrency": concurrency, "argv": sys.argv[1:],
@@ -118,9 +123,11 @@ def main(argv: list[str] | None = None, *, executor=None) -> int:
     setup.writer.sort_by(keys)
 
     if not args.partial:
-        summary = records.verify_run_complete(setup.writer.path, keys)
+        verify_target = args.out if args.resume else setup.writer.path
+        summary = records.verify_run_complete(verify_target, keys)
+        scope = f", limited to {args.limit} of {len(benchmark)}" if args.limit else ""
         print(f"records: {summary['n_records']}/{summary['n_expected']} "
-              f"({'complete' if summary['complete'] else 'INCOMPLETE'})")
+              f"({'complete' if summary['complete'] else 'INCOMPLETE'}{scope})")
         if summary["missing"]:
             print(f"  missing: {len(summary['missing'])} (first: {summary['missing'][:5]})")
             return 1
