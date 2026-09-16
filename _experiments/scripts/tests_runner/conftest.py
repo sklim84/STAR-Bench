@@ -48,9 +48,15 @@ SINGLE_CASES = [
 SCENARIOS = [
     {"id": "mt_001", "scenario": "STR workflow", "sub_category": "str",
      "turns": [
+         # As the rebuilt data has it: the arguments hold the CHECKS and the
+         # executable query is the reference (C2-008).
          {"turn": 1, "content": "이 계좌의 최근 거래를 조회해줘",
           "tool_calls": [{"name": "query_transactions",
-                          "arguments": {"sql": "SELECT 1 FROM hofinet"}}],
+                          "arguments": {"sql_conditions": [{"column": "sender_acc", "op": "=",
+                                                            "value": 9000000000000002}],
+                                        "sql_valid": True},
+                          "reference_sql": "SELECT amount FROM hofinet "
+                                           "WHERE sender_acc = 9000000000000002"}],
           "tool_result": {"total_count": 2, "result": [{"amount": 5000000}]}},
          {"turn": 2, "content": "그 계좌의 위험도를 평가해줘",
           "tool_calls": [{"name": "score_account_risk",

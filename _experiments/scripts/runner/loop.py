@@ -26,7 +26,8 @@ from .preflight import TOOL_RESULT_TOKENS, truncate
 from .records import CallRecord, ExecutedRecord, RoundRecord, RunRecord
 
 __all__ = ["ToolExecutor", "platform_executor", "run_case", "run_scenario",
-           "failed_record", "expected_keys", "MAX_ROUNDS", "MAX_CALLS_PER_ROUND"]
+           "failed_record", "expected_keys", "oracle_arguments", "EVALUATOR_ONLY_ARGS",
+           "MAX_ROUNDS", "MAX_CALLS_PER_ROUND"]
 
 MAX_ROUNDS = 5
 MAX_CALLS_PER_ROUND = 8   # L5-024: one case reached 318 calls with no ceiling
@@ -148,6 +149,39 @@ def run_case(case: dict, *, client: ModelClient, arm, executor: ToolExecutor,
 
 CLARIFICATION_REPLY = "확인이 필요합니다. 추가 정보를 알려주세요."
 
+# Gold keys that describe a CHECK, not an argument. They belong to the evaluator
+# and must never appear in the conversation: an assistant turn carrying
+# `sql_conditions` and `sql_valid` is not a call any model would make, and it
+# shows the next turn the checking apparatus instead of the query (C2-008).
+EVALUATOR_ONLY_ARGS = frozenset({
+    "sql_conditions", "sql_valid", "sql_contains",
+    "result_row_count_min", "result_row_count_max", "result_contains",
+    "hops_min", "hops_max",
+})
+
+
+def oracle_arguments(call: dict, turn: dict) -> dict:
+    """The arguments to inject for one gold call: a real call, not a check.
+
+    A `query_transactions` gold turn carries the executable query as
+    `reference_sql` on the call, or under `reference_calls[tool].sql` on the turn.
+    That query is what the assistant turn shows; the condition list stays with the
+    evaluator. Any other evaluator-only key is stripped the same way.
+    """
+    arguments = {k: v for k, v in (call.get("arguments") or {}).items()
+                 if k not in EVALUATOR_ONLY_ARGS}
+    reference = call.get("reference_sql")
+    if reference is None:
+        by_tool = turn.get("reference_calls") or {}
+        entry = by_tool.get(call.get("name"))
+        if isinstance(entry, dict):
+            reference = entry.get("sql")
+        elif isinstance(entry, str):
+            reference = entry
+    if reference:
+        arguments["sql"] = reference
+    return arguments
+
 
 def _oracle_turns(turn: dict, turn_no: int) -> list[dict]:
     """Assistant turn plus tool results, built from the gold call of this turn."""
@@ -164,8 +198,9 @@ def _oracle_turns(turn: dict, turn_no: int) -> list[dict]:
     assistant = {"role": "assistant", "content": "",
                  "tool_calls": [{"id": ids[i], "type": "function",
                                  "function": {"name": c["name"],
-                                              "arguments": json.dumps(c.get("arguments", {}),
-                                                                      ensure_ascii=False)}}
+                                              "arguments": json.dumps(
+                                                  oracle_arguments(c, turn),
+                                                  ensure_ascii=False)}}
                                 for i, c in enumerate(calls)]}
     return [assistant] + [{"role": "tool", "tool_call_id": ids[i], "content": payload}
                           for i in range(len(calls))]

@@ -99,3 +99,65 @@ def test_the_run_is_verified_against_the_expected_turn_count(server, multiturn_b
     server.always(text("네"))
     _run(server, multiturn_benchmark, tmp_path / "r", fake_tools)
     assert "3/3 (complete)" in capsys.readouterr().out
+
+
+def test_an_oracle_sql_turn_shows_the_query_and_never_the_checks(server, multiturn_benchmark,
+                                                                 tmp_path, fake_tools):
+    """C2-008: the evaluator's keys are checks, not a call the model could make."""
+    server.always(text("네"))
+    _run(server, multiturn_benchmark, tmp_path / "r", fake_tools)
+
+    injected = [m for request in server.requests for m in request["messages"]
+                if m.get("tool_calls")]
+    assert injected, "the oracle setting must inject the gold call"
+    arguments = [json.loads(call["function"]["arguments"])
+                 for m in injected for call in m["tool_calls"]
+                 if call["function"]["name"] == "query_transactions"]
+    assert arguments
+    for args in arguments:
+        assert args["sql"].lstrip().upper().startswith("SELECT")
+        for key in ("sql_conditions", "sql_valid", "sql_contains"):
+            assert key not in args
+
+    whole = json.dumps(server.requests, ensure_ascii=False)
+    for key in ("sql_conditions", "sql_valid", "sql_contains"):
+        assert key not in whole, f"{key} reached the model"
+
+
+def test_evaluator_only_keys_are_stripped_even_without_a_reference_query():
+    from _experiments.scripts.runner.loop import oracle_arguments
+
+    call = {"name": "analyze_network",
+            "arguments": {"account_id": 9000000000000002, "hops": 2,
+                          "hops_min": 1, "hops_max": 3, "result_row_count_min": 1}}
+    assert oracle_arguments(call, {}) == {"account_id": 9000000000000002, "hops": 2}
+
+
+def test_a_turn_level_reference_call_is_used_when_the_call_carries_none():
+    from _experiments.scripts.runner.loop import oracle_arguments
+
+    call = {"name": "query_transactions", "arguments": {"sql_conditions": [], "sql_valid": True}}
+    turn = {"reference_calls": {"query_transactions": {"sql": "SELECT 1 FROM hofinet"}}}
+    assert oracle_arguments(call, turn) == {"sql": "SELECT 1 FROM hofinet"}
+
+
+def test_the_real_multi_turn_gold_renders_a_query_for_every_sql_turn():
+    """The rebuilt benchmark, not a fixture: no SQL turn injects a check."""
+    from pathlib import Path as _Path
+
+    from _experiments.scripts.runner.loop import EVALUATOR_ONLY_ARGS, oracle_arguments
+
+    root = _Path(__file__).resolve().parents[3]
+    scenarios = json.loads(
+        (root / "benchmarks_multiturn" / "cases_str_workflow.json").read_text(encoding="utf-8"))
+    sql_turns = 0
+    for scenario in scenarios:
+        for turn in scenario.get("turns", []):
+            for call in turn.get("tool_calls") or []:
+                args = oracle_arguments(call, turn)
+                assert not (set(args) & EVALUATOR_ONLY_ARGS), (scenario["id"], turn["turn"])
+                if call["name"] == "query_transactions":
+                    sql_turns += 1
+                    assert args.get("sql", "").lstrip().upper().startswith(("SELECT", "WITH")), \
+                        (scenario["id"], turn["turn"])
+    assert sql_turns > 0
