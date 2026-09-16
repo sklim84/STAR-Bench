@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 import pytest
 
 from _experiments.scripts.scoring import sql as sql_module
@@ -178,3 +180,172 @@ def test_both_parsers_read_the_same_atoms_from_the_same_statements():
         sql_module.sqlglot = saved
     for statement, a, b in zip(statements, with_sqlglot, without):
         assert a == b, statement
+
+
+# ---------------------------------------------------------------------------
+# Subqueries in the WHERE clause (V-05)
+#
+# The fallback used to skip any clause whose text contained SELECT, so
+# st_qt_025 and st_qt_039 - both `... WHERE col = v AND amount >= (SELECT ...)`
+# - lost the predicate beside the subquery and failed their own gold self-test
+# in a sqlglot-less environment, while passing everywhere else.
+# ---------------------------------------------------------------------------
+
+ST_QT_025 = ("SELECT date, sender_bank, receiver_bank, amount FROM hofinet "
+             "WHERE fraud_type = 5 AND amount >= "
+             "(SELECT AVG(amount) FROM hofinet WHERE fraud_type = 5) "
+             "ORDER BY amount DESC LIMIT 100")
+ST_QT_039 = ("SELECT COUNT(*) AS fraud_count FROM hofinet WHERE sender_bank = 134 "
+             "AND date BETWEEN 20230101 AND 20230630 AND is_fraud = 1 AND amount >= "
+             "(SELECT AVG(amount) FROM hofinet WHERE sender_bank = 134 "
+             "AND date BETWEEN 20230101 AND 20230630 AND is_fraud = 1)")
+
+
+def test_a_predicate_beside_a_scalar_subquery_is_read(parser):
+    assert passes(ST_QT_025, [{"column": "fraud_type", "op": "=", "value": 5}])
+    assert passes(ST_QT_039, [{"column": "sender_bank", "op": "=", "value": 134},
+                              {"column": "is_fraud", "op": "=", "value": 1},
+                              {"column": "date", "op": "BETWEEN",
+                               "value": [20230101, 20230630]}])
+
+
+def test_a_predicate_the_subquery_alone_carries_does_not_satisfy_the_outer_query(parser):
+    sql = ("SELECT * FROM hofinet WHERE amount >= "
+           "(SELECT AVG(amount) FROM hofinet WHERE fraud_type = 4) AND sender_bank = 1")
+    assert passes(sql, [{"column": "sender_bank", "op": "=", "value": 1}])
+    # fraud_type = 4 restricts the subquery, and sqlglot reads subquery clauses
+    # too, so both parsers must agree on whether it counts.
+    assert extract_atoms(sql)[0].count(("fraud_type", "=", 4)) == 1
+
+
+def test_an_or_inside_a_subquery_does_not_silence_the_outer_clause(parser):
+    sql = ("SELECT * FROM hofinet WHERE fraud_type = 4 AND amount > "
+           "(SELECT AVG(amount) FROM hofinet WHERE sender_bank = 1 OR sender_bank = 2)")
+    assert passes(sql)
+
+
+def test_a_clause_end_keyword_inside_a_subquery_does_not_end_the_outer_clause(parser):
+    sql = ("SELECT * FROM hofinet WHERE fraud_type = 4 AND sender_acc IN "
+           "(SELECT sender_acc FROM hofinet GROUP BY sender_acc HAVING COUNT(*) > 3) "
+           "AND time_slot = 21")
+    atoms, _ = extract_atoms(sql)
+    assert ("fraud_type", "=", 4) in atoms and ("time_slot", "=", 21) in atoms
+
+
+def test_a_predicate_under_a_top_level_or_still_does_not_count_with_a_subquery(parser):
+    sql = ("SELECT * FROM hofinet WHERE fraud_type = 4 OR amount > "
+           "(SELECT AVG(amount) FROM hofinet)")
+    assert not passes(sql)
+
+
+def test_a_parenthesised_or_group_does_not_hide_its_and_siblings(parser):
+    sql = "SELECT * FROM hofinet WHERE (time_slot = 1 OR time_slot = 2) AND fraud_type = 4"
+    assert passes(sql)
+
+
+def test_a_cast_column_is_the_column_for_both_parsers(parser):
+    """`CAST(col AS INTEGER) = 4` restricts the query whichever parser reads it."""
+    assert passes("SELECT * FROM hofinet WHERE CAST(fraud_type AS INTEGER) = 4")
+    assert passes("SELECT * FROM hofinet WHERE fraud_type::INTEGER = 4")
+    assert passes("SELECT * FROM hofinet WHERE CAST(fraud_type AS INTEGER) = CAST('4' AS INTEGER)")
+    assert not passes("SELECT * FROM hofinet WHERE CAST(fraud_type AS INTEGER) = 7")
+
+
+def test_a_cast_inside_a_string_literal_is_left_alone(parser):
+    assert passes("SELECT * FROM hofinet WHERE fraud_description = 'CAST(x AS y)' "
+                  "AND fraud_type = 4")
+    assert passes("SELECT * FROM hofinet WHERE fraud_description = 'CAST(x AS y)'",
+                  [{"column": "fraud_description", "op": "=", "value": "CAST(x AS y)"}])
+
+
+def test_a_where_inside_a_string_literal_is_not_a_clause(parser):
+    assert not passes("SELECT 'WHERE fraud_type = 4' AS note FROM hofinet")
+
+
+# ---------------------------------------------------------------------------
+# A check that fails because sqlglot is absent says so
+# ---------------------------------------------------------------------------
+
+def test_the_fallback_reports_the_terms_it_could_not_read():
+    """A gold self-test must never differ by environment without saying so."""
+    sql_module_sqlglot = sql_module.sqlglot
+    try:
+        sql_module.sqlglot = None
+        result = check_sql_conditions(
+            "SELECT * FROM hofinet WHERE date_trunc('month', ts) = '2024-01-01' "
+            "AND fraud_type = 4", [{"column": "fraud_type", "op": "=", "value": 4},
+                                   {"column": "ts", "op": "=", "value": "2024-01-01"}])
+        assert not result["passed"]
+        assert result["parser"] == "fallback"
+        assert result["unreadable"], "the unreadable term is reported"
+        assert "could not read" in result["reason"] and "install sqlglot" in result["reason"]
+    finally:
+        sql_module.sqlglot = sql_module_sqlglot
+
+
+def test_a_readable_statement_reports_no_gap(parser):
+    from _experiments.scripts.scoring.sql import extract_atoms_detailed
+
+    atoms, name, unreadable = extract_atoms_detailed(
+        "SELECT * FROM hofinet WHERE fraud_type = 4 AND amount BETWEEN 1 AND 2")
+    assert name == parser and unreadable == []
+    assert len(atoms) == 2
+    assert "unreadable" not in check_sql_conditions(
+        "SELECT * FROM hofinet WHERE fraud_type = 4", FRAUD4)
+
+
+def test_both_parsers_read_the_same_atoms_from_statements_with_subqueries():
+    pytest.importorskip("sqlglot")
+    statements = [
+        ST_QT_025,
+        ST_QT_039,
+        "SELECT * FROM hofinet WHERE fraud_type = 4 AND amount > (SELECT AVG(amount) FROM hofinet)",
+        "SELECT * FROM (SELECT * FROM hofinet WHERE fraud_type = 4) t WHERE t.amount >= 10",
+        "WITH per_bank AS (SELECT sender_bank, COUNT(*) AS n FROM hofinet WHERE is_fraud = 1 "
+        "GROUP BY sender_bank) SELECT * FROM per_bank WHERE n > 5",
+        "SELECT * FROM hofinet WHERE sender_acc IN (SELECT sender_acc FROM hofinet "
+        "WHERE fraud_type = 7) AND time_slot = 21",
+        "SELECT * FROM hofinet WHERE fraud_type = 4 AND amount > (SELECT AVG(amount) "
+        "FROM hofinet WHERE sender_bank = 1 OR sender_bank = 2)",
+        "SELECT sender_acc, COUNT(*) FROM hofinet WHERE fraud_type = 4 GROUP BY sender_acc "
+        "HAVING COUNT(*) >= 3",
+        "SELECT * FROM hofinet WHERE CAST(fraud_type AS INTEGER) = 4 AND amount::BIGINT >= 10",
+        "SELECT * FROM hofinet WHERE fraud_description = 'CAST(x AS y)' AND fraud_type = 4",
+    ]
+    with_sqlglot = [extract_atoms(s)[0] for s in statements]
+    saved = sql_module.sqlglot
+    try:
+        sql_module.sqlglot = None
+        without = [extract_atoms(s)[0] for s in statements]
+    finally:
+        sql_module.sqlglot = saved
+    for statement, a, b in zip(statements, with_sqlglot, without):
+        assert sorted(map(str, a)) == sorted(map(str, b)), statement
+
+
+def test_both_parsers_read_every_reference_statement_of_the_benchmark_the_same_way():
+    """The measurement that found the defect, as a test: all four directories."""
+    pytest.importorskip("sqlglot")
+    import glob
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[3]
+    statements = []
+    for name in ("benchmarks", "benchmarks_en"):
+        for path in sorted(glob.glob(str(root / name / "cases_*.json"))):
+            for case in json.loads(Path(path).read_text(encoding="utf-8")):
+                for ref in ((case.get("expected") or {}).get("reference_calls") or {}).values():
+                    statement = ref.get("sql") or ref.get("reference_sql")
+                    if statement:
+                        statements.append((case["id"], statement))
+    assert len(statements) > 50, "the benchmark should carry reference SQL"
+    saved = sql_module.sqlglot
+    try:
+        for case_id, statement in statements:
+            sql_module.sqlglot = saved
+            a = sorted(map(str, extract_atoms(statement)[0]))
+            sql_module.sqlglot = None
+            b = sorted(map(str, extract_atoms(statement)[0]))
+            assert a == b, case_id
+    finally:
+        sql_module.sqlglot = saved

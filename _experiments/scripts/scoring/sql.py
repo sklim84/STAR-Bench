@@ -4,11 +4,22 @@ Predicates are taken from every WHERE and HAVING clause of the statement
 (subqueries and CTEs included), but only along AND-only paths: a comparison
 under OR or NOT (other than NOT col = v) does not restrict the result, so it
 never satisfies a condition. When sqlglot cannot parse the text, a regex
-fallback reads the same atoms from the WHERE clause: it splits on AND at
-parenthesis depth 0, so ``col IN (1, 2)`` and ``col BETWEEN a AND b`` survive
-intact, and it drops a single term it cannot read rather than the whole clause.
-It still gives up on a clause containing OR, because AND binds tighter and a
-term under OR does not restrict the result.
+fallback reads the same atoms: it finds every WHERE and HAVING outside string
+literals, delimits each clause by depth (a clause inside a subquery ends at the
+parenthesis that closes it), and splits on AND at parenthesis depth 0, so
+``col IN (1, 2)`` and ``col BETWEEN a AND b`` survive intact. It drops a single
+term it cannot read rather than the whole clause, and gives up on a clause whose
+OR is at the clause's own top level, because AND binds tighter and a term next
+to such an OR does not restrict the result.
+
+The fallback used to skip any clause whose text contained SELECT, so the two
+cases whose reference SQL puts a scalar subquery in the WHERE clause
+(`st_qt_025`, `st_qt_039`) silently lost their sibling predicates and the gold
+self-test read 1256/1258 in a sqlglot-less environment (V-05). Terms the
+fallback still cannot read are now reported: `extract_atoms_detailed` returns
+them and `check_sql_conditions` names them in the reason of a failing check, so
+a check that fails because of the environment says so instead of looking like a
+data defect.
 
 `sqlglot` is pinned in `_experiments/env/requirements-eval.txt` and gate 1
 checks it. Without it the fallback answers, and the fallback is the conservative
@@ -151,7 +162,8 @@ _RE_IN = re.compile(rf"^{_COL}\s+IN\s*\(([^()]*)\)$", re.I)
 _RE_LIKE = re.compile(rf"^{_COL}\s+(I?LIKE)\s+{_LIT}$", re.I)
 _RE_CMP = re.compile(rf"^{_COL}\s*(=|!=|<>|>=|<=|>|<)\s*{_LIT}$", re.I)
 _RE_CMP_REV = re.compile(rf"^{_LIT}\s*(=|!=|<>|>=|<=|>|<)\s*{_COL}$", re.I)
-_CLAUSE_END = re.compile(r"\b(GROUP\s+BY|ORDER\s+BY|LIMIT|HAVING|UNION|WINDOW|QUALIFY)\b|;", re.I)
+_CLAUSE_END = re.compile(r"(GROUP\s+BY|ORDER\s+BY|LIMIT|OFFSET|HAVING|UNION|EXCEPT|INTERSECT"
+                         r"|WINDOW|QUALIFY)(?![\w])", re.I)
 _RE_NOT = re.compile(r"^NOT\s+(.*)$", re.I | re.S)
 
 
@@ -162,6 +174,19 @@ def _fallback_literal(text: str) -> Any:
         return int(text)
     except ValueError:
         return float(text)
+
+
+def _skip_literal(text: str, i: int) -> int:
+    """Index just past the string literal that starts at `i`, '' escapes included."""
+    i += 1
+    while i < len(text):
+        if text[i] == "'":
+            if text[i + 1: i + 2] == "'":
+                i += 2
+                continue
+            return i + 1
+        i += 1
+    return i
 
 
 def _strip_outer_parens(text: str) -> str:
@@ -187,6 +212,69 @@ def _word_at(text: str, i: int, word: str) -> bool:
     return not (before.isalnum() or before == "_") and not (after.isalnum() or after == "_")
 
 
+def _clause_starts(text: str) -> list[int]:
+    """Where each WHERE/HAVING clause body begins, ignoring string literals."""
+    starts, i = [], 0
+    while i < len(text):
+        if text[i] == "'":
+            i = _skip_literal(text, i)
+            continue
+        for word in ("WHERE", "HAVING"):
+            if _word_at(text, i, word):
+                starts.append(i + len(word))
+                i += len(word)
+                break
+        else:
+            i += 1
+    return starts
+
+
+def _clause_body(text: str, start: int) -> str:
+    """One clause: to the keyword that ends it, to `;`, or to the `)` that closes it.
+
+    A clause inside a subquery ends at that subquery's closing parenthesis, which
+    is what lets the outer clause of `... WHERE a = 1 AND b >= (SELECT ... WHERE
+    c = 2) ORDER BY x` and the inner one be read separately.
+    """
+    depth, i = 0, start
+    while i < len(text):
+        ch = text[i]
+        if ch == "'":
+            i = _skip_literal(text, i)
+            continue
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            if depth == 0:
+                return text[start:i]
+            depth -= 1
+        elif ch == ";":
+            return text[start:i]
+        elif depth == 0 and ch.isalpha() and not (text[i - 1: i].isalnum() or text[i - 1: i] == "_"):
+            if _CLAUSE_END.match(text, i):
+                return text[start:i]
+        i += 1
+    return text[start:]
+
+
+def _has_top_level_or(text: str) -> bool:
+    """An OR at the clause's own level: AND binds tighter, so nothing restricts."""
+    depth, i = 0, 0
+    while i < len(text):
+        ch = text[i]
+        if ch == "'":
+            i = _skip_literal(text, i)
+            continue
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+        elif depth == 0 and _word_at(text, i, "OR"):
+            return True
+        i += 1
+    return False
+
+
 def _split_and(text: str) -> list[str]:
     """Splits on AND at parenthesis depth 0, outside string literals.
 
@@ -197,15 +285,7 @@ def _split_and(text: str) -> list[str]:
     while i < len(text):
         ch = text[i]
         if ch == "'":
-            i += 1
-            while i < len(text):
-                if text[i] == "'":
-                    if text[i + 1: i + 2] == "'":
-                        i += 2
-                        continue
-                    break
-                i += 1
-            i += 1
+            i = _skip_literal(text, i)
             continue
         if ch == "(":
             depth += 1
@@ -240,8 +320,51 @@ def _conjuncts_fallback(text: str) -> list[str]:
     return out
 
 
-def _fallback_atom(part: str) -> tuple | None:
-    """One AND-ed term as an atom, or None when it does not restrict the result."""
+_RE_CAST = re.compile(r"\b(?:TRY_)?CAST\s*\(\s*([^()]*?)\s+AS\s+[A-Za-z_][\w ]*\s*\)", re.I)
+_RE_DOUBLE_COLON = re.compile(r"::\s*[A-Za-z_][\w]*")
+
+
+def _mask_literals(text: str) -> tuple[str, list[str]]:
+    """Replaces every string literal with a placeholder, so a rewrite cannot reach inside it."""
+    out, kept, i, start = [], [], 0, 0
+    while i < len(text):
+        if text[i] == "'":
+            out.append(text[start:i])
+            end = _skip_literal(text, i)
+            out.append(f"\x00{len(kept)}\x00")
+            kept.append(text[i:end])
+            i = start = end
+            continue
+        i += 1
+    out.append(text[start:])
+    return "".join(out), kept
+
+
+def _unmask_literals(text: str, kept: list[str]) -> str:
+    for index, literal in enumerate(kept):
+        text = text.replace(f"\x00{index}\x00", literal)
+    return text
+
+
+def _unwrap_casts(part: str) -> str:
+    """`CAST(col AS INTEGER)` and `col::INTEGER` are the column, as sqlglot reads them."""
+    masked, kept = _mask_literals(part)
+    previous = None
+    while previous != masked:
+        previous = masked
+        masked = _RE_CAST.sub(r"\1", masked)
+    masked = _RE_DOUBLE_COLON.sub("", masked)
+    return _unmask_literals(masked, kept).strip()
+
+
+def _fallback_atom(part: str) -> tuple[tuple | None, bool]:
+    """(atom, unreadable) for one AND-ed term.
+
+    `unreadable` is True only when the fallback does not recognise the text at
+    all. A term it recognises and drops on purpose - anything under NOT, an IN
+    whose values are not literals - is not a gap: sqlglot drops those too.
+    """
+    part = _unwrap_casts(part)
     if match := _RE_NOT.match(part):
         # NOT binds tighter than AND. `NOT col = v` is `col != v`; anything else
         # under NOT (NOT IN, NOT BETWEEN, NOT (...)) is dropped, the way sqlglot
@@ -249,56 +372,73 @@ def _fallback_atom(part: str) -> tuple | None:
         inner = _strip_outer_parens(match.group(1).strip())
         cmp_match = _RE_CMP.match(inner)
         if cmp_match and cmp_match.group(2) == "=":
-            return (cmp_match.group(1).lower(), "!=", _fallback_literal(cmp_match.group(3)))
-        return None
+            return (cmp_match.group(1).lower(), "!=", _fallback_literal(cmp_match.group(3))), False
+        return None, False
     if re.search(r"\bNOT\b", part, re.I):
-        return None                      # col NOT IN (...), col IS NOT NULL
+        return None, False                # col NOT IN (...), col IS NOT NULL
     if m := _RE_BETWEEN.match(part):
         return (m.group(1).lower(), "BETWEEN",
-                [_fallback_literal(m.group(2)), _fallback_literal(m.group(3))])
+                [_fallback_literal(m.group(2)), _fallback_literal(m.group(3))]), False
     if m := _RE_IN.match(part):
         vals = [v.strip() for v in m.group(2).split(",") if v.strip()]
         if vals and all(re.fullmatch(_LIT, v) for v in vals):
-            return (m.group(1).lower(), "IN", [_fallback_literal(v) for v in vals])
-        return None
+            return (m.group(1).lower(), "IN", [_fallback_literal(v) for v in vals]), False
+        return None, False
     if m := _RE_LIKE.match(part):
-        return (m.group(1).lower(), m.group(2).upper(), _fallback_literal(m.group(3)))
+        return (m.group(1).lower(), m.group(2).upper(), _fallback_literal(m.group(3))), False
     if m := _RE_CMP.match(part):
         op = "!=" if m.group(2) == "<>" else m.group(2)
-        return (m.group(1).lower(), op, _fallback_literal(m.group(3)))
+        return (m.group(1).lower(), op, _fallback_literal(m.group(3))), False
     if m := _RE_CMP_REV.match(part):
         op = "!=" if m.group(2) == "<>" else m.group(2)
-        return (m.group(3).lower(), _FLIP[op], _fallback_literal(m.group(1)))
-    return None
+        return (m.group(3).lower(), _FLIP[op], _fallback_literal(m.group(1))), False
+    if re.fullmatch(r"[\w.\"]+\s+IS\s+NULL", part, re.I):
+        return None, False
+    return None, True
 
 
-def _atoms_fallback(sql: str) -> list[tuple]:
+def _atoms_fallback(sql: str) -> tuple[list[tuple], list[str]]:
     text = re.sub(r"--[^\n]*", " ", sql)
     text = re.sub(r"/\*.*?\*/", " ", text, flags=re.S)
     atoms: list[tuple] = []
-    for match in re.finditer(r"\b(WHERE|HAVING)\b", text, re.I):
-        body = text[match.end():]
-        end = _CLAUSE_END.search(body)
-        body = body[: end.start()] if end else body
-        if re.search(r"\bOR\b|\bSELECT\b", body, re.I):
-            # AND binds tighter than OR, so a term next to an OR does not
-            # restrict the result on its own.
+    unreadable: list[str] = []
+    for start in _clause_starts(text):
+        body = _clause_body(text, start).strip()
+        if not body:
             continue
-        for part in _conjuncts_fallback(body.strip()):
-            atom = _fallback_atom(part)
+        if _has_top_level_or(body):
+            # AND binds tighter than OR, so a term next to an OR at this level
+            # does not restrict the result on its own. sqlglot reads the clause
+            # the same way.
+            continue
+        for part in _conjuncts_fallback(body):
+            atom, gap = _fallback_atom(part)
             if atom is not None:
                 atoms.append(atom)
-    return atoms
+            elif gap:
+                unreadable.append(" ".join(part.split())[:120])
+    return atoms, unreadable
+
+
+def extract_atoms_detailed(sql: str) -> tuple[list[tuple], str, list[str]]:
+    """(atoms, parser, unreadable terms). The parser is 'sqlglot' or 'fallback'.
+
+    Only the fallback reports unreadable terms; sqlglot either parses the
+    statement or hands it to the fallback.
+    """
+    if sqlglot is not None:
+        try:
+            return _atoms_sqlglot(sql), "sqlglot", []
+        except Exception:
+            pass
+    atoms, unreadable = _atoms_fallback(sql)
+    return atoms, "fallback", unreadable
 
 
 def extract_atoms(sql: str) -> tuple[list[tuple], str]:
     """Return (atoms, parser) where parser is 'sqlglot' or 'fallback'."""
-    if sqlglot is not None:
-        try:
-            return _atoms_sqlglot(sql), "sqlglot"
-        except Exception:
-            pass
-    return _atoms_fallback(sql), "fallback"
+    atoms, parser, _unreadable = extract_atoms_detailed(sql)
+    return atoms, parser
 
 
 # ---------------------------------------------------------------------------
@@ -378,18 +518,25 @@ def check_sql_conditions(sql: Any, conditions: list[dict]) -> dict:
         return {"passed": False, "reason": "sql argument missing or not a string", "conditions": []}
     if not isinstance(conditions, list) or not conditions:
         return {"passed": False, "reason": "gold sql_conditions is empty or malformed", "conditions": []}
-    atoms, parser = extract_atoms(sql)
+    atoms, parser, unreadable = extract_atoms_detailed(sql)
     per = []
     for cond in conditions:
         ok = isinstance(cond, dict) and str(cond.get("op", "")).upper() in _OPS | {"<>"} and _condition_met(cond, atoms)
         per.append({"condition": cond, "met": ok})
     passed = all(p["met"] for p in per)
-    return {
-        "passed": passed,
-        "parser": parser,
-        "conditions": per,
-        "reason": "" if passed else "unmet: " + json.dumps([p["condition"] for p in per if not p["met"]], ensure_ascii=False),
-    }
+    reason = "" if passed else "unmet: " + json.dumps(
+        [p["condition"] for p in per if not p["met"]], ensure_ascii=False)
+    if unreadable and not passed:
+        # Say when the environment, not the data, is what failed the check: with
+        # sqlglot installed this statement is read by the parser (V-05).
+        reason += (f"; the regex fallback could not read {json.dumps(unreadable, ensure_ascii=False)}"
+                   f" - install sqlglot {SQLGLOT_PIN} "
+                   f"(_experiments/scripts/scoring/requirements.txt) to score this statement with "
+                   f"the parser")
+    out = {"passed": passed, "parser": parser, "conditions": per, "reason": reason}
+    if unreadable:
+        out["unreadable"] = unreadable
+    return out
 
 
 # ---------------------------------------------------------------------------

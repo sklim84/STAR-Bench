@@ -113,8 +113,14 @@ WHERE and HAVING clause of the statement, including subqueries and CTEs, but onl
 paths: a comparison under OR, or under NOT other than `NOT col = v`, does not restrict the result and
 never satisfies a condition. `=` is also satisfied by `IN (v)` with one value, `>=` and `<=` by the
 matching side of a BETWEEN, and a BETWEEN condition by the pair of `>=` and `<=` predicates. When
-sqlglot cannot parse the text, a regex fallback reads `col op literal` terms from the WHERE clause
-and refuses any clause containing OR or NOT. This replaces the substring test, under which
+sqlglot cannot parse the text, or is not installed, a regex fallback reads `col op literal` terms
+from every WHERE and HAVING clause, subqueries included: it delimits each clause by parenthesis
+depth, splits on AND at depth 0, unwraps `CAST(col AS t)` and `col::t`, and gives up on a clause
+whose OR is at the clause's own level. It drops the single terms it cannot read rather than the
+clause, and reports them: a condition check that fails while such a term was dropped says so and
+names the sqlglot pin, so a failure caused by the environment cannot be read as a data defect. Both
+parsers read the same atoms from every reference statement in the benchmark, which is a test.
+This replaces the substring test, under which
 `sql_contains: ["4"]` was satisfied by the year 2024 or by `LIMIT 10`, and a keyword inside a comment
 or a string literal counted as a condition (L4-015). The same rule is used for single-turn and
 multi-turn (L4-018).
