@@ -14,12 +14,12 @@ Source: `_experiments/results_mt_real`. 5,550 executed tool calls.
 |---|---|---:|---:|
 | `platform_nan` | platform | 538 | 9.7% |
 | `entity_absent` | data | 281 | 5.1% |
-| `platform_key_error` | platform | 255 | 4.6% |
+| `platform_model_artifact` | platform | 169 | 3.0% |
+| `platform_key_error` | platform | 109 | 2.0% |
 | `model_bad_argument` | model | 87 | 1.6% |
 | `graph_backend_absent` | platform | 47 | 0.8% |
 | `model_missing_argument` | model | 44 | 0.8% |
 | `model_bad_sql` | model | 35 | 0.6% |
-| `platform_model_artifact` | platform | 23 | 0.4% |
 | `model_unknown_tool` | model | 14 | 0.3% |
 
 ## Errors by family

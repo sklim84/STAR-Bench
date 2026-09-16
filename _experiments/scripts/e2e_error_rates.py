@@ -47,12 +47,19 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 
 # (cause, family, pattern). First match wins, so the specific rules come first.
+#
+# `platform_key_error` matches the tool layer's generic wrapper text, which is
+# what most of the specific platform defects are wrapped in, so it has to come
+# after every rule that names one of them: with it above, the 142 'predict_prob'
+# and 4 __round__ messages were counted as generic and platform_model_artifact
+# saw only `feature_names mismatch` (V-09). The family is `platform` either way,
+# so the 863 / 281 / 180 split does not move; the cause table does.
 RULES: tuple[tuple[str, str, str], ...] = (
     ("graph_backend_absent", "platform", r"memgraph|bolt://|neo4j"),
     ("database_lock", "platform", r"could not set lock|database is locked"),
     ("platform_nan", "platform", r"cannot convert float nan to integer"),
-    ("platform_key_error", "platform", r"unexpected error occurred during tool execution"),
     ("platform_model_artifact", "platform", r"feature_names mismatch|'predict_prob'|__round__"),
+    ("platform_key_error", "platform", r"unexpected error occurred during tool execution"),
     ("entity_absent", "data", r"no transaction history|not found in (the )?hofinet|"
                               r"account .* does not exist|no such account"),
     ("model_unknown_tool", "model", r"^unknown tool\b"),

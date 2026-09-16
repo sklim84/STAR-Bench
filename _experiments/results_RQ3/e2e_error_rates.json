@@ -8,12 +8,12 @@
  "by_cause": {
   "platform_nan": 538,
   "entity_absent": 281,
-  "platform_key_error": 255,
+  "platform_model_artifact": 169,
+  "platform_key_error": 109,
   "model_bad_argument": 87,
   "graph_backend_absent": 47,
   "model_missing_argument": 44,
   "model_bad_sql": 35,
-  "platform_model_artifact": 23,
   "model_unknown_tool": 14
  },
  "by_family": {
@@ -32,10 +32,10 @@
   "platform_nan": "Account profile retrieval error: cannot convert float NaN to integer",
   "platform_key_error": "An unexpected error occurred during tool execution: 'str' object has no attribute 'get'",
   "entity_absent": "No transaction history for this account.",
+  "platform_model_artifact": "An unexpected error occurred during tool execution: 'predict_prob'",
   "model_bad_sql": "Query execution error: Conversion Error: Could not convert string '2023-01-01' to INT32\n\nLINE 1: SELECT * FROM hofinet WHERE date BETWEEN '2023-01-01' AND '2023",
   "graph_backend_absent": "Unable to find shortest path as Memgraph is not running.",
-  "model_unknown_tool": "Unknown tool: get_cross_institution_flow",
-  "platform_model_artifact": "Model prediction error: feature_names mismatch: ['time_slot', 'sender_bank', 'receiver_bank', 'fund_type', 'media_type', 'amount'] ['amount', 'fund_type', 'medi"
+  "model_unknown_tool": "Unknown tool: get_cross_institution_flow"
  },
  "per_model": {
   "DragonLLM/Llama-Open-Finance-8B": {
@@ -45,8 +45,9 @@
    "ok": 96,
    "cause:model_missing_argument": 1,
    "cause:platform_nan": 31,
-   "cause:platform_key_error": 25,
+   "cause:platform_key_error": 13,
    "cause:entity_absent": 12,
+   "cause:platform_model_artifact": 12,
    "cause:model_bad_sql": 3
   },
   "DragonLLM/Qwen-Open-Finance-R-8B": {
@@ -55,7 +56,7 @@
    "ok": 100,
    "empty": 26,
    "cause:entity_absent": 9,
-   "cause:platform_key_error": 6,
+   "cause:platform_model_artifact": 6,
    "cause:graph_backend_absent": 1,
    "cause:model_bad_argument": 1
   },
@@ -65,7 +66,7 @@
    "cause:platform_nan": 27,
    "cause:entity_absent": 15,
    "empty": 17,
-   "cause:platform_key_error": 8,
+   "cause:platform_model_artifact": 8,
    "cause:model_bad_sql": 1,
    "cause:model_unknown_tool": 2,
    "cause:model_bad_argument": 1,
@@ -77,7 +78,7 @@
    "empty": 38,
    "ok": 105,
    "cause:entity_absent": 12,
-   "cause:platform_key_error": 8,
+   "cause:platform_model_artifact": 8,
    "cause:model_missing_argument": 2,
    "cause:graph_backend_absent": 1
   },
@@ -89,7 +90,7 @@
    "cause:platform_nan": 22,
    "cause:model_bad_sql": 3,
    "cause:entity_absent": 8,
-   "cause:platform_key_error": 3,
+   "cause:platform_model_artifact": 3,
    "cause:graph_backend_absent": 1
   },
   "Qwen/Qwen3.5-27B": {
@@ -98,11 +99,10 @@
    "empty": 98,
    "ok": 294,
    "cause:entity_absent": 21,
-   "cause:platform_key_error": 8,
+   "cause:platform_model_artifact": 9,
    "cause:model_missing_argument": 2,
    "cause:graph_backend_absent": 3,
-   "cause:model_bad_sql": 1,
-   "cause:platform_model_artifact": 1
+   "cause:model_bad_sql": 1
   },
   "Qwen/Qwen3.5-4B": {
    "empty": 118,
@@ -110,7 +110,7 @@
    "error": 100,
    "cause:platform_nan": 46,
    "cause:entity_absent": 26,
-   "cause:platform_key_error": 17,
+   "cause:platform_model_artifact": 17,
    "cause:model_bad_sql": 4,
    "cause:model_missing_argument": 3,
    "cause:graph_backend_absent": 3,
@@ -121,9 +121,10 @@
    "error": 48,
    "cause:platform_nan": 23,
    "ok": 144,
-   "cause:platform_key_error": 7,
+   "cause:platform_model_artifact": 6,
    "cause:entity_absent": 14,
    "cause:model_missing_argument": 2,
+   "cause:platform_key_error": 1,
    "cause:graph_backend_absent": 2
   },
   "Qwen/Qwen3.6-35B-A3B": {
@@ -132,8 +133,9 @@
    "error": 44,
    "cause:platform_nan": 23,
    "cause:entity_absent": 14,
-   "cause:platform_key_error": 4,
+   "cause:platform_model_artifact": 3,
    "cause:model_missing_argument": 2,
+   "cause:platform_key_error": 1,
    "cause:graph_backend_absent": 1
   },
   "Salesforce/Llama-xLAM-2-70b-fc-r": {
@@ -143,7 +145,7 @@
    "empty": 31,
    "cause:model_bad_argument": 3,
    "cause:entity_absent": 10,
-   "cause:platform_key_error": 5,
+   "cause:platform_model_artifact": 5,
    "cause:graph_backend_absent": 1
   },
   "Salesforce/xLAM-2-3b-fc-r": {
@@ -152,7 +154,7 @@
    "ok": 88,
    "cause:entity_absent": 12,
    "empty": 11,
-   "cause:platform_key_error": 4,
+   "cause:platform_model_artifact": 4,
    "cause:model_bad_argument": 7,
    "cause:model_unknown_tool": 3,
    "cause:model_bad_sql": 2,
@@ -163,10 +165,9 @@
    "ok": 116,
    "error": 61,
    "cause:model_bad_sql": 2,
-   "cause:platform_model_artifact": 11,
+   "cause:platform_model_artifact": 21,
    "cause:graph_backend_absent": 9,
    "cause:entity_absent": 12,
-   "cause:platform_key_error": 10,
    "cause:model_missing_argument": 2,
    "cause:platform_nan": 15
   },
@@ -175,9 +176,8 @@
    "ok": 57,
    "error": 30,
    "cause:entity_absent": 9,
-   "cause:platform_key_error": 2,
+   "cause:platform_model_artifact": 4,
    "cause:platform_nan": 14,
-   "cause:platform_model_artifact": 2,
    "cause:model_missing_argument": 1,
    "cause:model_bad_sql": 1,
    "cause:graph_backend_absent": 1
@@ -188,7 +188,7 @@
    "error": 31,
    "cause:platform_nan": 8,
    "cause:entity_absent": 12,
-   "cause:platform_key_error": 1,
+   "cause:platform_model_artifact": 1,
    "cause:model_missing_argument": 4,
    "cause:graph_backend_absent": 4,
    "cause:model_bad_sql": 2
@@ -200,7 +200,7 @@
    "cause:platform_nan": 11,
    "cause:entity_absent": 9,
    "cause:graph_backend_absent": 10,
-   "cause:platform_key_error": 3,
+   "cause:platform_model_artifact": 3,
    "cause:model_missing_argument": 1
   },
   "meta-llama/Llama-3.2-3B-Instruct": {
@@ -208,9 +208,10 @@
    "error": 98,
    "cause:model_bad_argument": 25,
    "ok": 66,
-   "cause:platform_key_error": 43,
+   "cause:platform_key_error": 41,
    "cause:platform_nan": 16,
    "cause:entity_absent": 10,
+   "cause:platform_model_artifact": 2,
    "cause:model_missing_argument": 2,
    "cause:model_unknown_tool": 1,
    "cause:model_bad_sql": 1
@@ -220,19 +221,21 @@
    "error": 109,
    "cause:model_bad_argument": 19,
    "ok": 59,
-   "cause:platform_key_error": 56,
+   "cause:platform_key_error": 52,
    "cause:platform_nan": 22,
    "cause:entity_absent": 11,
+   "cause:platform_model_artifact": 4,
    "cause:graph_backend_absent": 1
   },
   "microsoft/Phi-4-mini-instruct": {
    "error": 58,
    "cause:platform_nan": 19,
    "cause:model_bad_argument": 17,
-   "cause:platform_key_error": 9,
+   "cause:platform_key_error": 1,
    "ok": 55,
    "cause:entity_absent": 7,
    "empty": 27,
+   "cause:platform_model_artifact": 8,
    "cause:model_unknown_tool": 2,
    "cause:model_missing_argument": 3,
    "cause:graph_backend_absent": 1
@@ -244,8 +247,7 @@
    "cause:model_bad_sql": 8,
    "cause:platform_nan": 29,
    "cause:entity_absent": 6,
-   "cause:platform_key_error": 7,
-   "cause:platform_model_artifact": 9,
+   "cause:platform_model_artifact": 16,
    "cause:model_missing_argument": 3,
    "cause:graph_backend_absent": 1
   },
@@ -256,7 +258,7 @@
    "cause:platform_nan": 14,
    "cause:entity_absent": 12,
    "cause:model_bad_sql": 3,
-   "cause:platform_key_error": 5,
+   "cause:platform_model_artifact": 5,
    "cause:graph_backend_absent": 2,
    "cause:model_bad_argument": 2,
    "cause:model_missing_argument": 2
@@ -266,7 +268,7 @@
    "ok": 222,
    "error": 51,
    "cause:entity_absent": 16,
-   "cause:platform_key_error": 10,
+   "cause:platform_model_artifact": 10,
    "cause:platform_nan": 20,
    "cause:model_bad_sql": 1,
    "cause:model_missing_argument": 2,
@@ -278,7 +280,7 @@
    "error": 60,
    "cause:entity_absent": 14,
    "cause:model_unknown_tool": 6,
-   "cause:platform_key_error": 10,
+   "cause:platform_model_artifact": 10,
    "cause:platform_nan": 28,
    "cause:graph_backend_absent": 1,
    "cause:model_bad_sql": 1
@@ -288,7 +290,7 @@
    "empty": 44,
    "error": 22,
    "cause:entity_absent": 7,
-   "cause:platform_key_error": 3,
+   "cause:platform_model_artifact": 3,
    "cause:platform_nan": 10,
    "cause:model_missing_argument": 1,
    "cause:graph_backend_absent": 1
@@ -302,7 +304,7 @@
    "cause:entity_absent": 3,
    "cause:model_missing_argument": 1,
    "cause:model_bad_argument": 2,
-   "cause:platform_key_error": 1,
+   "cause:platform_model_artifact": 1,
    "cause:graph_backend_absent": 1
   }
  },
@@ -389,7 +391,8 @@
    "error": 114,
    "cause:model_missing_argument": 12,
    "ok": 239,
-   "cause:platform_key_error": 102
+   "cause:platform_key_error": 98,
+   "cause:platform_model_artifact": 4
   },
   "get_account_profile": {
    "error": 499,
@@ -458,7 +461,7 @@
   },
   "rank_risky_transactions": {
    "error": 142,
-   "cause:platform_key_error": 142
+   "cause:platform_model_artifact": 142
   },
   "score_account_risk": {
    "ok": 53,
