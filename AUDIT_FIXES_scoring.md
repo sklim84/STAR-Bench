@@ -65,32 +65,29 @@ into the paper).
 ## Gold self-test on the current data
 
 Run against the four benchmark directories; reports in
-`_experiments/dataset_fix_20260915/impl/gold_selftest_*.json`.
+`_experiments/dataset_fix_20260915/impl/gold_selftest_*.json`, regenerated 2026-09-16 on the
+rebuilt data. Pre-flight gate 4 runs the same self-test and fails when a committed report and a
+fresh run disagree, so these numbers cannot go stale unnoticed again.
 
 | benchmark | perfect | defects | advisories |
 |---|---|---|---|
-| `benchmarks` | 1176 / 1258 | 82 | 17 |
-| `benchmarks_en` | 1176 / 1258 | 82 | 17 |
-| `benchmarks_multiturn` (oracle and e2e) | 10 / 50 | 40 | 1 |
-| `benchmarks_multiturn_en` (oracle and e2e) | 10 / 50 | 40 | 1 |
+| `benchmarks` | 1258 / 1258 | 0 | 1 |
+| `benchmarks_en` | 1258 / 1258 | 0 | 1 |
+| `benchmarks_multiturn` (oracle and e2e) | 50 / 50 | 0 | 0 |
+| `benchmarks_multiturn_en` (oracle and e2e) | 50 / 50 | 0 | 0 |
 
-What the defects are:
+Every gold call renders and scores 1 against itself. The one advisory is `st_mtool_084`, whose gold
+`analyze_network` call pins no `account_id`: the annotation is consistent, but the call cannot be
+executed as written, so it is also the one call the platform gold-call harness skips (L1-016, open
+in the data workstream).
 
-- 78 single-turn cases (156 problems) and 36 multi-turn turns expect `query_transactions` but carry
-  no `expected.reference_calls.query_transactions.sql`, so no gold call can be rendered and both the
-  SQL condition check and `sql_valid` fail. Contract 1 requires that field.
-- 5 single-turn cases use `period_a_start`, `period_a_end`, `period_b_start`, `period_b_end`, which
-  are not `compare_periods` schema properties (L1-012). One multi-turn turn passes `account_id` to
-  `detect_ctr_candidates`, which has no such property.
-- 12 multi-turn context references point at `generate_str.fraud_probability`, which is not scored,
-  and 2 point at an argument no gold call takes (`sql_contains`, `기관쌍`). These references cannot
-  be evaluated as written (L2-013).
-- Advisories: 17 single-turn cases and 1 multi-turn scenario pin no value for a required argument, so
-  the gold call is not executable as written (`detect_ctr_candidates.mode`,
-  `detect_smurfing_network.direction`, `validate_str_fields.str_draft`, and others). `st_gl_008` asks
-  for the glossary term `구조화`, which the catalog does not contain.
+The defects this table used to report (82 single-turn, 40 multi-turn) were the pre-rebuild data:
+cases expecting `query_transactions` without `expected.reference_calls.query_transactions.sql`,
+`period_a_*` arguments that are not `compare_periods` properties (L1-012), and context references
+pointing at `generate_str.fraud_probability` (L2-013). WS-D and WS-E fixed all of them; the
+requirements they came from are listed under "What the other streams must provide" below.
 
-The same command re-runs against the rebuilt data:
+The same command re-runs against the data in the tree:
 
 ```
 python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks \

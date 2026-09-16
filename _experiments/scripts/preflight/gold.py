@@ -12,6 +12,11 @@ Two independent readings of the same data:
 An error fails the gate. An empty or unexecutable call fails it too unless
 `allow_empty.json` names that case and says why, so the ring and layering scans
 that HOFINET cannot answer stay visible instead of being rounded away (D06).
+
+The self-test reports committed under `impl/` are compared with the fresh run.
+They were 1176/1258 with 82 defects while the data was 1258/1258 with none, and
+`AUDIT_FIXES_scoring.md` quoted them as current, so a stale report read as a
+measurement of data that no longer existed.
 """
 
 from __future__ import annotations
@@ -22,7 +27,7 @@ import tempfile
 import time
 from pathlib import Path
 
-from .gate import BENCHMARK_DIRS, Check, Context, GateResult, run_command
+from .gate import BENCHMARK_DIRS, Check, Context, GateResult, IMPL_DIR, run_command
 
 NUMBER = 4
 KEY = "gold"
@@ -33,12 +38,60 @@ ALLOW_PATH = Path(__file__).resolve().parent / "allow_empty.json"
 
 def run(ctx: Context, *, update_allow_list: bool = False) -> GateResult:
     started = time.time()
-    checks = [_selftest(ctx, name) for name in BENCHMARK_DIRS]
+    checks, fresh = [], {}
+    for name in BENCHMARK_DIRS:
+        check, report = _selftest(ctx, name)
+        checks.append(check)
+        fresh[name] = report
+    checks.append(_committed_reports_match(fresh))
     checks.extend(_gold_calls(ctx, update_allow_list=update_allow_list))
     return GateResult(KEY, NUMBER, TITLE, checks, time.time() - started)
 
 
-def _selftest(ctx: Context, benchmark: str) -> Check:
+def headline(report: dict) -> dict:
+    """The numbers a document quotes: per block, n, perfect and defect count."""
+    out = {"benchmark_sha256": report.get("benchmark_sha256")}
+    for key in ("single", "oracle", "e2e"):
+        block = report.get(key)
+        if isinstance(block, dict):
+            out[key] = {"n": block.get("n"), "n_perfect": block.get("n_perfect"),
+                        "defects": len(block.get("defects") or [])}
+    return out
+
+
+def _committed_reports_match(fresh: dict[str, dict]) -> Check:
+    """`impl/gold_selftest_*.json` is what the stream reports quote; it must be current."""
+    problems, compared = [], []
+    for name, report in fresh.items():
+        path = IMPL_DIR / f"gold_selftest_{name}.json"
+        if not path.is_file():
+            problems.append(f"{path.name} is missing")
+            continue
+        if not report:
+            problems.append(f"{name}: the fresh self-test produced no report to compare with")
+            continue
+        try:
+            committed = json.loads(path.read_text(encoding="utf-8"))
+        except ValueError as exc:
+            problems.append(f"{path.name} is not readable: {exc}")
+            continue
+        want, have = headline(report), headline(committed)
+        if want != have:
+            problems.append(f"{path.name} says {have}, a fresh run says {want}")
+        else:
+            compared.append(name)
+    return Check("the committed gold self-test reports match a fresh run", not problems,
+                 "; ".join(problems[:3]) if problems
+                 else f"{len(compared)} report(s) current: " + ", ".join(
+                     f"{n} {fresh[n].get('single', fresh[n].get('oracle', {})).get('n_perfect')}"
+                     f"/{fresh[n].get('single', fresh[n].get('oracle', {})).get('n')}"
+                     for n in compared),
+                 "python -m _experiments.scripts.scoring.gold_selftest --benchmark <dir> "
+                 "--out _experiments/dataset_fix_20260915/impl/gold_selftest_<dir>.json",
+                 {"problems": problems})
+
+
+def _selftest(ctx: Context, benchmark: str) -> tuple[Check, dict]:
     with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as handle:
         out = Path(handle.name)
     try:
@@ -58,7 +111,7 @@ def _selftest(ctx: Context, benchmark: str) -> Check:
     if defects:
         detail = f"{len(defects)} defect(s): " + "; ".join(_describe(d) for d in defects[:4])
     return Check(f"gold self-test on {benchmark}", done.ok and not defects, detail,
-                 done.command, {"defects": defects[:20]})
+                 done.command, {"defects": defects[:20]}), report
 
 
 def _describe(defect: dict) -> str:

@@ -77,7 +77,10 @@ def load_tool_schemas(path: str | Path | None = None) -> SchemaSet:
     try:
         from src.features.agent import TOOLS  # noqa: PLC0415
 
-        return SchemaSet(TOOLS, f"import:{root}/src/features/agent.py")
+        # Named relative to the platform checkout: the source ends up in a
+        # committed report, and a checkout path is a property of the machine.
+        return SchemaSet(TOOLS, "import:<platform>/src/features/agent.py")
     except Exception:  # the tool layer's own dependencies may be missing
         agent_py = root / "src" / "features" / "agent.py"
-        return SchemaSet(_tools_from_agent_source(agent_py), f"ast:{agent_py}")
+        return SchemaSet(_tools_from_agent_source(agent_py),
+                         "ast:<platform>/src/features/agent.py")
