@@ -17,7 +17,8 @@ from pathlib import Path
 
 from . import arms, preflight, provenance, records, registry
 
-__all__ = ["add_common_arguments", "resolve", "RunSetup", "apply_limit", "select_cases"]
+__all__ = ["add_common_arguments", "resolve", "RunSetup", "apply_limit", "select_cases",
+           "identity_of"]
 
 _ROOT = Path(__file__).resolve().parents[3]
 
@@ -223,8 +224,21 @@ def resolve(args, *, cases: list[dict], setting: str, query_lang_default: str,
                     run_id=run_id, query_lang=query_lang, provenance_block=prov, serving=serving)
 
 
-def select_cases(cases: list[dict], args, *, keys, out_dir: Path) -> list[dict]:
-    """Applies --case-ids and --resume. `--limit` is applied by `apply_limit` first."""
+def identity_of(setup: RunSetup, *, setting: str) -> dict:
+    """The arm this run belongs to, read the way it is read out of a record."""
+    return records.run_identity({"setting": setting, "tools_lang": setup.arm.lang,
+                                 "query_lang": setup.query_lang, "config": setup.config,
+                                 "provenance": setup.provenance})
+
+
+def select_cases(cases: list[dict], args, *, keys, out_dir: Path, setup: RunSetup | None = None,
+                 setting: str | None = None) -> list[dict]:
+    """Applies --case-ids and --resume. `--limit` is applied by `apply_limit` first.
+
+    `setup` is what makes `--resume` an arm check rather than a case-id check: a
+    directory whose records were produced with another benchmark directory, arm,
+    prompt variant or model is refused instead of being merged (V-03).
+    """
     wanted = _case_filter(args)
     if wanted is not None:
         known = {c["id"] for c in cases}
@@ -234,7 +248,9 @@ def select_cases(cases: list[dict], args, *, keys, out_dir: Path) -> list[dict]:
                              f"contain: {missing[:5]}")
         cases = [c for c in cases if c["id"] in wanted]
     if args.resume:
-        done = records.resume_state(out_dir, keys, allow_partial=args.partial)
+        identity = identity_of(setup, setting=setting or setup.config.get("setting")) \
+            if setup is not None else None
+        done = records.resume_state(out_dir, keys, allow_partial=args.partial, identity=identity)
         cases = [c for c in cases if not all(k in done for k in keys_of(c, keys))]
         print(f"resume: {len(done)} record(s) already present, {len(cases)} case(s) to run")
     return cases

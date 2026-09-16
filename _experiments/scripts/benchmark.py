@@ -12,8 +12,9 @@ that used to live here moved with it.
 
 Old checkpoints are never read: a run writes into a fresh directory, and
 `--resume` skips only the cases that same directory already holds a record for,
-after checking that its contents belong to this benchmark (C2-014, C2-015,
-L5-027).
+after checking that its contents belong to this run: the same benchmark
+directory and file hash, schema arm, query language, prompt variant, model and
+revision (C2-014, C2-015, L5-027, V-03).
 
 `--limit N` is a smoke run: the first N cases of the benchmark are the run, and
 the run is verified against those N. It used to be checked against the whole
@@ -76,7 +77,8 @@ def main(argv: list[str] | None = None, *, executor=None) -> int:
                         cases_dir=args.cases_dir)
 
     keys = loop.expected_keys(cases, multiturn=False)
-    todo = cli.select_cases(cases, args, keys=keys, out_dir=args.out)
+    todo = cli.select_cases(cases, args, keys=keys, out_dir=args.out, setup=setup,
+                            setting="single")
 
     clients = cli.client_pool(args, setup.chat_options)
     executor = executor or loop.platform_executor()

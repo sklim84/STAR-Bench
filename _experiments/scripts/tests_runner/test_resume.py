@@ -166,3 +166,126 @@ def test_run_ids_carry_the_arm_the_setting_and_a_timestamp(server, single_benchm
     run_id = next(out.glob("*.jsonl")).stem
     assert "kr" in run_id and "single" in run_id
     assert run_id.count("-") >= 3
+
+
+# ---------------------------------------------------------------------------
+# A resume continues one arm; it does not merge two (V-03)
+#
+# `benchmarks` and `benchmarks_en` carry the same 1,258 case ids by design, so a
+# membership test cannot separate them: resuming a Korean run with
+# `--cases-dir benchmarks_en` was accepted, the file then held both arms and the
+# manifest claimed one. Every field that makes a run a different arm is checked.
+# ---------------------------------------------------------------------------
+
+@pytest.fixture
+def english_benchmark(tmp_path, single_benchmark):
+    """The same case ids, translated: a different directory and a different hash."""
+    path = tmp_path / "benchmarks_en"
+    path.mkdir()
+    cases = json.loads((single_benchmark / "cases_multi_tool.json").read_text(encoding="utf-8"))
+    english = ["How many suspicious transactions last month?",
+               "Show the profile of account 9000000000000002",
+               "What is money laundering?"]
+    for case, question in zip(cases, english):
+        case["question"] = question
+    (path / "cases_multi_tool.json").write_text(json.dumps(cases, ensure_ascii=False),
+                                                encoding="utf-8")
+    return path
+
+
+def _first_run(server, bench, out, fake_tools, extra=()):
+    server.always(text("끝"))
+    benchmark.main(_argv(server, bench, out, ["--limit", "1", *extra]), executor=fake_tools)
+    return out
+
+
+def test_resume_refuses_the_other_language_arm(server, single_benchmark, english_benchmark,
+                                               tmp_path, fake_tools):
+    """The reported hole: three Korean records, resumed with --cases-dir benchmarks_en."""
+    out = _first_run(server, single_benchmark, tmp_path / "r", fake_tools)
+    with pytest.raises(records.ResumeRefused) as excinfo:
+        benchmark.main(_argv(server, english_benchmark, out, ["--resume"]), executor=fake_tools)
+    message = str(excinfo.value)
+    assert "benchmark_dir" in message and "--cases-dir" in message
+    assert "benchmark_sha256" in message
+    recs = [r for f in sorted(out.glob("*.jsonl")) for r in records.read_records(f)]
+    assert {r["provenance"]["benchmark_dir"] for r in recs} == {"benchmarks"}, \
+        "the refused run must not have written anything"
+
+
+def test_resume_refuses_the_same_questions_from_another_copy_of_the_benchmark(
+        server, single_benchmark, tmp_path, fake_tools):
+    """Same directory name, edited content: the hash is what catches it."""
+    out = _first_run(server, single_benchmark, tmp_path / "r", fake_tools)
+    cases = json.loads((single_benchmark / "cases_multi_tool.json").read_text(encoding="utf-8"))
+    cases[2]["question"] = cases[2]["question"] + " 자세히"
+    (single_benchmark / "cases_multi_tool.json").write_text(json.dumps(cases, ensure_ascii=False),
+                                                            encoding="utf-8")
+    with pytest.raises(records.ResumeRefused, match="benchmark_sha256"):
+        benchmark.main(_argv(server, single_benchmark, out, ["--resume"]), executor=fake_tools)
+
+
+def test_resume_refuses_another_schema_arm(server, single_benchmark, tmp_path, fake_tools):
+    out = _first_run(server, single_benchmark, tmp_path / "r", fake_tools)
+    argv = base_argv(server, out, tools_lang="en") + ["--cases-dir", str(single_benchmark),
+                                                     "--resume"]
+    with pytest.raises(records.ResumeRefused, match="tools_lang"):
+        benchmark.main(argv, executor=fake_tools)
+
+
+def test_resume_refuses_another_prompt_variant(server, single_benchmark, tmp_path, fake_tools):
+    out = _first_run(server, single_benchmark, tmp_path / "r", fake_tools)
+    with pytest.raises(records.ResumeRefused, match="prompt_variant"):
+        benchmark.main(_argv(server, single_benchmark, out,
+                             ["--resume", "--prompt-variant", "list_reporting_tools"]),
+                       executor=fake_tools)
+
+
+def test_resume_refuses_another_model(server, single_benchmark, tmp_path, fake_tools):
+    out = _first_run(server, single_benchmark, tmp_path / "r", fake_tools)
+    argv = [a if a != "mock-model" else "other-model"
+            for a in _argv(server, single_benchmark, out, ["--resume"])]
+    with pytest.raises(records.ResumeRefused, match="model"):
+        benchmark.main(argv, executor=fake_tools)
+
+
+def test_resume_refuses_another_query_language(server, single_benchmark, tmp_path, fake_tools):
+    out = _first_run(server, single_benchmark, tmp_path / "r", fake_tools)
+    with pytest.raises(records.ResumeRefused, match="query_lang"):
+        benchmark.main(_argv(server, single_benchmark, out, ["--resume", "--query-lang", "en"]),
+                       executor=fake_tools)
+
+
+def test_resume_of_the_same_configuration_is_still_accepted(server, single_benchmark, tmp_path,
+                                                            fake_tools):
+    """The guard refuses another arm, not a resume."""
+    out = _first_run(server, single_benchmark, tmp_path / "r", fake_tools)
+    assert benchmark.main(_argv(server, single_benchmark, out, ["--resume"]),
+                          executor=fake_tools) == 0
+    recs = [r for f in sorted(out.glob("*.jsonl")) for r in records.read_records(f)]
+    assert sorted(r["case_id"] for r in recs) == ["st_001", "st_002", "st_003"]
+
+
+def test_the_identity_of_a_record_and_of_the_run_are_read_the_same_way(server, single_benchmark,
+                                                                       tmp_path, fake_tools):
+    out = _first_run(server, single_benchmark, tmp_path / "r", fake_tools)
+    record = next(records.read_records(next(out.glob("*.jsonl"))))
+    identity = records.run_identity(record)
+    assert identity["benchmark_dir"] == "benchmarks"
+    assert identity["tools_lang"] == "kr" and identity["query_lang"] == "kr"
+    assert identity["setting"] == "single" and identity["prompt_variant"] == "baseline"
+    assert len(identity["benchmark_sha256"]) == 64
+    assert set(identity) == set(records.IDENTITY_FIELDS)
+
+
+def test_a_multi_turn_resume_refuses_the_other_setting(server, multiturn_benchmark, tmp_path,
+                                                       fake_tools):
+    from _experiments.scripts import benchmark_multiturn
+
+    server.always(text("끝"))
+    out = tmp_path / "r"
+    argv = base_argv(server, out) + ["--cases-dir", str(multiturn_benchmark), "--limit", "1"]
+    benchmark_multiturn.main(argv + ["--setting", "oracle"], executor=fake_tools)
+    with pytest.raises(records.ResumeRefused, match="setting"):
+        benchmark_multiturn.main(argv[:-2] + ["--setting", "e2e", "--resume"],
+                                 executor=fake_tools)

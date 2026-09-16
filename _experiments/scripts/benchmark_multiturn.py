@@ -76,7 +76,8 @@ def main(argv: list[str] | None = None, *, executor=None) -> int:
                         cases_dir=args.cases_dir)
 
     keys = loop.expected_keys(scenarios, multiturn=True)
-    todo = cli.select_cases(scenarios, args, keys=keys, out_dir=args.out)
+    todo = cli.select_cases(scenarios, args, keys=keys, out_dir=args.out, setup=setup,
+                            setting=args.setting)
 
     clients = cli.client_pool(args, setup.chat_options)
     executor = executor or loop.platform_executor()

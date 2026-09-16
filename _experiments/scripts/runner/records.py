@@ -8,7 +8,8 @@ without re-running a model (L4-016).
 A run writes into a fresh directory. Old checkpoints are never read: a rerun
 that wants to skip finished cases passes `--resume`, which reads the records
 this very run directory already holds and refuses anything that does not carry
-the expected case count (C2-014, C2-015, L5-027).
+the expected case count (C2-014, C2-015, L5-027) or does not belong to the same
+arm (`run_identity`, V-03).
 """
 
 from __future__ import annotations
@@ -25,6 +26,7 @@ from typing import Any, Iterable, Iterator
 __all__ = [
     "CallRecord", "ExecutedRecord", "RoundRecord", "RunRecord", "RecordWriter",
     "new_run_id", "read_records", "case_ids_in", "RESUME_REFUSED", "ResumeRefused",
+    "run_identity", "IDENTITY_FIELDS",
 ]
 
 STOP_REASONS = ("no_tool_call", "tool_call", "max_rounds", "error", "length",
@@ -258,14 +260,77 @@ def case_ids_in(out_dir: Path | str, *, include_partial: bool = False) -> dict[s
     return found
 
 
+IDENTITY_FIELDS = ("setting", "benchmark_dir", "benchmark_sha256", "tools_lang",
+                   "query_lang", "prompt_variant", "config_id", "model", "model_revision")
+
+_IDENTITY_LABEL = {
+    "setting": "--setting", "benchmark_dir": "--cases-dir",
+    "benchmark_sha256": "the benchmark files", "tools_lang": "--tools-lang",
+    "query_lang": "--query-lang", "prompt_variant": "--prompt-variant",
+    "config_id": "--config", "model": "--model", "model_revision": "the model revision",
+}
+
+
+def run_identity(record: dict) -> dict:
+    """Which arm a record belongs to: what a resume has to match.
+
+    The case ids of `benchmarks` and `benchmarks_en` are the same 1,258 by
+    design, so a membership test cannot tell the two arms apart: resuming a
+    Korean run with `--cases-dir benchmarks_en` was accepted, and the record file
+    then held both arms while the manifest claimed one (V-03). This reads the
+    identity out of a record and out of the run about to start in the same shape,
+    so the two compare.
+    """
+    prov = record.get("provenance") or {}
+    config = record.get("config") or {}
+    return {
+        "setting": record.get("setting"),
+        "benchmark_dir": prov.get("benchmark_dir"),
+        "benchmark_sha256": prov.get("benchmark_sha256"),
+        "tools_lang": record.get("tools_lang") or prov.get("tools_lang"),
+        "query_lang": record.get("query_lang"),
+        "prompt_variant": prov.get("prompt_variant") or config.get("prompt_variant"),
+        "config_id": config.get("config_id"),
+        "model": config.get("model"),
+        "model_revision": config.get("model_revision"),
+    }
+
+
+def _identity_differences(stored: dict, wanted: dict) -> list[str]:
+    out = []
+    for field in IDENTITY_FIELDS:
+        have, want = stored.get(field), wanted.get(field)
+        if have == want:
+            continue
+        out.append(f"{field} ({_IDENTITY_LABEL[field]}) is {have!r} in the directory, "
+                   f"{want!r} in this run")
+    return out
+
+
+def identities_in(out_dir: Path | str, *, include_partial: bool = False) -> list[tuple[str, dict]]:
+    """(case key, identity) for every record already in this run directory."""
+    found = []
+    for path in _record_files(Path(out_dir)):
+        if not include_partial and path.name.endswith(".partial.jsonl"):
+            continue
+        for rec in read_records(path):
+            case_id = rec.get("case_id")
+            key = case_id if rec.get("turn") is None else f"{case_id}#{rec.get('turn')}"
+            found.append((key, run_identity(rec)))
+    return found
+
+
 def resume_state(out_dir: Path | str, expected_keys: Iterable[str], *,
-                 allow_partial: bool = False) -> set[str]:
+                 allow_partial: bool = False, identity: dict | None = None) -> set[str]:
     """Keys a `--resume` run may skip, or a refusal.
 
     Refuses when the directory holds records the benchmark does not know about,
-    when it holds partial files (which are, by construction, not a full run) and
+    when it holds partial files (which are, by construction, not a full run),
     when every expected key is already there, because a resume that skips
-    everything is a configuration mistake and not a finished run (C2-015).
+    everything is a configuration mistake and not a finished run (C2-015), and
+    when the records were produced by a different arm (V-03): another benchmark
+    directory or another copy of it, another schema arm, query language, prompt
+    variant, model or revision.
     """
     out_dir = Path(out_dir)
     expected = set(expected_keys)
@@ -283,6 +348,16 @@ def resume_state(out_dir: Path | str, expected_keys: Iterable[str], *,
             f"(first: {unknown[:3]}). The directory belongs to another benchmark or another "
             f"schema arm; use a fresh output directory."
         )
+    if identity is not None:
+        for key, stored in identities_in(out_dir, include_partial=allow_partial):
+            differences = _identity_differences(stored, identity)
+            if differences:
+                raise ResumeRefused(
+                    f"{out_dir} holds records from a different run configuration (first: {key}):\n"
+                    + "\n".join(f"  - {d}" for d in differences)
+                    + "\nA resume continues one arm; it does not merge two. Use a fresh output "
+                      "directory, or run the arm the directory belongs to."
+                )
     missing = expected - set(done)
     if not missing:
         raise ResumeRefused(
