@@ -1,10 +1,13 @@
 """Pass 01 - apply the approved single-turn fix table v3 (register K4).
 
-`fix_table_data.json` holds, per case, the as-is question and gold and the
+`inputs/fix_table_data.json` holds, per case, the as-is question and gold and the
 approved to-be values: `kr_tobe` for the Korean question, `en_tobe` for the
 English one and `gold_tobe` for the shared `expected` block. The pass refuses to
 run when an as-is value no longer matches the data, so a later pass can never be
 silently overwritten by an earlier fix table.
+
+The table is tracked next to the passes. It used to be read out of the internal
+audit directory, which is gitignored, so a clean clone could not replay the round.
 """
 
 from __future__ import annotations
@@ -16,9 +19,9 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
     __package__ = "_experiments.scripts.data_fixes"
 
-from .common import AUDIT, Bench, ChangeLog, both, load_json
+from .common import INPUTS, Bench, ChangeLog, both, load_json
 
-FIX_TABLE = AUDIT / "fix_table_data.json"
+FIX_TABLE = INPUTS / "fix_table_data.json"
 
 
 def verify_asis(kr: Bench, en: Bench, cases: list[dict]) -> list[str]:

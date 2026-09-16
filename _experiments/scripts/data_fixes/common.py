@@ -11,7 +11,9 @@ REPO = Path(__file__).resolve().parents[3]
 KR = REPO / "benchmarks"
 EN = REPO / "benchmarks_en"
 CHANGELOG = Path(__file__).resolve().parent / "changelog"
-AUDIT = REPO / "_experiments" / "dataset_fix_20260915"
+# Inputs a pass reads but does not derive. They are tracked, so a clean clone can replay
+# the round; the internal audit directory they used to live in is gitignored.
+INPUTS = Path(__file__).resolve().parent / "inputs"
 
 
 def load_json(path: str | Path):
@@ -19,7 +21,9 @@ def load_json(path: str | Path):
 
 
 def dump_json(path: str | Path, payload) -> None:
-    Path(path).write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 @dataclass
