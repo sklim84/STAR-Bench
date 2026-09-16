@@ -1,0 +1,40 @@
+# Evaluation stack: the runners, the tool layer, the scorer and the analysis.
+#
+# Everything on this side shares one numpy, and it is the platform's, because the
+# tool layer is the component with the hardest constraint (DuckDB, PyArrow and
+# XGBoost are built against numpy 2). The serving stack is installed separately
+# (requirements-serving.txt) and never shares a virtual environment with it.
+#
+#     python -m venv .venv-eval && . .venv-eval/bin/activate
+#     pip install -r _experiments/env/requirements-eval.txt
+#     pip install -r ../STAR-Bench-Web/requirements-tools.txt
+#     python -m _experiments.env.check_env
+#
+# The second line installs the executable AML tools. They are pinned in the
+# platform repository so the two copies cannot drift; `check_env` verifies that
+# what is installed matches both files and reports any conflict by name.
+
+# Shared with the platform tool layer: these must stay equal to the pins in
+# STAR-Bench-Web/requirements-tools.txt. check_env fails when they diverge.
+numpy==2.3.5
+pandas==2.3.3
+scipy==1.18.1
+
+# Model clients. The runner sets max_retries=0 on the client and does its own
+# retrying, so the attempt count reaches the run record (C2-013).
+openai==3.14.0
+
+# Scoring
+sqlglot==30.18.0
+
+# Analysis and reporting
+matplotlib==3.10.7
+openpyxl==3.1.5
+
+# Tests
+pytest==9.1.1
+jinja2==3.1.6
+
+# Optional, for the prompt-budget preflight: with it the check uses the serving
+# tokenizer, without it a calibrated byte estimate.
+# tokenizers==0.23.1

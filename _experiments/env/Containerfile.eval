@@ -1,0 +1,23 @@
+# Evaluation stack image: the runners, the tool layer, the scorer.
+#
+#   podman build -f _experiments/env/Containerfile.eval -t starbench-eval .
+#
+# The platform checkout is mounted, not copied, so the run records the commit of
+# the tree that actually answered the calls.
+FROM python:3.12-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    STAR_BENCH_WEB=/opt/star-bench-web
+
+RUN apt-get update && apt-get install -y --no-install-recommends git \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt/star-bench
+COPY _experiments/env/requirements-eval.txt _experiments/env/
+RUN pip install --no-cache-dir -r _experiments/env/requirements-eval.txt
+COPY . .
+
+# Install the tool-layer pins from the mounted platform checkout at start-up, so
+# the image cannot hold a different version from the code it calls:
+#   pip install -r $STAR_BENCH_WEB/requirements-tools.txt
+#   python -m _experiments.env.check_env

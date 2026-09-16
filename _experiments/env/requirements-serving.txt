@@ -1,0 +1,23 @@
+# Serving stack: the vLLM host that answers the benchmark's requests.
+#
+# This host runs nothing else. It does not import the tool layer, the scorer or
+# the analysis code, so it does not share their numpy pin: vLLM and torch bring
+# their own, and forcing numpy==1.26.4 on them (as the single requirements.txt
+# used to) is the conflict that made a co-author's rerun impossible to install
+# (R1-R4).
+#
+#     python -m venv .venv-serving && . .venv-serving/bin/activate
+#     pip install -r _experiments/env/requirements-serving.txt
+#
+# CUDA 12.x must be on the host and CUDA_HOME must point at it: the Qwen3.5/3.6
+# and MoE configurations compile a flashinfer kernel at start-up and die
+# immediately when it points elsewhere.
+
+vllm==0.20.1
+transformers==5.7.0
+torch==2.11.0
+tokenizers==0.23.1
+huggingface-hub==1.6.2
+
+# The Kanana tool parser is loaded as a vLLM plugin from this repository
+# (_experiments/scripts/kanana_tool_calls); it needs no package.

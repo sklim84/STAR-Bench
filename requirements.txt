@@ -1,33 +1,23 @@
-# STAR-Bench evaluation dependencies (tested on Python 3.12).
+# STAR-Bench dependencies (Python 3.12).
 #
-# Hosted-provider evaluation (OpenAI / Anthropic) needs only the analysis and
-# client packages below. Reproducing the open-weight runs additionally requires
-# the vLLM serving stack at the bottom of this file.
+# There are two environments, and they are not installed together. A single file
+# could not hold both: the serving stack follows vLLM's and torch's numpy, the
+# tool layer needs numpy 2 for DuckDB, PyArrow and XGBoost, and the pin that used
+# to sit here (numpy==1.26.4) satisfied neither, so a co-author could not
+# reproduce a run on another machine (R1-R4).
 #
-# NOT LISTED HERE: the executable AML tools (DuckDB, XGBoost, PyArrow, joblib,
-# scikit-learn, NetworkX, python-dotenv, …). They belong to the companion
-# platform repository and are pinned in ITS requirements file, so install both:
+#   serving host:      _experiments/env/requirements-serving.txt
+#   evaluation host:   _experiments/env/requirements-eval.txt
+#                      plus ../STAR-Bench-Web/requirements-tools.txt
 #
-#     pip install -r requirements.txt
-#     pip install -r ../STAR-Bench-Web/requirements-tools.txt
+# Verify an installed environment with:
 #
-# Duplicating those pins here would let the two drift apart. See README
-# "Installation".
+#   python -m _experiments.env.check_env            # evaluation stack
+#   python -m _experiments.env.check_env --serving  # serving stack
+#
+# Container recipes for both are in _experiments/env/. Model snapshot revisions
+# are pinned in _experiments/scripts/model_revisions.json and the serving
+# configurations in _experiments/scripts/runner/registry.py; every run record
+# carries the commit, the data hashes and the versions it ran with.
 
-# Analysis and evaluation engine
-numpy==1.26.4
-scipy==1.16.2
-pandas==2.3.3
-matplotlib==3.10.7
-openpyxl==3.1.5
-
-# LLM provider clients (OpenAI, Anthropic, and OpenAI-compatible vLLM endpoints)
-openai==2.36.0
-anthropic==0.100.0
-
-# Local serving of open-weight models (vLLM backend; pulls in torch).
-# Note: later cohort models (e.g. Gemma-4) require transformers>=5.7.0, which in
-# turn needs a recent vLLM; the versions below are the ones used for the full run.
-vllm==0.20.1
-transformers==5.7.0
-torch==2.11.0
+-r _experiments/env/requirements-eval.txt

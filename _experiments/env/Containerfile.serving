@@ -1,0 +1,27 @@
+# Serving stack image. Build on the host that will run it, so the CUDA minor
+# version matches the driver.
+#
+#   podman build -f _experiments/env/Containerfile.serving -t starbench-serving .
+#   podman run --gpus all -p 11434:11434 -v $HF_HOME:/hf starbench-serving \
+#       python -m _experiments.scripts.serve --config qwen35-27b-t --port 11434
+FROM nvidia/cuda:12.6.3-devel-ubuntu22.04
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    CUDA_HOME=/usr/local/cuda \
+    HF_HOME=/hf \
+    PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        python3.12 python3.12-venv python3-pip git \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt/star-bench
+COPY _experiments/env/requirements-serving.txt _experiments/env/
+RUN python3.12 -m pip install --no-cache-dir -r _experiments/env/requirements-serving.txt
+
+COPY _experiments/scripts/chat_templates _experiments/scripts/chat_templates
+COPY _experiments/scripts/kanana_tool_calls _experiments/scripts/kanana_tool_calls
+COPY _experiments/scripts/runner _experiments/scripts/runner
+COPY _experiments/scripts/model_revisions.json _experiments/scripts/
+COPY _experiments/scripts/_platform.py _experiments/scripts/serve.py _experiments/scripts/
+COPY _experiments/scripts/__init__.py _experiments/__init__.py _experiments/scripts/
