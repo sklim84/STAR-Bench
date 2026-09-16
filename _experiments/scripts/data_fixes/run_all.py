@@ -26,15 +26,18 @@ from .common import EN, KR, REPO
 # `p11_difficulty` and `p12_notes` derive their values from the question and the gold,
 # so they run last, after every pass that changes either. In the first round they ran
 # before `p13_lint_fixes`, which left eight notes naming a value their gold no longer
-# carried; the order below is what fixes that.
+# carried; the order below is what fixes that. `p13_lint_fixes` writes whole questions
+# from its own table, so it runs before the passes that reword them.
 PASSES = [
     "p01_apply_v3", "p02_dedupe", "p03_followups", "p04_accounts", "p05_predict_fraud",
     "p06_relevance", "p07_boundaries", "p08_clarification", "p09_contract1",
-    "p10_executable_gold",
+    "p10_executable_gold", "p13_lint_fixes",
     # closeout round (2026-09-16)
     "p14_risk_score", "p15_tool_cues", "p16_executable_gold2", "p17_boundary_parity",
     "p18_str_drafts", "p19_sweep_fixes",
-    "p13_lint_fixes", "p11_difficulty", "p12_notes",
+    # domain review (2026-09-16)
+    "p20_terminology", "p21_phrasing", "p22_clarification_audit",
+    "p11_difficulty", "p12_notes",
 ]
 
 

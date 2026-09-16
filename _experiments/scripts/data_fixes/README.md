@@ -42,6 +42,9 @@ left eight notes naming a value their own gold no longer carried.
 | `p17_boundary_parity` | L1-025 | Comparison words that mean the threshold the gold checks, in both languages. |
 | `p18_str_drafts` | L1-014 | The three pre-existing STR drafts rebuilt from real HOFINET aggregates. |
 | `p19_sweep_fixes` | L1-009, L1-013 | The three questions the closeout case sweep found. |
+| `p20_terminology` | review ask A | One spelling per pattern term (ring, layering, funnel, structuring, smurfing) in both arms. |
+| `p21_phrasing` | review asks C, D | Schema spellings out of the questions, and the phrasings the domain review flagged. |
+| `p22_clarification_audit` | review ask B | Re-derives every `expect_clarification` case against D19 and checks it against the tool schema. Changes no data. |
 | `p13_lint_fixes` | C1-011 | Whatever the linter reported after all the other passes had run. |
 | `p11_difficulty` | L1-022, D23 | Relabels difficulty by an explicit rule. Writes `changelog/p11_difficulty_scores.json` with the points per case. |
 | `p12_notes` | L1-026 | Regenerates every note from the final gold. |

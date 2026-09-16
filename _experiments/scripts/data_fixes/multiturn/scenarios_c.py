@@ -877,7 +877,7 @@ SCENARIOS_C: list[S] = [
           args={"mode": "structuring", "date_from": 20240101, "date_to": 20241231},
           bind={"cn": R(3, "count"), "cacc": R(3, "result[0].sender_acc"),
                 "ctx_n": R(3, "result[0].tx_count"), "camt": R(3, "result[0].total_amount")}),
-        T(kr="구조화(structuring)가 무슨 뜻인지도 설명해줘.",
+        T(kr="AML 용어집의 Structuring 항목도 무슨 뜻인지 설명해줘.",
           en="Explain what structuring means as well.",
           tool="get_aml_glossary", args={"term": "Structuring"},
           bind={"gdef": R(4, "definition")}),
@@ -888,7 +888,7 @@ SCENARIOS_C: list[S] = [
             "모니터링 R003에서 출금계좌 {racc:이가} {ramt:,}원을 {rrep}회, 상대 계좌 {rrcv}곳에 "
             "반복 이체해 합계 {rtot:,}원이 확인된다. 이 계좌의 전체 거래는 {tot}건이고 이상거래는 "
             "{frn}건({fr}%)이다. 2024년 CTR 분할거래 조회 상위 {cn}건 가운데 최다는 {cacc:이가} "
-            "하루 {ctx_n}건, {camt:,}원이다. 구조화는 {gdef:ko}. 동일 금액을 반복해 다수 상대에게 "
+            "하루 {ctx_n}건, {camt:,}원이다. structuring은 {gdef:ko}. 동일 금액을 반복해 다수 상대에게 "
             "보내는 형태여서 분할 거래로 판단한다.",
             "The R003 monitoring rule shows withdrawal account {racc} sending {ramt:,} KRW {rrep} "
             "times to {rrcv} counterparty accounts, {rtot:,} KRW in all. The account has {tot} "

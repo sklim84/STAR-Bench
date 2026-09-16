@@ -896,7 +896,7 @@
   },
   {
     "id": "st_mtool_029",
-    "question": "보고 기준 미만으로 쪼갠 구조화 의심 건을 탐지하고 심야 대량 거래 모니터링 알림도 확인해줘",
+    "question": "보고 기준 미만으로 쪼갠 structuring 의심 건을 탐지하고 심야 대량 거래 모니터링 알림도 확인해줘",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
@@ -1015,7 +1015,7 @@
   },
   {
     "id": "st_mtool_034",
-    "question": "입금이 한 계좌로 모이는(inbound) 스머핑 네트워크를 탐지하고 전체 통계도 확인해줘",
+    "question": "입금이 한 계좌로 모이는 스머핑 네트워크를 탐지하고 전체 통계도 확인해줘",
     "expected": {
       "primary_tool": "detect_smurfing_network",
       "tools_must_include": [
@@ -1028,7 +1028,7 @@
         }
       }
     },
-    "difficulty": "medium",
+    "difficulty": "hard",
     "note": "Expects detect_smurfing_network (direction=inbound), get_statistics."
   },
   {
@@ -1098,7 +1098,7 @@
   },
   {
     "id": "st_mtool_038",
-    "question": "CTR 대상 구조화 의심 건을 탐지하고, 입금계좌 9000000000022515의 수취 프로파일을 조회해줘",
+    "question": "CTR 대상 structuring 의심 건을 탐지하고, 입금계좌 9000000000022515의 수취 프로파일을 조회해줘",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
@@ -1118,12 +1118,12 @@
         }
       }
     },
-    "difficulty": "hard",
+    "difficulty": "medium",
     "note": "Expects detect_ctr_candidates (mode=structuring), get_receiving_account_profile (account_id=9000000000022515); called in the order detect_ctr_candidates -> get_receiving_account_profile."
   },
   {
     "id": "st_mtool_039",
-    "question": "입금이 모이는(inbound) 스머핑 네트워크를 탐지하고, 입금 상대가 많고 출금이 소수인 funnel 패턴도 함께 탐지해줘",
+    "question": "입금이 모이는 스머핑 네트워크를 탐지하고, 입금 상대가 많고 출금이 소수인 funnel 패턴도 함께 탐지해줘",
     "expected": {
       "primary_tool": "detect_smurfing_network",
       "tools_must_include": [
@@ -1139,7 +1139,7 @@
         }
       }
     },
-    "difficulty": "medium",
+    "difficulty": "hard",
     "note": "Expects detect_smurfing_network (direction=inbound), detect_aml_patterns (pattern_type=funnel)."
   },
   {
@@ -1201,7 +1201,7 @@
   },
   {
     "id": "st_mtool_042",
-    "question": "채널별 위험도를 분석하고, 고액거래를 CTR 대상으로 탐지하고, 입금이 모이는(inbound) 스머핑 네트워크도 탐지해줘",
+    "question": "채널별 위험도를 분석하고, 고액거래를 CTR 대상으로 탐지하고, 입금이 모이는 스머핑 네트워크도 탐지해줘",
     "expected": {
       "primary_tool": "analyze_channel_risk",
       "tools_must_include": [
@@ -1305,7 +1305,7 @@
   },
   {
     "id": "st_mtool_045",
-    "question": "휴면계좌 재활성화를 탐지하고, 입금이 모이는(inbound) 스머핑 네트워크도 함께 탐지해줘",
+    "question": "휴면계좌 재활성화를 탐지하고, 입금이 모이는 스머핑 네트워크도 함께 탐지해줘",
     "expected": {
       "primary_tool": "detect_dormant_reactivation",
       "tools_must_include": [
@@ -1322,7 +1322,7 @@
         }
       }
     },
-    "difficulty": "medium",
+    "difficulty": "hard",
     "note": "Expects detect_dormant_reactivation, detect_smurfing_network (direction=inbound); called in the order detect_dormant_reactivation -> detect_smurfing_network."
   },
   {
@@ -1474,7 +1474,7 @@
   },
   {
     "id": "st_mtool_052",
-    "question": "입금이 모이는(inbound) 스머핑 네트워크를 탐지하고, 탐지 결과를 바탕으로 계좌 9000000004388203의 위험도도 평가해줘",
+    "question": "입금이 모이는 스머핑 네트워크를 탐지하고, 탐지 결과를 바탕으로 계좌 9000000004388203의 위험도도 평가해줘",
     "expected": {
       "primary_tool": "detect_smurfing_network",
       "tools_must_include": [
@@ -1494,7 +1494,7 @@
         }
       }
     },
-    "difficulty": "medium",
+    "difficulty": "hard",
     "note": "Expects detect_smurfing_network (direction=inbound), score_account_risk (account_id=9000000004388203); called in the order detect_smurfing_network -> score_account_risk."
   },
   {
@@ -1543,7 +1543,7 @@
   },
   {
     "id": "st_mtool_055",
-    "question": "CTR 구조화 의심 건을 탐지하고, 2023년 4분기와 2024년 1분기 이상거래를 비교해줘",
+    "question": "CTR structuring 의심 건을 탐지하고, 2023년 4분기와 2024년 1분기 이상거래를 비교해줘",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
@@ -1716,7 +1716,7 @@
   },
   {
     "id": "st_mtool_061",
-    "question": "자금 수집(inbound) 스머핑을 탐지하고, 분산(outbound) 패턴도 함께 분석해줘",
+    "question": "스머핑 네트워크에서 자금이 한 계좌로 모이는 방향만 탐지해줘. 분산 방향은 지금 볼 필요 없어",
     "expected": {
       "primary_tool": "detect_smurfing_network",
       "tools_must_include": [
@@ -1728,7 +1728,7 @@
         }
       }
     },
-    "difficulty": "easy",
+    "difficulty": "medium",
     "note": "Expects detect_smurfing_network (direction=inbound)."
   },
   {
@@ -1828,7 +1828,7 @@
   },
   {
     "id": "st_mtool_065",
-    "question": "고액거래 CTR 대상을 탐지하고, 보고 기준 미만 구조화 의심 건도 함께 확인해줘",
+    "question": "고액거래 CTR 대상을 탐지하고, 보고 기준 미만 structuring 의심 건도 함께 확인해줘",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
@@ -1998,7 +1998,7 @@
   },
   {
     "id": "st_mtool_071",
-    "question": "휴면계좌 재활성화를 90일 기준으로 탐지하고, 탐지된 계좌로 입금이 모이는(inbound) 스머핑 패턴도 확인해줘",
+    "question": "휴면계좌 재활성화를 90일 기준으로 탐지하고, 탐지된 계좌로 입금이 모이는 스머핑 패턴도 확인해줘",
     "expected": {
       "primary_tool": "detect_dormant_reactivation",
       "tools_must_include": [
@@ -2014,7 +2014,7 @@
         }
       }
     },
-    "difficulty": "medium",
+    "difficulty": "hard",
     "note": "Expects detect_dormant_reactivation (dormant_days=90), detect_smurfing_network (direction=inbound)."
   },
   {
@@ -2063,7 +2063,7 @@
   },
   {
     "id": "st_mtool_074",
-    "question": "보고 기준 미만 구조화 의심 건을 탐지하고, 고액거래도 함께 조회해줘",
+    "question": "보고 기준 미만 structuring 의심 건을 탐지하고, 고액거래도 함께 조회해줘",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
@@ -2075,7 +2075,7 @@
         }
       }
     },
-    "difficulty": "medium",
+    "difficulty": "easy",
     "note": "Expects detect_ctr_candidates (mode=structuring)."
   },
   {
@@ -2119,7 +2119,7 @@
   },
   {
     "id": "st_mtool_077",
-    "question": "자금 분산(outbound) 스머핑을 탐지하고, 상위 5건 고위험 거래를 랭킹해줘",
+    "question": "자금 분산 스머핑을 탐지하고, 상위 5건 고위험 거래를 랭킹해줘",
     "expected": {
       "primary_tool": "detect_smurfing_network",
       "tools_must_include": [
@@ -2135,7 +2135,7 @@
         }
       }
     },
-    "difficulty": "medium",
+    "difficulty": "hard",
     "note": "Expects detect_smurfing_network (direction=outbound), rank_risky_transactions (top_k=5)."
   },
   {
@@ -2496,7 +2496,7 @@
   },
   {
     "id": "st_mtool_101",
-    "question": "구조화(structuring)에 해당하는 FIU 의심거래 참고유형을 확인하고, 같은 관점에서 보고 기준 미만으로 쪼갠 거래도 탐지해줘",
+    "question": "structuring에 해당하는 FIU 의심거래 참고유형을 확인하고, 같은 관점에서 보고 기준 미만으로 쪼갠 거래도 탐지해줘",
     "expected": {
       "primary_tool": "lookup_fiu_reference_types",
       "tools_must_include": [
@@ -2873,7 +2873,7 @@
   },
   {
     "id": "st_mtool_113",
-    "question": "금융회사 151의 입출금 양방향 현황 리포트를 확인하고, 2000건 샘플에서 위험도 상위 30건도 뽑아줘",
+    "question": "금융회사 151의 입출금 자금흐름 현황 리포트를 확인하고, 2000건 샘플에서 위험도 상위 30건도 뽑아줘",
     "expected": {
       "primary_tool": "get_institution_report",
       "tools_must_include": [
@@ -3153,7 +3153,7 @@
   },
   {
     "id": "st_mtool_122",
-    "question": "여러 곳에서 자금을 받아 소수 계좌로만 내보내는 깔때기(funnel) 계좌를 탐지하고, 계좌 9000000004374328의 거래 프로파일도 조회해줘",
+    "question": "여러 곳에서 자금을 받아 소수 계좌로만 내보내는 funnel 계좌를 탐지하고, 계좌 9000000004374328의 거래 프로파일도 조회해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [

@@ -51,7 +51,7 @@ KO_SOURCE = {
         "심야·새벽을 포함해 하루 종일 인터넷뱅킹으로 거래 건수가 과다하거나 대량 이체가 이뤄지는 유형",
     "Transactions split among multiple people or structured below threshold to avoid "
     "reporting (structuring)":
-        "보고를 피하려고 여러 사람에게 나누거나 기준 금액 아래로 쪼개 거래하는 유형(구조화)",
+        "보고를 피하려고 여러 사람에게 나누거나 기준 금액 아래로 쪼개 거래하는 유형(structuring)",
     "Depositing large funds, issuing a balance certificate, and withdrawing the full amount "
     "the next day":
         "거액을 입금한 뒤 잔액증명서를 발급받고 다음 날 전액을 인출하는 유형",

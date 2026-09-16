@@ -286,7 +286,7 @@ SCENARIOS_B: list[S] = [
           "because its documented empty answer is the point of the turn: HOFINET's transfer graph "
           "is acyclic and its longest fraud chain is two transfers.",
       turns=[
-        T(kr="레이어링(layering)이 무슨 뜻인지 설명해줘.",
+        T(kr="AML 용어집의 Layering 항목이 무슨 뜻인지 설명해줘.",
           en="Explain what layering means.",
           tool="get_aml_glossary", args={"term": "Layering"},
           bind={"gdef": R(1, "definition")}),
@@ -338,7 +338,7 @@ SCENARIOS_B: list[S] = [
           clarify=True,
           point_kr="detect_ctr_candidates의 필수 인자 mode(high_value/structuring)가 없다",
           point_en="detect_ctr_candidates needs its required mode"),
-        T(kr="분할거래(structuring) 의심 건으로 탐지해줘.",
+        T(kr="structuring 의심 건으로 탐지해줘.",
           en="Detect the structuring candidates.",
           tool="detect_ctr_candidates",
           args={"mode": "structuring", "date_from": 20230101, "date_to": 20231231},
