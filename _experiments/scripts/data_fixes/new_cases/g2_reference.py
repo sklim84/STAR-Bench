@@ -17,11 +17,11 @@ from __future__ import annotations
 
 # term, Korean question, English question, alternative term (a comparison case), rationale
 GLOSSARY = [
-    ("MLRO", "AML 용어집에서 MLRO 항목의 정의와 출처를 확인해줘",
-     "Please check the definition and the source of the MLRO entry in the AML glossary.",
+    ("MLRO", "MLRO가 AML 용어집에 어떻게 정의돼 있고 근거 문서는 무엇인지 확인해줘",
+     "Please check how the AML glossary defines MLRO and which document it cites.",
      None, "catalog entry the glossary holds; the term is written out"),
-    ("FATF", "AML 용어집에 등록된 FATF 항목의 정의와 출처를 알려줘",
-     "Please give the definition and the source of the FATF entry as the AML glossary records it.",
+    ("FATF", "FATF는 AML 용어집에 어떤 설명으로 등록돼 있어? 출처도 같이 알려줘",
+     "How does the AML glossary describe FATF? Please give its source as well.",
      None, "catalog entry the glossary holds; the term is written out"),
     ("KYE", "AML 용어집에서 KYE 항목의 정의와 근거 문서를 찾아줘",
      "Please find the definition of the KYE entry in the AML glossary and the document it cites.",

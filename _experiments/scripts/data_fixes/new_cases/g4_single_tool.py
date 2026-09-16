@@ -40,9 +40,9 @@ def build(grounding: dict) -> list[dict]:
          "high_value with a threshold in the top amount band HOFINET holds"),
         ("st_ctr_045", "cases_detect_ctr_candidates.json", "detect_ctr_candidates",
          {"mode": "structuring", "threshold": 20000000},
-         "2000만원 보고 기준 미만으로 쪼갠 구조화(structuring) 의심 건을 탐지해줘",
-         "Please detect suspected structuring: transactions split below a 20,000,000 KRW "
-         "reporting threshold.",
+         "보고 기준을 2000만원으로 잡았을 때 그 아래로 나눠 거래한 계좌를 structuring 모드로 탐지해줘",
+         "With the reporting threshold set to 20,000,000 KRW, please detect in structuring mode the "
+         "accounts that split their transactions below it.",
          "structuring at a threshold no existing case uses"),
         ("st_ctr_046", "cases_detect_ctr_candidates.json", "detect_ctr_candidates",
          {"mode": "high_value", "date_from": 20220701, "date_to": 20221231},
@@ -104,9 +104,10 @@ def build(grounding: dict) -> list[dict]:
         ("st_cp_049", "cases_compare_periods.json", "compare_periods",
          {"period1_start": 20221001, "period1_end": 20221231,
           "period2_start": 20230101, "period2_end": 20230331},
-         "2022년 4분기와 2023년 1분기 이상거래 추이를 비교해줘",
-         "Please compare the suspicious transaction trend of the fourth quarter of 2022 and "
-         "the first quarter of 2023.",
+         "연말에서 연초로 넘어가는 구간을 보고 싶어. 2022년 4분기와 2023년 1분기 이상거래 추이를 "
+         "비교해줘",
+         "I want to look at the turn of the year: please compare the suspicious transaction trend "
+         "of the fourth quarter of 2022 with the first quarter of 2023.",
          "a year boundary pair the existing cases leave out"),
 
         # ---- get_fraud_type_summary: the bank_id argument, which had no case ----
