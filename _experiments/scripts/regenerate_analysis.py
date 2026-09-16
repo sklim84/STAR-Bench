@@ -158,11 +158,17 @@ BY_KEY = {step.key: step for step in STEPS}
 
 
 def _missing_inputs(step: Step, results_root: Path | None) -> list[str]:
+    """The inputs a step needs and does not have.
+
+    A step that accepts `--results-root` is handed that directory verbatim, so
+    that directory is what has to exist; the rest read the directories named in
+    their own header.
+    """
+    if results_root is not None and step.results_root_option:
+        return [] if results_root.exists() else [str(results_root)]
     missing = []
     for rel in step.inputs:
         path = Path(rel)
-        if results_root is not None and step.results_root_option:
-            path = results_root / Path(rel).name
         candidate = path if path.is_absolute() else ROOT / path
         if not candidate.exists():
             missing.append(str(path))
@@ -197,8 +203,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--all", action="store_true", help="run every step")
     ap.add_argument("--only", help="comma-separated step keys")
     ap.add_argument("--list", action="store_true", help="print the steps and what they produce")
-    ap.add_argument("--results-root", help="directory holding the run outputs; steps whose script "
-                                           "accepts it are pointed at it")
+    ap.add_argument("--results-root",
+                    help="directory holding the run outputs. It is passed verbatim to the steps "
+                         "whose script accepts it (the report says which); the others read the "
+                         "directories named in their own header")
     ap.add_argument("--dry-run", action="store_true", help="print the commands and stop")
     ap.add_argument("--timeout", type=int, default=3600, help="seconds per step")
     ap.add_argument("--report", help="write the JSON report here")

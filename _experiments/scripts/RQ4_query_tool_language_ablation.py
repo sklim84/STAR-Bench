@@ -182,7 +182,10 @@ def main(argv=None):
         return round(sum(v) / len(v), 4) if v else None
 
     summary = {
-        'cells': {name: str(path) for name, path in CELLS.items()},
+        # Relative to the repository root: a checkout path is a property of the
+        # machine and this file is committed.
+        'cells': {name: str(path.relative_to(_SB)) if path.is_relative_to(_SB) else str(path)
+                  for name, path in CELLS.items()},
         'n_targets': len(rows),
         'n_full_4way': len(full4),
         'n_full_4way_ex_outlier': len(full4_clean),

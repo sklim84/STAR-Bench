@@ -192,7 +192,7 @@ def summarise(calls) -> dict:
     }
 
 
-def markdown(report: dict, results_dir: Path) -> str:
+def markdown(report: dict, results_dir: Path | str) -> str:
     total = report["total_calls"]
     lines = [f"# End-to-end tool error and empty-result rates",
              "",
@@ -241,10 +241,14 @@ def main(argv: list[str] | None = None) -> int:
 
     calls = list(read_calls(results_dir))
     report = summarise(calls)
-    report["results_dir"] = str(results_dir)
+    # Relative to the repository root: the report is committed and a checkout
+    # path is a property of the machine.
+    report["results_dir"] = str(results_dir.relative_to(ROOT)) \
+        if results_dir.is_relative_to(ROOT) else str(results_dir)
     (out_dir / "e2e_error_rates.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
-    (out_dir / "e2e_error_rates.md").write_text(markdown(report, results_dir), encoding="utf-8")
+    (out_dir / "e2e_error_rates.md").write_text(
+        markdown(report, report["results_dir"]), encoding="utf-8")
 
     total = report["total_calls"]
     print(f"{total:,} executed calls: {report['ok']:,} answered, "
