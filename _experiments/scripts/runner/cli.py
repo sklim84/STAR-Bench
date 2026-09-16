@@ -124,7 +124,7 @@ def _provider(args) -> dict | None:
 
 
 def resolve(args, *, cases: list[dict], setting: str, query_lang_default: str,
-            engine: str = "vllm") -> RunSetup:
+            engine: str = "vllm", cases_dir: Path | str | None = None) -> RunSetup:
     """Applies the options, runs the guards and opens the record writer."""
     if not args.config and not args.model:
         raise SystemExit("pass --config <registry id> or --model <model id>")
@@ -171,7 +171,7 @@ def resolve(args, *, cases: list[dict], setting: str, query_lang_default: str,
     config["concurrency"] = args.concurrency
 
     config["prompt_variant"] = arm.prompt_variant
-    prov = provenance.collect(arm=arm, config=config)
+    prov = provenance.collect(arm=arm, config=config, cases_dir=cases_dir)
     problems = provenance.check_pin(prov, provenance.expected_pin(args.pin),
                                     strict=not args.no_env_check)
     if problems:

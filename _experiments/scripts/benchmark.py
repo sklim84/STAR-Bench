@@ -33,6 +33,7 @@ _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(_PROJECT_ROOT))
 
 from _experiments.scripts.runner import cli, loop, parallel, records  # noqa: E402
+from _experiments.scripts.runner import provenance as runner_provenance  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +67,8 @@ def main(argv: list[str] | None = None, *, executor=None) -> int:
 
     cases = load_cases(args.cases_dir)
     query_lang = "en" if args.cases_dir.name.endswith("_en") else "kr"
-    setup = cli.resolve(args, cases=cases, setting="single", query_lang_default=query_lang)
+    setup = cli.resolve(args, cases=cases, setting="single", query_lang_default=query_lang,
+                        cases_dir=args.cases_dir)
 
     keys = loop.expected_keys(cases, multiturn=False)
     todo = cli.select_cases(cases, args, keys=keys, out_dir=args.out)
@@ -80,6 +82,7 @@ def main(argv: list[str] | None = None, *, executor=None) -> int:
         "setting": "single", "tools_lang": setup.arm.lang, "query_lang": setup.query_lang,
         "cases_dir": str(args.cases_dir), "n_cases_selected": len(todo),
         "n_cases_benchmark": len(cases), "config": setup.config,
+        "benchmark_file_hashes": runner_provenance.benchmark_file_hashes(args.cases_dir),
         "provenance": setup.provenance, "max_rounds": max_rounds,
         "concurrency": concurrency, "argv": sys.argv[1:],
     })

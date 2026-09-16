@@ -33,6 +33,7 @@ _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(_PROJECT_ROOT))
 
 from _experiments.scripts.runner import cli, loop, parallel, records  # noqa: E402
+from _experiments.scripts.runner import provenance as runner_provenance  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +68,8 @@ def main(argv: list[str] | None = None, *, executor=None) -> int:
     # preflight uses is the longest turn of the scenario.
     flat = [{"id": s["id"], "question": max((t["content"] for t in s.get("turns", [])),
                                             key=len, default="")} for s in scenarios]
-    setup = cli.resolve(args, cases=flat, setting=args.setting, query_lang_default=query_lang)
+    setup = cli.resolve(args, cases=flat, setting=args.setting, query_lang_default=query_lang,
+                        cases_dir=args.cases_dir)
 
     keys = loop.expected_keys(scenarios, multiturn=True)
     todo = cli.select_cases(scenarios, args, keys=keys, out_dir=args.out)
@@ -81,6 +83,7 @@ def main(argv: list[str] | None = None, *, executor=None) -> int:
         "cases_dir": str(args.cases_dir), "n_scenarios_selected": len(todo),
         "n_scenarios_benchmark": len(scenarios), "n_turns_expected": len(keys),
         "config": setup.config, "provenance": setup.provenance,
+        "benchmark_file_hashes": runner_provenance.benchmark_file_hashes(args.cases_dir),
         "concurrency": concurrency, "argv": sys.argv[1:],
     })
     print(f"run {setup.run_id}: {len(todo)} scenario(s), {args.setting}, "

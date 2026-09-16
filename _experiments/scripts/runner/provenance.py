@@ -21,7 +21,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 __all__ = ["EnvironmentMismatch", "collect", "star_bench_commit", "sha256_file",
-           "sha256_text", "expected_pin", "check_pin"]
+           "sha256_text", "expected_pin", "check_pin", "benchmark_digest",
+           "benchmark_file_hashes", "open_database"]
 
 _ROOT = Path(__file__).resolve().parents[3]
 
@@ -69,6 +70,52 @@ def star_bench_commit() -> dict:
             "star_bench_dirty": bool(_git(_ROOT, "status", "--porcelain", "--untracked-files=no") or "")}
 
 
+def benchmark_digest(cases_dir: Path | str | None) -> dict:
+    """Hash of the case files a run read (C1-012).
+
+    A run record said which platform commit and which database answered but not
+    which benchmark files it was asked about, and the 2026 data was edited and
+    reverted twice. The digest is over file name and bytes of every
+    `cases_*.json` in name order, which is what `scoring.gold.load_benchmark`
+    computes, so a record and an eval file can be compared.
+    """
+    if cases_dir is None:
+        return {}
+    root = Path(cases_dir)
+    files = sorted(root.glob("cases_*.json"))
+    digest = hashlib.sha256()
+    for path in files:
+        digest.update(path.name.encode())
+        digest.update(path.read_bytes())
+    return {"benchmark_dir": root.name, "benchmark_sha256": digest.hexdigest() if files else None,
+            "benchmark_files": len(files)}
+
+
+def benchmark_file_hashes(cases_dir: Path | str | None) -> list[dict]:
+    """Per-file hashes for the run manifest; the record carries the combined one."""
+    if cases_dir is None:
+        return []
+    return [{"name": path.name, "sha256": sha256_file(path)}
+            for path in sorted(Path(cases_dir).glob("cases_*.json"))]
+
+
+def open_database() -> str | None:
+    """Opens the tool layer's connection, or returns why it could not be opened.
+
+    `connection_info()` describes the connection that is open, and nothing had
+    opened one when `collect()` ran, so `database.origin` and
+    `database.build_info` were null in every record (C2-016).
+    """
+    try:
+        from _experiments.scripts._platform import ensure_platform_on_path
+        ensure_platform_on_path()
+        from src.data import db
+        db.get_connection()
+        return None
+    except Exception as exc:
+        return f"{type(exc).__name__}: {exc}"
+
+
 def _platform_provenance() -> dict:
     """`src.provenance.get_provenance()`, or the reason it could not be read."""
     try:
@@ -91,8 +138,14 @@ def hofinet_columns() -> list[str] | None:
         return None
 
 
-def collect(*, arm, config: dict, check_columns: bool = True) -> dict:
-    """The Contract 2 provenance block for the current process."""
+def collect(*, arm, config: dict, check_columns: bool = True,
+            cases_dir: Path | str | None = None) -> dict:
+    """The Contract 2 provenance block for the current process.
+
+    The database is opened first: everything the platform reports about it
+    (`origin`, `build_info`) describes the connection that is open.
+    """
+    database_error = open_database()
     platform = _platform_provenance()
     record = {
         **star_bench_commit(),
@@ -114,6 +167,9 @@ def collect(*, arm, config: dict, check_columns: bool = True) -> dict:
     }
     if platform.get("error"):
         record["platform_error"] = platform["error"]
+    if database_error:
+        record["database_error"] = database_error
+    record.update(benchmark_digest(cases_dir))
     if check_columns:
         record["hofinet_columns"] = hofinet_columns()
     for key in ("chat_template_sha256", "model_revision"):
@@ -152,6 +208,13 @@ def check_pin(record: dict, pin: dict | None, *, strict: bool = True) -> list[st
         want = (pin or {}).get(key)
         if want and record.get(key) != want:
             problems.append(f"{key} is {record.get(key)}, pinned to {want}")
+    if not record.get("platform_error"):
+        database = record.get("database") or {}
+        if record.get("database_error"):
+            problems.append(f"the tool layer database did not open: {record['database_error']}")
+        elif not database.get("origin"):
+            problems.append("the run record does not say which database object answered "
+                            "(provenance.database.origin is empty)")
     if record.get("star_bench_dirty"):
         problems.append("the STAR-Bench working tree has uncommitted changes")
     if record.get("platform_dirty"):
