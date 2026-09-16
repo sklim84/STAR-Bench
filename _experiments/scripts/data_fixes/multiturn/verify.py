@@ -33,7 +33,7 @@ if __package__ in (None, ""):
     __package__ = "_experiments.scripts.data_fixes.multiturn"
 
 from .build import KR_DIR, EN_DIR, FILENAME, resolve_path
-from .spec import CHECK_ONLY
+from .spec import CHECK_ONLY, KO_SOURCE
 
 # Crime names the pre-audit data used, which HOFINET does not carry.
 OLD_NAMES = ["자금세탁", "보이스피싱", "대포통장", "불법도박", "유사수신", "정액거래", "라운드 금액"]
@@ -65,9 +65,27 @@ def hofinet_ids() -> tuple[set, set, set]:
     return accounts, senders, receivers
 
 
+# `generate_str` answers in the language of the question (D13), and it echoes the
+# summary it is given into VII_Narrative.SuspicionJudgmentReason, so those two places
+# are language-dependent by design. They are blanked before the two arms are compared,
+# and `check_summary_language` checks them on their own; everything else in the gold
+# call and in the injected result still has to be identical.
+LANGUAGE_DEPENDENT = ("SuspicionJudgmentReason",)
+
+
+def normalise(value):
+    if isinstance(value, dict):
+        return {k: ("<summary>" if k in ("summary",) + LANGUAGE_DEPENDENT else normalise(v))
+                for k, v in value.items()}
+    if isinstance(value, list):
+        return [normalise(v) for v in value]
+    return value
+
+
 def interface(scenario: dict) -> list:
-    return [[t.get("tool_calls"), t.get("tool_result"), t.get("context_ref"),
-             t.get("reference_calls"), t.get("expect_clarification"), t.get("turn")]
+    return [[normalise(t.get("tool_calls")), normalise(t.get("tool_result")),
+             t.get("context_ref"), t.get("reference_calls"),
+             t.get("expect_clarification"), t.get("turn")]
             for t in scenario["turns"]]
 
 
@@ -85,6 +103,31 @@ def check_parity(kr: list[dict], en: list[dict], fail):
         for ta, tb in zip(a["turns"], b["turns"]):
             if ta["content"] == tb["content"] and not ta["content"].isdigit():
                 fail(f"{a['id']} turn {ta['turn']}: the English turn was not translated")
+
+
+HANGUL = re.compile(r"[가-힣]")
+
+
+def summaries(scenarios: list[dict]):
+    for sc in scenarios:
+        for turn in sc["turns"]:
+            for call in turn.get("tool_calls") or []:
+                if call["name"] == "generate_str":
+                    yield sc["id"], turn["turn"], call["arguments"].get("summary", "")
+
+
+def check_summary_language(kr: list[dict], en: list[dict], fail):
+    """The answer is written in the language of the question (D13).
+
+    The `fraud_type` argument stays Korean in both arms: it is a §VI enum the platform
+    only accepts in Korean. `summary` is free text, so it follows the question.
+    """
+    for scenario_id, turn, text in summaries(kr):
+        if not HANGUL.search(text):
+            fail(f"{scenario_id} turn {turn}: the Korean gold summary carries no Korean")
+    for scenario_id, turn, text in summaries(en):
+        if HANGUL.search(text):
+            fail(f"{scenario_id} turn {turn}: the English gold summary carries Korean")
 
 
 def check_gold(kr: list[dict], schemas: dict, fail):
@@ -130,6 +173,12 @@ def check_gold(kr: list[dict], schemas: dict, fail):
 
 def check_entities(kr: list[dict], en: list[dict], accounts, senders, receivers, fail):
     text = json.dumps(kr, ensure_ascii=False) + json.dumps(en, ensure_ascii=False)
+    # The Korean renderings of the FIU catalog and the AML glossary are recorded in
+    # spec.KO_SOURCE, and the glossary defines layering as a stage of 자금세탁. They are
+    # taken out before the scan, so the gate still catches a crime name used as if it
+    # were a HOFINET transaction type.
+    for rendering in KO_SOURCE.values():
+        text = text.replace(rendering, " ")
     for name in OLD_NAMES:
         if name in text:
             fail(f"old crime name {name!r} is still in the data")
@@ -233,6 +282,7 @@ def main() -> int:
     schemas = tool_schemas()
     accounts, senders, receivers = hofinet_ids()
     check_parity(kr, en, fail)
+    check_summary_language(kr, en, fail)
     check_gold(kr, schemas, fail)
     check_entities(kr, en, accounts, senders, receivers, fail)
     check_results_are_live(kr, fail)

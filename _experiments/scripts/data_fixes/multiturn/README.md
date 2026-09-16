@@ -55,6 +55,17 @@ spec and the data is its output:
 * **One pass, two languages.** The English file is written in the same pass from
   the same spec, keyed by scenario id and turn, so it cannot be scrambled the way
   positional matching scrambled it (C1-010).
+* **The answer follows the question (D13).** `generate_str` takes a free-text
+  `summary`, so each scenario carries one in each language (`Bi` in `spec.py`) and
+  the call is executed once per arm, because the tool echoes the summary into the
+  report it returns. Everything else in the gold call and in the injected result is
+  identical in the two arms, and `verify.py` still checks that. `fraud_type` stays
+  Korean in both: it is a §VI enum the platform only accepts in Korean.
+* **No English pasted into Korean prose.** The FIU catalog, the AML glossary and the
+  "nothing found" notices are English-only in the platform. `{name:ko}` renders the
+  Korean a value stands for, from `spec.KO_SOURCE`, and the build fails on a value
+  that table does not hold, so the rendering cannot drift from the result it came
+  from (L2-012).
 
 ## Register ids
 

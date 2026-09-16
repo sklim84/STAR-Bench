@@ -9,6 +9,11 @@
       {
         "turn": 1,
         "content": "Withdrawal account 9000000000037352 looks like a sudden change in transaction pattern. List its 2024 rows of that type, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000037352 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -35,14 +40,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000037352 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000037352 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000037352 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -368,7 +368,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금계좌 9000000000037352(출금기관 157)의 전체 거래는 11171건이고 이상거래는 194건(1.74%)이다. 2024년 갑작스러운 거래패턴의 변화 유형 상위 20건 가운데 가장 큰 건은 2024년 2월 26일에 입금계좌 9000000003241879로 이체한 100,000,000원이며 예측 모델 위험 점수는 0.9954다. 1단계 네트워크에는 연결 계좌 785개가 있다. 거래 규모와 상대 계좌 수가 종전 패턴과 달라 갑작스러운 거래패턴의 변화로 판단한다.",
+              "summary": "Withdrawal account 9000000000037352 (institution 157) has 11171 transactions in all, 194 of them flagged (1.74%). Among its top 20 sudden-change-in-transaction-pattern rows of 2024 the largest is 100,000,000 KRW transferred to receiving account 9000000003241879 on 26 February 2024, with a model risk score of 0.9954. Its one-hop network holds 785 connected accounts. The size of the transfers and the number of counterparties depart from the earlier pattern, so this is judged a sudden change in transaction pattern.",
               "fraud_type": "갑작스러운 거래패턴의 변화",
               "tools_used": [
                 "query_transactions",
@@ -433,7 +433,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000037352 and receiving accounts 9000000003241879.",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금계좌 9000000000037352(출금기관 157)의 전체 거래는 11171건이고 이상거래는 194건(1.74%)이다. 2024년 갑작스러운 거래패턴의 변화 유형 상위 20건 가운데 가장 큰 건은 2024년 2월 26일에 입금계좌 9000000003241879로 이체한 100,000,000원이며 예측 모델 위험 점수는 0.9954다. 1단계 네트워크에는 연결 계좌 785개가 있다. 거래 규모와 상대 계좌 수가 종전 패턴과 달라 갑작스러운 거래패턴의 변화로 판단한다.",
+            "SuspicionJudgmentReason": "Withdrawal account 9000000000037352 (institution 157) has 11171 transactions in all, 194 of them flagged (1.74%). Among its top 20 sudden-change-in-transaction-pattern rows of 2024 the largest is 100,000,000 KRW transferred to receiving account 9000000003241879 on 26 February 2024, with a model risk score of 0.9954. Its one-hop network holds 785 connected accounts. The size of the transfers and the number of counterparties depart from the earlier pattern, so this is judged a sudden change in transaction pattern.",
             "OverallOpinion": "[2024-12-31] Sudden Change in Transaction Pattern suspicious transaction detected. Period: Unknown, related accounts: 2, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -472,6 +472,11 @@
       {
         "turn": 2,
         "content": "The account is 9000000004236284 and I suspect concurrent multiple transactions. List its 2024 flagged transactions, the 20 largest by amount.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004236284 AND is_fraud = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -498,14 +503,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004236284 AND is_fraud = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004236284 AND is_fraud = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004236284 AND is_fraud = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -1079,7 +1079,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금계좌 9000000004236284(출금기관 147)의 2024년 다중거래의 동시 요청 유형 상위 20건을 확인했고 최대 건은 2024년 3월 14일에 매체구분 2 채널로 이체한 100,000,000원이다. 해당 건의 예측 모델 위험 점수는 0.9959다. 같은 기간 CTR 고액거래 조회에서 상위 20건이 나왔다. 동일 시점에 다수 거래가 몰리는 형태여서 다중거래의 동시 요청으로 판단한다.",
+              "summary": "The top 20 concurrent-multiple-transaction rows of 2024 for withdrawal account 9000000004236284 (institution 147) were reviewed; the largest is 100,000,000 KRW sent over media type 2 on 14 March 2024, with a model risk score of 0.9959. A CTR high-value query over the same period returned 20 rows. Several transfers fall on the same moment, so this is judged a concurrent multiple transaction request.",
               "fraud_type": "다중거래의 동시요청",
               "tools_used": [
                 "query_transactions",
@@ -1142,7 +1142,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004236284 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금계좌 9000000004236284(출금기관 147)의 2024년 다중거래의 동시 요청 유형 상위 20건을 확인했고 최대 건은 2024년 3월 14일에 매체구분 2 채널로 이체한 100,000,000원이다. 해당 건의 예측 모델 위험 점수는 0.9959다. 같은 기간 CTR 고액거래 조회에서 상위 20건이 나왔다. 동일 시점에 다수 거래가 몰리는 형태여서 다중거래의 동시 요청으로 판단한다.",
+            "SuspicionJudgmentReason": "The top 20 concurrent-multiple-transaction rows of 2024 for withdrawal account 9000000004236284 (institution 147) were reviewed; the largest is 100,000,000 KRW sent over media type 2 on 14 March 2024, with a model risk score of 0.9959. A CTR high-value query over the same period returned 20 rows. Several transfers fall on the same moment, so this is judged a concurrent multiple transaction request.",
             "OverallOpinion": "[2024-12-31] Concurrent Multiple Transactions suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -1173,6 +1173,11 @@
       {
         "turn": 1,
         "content": "I hear institution 159 has a lot of split-transaction fraud. Give me the top five withdrawal accounts by count for 2024.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT sender_acc, count(*) AS tx_count, sum(amount) AS total_amount, min(date) AS first_date, max(date) AS last_date FROM hofinet WHERE sender_bank = 159 AND fraud_type = 3 AND date BETWEEN 20240101 AND 20241231 GROUP BY sender_acc ORDER BY tx_count DESC, sender_acc LIMIT 5"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -1202,11 +1207,6 @@
             "reference_sql": "SELECT sender_acc, count(*) AS tx_count, sum(amount) AS total_amount, min(date) AS first_date, max(date) AS last_date FROM hofinet WHERE sender_bank = 159 AND fraud_type = 3 AND date BETWEEN 20240101 AND 20241231 GROUP BY sender_acc ORDER BY tx_count DESC, sender_acc LIMIT 5"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT sender_acc, count(*) AS tx_count, sum(amount) AS total_amount, min(date) AS first_date, max(date) AS last_date FROM hofinet WHERE sender_bank = 159 AND fraud_type = 3 AND date BETWEEN 20240101 AND 20241231 GROUP BY sender_acc ORDER BY tx_count DESC, sender_acc LIMIT 5"
-          }
-        },
         "tool_result": {
           "total_count": 5,
           "returned_count": 5,
@@ -1366,7 +1366,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금기관 159 소속 출금계좌 9000000004390593은 2024년에 분할 거래 유형 이상거래 189건, 767,000,000원을 실행해 해당 기관에서 건수가 가장 많다. 계좌 전체 거래는 12747건이고 이상거래 비율은 7.0056%다. 최다 상대 계좌는 9000000004424162며 위험도 평가는 7.6점(Low)이다. 같은 상대에게 소액을 반복 이체하는 형태여서 분할 거래로 판단한다.",
+              "summary": "Withdrawal account 9000000004390593, at institution 159, made 189 split-transaction rows worth 767,000,000 KRW in 2024, the highest count at that institution. The account has 12747 transactions in all and a suspicious-transaction ratio of 7.0056%. Its busiest counterparty is 9000000004424162, and its behavioural risk score is 7.6 (Low). Small amounts go repeatedly to the same counterparty, so this is judged a split transaction.",
               "fraud_type": "분할거래",
               "tools_used": [
                 "query_transactions",
@@ -1429,7 +1429,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004390593 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금기관 159 소속 출금계좌 9000000004390593은 2024년에 분할 거래 유형 이상거래 189건, 767,000,000원을 실행해 해당 기관에서 건수가 가장 많다. 계좌 전체 거래는 12747건이고 이상거래 비율은 7.0056%다. 최다 상대 계좌는 9000000004424162며 위험도 평가는 7.6점(Low)이다. 같은 상대에게 소액을 반복 이체하는 형태여서 분할 거래로 판단한다.",
+            "SuspicionJudgmentReason": "Withdrawal account 9000000004390593, at institution 159, made 189 split-transaction rows worth 767,000,000 KRW in 2024, the highest count at that institution. The account has 12747 transactions in all and a suspicious-transaction ratio of 7.0056%. Its busiest counterparty is 9000000004424162, and its behavioural risk score is 7.6 (Low). Small amounts go repeatedly to the same counterparty, so this is judged a split transaction.",
             "OverallOpinion": "[2024-12-31] Split Transaction suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -1460,6 +1460,11 @@
       {
         "turn": 1,
         "content": "List the 2024 split-transaction rows of account 9000000000039222, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000039222 AND fraud_type = 3 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -1486,14 +1491,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000039222 AND fraud_type = 3 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000039222 AND fraud_type = 3 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000039222 AND fraud_type = 3 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -1813,7 +1813,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금계좌 9000000000039222(출금기관 159)의 2024년 분할 거래 유형 상위 20건 중 최대 금액은 4,000,000원이다. 자금 분산 분석 결과 상대 계좌 856곳에 총 1555건, 건당 평균 1,007,302원을 이체했고 그중 127건이 이상거래로 분류됐다. 1단계 네트워크의 이상거래 비율은 8.17%다. 소액을 다수 상대에게 쪼개 보내는 형태여서 분할 거래로 판단한다.",
+              "summary": "Among the top 20 split-transaction rows of 2024 for withdrawal account 9000000000039222 (institution 159) the largest is 4,000,000 KRW. The dispersion analysis shows 1555 transfers to 856 counterparty accounts, 1,007,302 KRW on average, 127 of them flagged. The one-hop network carries a suspicious-transaction ratio of 8.17%. Small amounts are split across many counterparties, so this is judged a split transaction.",
               "fraud_type": "분할거래",
               "tools_used": [
                 "query_transactions",
@@ -1876,7 +1876,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000039222 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금계좌 9000000000039222(출금기관 159)의 2024년 분할 거래 유형 상위 20건 중 최대 금액은 4,000,000원이다. 자금 분산 분석 결과 상대 계좌 856곳에 총 1555건, 건당 평균 1,007,302원을 이체했고 그중 127건이 이상거래로 분류됐다. 1단계 네트워크의 이상거래 비율은 8.17%다. 소액을 다수 상대에게 쪼개 보내는 형태여서 분할 거래로 판단한다.",
+            "SuspicionJudgmentReason": "Among the top 20 split-transaction rows of 2024 for withdrawal account 9000000000039222 (institution 159) the largest is 4,000,000 KRW. The dispersion analysis shows 1555 transfers to 856 counterparty accounts, 1,007,302 KRW on average, 127 of them flagged. The one-hop network carries a suspicious-transaction ratio of 8.17%. Small amounts are split across many counterparties, so this is judged a split transaction.",
             "OverallOpinion": "[2024-12-31] Split Transaction suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -1957,6 +1957,11 @@
       {
         "turn": 2,
         "content": "List that type's transactions for withdrawal account 9000000000041932, the 20 largest by amount.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000041932 AND fraud_type = 5 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -1975,14 +1980,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000041932 AND fraud_type = 5 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000041932 AND fraud_type = 5 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000041932 AND fraud_type = 5 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -2274,7 +2274,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "거액 입금 후 당일 인출 유형은 HOFINET 전체에서 243건, 12,370,000,000원이고 상위 출금기관은 159다. 출금계좌 9000000000041932(출금기관 159)의 해당 유형 상위 20건 중 최대 건은 2022년 1월 8일에 매체구분 2 채널로 이체한 90,000,000원이다. 해당 건의 예측 모델 위험 점수는 0.9975다. 거액이 들어온 당일에 같은 규모가 빠져나가는 형태여서 거액 입금 후 당일 인출로 판단한다.",
+              "summary": "Across HOFINET the same-day-withdrawal-after-large-deposit type covers 243 rows worth 12,370,000,000 KRW, and institution 159 leads it. Among the top 20 rows of that type for withdrawal account 9000000000041932 (institution 159) the largest is 90,000,000 KRW sent over media type 2 on 8 January 2022, with a model risk score of 0.9975. A large deposit leaves again on the day it arrives, so this is judged a same-day withdrawal after a large deposit.",
               "fraud_type": "거액 입금 후 당일/익일 인출",
               "tools_used": [
                 "get_fraud_type_summary",
@@ -2337,7 +2337,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000041932 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "거액 입금 후 당일 인출 유형은 HOFINET 전체에서 243건, 12,370,000,000원이고 상위 출금기관은 159다. 출금계좌 9000000000041932(출금기관 159)의 해당 유형 상위 20건 중 최대 건은 2022년 1월 8일에 매체구분 2 채널로 이체한 90,000,000원이다. 해당 건의 예측 모델 위험 점수는 0.9975다. 거액이 들어온 당일에 같은 규모가 빠져나가는 형태여서 거액 입금 후 당일 인출로 판단한다.",
+            "SuspicionJudgmentReason": "Across HOFINET the same-day-withdrawal-after-large-deposit type covers 243 rows worth 12,370,000,000 KRW, and institution 159 leads it. Among the top 20 rows of that type for withdrawal account 9000000000041932 (institution 159) the largest is 90,000,000 KRW sent over media type 2 on 8 January 2022, with a model risk score of 0.9975. A large deposit leaves again on the day it arrives, so this is judged a same-day withdrawal after a large deposit.",
             "OverallOpinion": "[2024-12-31] Same-Day Withdrawal after Large Deposit suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -2394,6 +2394,11 @@
       {
         "turn": 2,
         "content": "List the late-night bulk transactions of withdrawal account 9000000000038845 by date.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000038845 AND fraud_type = 7 ORDER BY date, receiver_acc, sender_acc, amount, time_slot, media_type, fund_type LIMIT 25"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -2412,14 +2417,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000038845 AND fraud_type = 7 ORDER BY date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 25"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000038845 AND fraud_type = 7 ORDER BY date, receiver_acc, sender_acc, amount, time_slot, media_type, fund_type LIMIT 25"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000038845 AND fraud_type = 7 ORDER BY date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 25"
-          }
-        },
         "tool_result": {
           "total_count": 23,
           "returned_count": 23,
@@ -2748,7 +2748,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금기관 159 소속 출금계좌 9000000000038845는 2022년 2월 5일을 시작으로 거래시간대 21 구간에서 건당 5,000,000원 규모의 이체 23건을 실행했다. 위험도 평가는 32.3점(Low)이고 심야 거래 비중 지표는 0.2029다. FIU 참고유형 Non-face-to-face 항목 'Excessive number of transactions and bulk operations via internet banking throughout the day, including night/early morning hours'에 해당한다. 영업시간 외 시간대에 같은 금액이 반복되어 심야/새벽 대량 거래로 판단한다.",
+              "summary": "Withdrawal account 9000000000038845, at institution 159, made 23 transfers of 5,000,000 KRW each in time slot 21, starting on 5 February 2022. Its behavioural risk score is 32.3 (Low) and its night-transaction share indicator is 0.2029. It matches the FIU reference type 'Excessive number of transactions and bulk operations via internet banking throughout the day, including night/early morning hours' in the Non-face-to-face category. The same amount repeats outside business hours, so this is judged a late-night/early-morning bulk transaction.",
               "fraud_type": "기타(자유기술)",
               "tools_used": [
                 "lookup_fiu_reference_types",
@@ -2810,7 +2810,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000038845 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금기관 159 소속 출금계좌 9000000000038845는 2022년 2월 5일을 시작으로 거래시간대 21 구간에서 건당 5,000,000원 규모의 이체 23건을 실행했다. 위험도 평가는 32.3점(Low)이고 심야 거래 비중 지표는 0.2029다. FIU 참고유형 Non-face-to-face 항목 'Excessive number of transactions and bulk operations via internet banking throughout the day, including night/early morning hours'에 해당한다. 영업시간 외 시간대에 같은 금액이 반복되어 심야/새벽 대량 거래로 판단한다.",
+            "SuspicionJudgmentReason": "Withdrawal account 9000000000038845, at institution 159, made 23 transfers of 5,000,000 KRW each in time slot 21, starting on 5 February 2022. Its behavioural risk score is 32.3 (Low) and its night-transaction share indicator is 0.2029. It matches the FIU reference type 'Excessive number of transactions and bulk operations via internet banking throughout the day, including night/early morning hours' in the Non-face-to-face category. The same amount repeats outside business hours, so this is judged a late-night/early-morning bulk transaction.",
             "OverallOpinion": "[2024-12-31] 기타(자유기술) suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -3300,6 +3300,11 @@
       {
         "turn": 2,
         "content": "List the sudden-pattern-change fraud on the PC banking channel in 2024, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE media_type = 1 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 10"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -3326,14 +3331,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE media_type = 1 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 10"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE media_type = 1 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 10"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE media_type = 1 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 10"
-          }
-        },
         "tool_result": {
           "total_count": 10,
           "returned_count": 10,
@@ -3505,7 +3505,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "2024년 채널 분석에서 이상거래 비율이 가장 높은 채널은 PC Banking(매체구분 1, 2.6667%)이다. 이 채널의 갑작스러운 거래패턴의 변화 유형 상위 10건 중 최대 건은 2024년 8월 12일에 출금기관 143 소속 출금계좌 9000000000020857이 이체한 300,000,000원이다. 해당 건의 예측 모델 위험 점수는 0.9766이다. 평소 사용하지 않던 채널에서 거액이 나간 형태여서 갑작스러운 거래패턴의 변화로 판단한다.",
+              "summary": "In the 2024 channel analysis the highest suspicious-transaction ratio belongs to PC Banking (media type 1, 2.6667%). Among the top 10 sudden-change rows on that channel the largest is 300,000,000 KRW sent on 12 August 2024 by withdrawal account 9000000000020857 at institution 143, with a model risk score of 0.9766. A large amount left over a channel the account does not normally use, so this is judged a sudden change in transaction pattern.",
               "fraud_type": "갑작스러운 거래패턴의 변화",
               "tools_used": [
                 "analyze_channel_risk",
@@ -3568,7 +3568,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000020857 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "2024년 채널 분석에서 이상거래 비율이 가장 높은 채널은 PC Banking(매체구분 1, 2.6667%)이다. 이 채널의 갑작스러운 거래패턴의 변화 유형 상위 10건 중 최대 건은 2024년 8월 12일에 출금기관 143 소속 출금계좌 9000000000020857이 이체한 300,000,000원이다. 해당 건의 예측 모델 위험 점수는 0.9766이다. 평소 사용하지 않던 채널에서 거액이 나간 형태여서 갑작스러운 거래패턴의 변화로 판단한다.",
+            "SuspicionJudgmentReason": "In the 2024 channel analysis the highest suspicious-transaction ratio belongs to PC Banking (media type 1, 2.6667%). Among the top 10 sudden-change rows on that channel the largest is 300,000,000 KRW sent on 12 August 2024 by withdrawal account 9000000000020857 at institution 143, with a model risk score of 0.9766. A large amount left over a channel the account does not normally use, so this is judged a sudden change in transaction pattern.",
             "OverallOpinion": "[2024-12-31] Sudden Change in Transaction Pattern suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -3836,7 +3836,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "HOFINET 전체 거래는 4732130건이고 이상거래는 14490건(0.3062%)이다. 위험도 랭킹 1순위는 2023년 5월 5일에 출금계좌 9000000004241908이 입금계좌 9000000004409923으로 이체한 6,000,000원이며 랭킹 점수는 0.9981, 재예측 점수는 0.9981이다. 거래 상대가 종전 거래 이력에 없던 계좌여서 신규 수신처 거래로 판단한다.",
+              "summary": "HOFINET holds 4732130 transactions in all, 14490 of them flagged (0.3062%). The top row of the risk ranking is 6,000,000 KRW sent by withdrawal account 9000000004241908 to receiving account 9000000004409923 on 5 May 2023, ranked at 0.9981 and re-scored at 0.9981. The counterparty does not appear in the account's earlier history, so this is judged a transaction with a new counterparty.",
               "fraud_type": "기타(자유기술)",
               "tools_used": [
                 "get_statistics",
@@ -3900,7 +3900,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004241908 and receiving accounts 9000000004409923.",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "HOFINET 전체 거래는 4732130건이고 이상거래는 14490건(0.3062%)이다. 위험도 랭킹 1순위는 2023년 5월 5일에 출금계좌 9000000004241908이 입금계좌 9000000004409923으로 이체한 6,000,000원이며 랭킹 점수는 0.9981, 재예측 점수는 0.9981이다. 거래 상대가 종전 거래 이력에 없던 계좌여서 신규 수신처 거래로 판단한다.",
+            "SuspicionJudgmentReason": "HOFINET holds 4732130 transactions in all, 14490 of them flagged (0.3062%). The top row of the risk ranking is 6,000,000 KRW sent by withdrawal account 9000000004241908 to receiving account 9000000004409923 on 5 May 2023, ranked at 0.9981 and re-scored at 0.9981. The counterparty does not appear in the account's earlier history, so this is judged a transaction with a new counterparty.",
             "OverallOpinion": "[2024-12-31] 기타(자유기술) suspicious transaction detected. Period: Unknown, related accounts: 2, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -4063,6 +4063,11 @@
       {
         "turn": 2,
         "content": "List the 2024 flagged transactions from institution 151 to institution 149, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 151 AND receiver_bank = 149 AND is_fraud = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -4094,14 +4099,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 151 AND receiver_bank = 149 AND is_fraud = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 151 AND receiver_bank = 149 AND is_fraud = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 151 AND receiver_bank = 149 AND is_fraud = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 4,
           "returned_count": 4,
@@ -4201,7 +4201,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "2024년 4분기 기관간 흐름에서 출금기관 151에서 입금기관 149로 가는 구간의 이상거래 비율이 14.2857%로 가장 높고 거래는 14건이다. 2024년 전체로 보면 이 구간의 이상거래는 4건이며 최대 건은 2024년 2월 5일에 출금계좌 9000000000027664가 이체한 70,000,000원이다. 해당 건의 예측 모델 위험 점수는 0.9985다. 이전 거래 이력이 없는 상대 기관으로 자금이 몰려 신규 수신처 거래로 판단한다.",
+              "summary": "In the fourth-quarter 2024 cross-institution flow the leg from withdrawal institution 151 to deposit institution 149 carries the highest suspicious-transaction ratio at 14.2857% over 14 transactions. Over 2024 as a whole that leg holds 4 flagged rows, the largest being 70,000,000 KRW sent by withdrawal account 9000000000027664 on 5 February 2024, with a model risk score of 0.9985. Funds concentrate on a counterpart institution with no earlier history, so this is judged a transaction with a new counterparty.",
               "fraud_type": "기타(자유기술)",
               "tools_used": [
                 "analyze_cross_institution_flow",
@@ -4263,7 +4263,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000027664 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "2024년 4분기 기관간 흐름에서 출금기관 151에서 입금기관 149로 가는 구간의 이상거래 비율이 14.2857%로 가장 높고 거래는 14건이다. 2024년 전체로 보면 이 구간의 이상거래는 4건이며 최대 건은 2024년 2월 5일에 출금계좌 9000000000027664가 이체한 70,000,000원이다. 해당 건의 예측 모델 위험 점수는 0.9985다. 이전 거래 이력이 없는 상대 기관으로 자금이 몰려 신규 수신처 거래로 판단한다.",
+            "SuspicionJudgmentReason": "In the fourth-quarter 2024 cross-institution flow the leg from withdrawal institution 151 to deposit institution 149 carries the highest suspicious-transaction ratio at 14.2857% over 14 transactions. Over 2024 as a whole that leg holds 4 flagged rows, the largest being 70,000,000 KRW sent by withdrawal account 9000000000027664 on 5 February 2024, with a model risk score of 0.9985. Funds concentrate on a counterpart institution with no earlier history, so this is judged a transaction with a new counterparty.",
             "OverallOpinion": "[2024-12-31] 기타(자유기술) suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -4739,7 +4739,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금계좌 9000000000023022는 2022년 4월 13일을 마지막으로 978일 동안 거래가 없다가 2024년 12월 16일에 5,000,000원으로 재활성화됐다. 계좌 전체 거래는 4건, 19,000,000원이고 이상거래 비율은 25.0%이며 주 이체 채널은 Internet Banking이다. 같은 달 CTR 분할거래 조회 상위 20건 가운데 최다 건수는 9000000000041188의 34건이다. 장기 휴면 계좌가 종전에 없던 상대와 거래를 재개해 신규 수신처 거래로 판단한다.",
+              "summary": "Withdrawal account 9000000000023022 was last active on 13 April 2022, stayed silent for 978 days and was reactivated on 16 December 2024 with 5,000,000 KRW. The account has 4 transactions worth 19,000,000 KRW in all, a suspicious-transaction ratio of 25.0% and Internet Banking as its main channel. A CTR structuring query over the same month returned 20 rows, the busiest being 34 transfers by account 9000000000041188. A long-dormant account resumed with a counterparty it had never used, so this is judged a transaction with a new counterparty.",
               "fraud_type": "기타(자유기술)",
               "tools_used": [
                 "detect_dormant_reactivation",
@@ -4801,7 +4801,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000023022 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금계좌 9000000000023022는 2022년 4월 13일을 마지막으로 978일 동안 거래가 없다가 2024년 12월 16일에 5,000,000원으로 재활성화됐다. 계좌 전체 거래는 4건, 19,000,000원이고 이상거래 비율은 25.0%이며 주 이체 채널은 Internet Banking이다. 같은 달 CTR 분할거래 조회 상위 20건 가운데 최다 건수는 9000000000041188의 34건이다. 장기 휴면 계좌가 종전에 없던 상대와 거래를 재개해 신규 수신처 거래로 판단한다.",
+            "SuspicionJudgmentReason": "Withdrawal account 9000000000023022 was last active on 13 April 2022, stayed silent for 978 days and was reactivated on 16 December 2024 with 5,000,000 KRW. The account has 4 transactions worth 19,000,000 KRW in all, a suspicious-transaction ratio of 25.0% and Internet Banking as its main channel. A CTR structuring query over the same month returned 20 rows, the busiest being 34 transfers by account 9000000000041188. A long-dormant account resumed with a counterparty it had never used, so this is judged a transaction with a new counterparty.",
             "OverallOpinion": "[2024-12-31] 기타(자유기술) suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -5017,6 +5017,11 @@
       {
         "turn": 2,
         "content": "List the 2024Q4 transactions of account 9000000000041188, the one R003 flagged, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000041188 AND date BETWEEN 20241001 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -5038,14 +5043,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000041188 AND date BETWEEN 20241001 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000041188 AND date BETWEEN 20241001 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000041188 AND date BETWEEN 20241001 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -5338,7 +5338,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "모니터링 R003(동일 금액 반복) 알림에서 출금계좌 9000000000041188이 4,000,000원을 202회, 상대 계좌 96곳에 반복 이체한 것으로 나타났다. 이 계좌(출금기관 159)의 2024년 4분기 거래 상위 20건을 확인했고 위험도 평가는 6.7점(Low)이다. 같은 금액을 다수 상대에게 반복해 보내는 형태여서 분할 거래로 판단한다.",
+              "summary": "The R003 monitoring rule (repeated identical amount) shows withdrawal account 9000000000041188 sending 4,000,000 KRW 202 times to 96 counterparty accounts. The top 20 fourth-quarter 2024 transactions of that account (institution 159) were reviewed, and its behavioural risk score is 6.7 (Low). The same amount goes repeatedly to many counterparties, so this is judged a split transaction.",
               "fraud_type": "분할거래",
               "tools_used": [
                 "detect_monitoring_alerts",
@@ -5401,7 +5401,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000041188 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "모니터링 R003(동일 금액 반복) 알림에서 출금계좌 9000000000041188이 4,000,000원을 202회, 상대 계좌 96곳에 반복 이체한 것으로 나타났다. 이 계좌(출금기관 159)의 2024년 4분기 거래 상위 20건을 확인했고 위험도 평가는 6.7점(Low)이다. 같은 금액을 다수 상대에게 반복해 보내는 형태여서 분할 거래로 판단한다.",
+            "SuspicionJudgmentReason": "The R003 monitoring rule (repeated identical amount) shows withdrawal account 9000000000041188 sending 4,000,000 KRW 202 times to 96 counterparty accounts. The top 20 fourth-quarter 2024 transactions of that account (institution 159) were reviewed, and its behavioural risk score is 6.7 (Low). The same amount goes repeatedly to many counterparties, so this is judged a split transaction.",
             "OverallOpinion": "[2024-12-31] Split Transaction suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -5605,6 +5605,11 @@
       {
         "turn": 3,
         "content": "List the late-night bulk transactions of withdrawal account 9000000004242392 by date.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004242392 AND fraud_type = 7 ORDER BY date, amount DESC, sender_acc, receiver_acc, time_slot, media_type, fund_type LIMIT 10"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -5623,14 +5628,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004242392 AND fraud_type = 7 ORDER BY date, amount DESC, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 10"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004242392 AND fraud_type = 7 ORDER BY date, amount DESC, sender_acc, receiver_acc, time_slot, media_type, fund_type LIMIT 10"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004242392 AND fraud_type = 7 ORDER BY date, amount DESC, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 10"
-          }
-        },
         "tool_result": {
           "total_count": 7,
           "returned_count": 7,
@@ -5730,7 +5730,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "분기 트렌드 14개 구간에서 마지막 분기 2024Q4의 이상거래 비율은 0.3948%다. 2024년 3분기 대비 4분기는 거래 건수가 -19.26%, 이상거래 건수가 28.01% 변화했다. 출금기관 159 소속 출금계좌 9000000004242392는 거래시간대 21 구간에서 심야/새벽 대량 거래 유형 7건을 실행했고 2022년 3월 1일의 60,000,000원이 가장 크다. 영업시간 외 시간대에 대량 이체가 몰려 심야/새벽 대량 거래로 판단한다.",
+              "summary": "Over 14 quarterly periods the last one, 2024Q4, carries a suspicious-transaction ratio of 0.3948%. Between the third and the fourth quarter of 2024 the transaction count moved by -19.26% and the flagged count by 28.01%. Withdrawal account 9000000004242392, at institution 159, made 7 late-night/early-morning bulk rows in time slot 21, the largest being 60,000,000 KRW on 1 March 2022. Bulk transfers concentrate outside business hours, so this is judged a late-night/early-morning bulk transaction.",
               "fraud_type": "기타(자유기술)",
               "tools_used": [
                 "get_trend_analysis",
@@ -5792,7 +5792,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004242392 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "분기 트렌드 14개 구간에서 마지막 분기 2024Q4의 이상거래 비율은 0.3948%다. 2024년 3분기 대비 4분기는 거래 건수가 -19.26%, 이상거래 건수가 28.01% 변화했다. 출금기관 159 소속 출금계좌 9000000004242392는 거래시간대 21 구간에서 심야/새벽 대량 거래 유형 7건을 실행했고 2022년 3월 1일의 60,000,000원이 가장 크다. 영업시간 외 시간대에 대량 이체가 몰려 심야/새벽 대량 거래로 판단한다.",
+            "SuspicionJudgmentReason": "Over 14 quarterly periods the last one, 2024Q4, carries a suspicious-transaction ratio of 0.3948%. Between the third and the fourth quarter of 2024 the transaction count moved by -19.26% and the flagged count by 28.01%. Withdrawal account 9000000004242392, at institution 159, made 7 late-night/early-morning bulk rows in time slot 21, the largest being 60,000,000 KRW on 1 March 2022. Bulk transfers concentrate outside business hours, so this is judged a late-night/early-morning bulk transaction.",
             "OverallOpinion": "[2024-12-31] 기타(자유기술) suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -5965,7 +5965,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "입금계좌 9000000004371903은 송금 계좌 123곳, 송금 기관 7곳에서 이체 1430건, 10,649,179,032원을 받았고 이상거래 비율은 7.2028%다. 최다 송금 계좌는 9000000004236284다. 자금 수집 분석에서 상대 123곳, 건당 평균 7,446,978원이 확인된다. 그래프 위험 점수는 0.1317이고 이웃 계좌 이상거래 비율은 0.9502%다. 유입 상대와 규모가 종전과 달라져 갑작스러운 거래패턴의 변화로 판단한다.",
+              "summary": "Receiving account 9000000004371903 took 1430 transfers worth 10,649,179,032 KRW from 123 sending accounts at 7 institutions, with a suspicious-transaction ratio of 7.2028%. Its busiest sender is 9000000004236284. The collection analysis finds 123 counterparties at 7,446,978 KRW per transfer on average. Its graph risk score is 0.1317 and the suspicious-transaction ratio of its neighbours is 0.9502%. The inbound counterparties and the size of the flows changed, so this is judged a sudden change in transaction pattern.",
               "fraud_type": "갑작스러운 거래패턴의 변화",
               "tools_used": [
                 "get_receiving_account_profile",
@@ -6028,7 +6028,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts  and receiving accounts 9000000004371903.",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "입금계좌 9000000004371903은 송금 계좌 123곳, 송금 기관 7곳에서 이체 1430건, 10,649,179,032원을 받았고 이상거래 비율은 7.2028%다. 최다 송금 계좌는 9000000004236284다. 자금 수집 분석에서 상대 123곳, 건당 평균 7,446,978원이 확인된다. 그래프 위험 점수는 0.1317이고 이웃 계좌 이상거래 비율은 0.9502%다. 유입 상대와 규모가 종전과 달라져 갑작스러운 거래패턴의 변화로 판단한다.",
+            "SuspicionJudgmentReason": "Receiving account 9000000004371903 took 1430 transfers worth 10,649,179,032 KRW from 123 sending accounts at 7 institutions, with a suspicious-transaction ratio of 7.2028%. Its busiest sender is 9000000004236284. The collection analysis finds 123 counterparties at 7,446,978 KRW per transfer on average. Its graph risk score is 0.1317 and the suspicious-transaction ratio of its neighbours is 0.9502%. The inbound counterparties and the size of the flows changed, so this is judged a sudden change in transaction pattern.",
             "OverallOpinion": "[2024-12-31] Sudden Change in Transaction Pattern suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -6067,6 +6067,11 @@
       {
         "turn": 2,
         "content": "The account is 9000000000019720. List its sudden-pattern-change transactions, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000019720 AND fraud_type = 1 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -6085,14 +6090,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000019720 AND fraud_type = 1 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000019720 AND fraud_type = 1 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000019720 AND fraud_type = 1 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -6384,7 +6384,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금계좌 9000000000019720(출금기관 134)의 갑작스러운 거래패턴의 변화 유형 이상거래 상위 20건을 확인했다. 최대 건은 2023년 8월 5일에 입금계좌 9000000001366020으로 이체한 100,000,000원이고 예측 모델 위험 점수는 0.9962다. 거래 규모가 평소와 달라 갑작스러운 거래패턴의 변화로 판단한다.",
+              "summary": "The top 20 sudden-change-in-transaction-pattern rows of withdrawal account 9000000000019720 (institution 134) were reviewed. The largest is 100,000,000 KRW sent to receiving account 9000000001366020 on 5 August 2023, with a model risk score of 0.9962. The size of the transfer departs from the account's usual level, so this is judged a sudden change in transaction pattern.",
               "fraud_type": "갑작스러운 거래패턴의 변화",
               "tools_used": [
                 "query_transactions",
@@ -6448,7 +6448,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000019720 and receiving accounts 9000000001366020.",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금계좌 9000000000019720(출금기관 134)의 갑작스러운 거래패턴의 변화 유형 이상거래 상위 20건을 확인했다. 최대 건은 2023년 8월 5일에 입금계좌 9000000001366020으로 이체한 100,000,000원이고 예측 모델 위험 점수는 0.9962다. 거래 규모가 평소와 달라 갑작스러운 거래패턴의 변화로 판단한다.",
+            "SuspicionJudgmentReason": "The top 20 sudden-change-in-transaction-pattern rows of withdrawal account 9000000000019720 (institution 134) were reviewed. The largest is 100,000,000 KRW sent to receiving account 9000000001366020 on 5 August 2023, with a model risk score of 0.9962. The size of the transfer departs from the account's usual level, so this is judged a sudden change in transaction pattern.",
             "OverallOpinion": "[2024-12-31] Sudden Change in Transaction Pattern suspicious transaction detected. Period: Unknown, related accounts: 2, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -6486,6 +6486,11 @@
       {
         "turn": 2,
         "content": "The account is 9000000004242077. List its 2024 concurrent-multiple-transaction rows, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004242077 AND fraud_type = 4 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -6512,14 +6517,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004242077 AND fraud_type = 4 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004242077 AND fraud_type = 4 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004242077 AND fraud_type = 4 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -6843,7 +6843,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금계좌 9000000004242077(출금기관 157)의 2024년 다중거래의 동시 요청 유형 이상거래 상위 20건을 확인했다. 최대 건은 2024년 2월 17일의 500,000,000원이고 예측 모델 위험 점수는 0.9961이다. FIU 참고유형 'Transactions split among multiple people or structured below threshold to avoid reporting (structuring)'와 형태가 겹친다. 같은 날 다수 이체가 동시에 요청되어 다중거래의 동시 요청으로 판단한다.",
+              "summary": "The top 20 concurrent-multiple-transaction rows of 2024 for withdrawal account 9000000004242077 (institution 157) were reviewed. The largest is 500,000,000 KRW on 17 February 2024, with a model risk score of 0.9961. It overlaps with the FIU reference type 'Transactions split among multiple people or structured below threshold to avoid reporting (structuring)'. Several transfers were requested together on one day, so this is judged a concurrent multiple transaction request.",
               "fraud_type": "다중거래의 동시요청",
               "tools_used": [
                 "query_transactions",
@@ -6906,7 +6906,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004242077 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금계좌 9000000004242077(출금기관 157)의 2024년 다중거래의 동시 요청 유형 이상거래 상위 20건을 확인했다. 최대 건은 2024년 2월 17일의 500,000,000원이고 예측 모델 위험 점수는 0.9961이다. FIU 참고유형 'Transactions split among multiple people or structured below threshold to avoid reporting (structuring)'와 형태가 겹친다. 같은 날 다수 이체가 동시에 요청되어 다중거래의 동시 요청으로 판단한다.",
+            "SuspicionJudgmentReason": "The top 20 concurrent-multiple-transaction rows of 2024 for withdrawal account 9000000004242077 (institution 157) were reviewed. The largest is 500,000,000 KRW on 17 February 2024, with a model risk score of 0.9961. It overlaps with the FIU reference type 'Transactions split among multiple people or structured below threshold to avoid reporting (structuring)'. Several transfers were requested together on one day, so this is judged a concurrent multiple transaction request.",
             "OverallOpinion": "[2024-12-31] Concurrent Multiple Transactions suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -7199,6 +7199,11 @@
       {
         "turn": 4,
         "content": "List institution 151's new-counterparty fraud in the second half of 2024, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 151 AND fraud_type = 2 AND date BETWEEN 20240701 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -7225,14 +7230,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 151 AND fraud_type = 2 AND date BETWEEN 20240701 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 151 AND fraud_type = 2 AND date BETWEEN 20240701 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 151 AND fraud_type = 2 AND date BETWEEN 20240701 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -7488,7 +7488,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금기관 151의 출금 거래는 195181건이고 이상거래는 1699건(0.8705%)이며 가장 많은 유형은 Transaction with New Counterparty이다. 2024년 상반기 대비 하반기에 이상거래 건수는 -38.12%, 이상거래 비율은 -0.1212%p 변화했다. 하반기 신규 수신처 거래 유형 상위 20건 가운데 최대 건은 2024년 7월 6일에 출금계좌 9000000000022819가 이체한 200,000,000원이다. 거래 이력이 없던 상대로 자금이 이동해 신규 수신처 거래로 판단한다.",
+              "summary": "Institution 151 sends 195181 transactions, 1699 of them flagged (0.8705%), and its most common type is Transaction with New Counterparty. Between the first and the second half of 2024 the flagged count moved by -38.12% and the flagged ratio by -0.1212 percentage points. Among the top 20 new-counterparty rows of the second half the largest is 200,000,000 KRW sent by withdrawal account 9000000000022819 on 6 July 2024. Funds moved to a counterparty with no earlier history, so this is judged a transaction with a new counterparty.",
               "fraud_type": "기타(자유기술)",
               "tools_used": [
                 "get_institution_report",
@@ -7550,7 +7550,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000022819 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금기관 151의 출금 거래는 195181건이고 이상거래는 1699건(0.8705%)이며 가장 많은 유형은 Transaction with New Counterparty이다. 2024년 상반기 대비 하반기에 이상거래 건수는 -38.12%, 이상거래 비율은 -0.1212%p 변화했다. 하반기 신규 수신처 거래 유형 상위 20건 가운데 최대 건은 2024년 7월 6일에 출금계좌 9000000000022819가 이체한 200,000,000원이다. 거래 이력이 없던 상대로 자금이 이동해 신규 수신처 거래로 판단한다.",
+            "SuspicionJudgmentReason": "Institution 151 sends 195181 transactions, 1699 of them flagged (0.8705%), and its most common type is Transaction with New Counterparty. Between the first and the second half of 2024 the flagged count moved by -38.12% and the flagged ratio by -0.1212 percentage points. Among the top 20 new-counterparty rows of the second half the largest is 200,000,000 KRW sent by withdrawal account 9000000000022819 on 6 July 2024. Funds moved to a counterparty with no earlier history, so this is judged a transaction with a new counterparty.",
             "OverallOpinion": "[2024-12-31] 기타(자유기술) suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -7688,7 +7688,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "입금계좌 9000000004424162는 송금 계좌 6곳에서 361건을 받았고 그중 74건이 이상거래로 분류됐다. 건당 평균 금액은 2,890,842원이다. 같은 기준의 funnel 스캔에서는 5개 계좌가 나왔고 이 계좌는 포함되지 않아 수집 후 재이체 형태는 확인되지 않는다. 소수 송금인이 소액을 반복 이체해 모아 주는 형태여서 분할 거래로 판단한다.",
+              "summary": "Receiving account 9000000004424162 took 361 transfers from 6 sending accounts, 74 of them flagged, at 2,890,842 KRW per transfer on average. A funnel scan on the same threshold returned 5 accounts and this one is not among them, so no collect-and-forward shape is present. A few senders transfer small amounts repeatedly into one account, so this is judged a split transaction.",
               "fraud_type": "분할거래",
               "tools_used": [
                 "detect_smurfing_network",
@@ -7750,7 +7750,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts  and receiving accounts 9000000004424162.",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "입금계좌 9000000004424162는 송금 계좌 6곳에서 361건을 받았고 그중 74건이 이상거래로 분류됐다. 건당 평균 금액은 2,890,842원이다. 같은 기준의 funnel 스캔에서는 5개 계좌가 나왔고 이 계좌는 포함되지 않아 수집 후 재이체 형태는 확인되지 않는다. 소수 송금인이 소액을 반복 이체해 모아 주는 형태여서 분할 거래로 판단한다.",
+            "SuspicionJudgmentReason": "Receiving account 9000000004424162 took 361 transfers from 6 sending accounts, 74 of them flagged, at 2,890,842 KRW per transfer on average. A funnel scan on the same threshold returned 5 accounts and this one is not among them, so no collect-and-forward shape is present. A few senders transfer small amounts repeatedly into one account, so this is judged a split transaction.",
             "OverallOpinion": "[2024-12-31] Split Transaction suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -8005,6 +8005,11 @@
       {
         "turn": 3,
         "content": "List this institution's 2024 sudden-pattern-change fraud, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 134 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -8031,14 +8036,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 134 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 134 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 134 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -8294,7 +8294,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금기관 134의 출금 거래 659786건 가운데 이상거래는 2877건(0.4361%)이다. 2024년 갑작스러운 거래패턴의 변화 유형 상위 20건 중 최대 건은 2024년 1월 23일 거래시간대 9 구간에 출금계좌 9000000000020163이 이체한 200,000,000원이다. 기관 평균을 크게 벗어난 금액이 한 계좌에서 나가 갑작스러운 거래패턴의 변화로 판단한다.",
+              "summary": "Of the 659786 transactions institution 134 sends, 2877 are flagged (0.4361%). Among the top 20 sudden-change rows of 2024 the largest is 200,000,000 KRW sent by withdrawal account 9000000000020163 on 23 January 2024 in time slot 9. An amount far above the institution's average left a single account, so this is judged a sudden change in transaction pattern.",
               "fraud_type": "갑작스러운 거래패턴의 변화",
               "tools_used": [
                 "get_institution_report",
@@ -8356,7 +8356,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000020163 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금기관 134의 출금 거래 659786건 가운데 이상거래는 2877건(0.4361%)이다. 2024년 갑작스러운 거래패턴의 변화 유형 상위 20건 중 최대 건은 2024년 1월 23일 거래시간대 9 구간에 출금계좌 9000000000020163이 이체한 200,000,000원이다. 기관 평균을 크게 벗어난 금액이 한 계좌에서 나가 갑작스러운 거래패턴의 변화로 판단한다.",
+            "SuspicionJudgmentReason": "Of the 659786 transactions institution 134 sends, 2877 are flagged (0.4361%). Among the top 20 sudden-change rows of 2024 the largest is 200,000,000 KRW sent by withdrawal account 9000000000020163 on 23 January 2024 in time slot 9. An amount far above the institution's average left a single account, so this is judged a sudden change in transaction pattern.",
             "OverallOpinion": "[2024-12-31] Sudden Change in Transaction Pattern suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -8491,6 +8491,11 @@
       {
         "turn": 4,
         "content": "List institution 147's transactions of that type in 2024, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 147 AND fraud_type = 4 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -8517,14 +8522,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 147 AND fraud_type = 4 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 147 AND fraud_type = 4 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 147 AND fraud_type = 4 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -8780,7 +8780,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "HOFINET 전체 거래 4732130건 가운데 이상거래는 14490건이다. 다중거래의 동시 요청 유형은 929건, 59,020,000,000원이고 출금기관 147이 812건으로 가장 많다. 출금기관 147의 2024년 해당 유형 상위 20건 중 최대 건은 2024년 2월 13일에 출금계좌 9000000000021942가 이체한 100,000,000원이다. 같은 날 같은 계좌에서 다수 이체가 동시에 요청되어 다중거래의 동시 요청으로 판단한다.",
+              "summary": "Of the 4732130 transactions in HOFINET, 14490 are flagged. The concurrent-multiple-transaction type covers 929 rows worth 59,020,000,000 KRW, and withdrawal institution 147 leads it with 812. Among the top 20 rows of that type at institution 147 in 2024 the largest is 100,000,000 KRW sent by withdrawal account 9000000000021942 on 13 February 2024. Several transfers were requested together from one account on one day, so this is judged a concurrent multiple transaction request.",
               "fraud_type": "다중거래의 동시요청",
               "tools_used": [
                 "get_statistics",
@@ -8843,7 +8843,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000021942 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "HOFINET 전체 거래 4732130건 가운데 이상거래는 14490건이다. 다중거래의 동시 요청 유형은 929건, 59,020,000,000원이고 출금기관 147이 812건으로 가장 많다. 출금기관 147의 2024년 해당 유형 상위 20건 중 최대 건은 2024년 2월 13일에 출금계좌 9000000000021942가 이체한 100,000,000원이다. 같은 날 같은 계좌에서 다수 이체가 동시에 요청되어 다중거래의 동시 요청으로 판단한다.",
+            "SuspicionJudgmentReason": "Of the 4732130 transactions in HOFINET, 14490 are flagged. The concurrent-multiple-transaction type covers 929 rows worth 59,020,000,000 KRW, and withdrawal institution 147 leads it with 812. Among the top 20 rows of that type at institution 147 in 2024 the largest is 100,000,000 KRW sent by withdrawal account 9000000000021942 on 13 February 2024. Several transfers were requested together from one account on one day, so this is judged a concurrent multiple transaction request.",
             "OverallOpinion": "[2024-12-31] Concurrent Multiple Transactions suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -8920,6 +8920,11 @@
       {
         "turn": 4,
         "content": "List the sudden-pattern-change transactions of account 9000000004235447, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004235447 AND fraud_type = 1 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -8938,14 +8943,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004235447 AND fraud_type = 1 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004235447 AND fraud_type = 1 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004235447 AND fraud_type = 1 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 19,
           "returned_count": 19,
@@ -9189,7 +9189,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "레이어링은 다음과 같이 정의된다. Creating complex transaction paths to conceal the source of funds. The second stage of money laundering. 3단계 이상 레이어링 탐지 결과는 0건이다. No chain of 3 or more consecutive fraud transfers found. The longest such chain in HOFINET is 2 transfers. 출금계좌 9000000004235447(출금기관 134)의 갑작스러운 거래패턴의 변화 유형 이상거래 상위 19건 중 최대 건은 2022년 12월 13일에 매체구분 2 채널로 이체한 200,000,000원이다. 다단계 분산은 확인되지 않지만 단일 계좌의 거래 규모 변화가 커 갑작스러운 거래패턴의 변화로 판단한다.",
+              "summary": "Layering is defined as follows. Creating complex transaction paths to conceal the source of funds. The second stage of money laundering. The scan for layering of three or more steps returned 0 matches. No chain of 3 or more consecutive fraud transfers found. The longest such chain in HOFINET is 2 transfers. Among the top 19 sudden-change rows of withdrawal account 9000000004235447 (institution 134) the largest is 200,000,000 KRW sent over media type 2 on 13 December 2022. No multi-step dispersion is present, but the single account's transaction size changed sharply, so this is judged a sudden change in transaction pattern.",
               "fraud_type": "갑작스러운 거래패턴의 변화",
               "tools_used": [
                 "get_aml_glossary",
@@ -9252,7 +9252,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004235447 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "레이어링은 다음과 같이 정의된다. Creating complex transaction paths to conceal the source of funds. The second stage of money laundering. 3단계 이상 레이어링 탐지 결과는 0건이다. No chain of 3 or more consecutive fraud transfers found. The longest such chain in HOFINET is 2 transfers. 출금계좌 9000000004235447(출금기관 134)의 갑작스러운 거래패턴의 변화 유형 이상거래 상위 19건 중 최대 건은 2022년 12월 13일에 매체구분 2 채널로 이체한 200,000,000원이다. 다단계 분산은 확인되지 않지만 단일 계좌의 거래 규모 변화가 커 갑작스러운 거래패턴의 변화로 판단한다.",
+            "SuspicionJudgmentReason": "Layering is defined as follows. Creating complex transaction paths to conceal the source of funds. The second stage of money laundering. The scan for layering of three or more steps returned 0 matches. No chain of 3 or more consecutive fraud transfers found. The longest such chain in HOFINET is 2 transfers. Among the top 19 sudden-change rows of withdrawal account 9000000004235447 (institution 134) the largest is 200,000,000 KRW sent over media type 2 on 13 December 2022. No multi-step dispersion is present, but the single account's transaction size changed sharply, so this is judged a sudden change in transaction pattern.",
             "OverallOpinion": "[2024-12-31] Sudden Change in Transaction Pattern suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -9519,7 +9519,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "CTR 분할거래 기준(10,000,000원)으로 2023년을 보면 출금계좌 9000000004243626이 2023년 11월 8일 하루에 93건, 합계 103,870,000원을 이체했고 단건 최대는 5,000,000원이다. 이 계좌의 전체 거래는 71051건이고 위험도 평가는 2.6점(Low)이다. 보고 기준 미만으로 금액을 쪼개 같은 날 반복 이체한 형태여서 분할 거래로 판단한다.",
+              "summary": "Under the CTR structuring threshold of 10,000,000 KRW, in 2023 withdrawal account 9000000004243626 made 93 transfers on 8 November 2023 totalling 103,870,000 KRW, the largest single one 5,000,000 KRW. The account has 71051 transactions in all and a behavioural risk score of 2.6 (Low). Amounts were split below the reporting threshold and repeated on one day, so this is judged a split transaction.",
               "fraud_type": "분할거래",
               "tools_used": [
                 "detect_ctr_candidates",
@@ -9581,7 +9581,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004243626 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "CTR 분할거래 기준(10,000,000원)으로 2023년을 보면 출금계좌 9000000004243626이 2023년 11월 8일 하루에 93건, 합계 103,870,000원을 이체했고 단건 최대는 5,000,000원이다. 이 계좌의 전체 거래는 71051건이고 위험도 평가는 2.6점(Low)이다. 보고 기준 미만으로 금액을 쪼개 같은 날 반복 이체한 형태여서 분할 거래로 판단한다.",
+            "SuspicionJudgmentReason": "Under the CTR structuring threshold of 10,000,000 KRW, in 2023 withdrawal account 9000000004243626 made 93 transfers on 8 November 2023 totalling 103,870,000 KRW, the largest single one 5,000,000 KRW. The account has 71051 transactions in all and a behavioural risk score of 2.6 (Low). Amounts were split below the reporting threshold and repeated on one day, so this is judged a split transaction.",
             "OverallOpinion": "[2024-12-31] Split Transaction suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -9661,6 +9661,11 @@
       {
         "turn": 3,
         "content": "List the new-counterparty fraud in the second half of 2024, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE fraud_type = 2 AND date BETWEEN 20240701 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -9682,14 +9687,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE fraud_type = 2 AND date BETWEEN 20240701 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE fraud_type = 2 AND date BETWEEN 20240701 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE fraud_type = 2 AND date BETWEEN 20240701 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -9945,7 +9945,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "2023년 이상거래는 4384건, 2024년은 5792건으로 32.12% 변화했다. 2024년 하반기 신규 수신처 거래 유형 상위 20건 중 최대 건은 2024년 8월 12일에 출금기관 157 소속 출금계좌 9000000004241747이 입금계좌 9000000004312117로 이체한 500,000,000원이다. 거래 이력이 없던 상대로 거액이 이동해 신규 수신처 거래로 판단한다.",
+              "summary": "Flagged transactions numbered 4384 in 2023 and 5792 in 2024, a change of 32.12%. Among the top 20 new-counterparty rows of the second half of 2024 the largest is 500,000,000 KRW sent on 12 August 2024 by withdrawal account 9000000004241747 at institution 157 to receiving account 9000000004312117. A large amount moved to a counterparty with no earlier history, so this is judged a transaction with a new counterparty.",
               "fraud_type": "기타(자유기술)",
               "tools_used": [
                 "compare_periods",
@@ -10008,7 +10008,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004241747 and receiving accounts 9000000004312117.",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "2023년 이상거래는 4384건, 2024년은 5792건으로 32.12% 변화했다. 2024년 하반기 신규 수신처 거래 유형 상위 20건 중 최대 건은 2024년 8월 12일에 출금기관 157 소속 출금계좌 9000000004241747이 입금계좌 9000000004312117로 이체한 500,000,000원이다. 거래 이력이 없던 상대로 거액이 이동해 신규 수신처 거래로 판단한다.",
+            "SuspicionJudgmentReason": "Flagged transactions numbered 4384 in 2023 and 5792 in 2024, a change of 32.12%. Among the top 20 new-counterparty rows of the second half of 2024 the largest is 500,000,000 KRW sent on 12 August 2024 by withdrawal account 9000000004241747 at institution 157 to receiving account 9000000004312117. A large amount moved to a counterparty with no earlier history, so this is judged a transaction with a new counterparty.",
             "OverallOpinion": "[2024-12-31] 기타(자유기술) suspicious transaction detected. Period: Unknown, related accounts: 2, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -10078,6 +10078,11 @@
       {
         "turn": 3,
         "content": "List the same-day-withdrawal transactions of account 9000000004387158, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004387158 AND fraud_type = 5 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -10096,14 +10101,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004387158 AND fraud_type = 5 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004387158 AND fraud_type = 5 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004387158 AND fraud_type = 5 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -10354,27 +10354,27 @@
       },
       {
         "turn": 4,
-        "content": "Here is the STR draft I am working on. Check it for missing required fields. {\"Header\": {\"ReportingDate\": \"2024-12-31\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": \"159\"}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000041932\", \"ReceivingAccountNumber\": \"9000000002364786\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20240101-20241231\", \"TransactionCount\": 6, \"TransactionChannel\": \"Internet Banking\", \"TotalAmount_KRW\": 320000000}}",
+        "content": "Here is the STR draft I am working on. Check it for missing required fields. {\"Header\": {\"ReportingDate\": \"2024-05-31\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": \"159\"}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000004387158\", \"ReceivingAccountNumber\": \"9000000004416541\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20240123-20240501\", \"TransactionCount\": 2, \"TransactionChannel\": \"Internet Banking\", \"TotalAmount_KRW\": 120000000}}",
         "tool_calls": [
           {
             "name": "validate_str_fields",
             "arguments": {
               "str_draft": {
                 "Header": {
-                  "ReportingDate": "2024-12-31"
+                  "ReportingDate": "2024-05-31"
                 },
                 "I_ReportingInstitution": {
                   "WithdrawalInstitutionCode": "159"
                 },
                 "II_Transactor": {
-                  "WithdrawalAccountNumber": "9000000000041932",
-                  "ReceivingAccountNumber": "9000000002364786"
+                  "WithdrawalAccountNumber": "9000000004387158",
+                  "ReceivingAccountNumber": "9000000004416541"
                 },
                 "III_TransactionDetails": {
-                  "TransactionPeriod": "20240101-20241231",
-                  "TransactionCount": 6,
+                  "TransactionPeriod": "20240123-20240501",
+                  "TransactionCount": 2,
                   "TransactionChannel": "Internet Banking",
-                  "TotalAmount_KRW": 320000000
+                  "TotalAmount_KRW": 120000000
                 }
               }
             }
@@ -10418,7 +10418,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "FIU 참고유형 검색에서 2건이 나왔고 그중 'Depositing large funds, issuing a balance certificate, and withdrawing the full amount the next day'가 이 사안과 같은 형태다. 출금계좌 9000000004387158(출금기관 159)의 거액 입금 후 당일 인출 유형 이상거래 상위 20건 중 최대 건은 2023년 3월 10일에 매체구분 2 채널로 이체한 90,000,000원이다. 초안 검증 결과 필수 항목 충족 여부는 미충족이고 미기재 항목은 VI_TransactionType.PrimarySuspicionType, VII_Narrative.SuspicionJudgmentReason이다. 거액이 들어온 직후 같은 규모가 빠져나가 거액 입금 후 당일 인출로 판단한다.",
+              "summary": "The FIU reference lookup returned 2 rows, of which 'Depositing large funds, issuing a balance certificate, and withdrawing the full amount the next day' matches this case. Among the top 20 same-day-withdrawal rows of withdrawal account 9000000004387158 (institution 159) the largest is 90,000,000 KRW sent over media type 2 on 10 March 2023. The draft validation reports the required fields as not met and the missing items as VI_TransactionType.PrimarySuspicionType, VII_Narrative.SuspicionJudgmentReason. A large deposit left again at the same size straight away, so this is judged a same-day withdrawal after a large deposit.",
               "fraud_type": "거액 입금 후 당일/익일 인출",
               "tools_used": [
                 "lookup_fiu_reference_types",
@@ -10481,7 +10481,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004387158 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "FIU 참고유형 검색에서 2건이 나왔고 그중 'Depositing large funds, issuing a balance certificate, and withdrawing the full amount the next day'가 이 사안과 같은 형태다. 출금계좌 9000000004387158(출금기관 159)의 거액 입금 후 당일 인출 유형 이상거래 상위 20건 중 최대 건은 2023년 3월 10일에 매체구분 2 채널로 이체한 90,000,000원이다. 초안 검증 결과 필수 항목 충족 여부는 미충족이고 미기재 항목은 VI_TransactionType.PrimarySuspicionType, VII_Narrative.SuspicionJudgmentReason이다. 거액이 들어온 직후 같은 규모가 빠져나가 거액 입금 후 당일 인출로 판단한다.",
+            "SuspicionJudgmentReason": "The FIU reference lookup returned 2 rows, of which 'Depositing large funds, issuing a balance certificate, and withdrawing the full amount the next day' matches this case. Among the top 20 same-day-withdrawal rows of withdrawal account 9000000004387158 (institution 159) the largest is 90,000,000 KRW sent over media type 2 on 10 March 2023. The draft validation reports the required fields as not met and the missing items as VI_TransactionType.PrimarySuspicionType, VII_Narrative.SuspicionJudgmentReason. A large deposit left again at the same size straight away, so this is judged a same-day withdrawal after a large deposit.",
             "OverallOpinion": "[2024-12-31] Same-Day Withdrawal after Large Deposit suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -10691,7 +10691,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금계좌 9000000000042369(출금기관 159)의 전체 거래는 1971건, 2,243,623,000원이고 이상거래 비율은 3.5515%이며 주 이체 채널은 Internet Banking이다. 최다 상대 계좌 9000000003555938로 65건이 나갔고, 이 입금계좌는 송금 계좌 323곳에서 973건을 받으며 이상거래 비율은 0.3083%다. 출금계좌의 1단계 네트워크는 연결 계좌 806개, 이상거래 70건이다. 소액을 여러 상대에게 나눠 보내고 특정 계좌로 모이는 형태여서 분할 거래로 판단한다.",
+              "summary": "Withdrawal account 9000000000042369 (institution 159) has 1971 transactions worth 2,243,623,000 KRW in all, a suspicious-transaction ratio of 3.5515% and Internet Banking as its main channel. 65 transfers went to its busiest counterparty 9000000003555938, and that receiving account takes 973 transfers from 323 sending accounts with a suspicious-transaction ratio of 0.3083%. The one-hop network of the withdrawal account holds 806 connected accounts and 70 flagged transactions. Small amounts are split across counterparties and collected into one account, so this is judged a split transaction.",
               "fraud_type": "분할거래",
               "tools_used": [
                 "get_account_profile",
@@ -10754,7 +10754,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000042369 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금계좌 9000000000042369(출금기관 159)의 전체 거래는 1971건, 2,243,623,000원이고 이상거래 비율은 3.5515%이며 주 이체 채널은 Internet Banking이다. 최다 상대 계좌 9000000003555938로 65건이 나갔고, 이 입금계좌는 송금 계좌 323곳에서 973건을 받으며 이상거래 비율은 0.3083%다. 출금계좌의 1단계 네트워크는 연결 계좌 806개, 이상거래 70건이다. 소액을 여러 상대에게 나눠 보내고 특정 계좌로 모이는 형태여서 분할 거래로 판단한다.",
+            "SuspicionJudgmentReason": "Withdrawal account 9000000000042369 (institution 159) has 1971 transactions worth 2,243,623,000 KRW in all, a suspicious-transaction ratio of 3.5515% and Internet Banking as its main channel. 65 transfers went to its busiest counterparty 9000000003555938, and that receiving account takes 973 transfers from 323 sending accounts with a suspicious-transaction ratio of 0.3083%. The one-hop network of the withdrawal account holds 806 connected accounts and 70 flagged transactions. Small amounts are split across counterparties and collected into one account, so this is judged a split transaction.",
             "OverallOpinion": "[2024-12-31] Split Transaction suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -10793,6 +10793,11 @@
       {
         "turn": 2,
         "content": "The account is 9000000000019227. List its transactions, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000019227 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -10806,14 +10811,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000019227 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000019227 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000019227 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -11193,6 +11193,11 @@
       {
         "turn": 3,
         "content": "Find the real transaction behind it: the 90,000,000 KRW concurrent-multiple-transaction row of 22 July 2022.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE fraud_type = 4 AND date = 20220722 AND amount = 90000000 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 5"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -11216,14 +11221,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE fraud_type = 4 AND date = 20220722 AND amount = 90000000 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 5"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE fraud_type = 4 AND date = 20220722 AND amount = 90000000 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 5"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE fraud_type = 4 AND date = 20220722 AND amount = 90000000 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 5"
-          }
-        },
         "tool_result": {
           "total_count": 1,
           "returned_count": 1,
@@ -11318,7 +11318,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "거래시간대 9, 출금기관 159, 입금기관 155, 자금구분 0, 매체구분 2, 90,000,000원 조건의 위험 점수는 0.9965, 위험 수준은 High이다. 같은 조건의 실제 거래는 2022년 7월 22일 1건이고 출금계좌는 9000000004390593이다. 이 계좌의 전체 거래는 12747건, 이상거래는 893건(7.0056%)이다. 하루에 동일 규모 이체가 몰려 다중거래의 동시 요청으로 판단한다.",
+              "summary": "For time slot 9, withdrawal institution 159, deposit institution 155, fund type 0, media type 2 and 90,000,000 KRW the risk score is 0.9965 at risk level High. The data holds 1 real transactions on those terms on 22 July 2022, from withdrawal account 9000000004390593. That account has 12747 transactions in all and 893 flagged ones (7.0056%). Transfers of the same size concentrate on one day, so this is judged a concurrent multiple transaction request.",
               "fraud_type": "다중거래의 동시요청",
               "tools_used": [
                 "predict_fraud",
@@ -11381,7 +11381,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004390593 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "거래시간대 9, 출금기관 159, 입금기관 155, 자금구분 0, 매체구분 2, 90,000,000원 조건의 위험 점수는 0.9965, 위험 수준은 High이다. 같은 조건의 실제 거래는 2022년 7월 22일 1건이고 출금계좌는 9000000004390593이다. 이 계좌의 전체 거래는 12747건, 이상거래는 893건(7.0056%)이다. 하루에 동일 규모 이체가 몰려 다중거래의 동시 요청으로 판단한다.",
+            "SuspicionJudgmentReason": "For time slot 9, withdrawal institution 159, deposit institution 155, fund type 0, media type 2 and 90,000,000 KRW the risk score is 0.9965 at risk level High. The data holds 1 real transactions on those terms on 22 July 2022, from withdrawal account 9000000004390593. That account has 12747 transactions in all and 893 flagged ones (7.0056%). Transfers of the same size concentrate on one day, so this is judged a concurrent multiple transaction request.",
             "OverallOpinion": "[2024-12-31] Concurrent Multiple Transactions suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -11629,6 +11629,11 @@
       {
         "turn": 2,
         "content": "Aggregate this institution's 2024 sudden-pattern-change rows into the top five withdrawal accounts by count.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT sender_acc, count(*) AS tx_count, sum(amount) AS total_amount, max(amount) AS max_amount FROM hofinet WHERE sender_bank = 157 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 GROUP BY sender_acc ORDER BY tx_count DESC, sender_acc LIMIT 5"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -11658,11 +11663,6 @@
             "reference_sql": "SELECT sender_acc, count(*) AS tx_count, sum(amount) AS total_amount, max(amount) AS max_amount FROM hofinet WHERE sender_bank = 157 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 GROUP BY sender_acc ORDER BY tx_count DESC, sender_acc LIMIT 5"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT sender_acc, count(*) AS tx_count, sum(amount) AS total_amount, max(amount) AS max_amount FROM hofinet WHERE sender_bank = 157 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 GROUP BY sender_acc ORDER BY tx_count DESC, sender_acc LIMIT 5"
-          }
-        },
         "tool_result": {
           "total_count": 5,
           "returned_count": 5,
@@ -11776,7 +11776,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금기관 157의 출금 거래 346257건 가운데 이상거래는 1426건(0.4118%)이다. 2024년 갑작스러운 거래패턴의 변화 유형은 출금계좌 9000000004242077에 53건으로 집중되며 단건 최대는 200,000,000원이다. 이 계좌의 전체 거래는 11235건, 이상거래는 326건(2.9016%)이고 주 거래시간대는 9 구간, 주 이체 채널은 Other이다. 한 계좌에 이상거래가 몰리고 금액대가 평소와 달라 갑작스러운 거래패턴의 변화로 판단한다.",
+              "summary": "Of the 346257 transactions institution 157 sends, 1426 are flagged (0.4118%). In 2024 the sudden-change type concentrates on withdrawal account 9000000004242077 with 53 rows, the largest single one 200,000,000 KRW. That account has 11235 transactions in all and 326 flagged ones (2.9016%), with 9 as its main time slots and Other as its main channel. Flagged rows concentrate on one account and the amounts depart from its usual level, so this is judged a sudden change in transaction pattern.",
               "fraud_type": "갑작스러운 거래패턴의 변화",
               "tools_used": [
                 "get_institution_report",
@@ -11839,7 +11839,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004242077 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금기관 157의 출금 거래 346257건 가운데 이상거래는 1426건(0.4118%)이다. 2024년 갑작스러운 거래패턴의 변화 유형은 출금계좌 9000000004242077에 53건으로 집중되며 단건 최대는 200,000,000원이다. 이 계좌의 전체 거래는 11235건, 이상거래는 326건(2.9016%)이고 주 거래시간대는 9 구간, 주 이체 채널은 Other이다. 한 계좌에 이상거래가 몰리고 금액대가 평소와 달라 갑작스러운 거래패턴의 변화로 판단한다.",
+            "SuspicionJudgmentReason": "Of the 346257 transactions institution 157 sends, 1426 are flagged (0.4118%). In 2024 the sudden-change type concentrates on withdrawal account 9000000004242077 with 53 rows, the largest single one 200,000,000 KRW. That account has 11235 transactions in all and 326 flagged ones (2.9016%), with 9 as its main time slots and Other as its main channel. Flagged rows concentrate on one account and the amounts depart from its usual level, so this is judged a sudden change in transaction pattern.",
             "OverallOpinion": "[2024-12-31] Sudden Change in Transaction Pattern suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -11870,6 +11870,11 @@
       {
         "turn": 1,
         "content": "Aggregate the split transactions of account 9000000004234041 into the top five receiving accounts by count.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT receiver_acc, count(*) AS tx_count, sum(amount) AS total_amount FROM hofinet WHERE sender_acc = 9000000004234041 AND fraud_type = 3 GROUP BY receiver_acc ORDER BY tx_count DESC, receiver_acc LIMIT 5"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -11891,11 +11896,6 @@
             "reference_sql": "SELECT receiver_acc, count(*) AS tx_count, sum(amount) AS total_amount FROM hofinet WHERE sender_acc = 9000000004234041 AND fraud_type = 3 GROUP BY receiver_acc ORDER BY tx_count DESC, receiver_acc LIMIT 5"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT receiver_acc, count(*) AS tx_count, sum(amount) AS total_amount FROM hofinet WHERE sender_acc = 9000000004234041 AND fraud_type = 3 GROUP BY receiver_acc ORDER BY tx_count DESC, receiver_acc LIMIT 5"
-          }
-        },
         "tool_result": {
           "total_count": 5,
           "returned_count": 5,
@@ -12053,7 +12053,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금계좌 9000000004234041(출금기관 134)의 분할 거래 유형은 입금계좌 9000000004289938로 이체 6건, 28,000,000원이 몰려 있다. 이 입금계좌는 송금 계좌 98곳, 송금 기관 6곳에서 939건을 받았고 이상거래 비율은 1.8104%다. 수집 패턴 분석에서 상대 98곳, 건당 평균 2,564,374원이 확인된다. 금액을 쪼개 한 계좌로 모으는 형태여서 분할 거래로 판단한다.",
+              "summary": "The split-transaction rows of withdrawal account 9000000004234041 (institution 134) concentrate on receiving account 9000000004289938: 6 transfers worth 28,000,000 KRW. That receiving account takes 939 transfers from 98 sending accounts at 6 institutions, with a suspicious-transaction ratio of 1.8104%. The collection analysis finds 98 counterparties at 2,564,374 KRW per transfer on average. Amounts are split and gathered into one account, so this is judged a split transaction.",
               "fraud_type": "분할거래",
               "tools_used": [
                 "query_transactions",
@@ -12118,7 +12118,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004234041 and receiving accounts 9000000004289938.",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금계좌 9000000004234041(출금기관 134)의 분할 거래 유형은 입금계좌 9000000004289938로 이체 6건, 28,000,000원이 몰려 있다. 이 입금계좌는 송금 계좌 98곳, 송금 기관 6곳에서 939건을 받았고 이상거래 비율은 1.8104%다. 수집 패턴 분석에서 상대 98곳, 건당 평균 2,564,374원이 확인된다. 금액을 쪼개 한 계좌로 모으는 형태여서 분할 거래로 판단한다.",
+            "SuspicionJudgmentReason": "The split-transaction rows of withdrawal account 9000000004234041 (institution 134) concentrate on receiving account 9000000004289938: 6 transfers worth 28,000,000 KRW. That receiving account takes 939 transfers from 98 sending accounts at 6 institutions, with a suspicious-transaction ratio of 1.8104%. The collection analysis finds 98 counterparties at 2,564,374 KRW per transfer on average. Amounts are split and gathered into one account, so this is judged a split transaction.",
             "OverallOpinion": "[2024-12-31] Split Transaction suspicious transaction detected. Period: Unknown, related accounts: 2, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -12355,6 +12355,11 @@
       {
         "turn": 2,
         "content": "List the 2024Q4 transactions of the account that changed the most, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004236923 AND date BETWEEN 20241001 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -12376,14 +12381,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004236923 AND date BETWEEN 20241001 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004236923 AND date BETWEEN 20241001 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004236923 AND date BETWEEN 20241001 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -12686,7 +12686,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "모니터링 R005에서 출금계좌 9000000004236923(출금기관 151)의 거래 건수가 기준 기간 12건에서 비교 기간 264건으로 22.0배 늘었고 금액은 294,630,000원이다. 2024년 4분기 거래 상위 20건의 최대 금액은 매체구분 2 채널 이체 5,000,000원이다. 같은 기간 전체 이상거래 건수는 직전 분기 대비 28.01% 변화했다. 거래 상대가 급격히 늘어난 형태여서 신규 수신처 거래로 판단한다.",
+              "summary": "The R005 monitoring rule shows withdrawal account 9000000004236923 (institution 151) rising from 12 transactions in the baseline period to 264 in the comparison period, a factor of 22.0, worth 294,630,000 KRW. Among its top 20 fourth-quarter 2024 transactions the largest is 5,000,000 KRW over media type 2. Over the same period the overall flagged count moved by 28.01% against the previous quarter. The number of counterparties rose sharply, so this is judged a transaction with a new counterparty.",
               "fraud_type": "기타(자유기술)",
               "tools_used": [
                 "detect_monitoring_alerts",
@@ -12748,7 +12748,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004236923 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "모니터링 R005에서 출금계좌 9000000004236923(출금기관 151)의 거래 건수가 기준 기간 12건에서 비교 기간 264건으로 22.0배 늘었고 금액은 294,630,000원이다. 2024년 4분기 거래 상위 20건의 최대 금액은 매체구분 2 채널 이체 5,000,000원이다. 같은 기간 전체 이상거래 건수는 직전 분기 대비 28.01% 변화했다. 거래 상대가 급격히 늘어난 형태여서 신규 수신처 거래로 판단한다.",
+            "SuspicionJudgmentReason": "The R005 monitoring rule shows withdrawal account 9000000004236923 (institution 151) rising from 12 transactions in the baseline period to 264 in the comparison period, a factor of 22.0, worth 294,630,000 KRW. Among its top 20 fourth-quarter 2024 transactions the largest is 5,000,000 KRW over media type 2. Over the same period the overall flagged count moved by 28.01% against the previous quarter. The number of counterparties rose sharply, so this is judged a transaction with a new counterparty.",
             "OverallOpinion": "[2024-12-31] 기타(자유기술) suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -13140,7 +13140,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "CTR 고액거래 기준(10,000,000원)으로 2024년 1순위는 2024년 2월 17일에 출금기관 157 소속 출금계좌 9000000004242077이 이체한 500,000,000원이다. 이 계좌의 1단계 네트워크는 연결 계좌 764개, 이상거래 326건(2.9%)이다. 그래프 위험 점수는 0.1129고 입출금 불균형 지표는 100.0%다. 거래 규모가 종전 수준을 벗어나 갑작스러운 거래패턴의 변화로 판단한다.",
+              "summary": "Under the CTR high-value threshold of 10,000,000 KRW the top row of 2024 is 500,000,000 KRW sent on 17 February 2024 by withdrawal account 9000000004242077 at institution 157. The one-hop network of that account holds 764 connected accounts and 326 flagged transactions (2.9%). Its graph risk score is 0.1129 and its inflow/outflow imbalance indicator is 100.0%. The size of the transfer leaves the account's earlier level behind, so this is judged a sudden change in transaction pattern.",
               "fraud_type": "갑작스러운 거래패턴의 변화",
               "tools_used": [
                 "detect_ctr_candidates",
@@ -13203,7 +13203,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004242077 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "CTR 고액거래 기준(10,000,000원)으로 2024년 1순위는 2024년 2월 17일에 출금기관 157 소속 출금계좌 9000000004242077이 이체한 500,000,000원이다. 이 계좌의 1단계 네트워크는 연결 계좌 764개, 이상거래 326건(2.9%)이다. 그래프 위험 점수는 0.1129고 입출금 불균형 지표는 100.0%다. 거래 규모가 종전 수준을 벗어나 갑작스러운 거래패턴의 변화로 판단한다.",
+            "SuspicionJudgmentReason": "Under the CTR high-value threshold of 10,000,000 KRW the top row of 2024 is 500,000,000 KRW sent on 17 February 2024 by withdrawal account 9000000004242077 at institution 157. The one-hop network of that account holds 764 connected accounts and 326 flagged transactions (2.9%). Its graph risk score is 0.1129 and its inflow/outflow imbalance indicator is 100.0%. The size of the transfer leaves the account's earlier level behind, so this is judged a sudden change in transaction pattern.",
             "OverallOpinion": "[2024-12-31] Sudden Change in Transaction Pattern suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -13276,6 +13276,11 @@
       {
         "turn": 2,
         "content": "Aggregate that institution's 2024 rows of this type into the top five withdrawal accounts by count.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT sender_acc, count(*) AS tx_count, sum(amount) AS total_amount FROM hofinet WHERE sender_bank = 147 AND fraud_type = 4 AND date BETWEEN 20240101 AND 20241231 GROUP BY sender_acc ORDER BY tx_count DESC, sender_acc LIMIT 5"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -13305,11 +13310,6 @@
             "reference_sql": "SELECT sender_acc, count(*) AS tx_count, sum(amount) AS total_amount FROM hofinet WHERE sender_bank = 147 AND fraud_type = 4 AND date BETWEEN 20240101 AND 20241231 GROUP BY sender_acc ORDER BY tx_count DESC, sender_acc LIMIT 5"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT sender_acc, count(*) AS tx_count, sum(amount) AS total_amount FROM hofinet WHERE sender_bank = 147 AND fraud_type = 4 AND date BETWEEN 20240101 AND 20241231 GROUP BY sender_acc ORDER BY tx_count DESC, sender_acc LIMIT 5"
-          }
-        },
         "tool_result": {
           "total_count": 2,
           "returned_count": 2,
@@ -13382,7 +13382,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "다중거래의 동시 요청 유형은 전체 929건이고 출금기관 147이 812건으로 가장 많다. 유형 평균 금액은 63,530,678원이다. 이 기관의 2024년 해당 유형은 출금계좌 9000000004236284에 244건, 13,080,000,000원으로 집중된다. 위험도 평가는 17.5점(Low)이고 거래 속도 변화 지표는 0.4754다. 동일 계좌에서 같은 날 다수 이체가 몰려 다중거래의 동시 요청으로 판단한다.",
+              "summary": "The concurrent-multiple-transaction type covers 929 rows in all, and withdrawal institution 147 leads it with 812. The type averages 63,530,678 KRW per transaction. At that institution the 2024 rows of the type concentrate on withdrawal account 9000000004236284: 244 rows worth 13,080,000,000 KRW. Its behavioural risk score is 17.5 (Low) and its transaction-velocity indicator is 0.4754. Several transfers concentrate on one day from one account, so this is judged a concurrent multiple transaction request.",
               "fraud_type": "다중거래의 동시요청",
               "tools_used": [
                 "get_fraud_type_summary",
@@ -13445,7 +13445,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004236284 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "다중거래의 동시 요청 유형은 전체 929건이고 출금기관 147이 812건으로 가장 많다. 유형 평균 금액은 63,530,678원이다. 이 기관의 2024년 해당 유형은 출금계좌 9000000004236284에 244건, 13,080,000,000원으로 집중된다. 위험도 평가는 17.5점(Low)이고 거래 속도 변화 지표는 0.4754다. 동일 계좌에서 같은 날 다수 이체가 몰려 다중거래의 동시 요청으로 판단한다.",
+            "SuspicionJudgmentReason": "The concurrent-multiple-transaction type covers 929 rows in all, and withdrawal institution 147 leads it with 812. The type averages 63,530,678 KRW per transaction. At that institution the 2024 rows of the type concentrate on withdrawal account 9000000004236284: 244 rows worth 13,080,000,000 KRW. Its behavioural risk score is 17.5 (Low) and its transaction-velocity indicator is 0.4754. Several transfers concentrate on one day from one account, so this is judged a concurrent multiple transaction request.",
             "OverallOpinion": "[2024-12-31] Concurrent Multiple Transactions suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -14028,6 +14028,11 @@
       {
         "turn": 3,
         "content": "List the December sudden-pattern-change transactions on the riskiest channel, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE media_type = 6 AND fraud_type = 1 AND date BETWEEN 20241201 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 10"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -14054,14 +14059,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE media_type = 6 AND fraud_type = 1 AND date BETWEEN 20241201 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 10"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE media_type = 6 AND fraud_type = 1 AND date BETWEEN 20241201 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 10"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE media_type = 6 AND fraud_type = 1 AND date BETWEEN 20241201 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 10"
-          }
-        },
         "tool_result": {
           "total_count": 10,
           "returned_count": 10,
@@ -14238,7 +14238,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "2024년 월별 트렌드 12개 구간에서 2024-12의 이상거래 비율은 0.4641%다. 12월 채널 분석에서 이상거래 비율이 가장 높은 채널은 Other(매체구분 6, 0.837%)이다. 이 채널의 12월 갑작스러운 거래패턴의 변화 유형 상위 10건 중 최대 건은 2024년 12월 8일에 출금기관 157 소속 출금계좌 9000000000037352가 이체한 50,000,000원이고 예측 모델 위험 점수는 0.995다. 평소 쓰지 않던 채널로 거액이 이동해 갑작스러운 거래패턴의 변화로 판단한다.",
+              "summary": "Across the 12 monthly periods of 2024 the suspicious-transaction ratio of 2024-12 is 0.4641%. In the December channel analysis the highest ratio belongs to Other (media type 6, 0.837%). Among the top 10 December sudden-change rows on that channel the largest is 50,000,000 KRW sent on 8 December 2024 by withdrawal account 9000000000037352 at institution 157, with a model risk score of 0.995. A large amount moved over a channel the account does not normally use, so this is judged a sudden change in transaction pattern.",
               "fraud_type": "갑작스러운 거래패턴의 변화",
               "tools_used": [
                 "get_trend_analysis",
@@ -14302,7 +14302,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000037352 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "2024년 월별 트렌드 12개 구간에서 2024-12의 이상거래 비율은 0.4641%다. 12월 채널 분석에서 이상거래 비율이 가장 높은 채널은 Other(매체구분 6, 0.837%)이다. 이 채널의 12월 갑작스러운 거래패턴의 변화 유형 상위 10건 중 최대 건은 2024년 12월 8일에 출금기관 157 소속 출금계좌 9000000000037352가 이체한 50,000,000원이고 예측 모델 위험 점수는 0.995다. 평소 쓰지 않던 채널로 거액이 이동해 갑작스러운 거래패턴의 변화로 판단한다.",
+            "SuspicionJudgmentReason": "Across the 12 monthly periods of 2024 the suspicious-transaction ratio of 2024-12 is 0.4641%. In the December channel analysis the highest ratio belongs to Other (media type 6, 0.837%). Among the top 10 December sudden-change rows on that channel the largest is 50,000,000 KRW sent on 8 December 2024 by withdrawal account 9000000000037352 at institution 157, with a model risk score of 0.995. A large amount moved over a channel the account does not normally use, so this is judged a sudden change in transaction pattern.",
             "OverallOpinion": "[2024-12-31] Sudden Change in Transaction Pattern suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -14665,7 +14665,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "HOFINET 전체 거래는 4732130건이고 이상거래 비율은 0.3062%다. 분할 거래 유형은 2073건, 18,076,000,000원이며 출금기관 159가 1464건으로 가장 많다. 이 기관의 출금 거래는 636917건, 이상거래는 3002건(0.4713%)이고 최다 상대 기관은 156이다. 한 기관에 분할 이체가 집중되어 분할 거래로 판단한다.",
+              "summary": "HOFINET holds 4732130 transactions in all, with a suspicious-transaction ratio of 0.3062%. The split-transaction type covers 2073 rows worth 18,076,000,000 KRW, and withdrawal institution 159 leads it with 1464. That institution sends 636917 transactions, 3002 of them flagged (0.4713%), and its busiest counterpart institution is 156. Split transfers concentrate on one institution, so this is judged a split transaction.",
               "fraud_type": "분할거래",
               "tools_used": [
                 "get_statistics",
@@ -14726,7 +14726,7 @@
             "SuspiciousTransactorRelated": "Transactor info not confirmed - manual verification required",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "HOFINET 전체 거래는 4732130건이고 이상거래 비율은 0.3062%다. 분할 거래 유형은 2073건, 18,076,000,000원이며 출금기관 159가 1464건으로 가장 많다. 이 기관의 출금 거래는 636917건, 이상거래는 3002건(0.4713%)이고 최다 상대 기관은 156이다. 한 기관에 분할 이체가 집중되어 분할 거래로 판단한다.",
+            "SuspicionJudgmentReason": "HOFINET holds 4732130 transactions in all, with a suspicious-transaction ratio of 0.3062%. The split-transaction type covers 2073 rows worth 18,076,000,000 KRW, and withdrawal institution 159 leads it with 1464. That institution sends 636917 transactions, 3002 of them flagged (0.4713%), and its busiest counterpart institution is 156. Split transfers concentrate on one institution, so this is judged a split transaction.",
             "OverallOpinion": "[2024-12-31] Split Transaction suspicious transaction detected. Period: Unknown, related accounts: 0, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -15313,7 +15313,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금계좌 9000000000028288은 2021년 9월 27일을 마지막으로 648일 동안 거래가 없다가 2023년 7월 7일에 100,000,000원으로 재활성화됐다. 계좌 전체 거래는 6건, 900,000,000원이고 이상거래는 2건(33.3333%)이며 주 이체 채널은 Internet Banking이다. 재활성화 연도의 CTR 고액거래 조회(10,000,000원 기준)에서 상위 20건이 나왔다. 장기 휴면 계좌에서 거액이 한 번에 나가 갑작스러운 거래패턴의 변화로 판단한다.",
+              "summary": "Withdrawal account 9000000000028288 was last active on 27 September 2021, stayed silent for 648 days and was reactivated on 7 July 2023 with 100,000,000 KRW. The account has 6 transactions worth 900,000,000 KRW in all, 2 of them flagged (33.3333%), and Internet Banking as its main channel. A CTR high-value query for the year of the reactivation, at a threshold of 10,000,000 KRW, returned 20 rows. A large amount left a long-dormant account in one go, so this is judged a sudden change in transaction pattern.",
               "fraud_type": "갑작스러운 거래패턴의 변화",
               "tools_used": [
                 "detect_dormant_reactivation",
@@ -15376,7 +15376,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000028288 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금계좌 9000000000028288은 2021년 9월 27일을 마지막으로 648일 동안 거래가 없다가 2023년 7월 7일에 100,000,000원으로 재활성화됐다. 계좌 전체 거래는 6건, 900,000,000원이고 이상거래는 2건(33.3333%)이며 주 이체 채널은 Internet Banking이다. 재활성화 연도의 CTR 고액거래 조회(10,000,000원 기준)에서 상위 20건이 나왔다. 장기 휴면 계좌에서 거액이 한 번에 나가 갑작스러운 거래패턴의 변화로 판단한다.",
+            "SuspicionJudgmentReason": "Withdrawal account 9000000000028288 was last active on 27 September 2021, stayed silent for 648 days and was reactivated on 7 July 2023 with 100,000,000 KRW. The account has 6 transactions worth 900,000,000 KRW in all, 2 of them flagged (33.3333%), and Internet Banking as its main channel. A CTR high-value query for the year of the reactivation, at a threshold of 10,000,000 KRW, returned 20 rows. A large amount left a long-dormant account in one go, so this is judged a sudden change in transaction pattern.",
             "OverallOpinion": "[2024-12-31] Sudden Change in Transaction Pattern suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -15407,6 +15407,11 @@
       {
         "turn": 1,
         "content": "Account 9000000000007575 was reported for late-night bulk activity. List its transactions, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000007575 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -15420,14 +15425,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000007575 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000007575 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000007575 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -16117,6 +16117,11 @@
       {
         "turn": 3,
         "content": "List the 2024 flagged transactions from institution 147 to institution 154, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 147 AND receiver_bank = 154 AND is_fraud = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -16148,14 +16153,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 147 AND receiver_bank = 154 AND is_fraud = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 147 AND receiver_bank = 154 AND is_fraud = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 147 AND receiver_bank = 154 AND is_fraud = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -16411,7 +16411,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "2024년 기관간 흐름에서 출금기관 147에서 입금기관 154로 가는 구간은 거래 157건 중 이상거래가 48건(30.5732%)으로 가장 높다. 출금기관 147의 출금 거래는 59106건, 이상거래는 1023건(1.7308%)이며 가장 많은 유형은 Concurrent Multiple Transactions이다. 이 구간의 2024년 이상거래 상위 20건 중 최대 건은 2024년 5월 13일에 출금계좌 9000000000021942가 이체한 100,000,000원이다. 같은 구간으로 다수 이체가 동시에 몰려 다중거래의 동시 요청으로 판단한다.",
+              "summary": "In the 2024 cross-institution flow the leg from withdrawal institution 147 to deposit institution 154 carries 48 flagged rows out of 157 transactions (30.5732%), the highest of all. Institution 147 sends 59106 transactions, 1023 of them flagged (1.7308%), and its most common type is Concurrent Multiple Transactions. Among the top 20 flagged rows of that leg in 2024 the largest is 100,000,000 KRW sent by withdrawal account 9000000000021942 on 13 May 2024. Several transfers concentrate on the same leg at once, so this is judged a concurrent multiple transaction request.",
               "fraud_type": "다중거래의 동시요청",
               "tools_used": [
                 "analyze_cross_institution_flow",
@@ -16474,7 +16474,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000021942 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "2024년 기관간 흐름에서 출금기관 147에서 입금기관 154로 가는 구간은 거래 157건 중 이상거래가 48건(30.5732%)으로 가장 높다. 출금기관 147의 출금 거래는 59106건, 이상거래는 1023건(1.7308%)이며 가장 많은 유형은 Concurrent Multiple Transactions이다. 이 구간의 2024년 이상거래 상위 20건 중 최대 건은 2024년 5월 13일에 출금계좌 9000000000021942가 이체한 100,000,000원이다. 같은 구간으로 다수 이체가 동시에 몰려 다중거래의 동시 요청으로 판단한다.",
+            "SuspicionJudgmentReason": "In the 2024 cross-institution flow the leg from withdrawal institution 147 to deposit institution 154 carries 48 flagged rows out of 157 transactions (30.5732%), the highest of all. Institution 147 sends 59106 transactions, 1023 of them flagged (1.7308%), and its most common type is Concurrent Multiple Transactions. Among the top 20 flagged rows of that leg in 2024 the largest is 100,000,000 KRW sent by withdrawal account 9000000000021942 on 13 May 2024. Several transfers concentrate on the same leg at once, so this is judged a concurrent multiple transaction request.",
             "OverallOpinion": "[2024-12-31] Concurrent Multiple Transactions suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -16956,6 +16956,11 @@
       {
         "turn": 2,
         "content": "List that channel's Q4 new-counterparty fraud, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE media_type = 1 AND fraud_type = 2 AND date BETWEEN 20241001 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 10"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -16982,14 +16987,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE media_type = 1 AND fraud_type = 2 AND date BETWEEN 20241001 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 10"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE media_type = 1 AND fraud_type = 2 AND date BETWEEN 20241001 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 10"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE media_type = 1 AND fraud_type = 2 AND date BETWEEN 20241001 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 10"
-          }
-        },
         "tool_result": {
           "total_count": 8,
           "returned_count": 8,
@@ -17213,7 +17213,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "2024년 4분기 채널 분석에서 PC Banking(매체구분 1)의 이상거래 비율이 1.495%로 가장 높고 거래는 602건이다. 이 채널의 4분기 신규 수신처 거래 유형 상위 8건 중 최대 건은 2024년 10월 28일에 출금기관 130 소속 출금계좌 9000000004228940이 이체한 400,000,000원이다. 이 계좌의 전체 거래는 471건, 이상거래는 32건(6.7941%)이고 1단계 네트워크는 연결 계좌 144개, 이상거래 비율 6.79%다. 거래 이력이 없던 상대로 자금이 나가 신규 수신처 거래로 판단한다.",
+              "summary": "In the fourth-quarter 2024 channel analysis PC Banking (media type 1) carries the highest suspicious-transaction ratio at 1.495% over 602 transactions. Among the top 8 new-counterparty rows on that channel in the quarter the largest is 400,000,000 KRW sent on 28 October 2024 by withdrawal account 9000000004228940 at institution 130. That account has 471 transactions in all and 32 flagged ones (6.7941%), and its one-hop network holds 144 connected accounts at a suspicious-transaction ratio of 6.79%. Funds left for a counterparty with no earlier history, so this is judged a transaction with a new counterparty.",
               "fraud_type": "기타(자유기술)",
               "tools_used": [
                 "analyze_channel_risk",
@@ -17276,7 +17276,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004228940 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "2024년 4분기 채널 분석에서 PC Banking(매체구분 1)의 이상거래 비율이 1.495%로 가장 높고 거래는 602건이다. 이 채널의 4분기 신규 수신처 거래 유형 상위 8건 중 최대 건은 2024년 10월 28일에 출금기관 130 소속 출금계좌 9000000004228940이 이체한 400,000,000원이다. 이 계좌의 전체 거래는 471건, 이상거래는 32건(6.7941%)이고 1단계 네트워크는 연결 계좌 144개, 이상거래 비율 6.79%다. 거래 이력이 없던 상대로 자금이 나가 신규 수신처 거래로 판단한다.",
+            "SuspicionJudgmentReason": "In the fourth-quarter 2024 channel analysis PC Banking (media type 1) carries the highest suspicious-transaction ratio at 1.495% over 602 transactions. Among the top 8 new-counterparty rows on that channel in the quarter the largest is 400,000,000 KRW sent on 28 October 2024 by withdrawal account 9000000004228940 at institution 130. That account has 471 transactions in all and 32 flagged ones (6.7941%), and its one-hop network holds 144 connected accounts at a suspicious-transaction ratio of 6.79%. Funds left for a counterparty with no earlier history, so this is judged a transaction with a new counterparty.",
             "OverallOpinion": "[2024-12-31] 기타(자유기술) suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -17515,6 +17515,11 @@
       {
         "turn": 2,
         "content": "Aggregate this institution's 2024Q4 activity into the top five withdrawal accounts by count.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT sender_acc, count(*) AS tx_count, sum(is_fraud) AS fraud_count, sum(amount) AS total_amount FROM hofinet WHERE sender_bank = 145 AND date BETWEEN 20241001 AND 20241231 GROUP BY sender_acc ORDER BY tx_count DESC, sender_acc LIMIT 5"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -17539,11 +17544,6 @@
             "reference_sql": "SELECT sender_acc, count(*) AS tx_count, sum(is_fraud) AS fraud_count, sum(amount) AS total_amount FROM hofinet WHERE sender_bank = 145 AND date BETWEEN 20241001 AND 20241231 GROUP BY sender_acc ORDER BY tx_count DESC, sender_acc LIMIT 5"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT sender_acc, count(*) AS tx_count, sum(is_fraud) AS fraud_count, sum(amount) AS total_amount FROM hofinet WHERE sender_bank = 145 AND date BETWEEN 20241001 AND 20241231 GROUP BY sender_acc ORDER BY tx_count DESC, sender_acc LIMIT 5"
-          }
-        },
         "tool_result": {
           "total_count": 5,
           "returned_count": 5,
@@ -17810,6 +17810,11 @@
       {
         "turn": 2,
         "content": "List that day's transactions of the account with the highest count, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000044046 AND date = 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -17828,14 +17833,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000044046 AND date = 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000044046 AND date = 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000044046 AND date = 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -18278,7 +18278,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "모니터링 R002에서 출금기관 160 소속 출금계좌 9000000000044046이 2024년 12월 31일 하루에 164건, 15,179,000원을 이체한 것으로 나타났다. 그날 거래 상위 20건의 최대 금액은 300,000원이고 그중 이상거래로 분류된 건은 0건이다. 같은 분기 CTR 분할거래 조회 상위 20건 가운데 최다는 9000000000041188의 34건이다. 하루 거래 건수가 평소 수준을 크게 벗어나 갑작스러운 거래패턴의 변화로 판단한다.",
+              "summary": "The R002 monitoring rule shows withdrawal account 9000000000044046, at institution 160, making 164 transfers worth 15,179,000 KRW on 31 December 2024. Among the top 20 transactions of that day the largest is 300,000 KRW and 0 of them are flagged. A CTR structuring query over the same quarter returned 20 rows, the busiest being 34 transfers by account 9000000000041188. The number of transactions in one day is far above the account's usual level, so this is judged a sudden change in transaction pattern.",
               "fraud_type": "갑작스러운 거래패턴의 변화",
               "tools_used": [
                 "detect_monitoring_alerts",
@@ -18341,7 +18341,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000044046 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "모니터링 R002에서 출금기관 160 소속 출금계좌 9000000000044046이 2024년 12월 31일 하루에 164건, 15,179,000원을 이체한 것으로 나타났다. 그날 거래 상위 20건의 최대 금액은 300,000원이고 그중 이상거래로 분류된 건은 0건이다. 같은 분기 CTR 분할거래 조회 상위 20건 가운데 최다는 9000000000041188의 34건이다. 하루 거래 건수가 평소 수준을 크게 벗어나 갑작스러운 거래패턴의 변화로 판단한다.",
+            "SuspicionJudgmentReason": "The R002 monitoring rule shows withdrawal account 9000000000044046, at institution 160, making 164 transfers worth 15,179,000 KRW on 31 December 2024. Among the top 20 transactions of that day the largest is 300,000 KRW and 0 of them are flagged. A CTR structuring query over the same quarter returned 20 rows, the busiest being 34 transfers by account 9000000000041188. The number of transactions in one day is far above the account's usual level, so this is judged a sudden change in transaction pattern.",
             "OverallOpinion": "[2024-12-31] Sudden Change in Transaction Pattern suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -18477,6 +18477,11 @@
       {
         "turn": 3,
         "content": "List that institution's 2024 transactions of this type, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 159 AND fraud_type = 5 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -18503,14 +18508,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 159 AND fraud_type = 5 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 159 AND fraud_type = 5 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_bank = 159 AND fraud_type = 5 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -18803,7 +18803,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "HOFINET 이상거래 14490건 가운데 거액 입금 후 당일 인출 유형은 243건이다. 유형 합계는 243건, 12,370,000,000원이고 출금기관 159가 148건으로 가장 많다. 이 기관의 2024년 해당 유형 상위 20건 중 최대 건은 2024년 5월 5일에 출금계좌 9000000000041932가 이체한 90,000,000원이다. FIU 참고유형 'Depositing large funds, issuing a balance certificate, and withdrawing the full amount the next day'와 형태가 일치한다. 거액 입금 직후 같은 규모가 인출되어 거액 입금 후 당일 인출로 판단한다.",
+              "summary": "Of the 14490 flagged transactions in HOFINET, 243 are of the same-day-withdrawal-after-large-deposit type. The type covers 243 rows worth 12,370,000,000 KRW, and withdrawal institution 159 leads it with 148. Among the top 20 rows of that type at the institution in 2024 the largest is 90,000,000 KRW sent by withdrawal account 9000000000041932 on 5 May 2024. It matches the FIU reference type 'Depositing large funds, issuing a balance certificate, and withdrawing the full amount the next day'. A large deposit is withdrawn again at the same size, so this is judged a same-day withdrawal after a large deposit.",
               "fraud_type": "거액 입금 후 당일/익일 인출",
               "tools_used": [
                 "get_statistics",
@@ -18867,7 +18867,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000041932 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "HOFINET 이상거래 14490건 가운데 거액 입금 후 당일 인출 유형은 243건이다. 유형 합계는 243건, 12,370,000,000원이고 출금기관 159가 148건으로 가장 많다. 이 기관의 2024년 해당 유형 상위 20건 중 최대 건은 2024년 5월 5일에 출금계좌 9000000000041932가 이체한 90,000,000원이다. FIU 참고유형 'Depositing large funds, issuing a balance certificate, and withdrawing the full amount the next day'와 형태가 일치한다. 거액 입금 직후 같은 규모가 인출되어 거액 입금 후 당일 인출로 판단한다.",
+            "SuspicionJudgmentReason": "Of the 14490 flagged transactions in HOFINET, 243 are of the same-day-withdrawal-after-large-deposit type. The type covers 243 rows worth 12,370,000,000 KRW, and withdrawal institution 159 leads it with 148. Among the top 20 rows of that type at the institution in 2024 the largest is 90,000,000 KRW sent by withdrawal account 9000000000041932 on 5 May 2024. It matches the FIU reference type 'Depositing large funds, issuing a balance certificate, and withdrawing the full amount the next day'. A large deposit is withdrawn again at the same size, so this is judged a same-day withdrawal after a large deposit.",
             "OverallOpinion": "[2024-12-31] Same-Day Withdrawal after Large Deposit suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -18899,6 +18899,11 @@
       {
         "turn": 1,
         "content": "List the 2024 concurrent-multiple-transaction rows of account 9000000004236284, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004236284 AND fraud_type = 4 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -18925,14 +18930,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004236284 AND fraud_type = 4 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004236284 AND fraud_type = 4 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004236284 AND fraud_type = 4 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -19341,7 +19341,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금계좌 9000000004236284(출금기관 147)의 2024년 다중거래의 동시 요청 유형 상위 20건 중 최대 건은 2024년 3월 14일에 입금계좌 9000000004308708로 이체한 100,000,000원이고 예측 모델 위험 점수는 0.9959다. 이 입금계좌는 송금 계좌 12곳에서 645건을 받았고 이상거래 비율은 2.0155%다. 수집 패턴 분석에서 상대 12곳, 건당 평균 2,179,518원이 확인된다. 같은 상대에게 동시에 여러 건이 요청되어 다중거래의 동시 요청으로 판단한다.",
+              "summary": "Among the top 20 concurrent-multiple-transaction rows of 2024 for withdrawal account 9000000004236284 (institution 147) the largest is 100,000,000 KRW sent to receiving account 9000000004308708 on 14 March 2024, with a model risk score of 0.9959. That receiving account takes 645 transfers from 12 sending accounts, with a suspicious-transaction ratio of 2.0155%. The collection analysis finds 12 counterparties at 2,179,518 KRW per transfer on average. Several transfers were requested at once to the same counterparty, so this is judged a concurrent multiple transaction request.",
               "fraud_type": "다중거래의 동시요청",
               "tools_used": [
                 "query_transactions",
@@ -19407,7 +19407,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004236284 and receiving accounts 9000000004308708.",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금계좌 9000000004236284(출금기관 147)의 2024년 다중거래의 동시 요청 유형 상위 20건 중 최대 건은 2024년 3월 14일에 입금계좌 9000000004308708로 이체한 100,000,000원이고 예측 모델 위험 점수는 0.9959다. 이 입금계좌는 송금 계좌 12곳에서 645건을 받았고 이상거래 비율은 2.0155%다. 수집 패턴 분석에서 상대 12곳, 건당 평균 2,179,518원이 확인된다. 같은 상대에게 동시에 여러 건이 요청되어 다중거래의 동시 요청으로 판단한다.",
+            "SuspicionJudgmentReason": "Among the top 20 concurrent-multiple-transaction rows of 2024 for withdrawal account 9000000004236284 (institution 147) the largest is 100,000,000 KRW sent to receiving account 9000000004308708 on 14 March 2024, with a model risk score of 0.9959. That receiving account takes 645 transfers from 12 sending accounts, with a suspicious-transaction ratio of 2.0155%. The collection analysis finds 12 counterparties at 2,179,518 KRW per transfer on average. Several transfers were requested at once to the same counterparty, so this is judged a concurrent multiple transaction request.",
             "OverallOpinion": "[2024-12-31] Concurrent Multiple Transactions suspicious transaction detected. Period: Unknown, related accounts: 2, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -19828,6 +19828,11 @@
       {
         "turn": 3,
         "content": "List the 2024 new-counterparty fraud received by this institution, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE receiver_bank = 156 AND fraud_type = 2 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -19854,14 +19859,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE receiver_bank = 156 AND fraud_type = 2 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE receiver_bank = 156 AND fraud_type = 2 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE receiver_bank = 156 AND fraud_type = 2 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -20117,7 +20117,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "모니터링 R004에서 출금계좌 9000000004237509의 거래 13건 중 11건(84.62%)이 입금기관 156 한 곳으로 집중됐다. 이 기관의 입금 거래는 587095건이고 이상거래는 1151건(0.1961%)이다. 2024년 이 기관으로 들어온 신규 수신처 거래 유형 상위 20건 중 최대 건은 2024년 4월 20일에 출금계좌 9000000000016541이 이체한 500,000,000원이다. 거래 이력이 없던 상대 기관으로 자금이 쏠려 신규 수신처 거래로 판단한다.",
+              "summary": "The R004 monitoring rule shows 11 of the 13 transactions of withdrawal account 9000000004237509 (84.62%) concentrating on deposit institution 156 alone. That institution receives 587095 transactions, 1151 of them flagged (0.1961%). Among the top 20 new-counterparty rows that reached it in 2024 the largest is 500,000,000 KRW sent by withdrawal account 9000000000016541 on 20 April 2024. Funds concentrate on a counterpart institution with no earlier history, so this is judged a transaction with a new counterparty.",
               "fraud_type": "기타(자유기술)",
               "tools_used": [
                 "detect_monitoring_alerts",
@@ -20181,7 +20181,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000016541, 9000000004237509 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "모니터링 R004에서 출금계좌 9000000004237509의 거래 13건 중 11건(84.62%)이 입금기관 156 한 곳으로 집중됐다. 이 기관의 입금 거래는 587095건이고 이상거래는 1151건(0.1961%)이다. 2024년 이 기관으로 들어온 신규 수신처 거래 유형 상위 20건 중 최대 건은 2024년 4월 20일에 출금계좌 9000000000016541이 이체한 500,000,000원이다. 거래 이력이 없던 상대 기관으로 자금이 쏠려 신규 수신처 거래로 판단한다.",
+            "SuspicionJudgmentReason": "The R004 monitoring rule shows 11 of the 13 transactions of withdrawal account 9000000004237509 (84.62%) concentrating on deposit institution 156 alone. That institution receives 587095 transactions, 1151 of them flagged (0.1961%). Among the top 20 new-counterparty rows that reached it in 2024 the largest is 500,000,000 KRW sent by withdrawal account 9000000000016541 on 20 April 2024. Funds concentrate on a counterpart institution with no earlier history, so this is judged a transaction with a new counterparty.",
             "OverallOpinion": "[2024-12-31] 기타(자유기술) suspicious transaction detected. Period: Unknown, related accounts: 2, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -20212,6 +20212,11 @@
       {
         "turn": 1,
         "content": "List the 2024 sudden-pattern-change rows of account 9000000000038694, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000038694 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -20238,14 +20243,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000038694 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000038694 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000038694 AND fraud_type = 1 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 18,
           "returned_count": 18,
@@ -20590,7 +20590,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금계좌 9000000000038694(출금기관 159)의 2024년 갑작스러운 거래패턴의 변화 유형 상위 18건 중 최대 건은 2024년 12월 8일에 매체구분 2 채널로 이체한 90,000,000원이고 예측 모델 위험 점수는 0.9963이다. 1단계 네트워크는 연결 계좌 1915개, 이상거래 비율 0.56%다. 제보 계좌 9000000001279469까지는 2단계이며 중간 계좌 9000000000036484를 거친다. 구간 거래는 각각 224건과 48건이다. 거래 규모와 경로가 종전과 달라 갑작스러운 거래패턴의 변화로 판단한다.",
+              "summary": "Among the top 18 sudden-change rows of 2024 for withdrawal account 9000000000038694 (institution 159) the largest is 90,000,000 KRW sent over media type 2 on 8 December 2024, with a model risk score of 0.9963. Its one-hop network holds 1915 connected accounts at a suspicious-transaction ratio of 0.56%. The reported account 9000000001279469 is 2 steps away, through intermediate account 9000000000036484. The two legs carry 224 and 48 transactions. The size of the transfers and the path they take depart from the earlier pattern, so this is judged a sudden change in transaction pattern.",
               "fraud_type": "갑작스러운 거래패턴의 변화",
               "tools_used": [
                 "query_transactions",
@@ -20654,7 +20654,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000038694 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금계좌 9000000000038694(출금기관 159)의 2024년 갑작스러운 거래패턴의 변화 유형 상위 18건 중 최대 건은 2024년 12월 8일에 매체구분 2 채널로 이체한 90,000,000원이고 예측 모델 위험 점수는 0.9963이다. 1단계 네트워크는 연결 계좌 1915개, 이상거래 비율 0.56%다. 제보 계좌 9000000001279469까지는 2단계이며 중간 계좌 9000000000036484를 거친다. 구간 거래는 각각 224건과 48건이다. 거래 규모와 경로가 종전과 달라 갑작스러운 거래패턴의 변화로 판단한다.",
+            "SuspicionJudgmentReason": "Among the top 18 sudden-change rows of 2024 for withdrawal account 9000000000038694 (institution 159) the largest is 90,000,000 KRW sent over media type 2 on 8 December 2024, with a model risk score of 0.9963. Its one-hop network holds 1915 connected accounts at a suspicious-transaction ratio of 0.56%. The reported account 9000000001279469 is 2 steps away, through intermediate account 9000000000036484. The two legs carry 224 and 48 transactions. The size of the transfers and the path they take depart from the earlier pattern, so this is judged a sudden change in transaction pattern.",
             "OverallOpinion": "[2024-12-31] Sudden Change in Transaction Pattern suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -21407,7 +21407,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "모니터링 R001에서 2024년 4분기 심야 대량거래 알림 상위 20건이 나왔고 최대 건은 2024년 12월 10일 거래시간대 21 구간에 출금기관 134 소속 출금계좌 9000000004234408이 이체한 200,000,000원이다. 이 계좌의 전체 거래는 2117건, 이상거래는 32건(1.5116%)이고 위험도 평가는 8.8점(Low), 심야 거래 비중 지표는 0.0019다. 출금기관의 출금 거래는 659786건이고 이상거래 비율은 0.4361%다. 영업시간 외 시간대에 거액이 나가 갑작스러운 거래패턴의 변화로 판단한다.",
+              "summary": "The R001 monitoring rule returned the top 20 late-night bulk alerts of the fourth quarter of 2024; the largest is 200,000,000 KRW sent on 10 December 2024 in time slot 21 by withdrawal account 9000000004234408 at institution 134. That account has 2117 transactions in all and 32 flagged ones (1.5116%), a behavioural risk score of 8.8 (Low) and a night-transaction share indicator of 0.0019. The institution sends 659786 transactions at a suspicious-transaction ratio of 0.4361%. A large amount left outside business hours, so this is judged a sudden change in transaction pattern.",
               "fraud_type": "갑작스러운 거래패턴의 변화",
               "tools_used": [
                 "detect_monitoring_alerts",
@@ -21471,7 +21471,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004234408 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "모니터링 R001에서 2024년 4분기 심야 대량거래 알림 상위 20건이 나왔고 최대 건은 2024년 12월 10일 거래시간대 21 구간에 출금기관 134 소속 출금계좌 9000000004234408이 이체한 200,000,000원이다. 이 계좌의 전체 거래는 2117건, 이상거래는 32건(1.5116%)이고 위험도 평가는 8.8점(Low), 심야 거래 비중 지표는 0.0019다. 출금기관의 출금 거래는 659786건이고 이상거래 비율은 0.4361%다. 영업시간 외 시간대에 거액이 나가 갑작스러운 거래패턴의 변화로 판단한다.",
+            "SuspicionJudgmentReason": "The R001 monitoring rule returned the top 20 late-night bulk alerts of the fourth quarter of 2024; the largest is 200,000,000 KRW sent on 10 December 2024 in time slot 21 by withdrawal account 9000000004234408 at institution 134. That account has 2117 transactions in all and 32 flagged ones (1.5116%), a behavioural risk score of 8.8 (Low) and a night-transaction share indicator of 0.0019. The institution sends 659786 transactions at a suspicious-transaction ratio of 0.4361%. A large amount left outside business hours, so this is judged a sudden change in transaction pattern.",
             "OverallOpinion": "[2024-12-31] Sudden Change in Transaction Pattern suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -21503,6 +21503,11 @@
       {
         "turn": 1,
         "content": "List the 2024 split transactions of account 9000000004242511, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004242511 AND fraud_type = 3 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -21529,14 +21534,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004242511 AND fraud_type = 3 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004242511 AND fraud_type = 3 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004242511 AND fraud_type = 3 AND date BETWEEN 20240101 AND 20241231 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -21887,7 +21887,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금계좌 9000000004242511(출금기관 159)의 2024년 분할 거래 유형 상위 20건 중 최대 건은 2024년 3월 6일에 매체구분 7 채널로 이체한 4,000,000원이고 예측 모델 위험 점수는 0.993이다. 초안 검증 결과 필수 항목 충족 여부는 미충족이고 미기재 필수 항목은 VI_TransactionType.PrimarySuspicionType, VII_Narrative.SuspicionJudgmentReason, 미기재 선택 항목은 I_ReportingInstitution.InstitutionName, I_ReportingInstitution.MLROName, I_ReportingInstitution.OfficerName, I_ReportingInstitution.OfficerPhone, II_Transactor.Name, II_Transactor.IdType, II_Transactor.IdNumber, II_Transactor.Nationality, III_TransactionDetails.TransactionType, III_TransactionDetails.MaxSingleAmount_KRW, VII_Narrative.OverallOpinion, VII_Narrative.SuspicionIntensity_1to5다. 같은 금액을 여러 상대에게 나눠 보내는 형태여서 분할 거래로 판단한다.",
+              "summary": "Among the top 20 split-transaction rows of 2024 for withdrawal account 9000000004242511 (institution 159) the largest is 4,000,000 KRW sent over media type 7 on 6 March 2024, with a model risk score of 0.993. The draft validation reports the required fields as not met, the missing required items as VI_TransactionType.PrimarySuspicionType, VII_Narrative.SuspicionJudgmentReason and the missing optional items as I_ReportingInstitution.InstitutionName, I_ReportingInstitution.MLROName, I_ReportingInstitution.OfficerName, I_ReportingInstitution.OfficerPhone, II_Transactor.Name, II_Transactor.IdType, II_Transactor.IdNumber, II_Transactor.Nationality, III_TransactionDetails.TransactionType, III_TransactionDetails.MaxSingleAmount_KRW, VII_Narrative.OverallOpinion, VII_Narrative.SuspicionIntensity_1to5. The same amount is split across several counterparties, so this is judged a split transaction.",
               "fraud_type": "분할거래",
               "tools_used": [
                 "query_transactions",
@@ -21950,7 +21950,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004242511 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금계좌 9000000004242511(출금기관 159)의 2024년 분할 거래 유형 상위 20건 중 최대 건은 2024년 3월 6일에 매체구분 7 채널로 이체한 4,000,000원이고 예측 모델 위험 점수는 0.993이다. 초안 검증 결과 필수 항목 충족 여부는 미충족이고 미기재 필수 항목은 VI_TransactionType.PrimarySuspicionType, VII_Narrative.SuspicionJudgmentReason, 미기재 선택 항목은 I_ReportingInstitution.InstitutionName, I_ReportingInstitution.MLROName, I_ReportingInstitution.OfficerName, I_ReportingInstitution.OfficerPhone, II_Transactor.Name, II_Transactor.IdType, II_Transactor.IdNumber, II_Transactor.Nationality, III_TransactionDetails.TransactionType, III_TransactionDetails.MaxSingleAmount_KRW, VII_Narrative.OverallOpinion, VII_Narrative.SuspicionIntensity_1to5다. 같은 금액을 여러 상대에게 나눠 보내는 형태여서 분할 거래로 판단한다.",
+            "SuspicionJudgmentReason": "Among the top 20 split-transaction rows of 2024 for withdrawal account 9000000004242511 (institution 159) the largest is 4,000,000 KRW sent over media type 7 on 6 March 2024, with a model risk score of 0.993. The draft validation reports the required fields as not met, the missing required items as VI_TransactionType.PrimarySuspicionType, VII_Narrative.SuspicionJudgmentReason and the missing optional items as I_ReportingInstitution.InstitutionName, I_ReportingInstitution.MLROName, I_ReportingInstitution.OfficerName, I_ReportingInstitution.OfficerPhone, II_Transactor.Name, II_Transactor.IdType, II_Transactor.IdNumber, II_Transactor.Nationality, III_TransactionDetails.TransactionType, III_TransactionDetails.MaxSingleAmount_KRW, VII_Narrative.OverallOpinion, VII_Narrative.SuspicionIntensity_1to5. The same amount is split across several counterparties, so this is judged a split transaction.",
             "OverallOpinion": "[2024-12-31] Split Transaction suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -21981,6 +21981,11 @@
       {
         "turn": 1,
         "content": "Check whether account 9000000000027378 shows concurrent multiple transactions. List its transactions, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000027378 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -21994,14 +21999,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000027378 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000027378 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000027378 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -22372,6 +22372,11 @@
       {
         "turn": 2,
         "content": "List the late-night bulk transactions of account 9000000004242392, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004242392 AND fraud_type = 7 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 10"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -22390,14 +22395,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004242392 AND fraud_type = 7 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 10"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004242392 AND fraud_type = 7 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 10"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000004242392 AND fraud_type = 7 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 10"
-          }
-        },
         "tool_result": {
           "total_count": 7,
           "returned_count": 7,
@@ -22604,7 +22604,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "FIU 참고유형 검색에서 2건이 나왔고 '24-hour bulk transactions via internet banking with parties unrelated to business'가 이 사안과 같은 형태다. 출금계좌 9000000004242392(출금기관 159)의 심야/새벽 대량 거래 유형은 상위 7건이고 최대 건은 2022년 6월 24일 거래시간대 21 구간에 입금계좌 9000000004421588로 이체한 70,000,000원이다. 이 입금계좌는 송금 계좌 27곳에서 361건을 받았고 이상거래 비율은 5.2632%다. 출금계좌 위험도는 5.8점(Low), 심야 거래 비중 지표는 0.1929다. 영업시간 외 시간대에 거액이 한 상대로 반복되어 심야/새벽 대량 거래로 판단한다.",
+              "summary": "The FIU reference lookup returned 2 rows, and '24-hour bulk transactions via internet banking with parties unrelated to business' matches this case. Withdrawal account 9000000004242392 (institution 159) carries 7 late-night/early-morning bulk rows; the largest is 70,000,000 KRW sent to receiving account 9000000004421588 on 24 June 2022 in time slot 21. That receiving account takes 361 transfers from 27 sending accounts, with a suspicious-transaction ratio of 5.2632%. The withdrawal account's behavioural risk score is 5.8 (Low) and its night-transaction share indicator is 0.1929. Large amounts repeat to one counterparty outside business hours, so this is judged a late-night/early-morning bulk transaction.",
               "fraud_type": "기타(자유기술)",
               "tools_used": [
                 "lookup_fiu_reference_types",
@@ -22669,7 +22669,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004242392 and receiving accounts 9000000004421588.",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "FIU 참고유형 검색에서 2건이 나왔고 '24-hour bulk transactions via internet banking with parties unrelated to business'가 이 사안과 같은 형태다. 출금계좌 9000000004242392(출금기관 159)의 심야/새벽 대량 거래 유형은 상위 7건이고 최대 건은 2022년 6월 24일 거래시간대 21 구간에 입금계좌 9000000004421588로 이체한 70,000,000원이다. 이 입금계좌는 송금 계좌 27곳에서 361건을 받았고 이상거래 비율은 5.2632%다. 출금계좌 위험도는 5.8점(Low), 심야 거래 비중 지표는 0.1929다. 영업시간 외 시간대에 거액이 한 상대로 반복되어 심야/새벽 대량 거래로 판단한다.",
+            "SuspicionJudgmentReason": "The FIU reference lookup returned 2 rows, and '24-hour bulk transactions via internet banking with parties unrelated to business' matches this case. Withdrawal account 9000000004242392 (institution 159) carries 7 late-night/early-morning bulk rows; the largest is 70,000,000 KRW sent to receiving account 9000000004421588 on 24 June 2022 in time slot 21. That receiving account takes 361 transfers from 27 sending accounts, with a suspicious-transaction ratio of 5.2632%. The withdrawal account's behavioural risk score is 5.8 (Low) and its night-transaction share indicator is 0.1929. Large amounts repeat to one counterparty outside business hours, so this is judged a late-night/early-morning bulk transaction.",
             "OverallOpinion": "[2024-12-31] 기타(자유기술) suspicious transaction detected. Period: Unknown, related accounts: 2, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -23177,7 +23177,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "모니터링 R003에서 출금계좌 9000000004390593이 4,000,000원을 2126회, 상대 계좌 315곳에 반복 이체해 합계 8,504,000,000원이 확인된다. 이 계좌의 전체 거래는 12747건이고 이상거래는 893건(7.0056%)이다. 2024년 CTR 분할거래 조회 상위 20건 가운데 최다는 9000000000041188이 하루 34건, 82,980,000원이다. 구조화는 다음과 같이 정의된다. Dividing cash transactions below the reporting threshold to avoid CTR. Subject to STR reporting. 동일 금액을 반복해 다수 상대에게 보내는 형태여서 분할 거래로 판단한다.",
+              "summary": "The R003 monitoring rule shows withdrawal account 9000000004390593 sending 4,000,000 KRW 2126 times to 315 counterparty accounts, 8,504,000,000 KRW in all. The account has 12747 transactions in all and 893 flagged ones (7.0056%). A 2024 CTR structuring query returned 20 rows, the busiest being 34 transfers worth 82,980,000 KRW in one day by account 9000000000041188. Structuring is defined as follows. Dividing cash transactions below the reporting threshold to avoid CTR. Subject to STR reporting. The same amount goes repeatedly to many counterparties, so this is judged a split transaction.",
               "fraud_type": "분할거래",
               "tools_used": [
                 "detect_monitoring_alerts",
@@ -23241,7 +23241,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000004390593 and receiving accounts .",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "모니터링 R003에서 출금계좌 9000000004390593이 4,000,000원을 2126회, 상대 계좌 315곳에 반복 이체해 합계 8,504,000,000원이 확인된다. 이 계좌의 전체 거래는 12747건이고 이상거래는 893건(7.0056%)이다. 2024년 CTR 분할거래 조회 상위 20건 가운데 최다는 9000000000041188이 하루 34건, 82,980,000원이다. 구조화는 다음과 같이 정의된다. Dividing cash transactions below the reporting threshold to avoid CTR. Subject to STR reporting. 동일 금액을 반복해 다수 상대에게 보내는 형태여서 분할 거래로 판단한다.",
+            "SuspicionJudgmentReason": "The R003 monitoring rule shows withdrawal account 9000000004390593 sending 4,000,000 KRW 2126 times to 315 counterparty accounts, 8,504,000,000 KRW in all. The account has 12747 transactions in all and 893 flagged ones (7.0056%). A 2024 CTR structuring query returned 20 rows, the busiest being 34 transfers worth 82,980,000 KRW in one day by account 9000000000041188. Structuring is defined as follows. Dividing cash transactions below the reporting threshold to avoid CTR. Subject to STR reporting. The same amount goes repeatedly to many counterparties, so this is judged a split transaction.",
             "OverallOpinion": "[2024-12-31] Split Transaction suspicious transaction detected. Period: Unknown, related accounts: 1, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"
@@ -23273,6 +23273,11 @@
       {
         "turn": 1,
         "content": "Account 9000000000017766 is suspected of a sudden change in transaction pattern. List its rows of that type, largest amount first.",
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000017766 AND fraud_type = 1 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
+          }
+        },
         "tool_calls": [
           {
             "name": "query_transactions",
@@ -23291,14 +23296,9 @@
               ],
               "sql_valid": true
             },
-            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000017766 AND fraud_type = 1 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
+            "reference_sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000017766 AND fraud_type = 1 ORDER BY amount DESC, date, receiver_acc, sender_acc, time_slot, media_type, fund_type LIMIT 20"
           }
         ],
-        "reference_calls": {
-          "query_transactions": {
-            "sql": "SELECT date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, fraud_type FROM hofinet WHERE sender_acc = 9000000000017766 AND fraud_type = 1 ORDER BY amount DESC, date, receiver_acc, sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type LIMIT 20"
-          }
-        },
         "tool_result": {
           "total_count": 20,
           "returned_count": 20,
@@ -23687,7 +23687,7 @@
           {
             "name": "generate_str",
             "arguments": {
-              "summary": "출금계좌 9000000000017766(출금기관 134)의 갑작스러운 거래패턴의 변화 유형 이상거래 상위 20건 중 최대 건은 2022년 10월 27일에 입금계좌 9000000001282185로 이체한 200,000,000원이고 예측 모델 위험 점수는 0.994, 위험 수준은 High이다. 1단계 네트워크는 연결 계좌 288개, 이상거래 49건(2.31%)이다. 위험도 평가는 9.0점(Low)이고 금액 이상치 지표는 0.225다. FIU 참고유형 검색 1건 중 'Transferring funds received from unknown counterparties to a third party'와 형태가 겹친다. 거래 규모와 상대 구성이 종전과 달라 갑작스러운 거래패턴의 변화로 판단한다.",
+              "summary": "Among the top 20 sudden-change rows of withdrawal account 9000000000017766 (institution 134) the largest is 200,000,000 KRW sent to receiving account 9000000001282185 on 27 October 2022, with a model risk score of 0.994 at risk level High. Its one-hop network holds 288 connected accounts and 49 flagged transactions (2.31%). Its behavioural risk score is 9.0 (Low) and its amount-anomaly indicator is 0.225. Of the 1 FIU reference rows found, 'Transferring funds received from unknown counterparties to a third party' overlaps with this case. The size of the transfers and the mix of counterparties departed from the earlier pattern, so this is judged a sudden change in transaction pattern.",
               "fraud_type": "갑작스러운 거래패턴의 변화",
               "tools_used": [
                 "query_transactions",
@@ -23754,7 +23754,7 @@
             "SuspiciousTransactorRelated": "Confirming suspicious transactions related to withdrawal accounts 9000000000017766 and receiving accounts 9000000001282185.",
             "TransactionOccurrenceDate": "Unknown",
             "TransactionMethodAnomalies": "Primary channel: Unknown / Transaction type: Unknown",
-            "SuspicionJudgmentReason": "출금계좌 9000000000017766(출금기관 134)의 갑작스러운 거래패턴의 변화 유형 이상거래 상위 20건 중 최대 건은 2022년 10월 27일에 입금계좌 9000000001282185로 이체한 200,000,000원이고 예측 모델 위험 점수는 0.994, 위험 수준은 High이다. 1단계 네트워크는 연결 계좌 288개, 이상거래 49건(2.31%)이다. 위험도 평가는 9.0점(Low)이고 금액 이상치 지표는 0.225다. FIU 참고유형 검색 1건 중 'Transferring funds received from unknown counterparties to a third party'와 형태가 겹친다. 거래 규모와 상대 구성이 종전과 달라 갑작스러운 거래패턴의 변화로 판단한다.",
+            "SuspicionJudgmentReason": "Among the top 20 sudden-change rows of withdrawal account 9000000000017766 (institution 134) the largest is 200,000,000 KRW sent to receiving account 9000000001282185 on 27 October 2022, with a model risk score of 0.994 at risk level High. Its one-hop network holds 288 connected accounts and 49 flagged transactions (2.31%). Its behavioural risk score is 9.0 (Low) and its amount-anomaly indicator is 0.225. Of the 1 FIU reference rows found, 'Transferring funds received from unknown counterparties to a third party' overlaps with this case. The size of the transfers and the mix of counterparties departed from the earlier pattern, so this is judged a sudden change in transaction pattern.",
             "OverallOpinion": "[2024-12-31] Sudden Change in Transaction Pattern suspicious transaction detected. Period: Unknown, related accounts: 2, total amount: 0 KRW (0 txns). Manager review and decision on FIU reporting required.",
             "SuspicionIntensity_1to5": 3,
             "SuspicionIntensityDescription": "Model risk score not provided - manual judgment required"

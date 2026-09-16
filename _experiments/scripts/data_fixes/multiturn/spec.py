@@ -21,11 +21,55 @@ CHECK_ONLY = {"sql_conditions", "sql_valid", "hops_min", "hops_max",
 
 
 @dataclass(frozen=True)
+class Bi:
+    """One gold argument whose value is written in the language of the question (D13).
+
+    `generate_str` echoes its `summary` into the report it returns, so the two arms
+    execute the call separately and each stores the report in its own language.
+    """
+
+    kr: str
+    en: str
+
+
+@dataclass(frozen=True)
 class Ref:
     """A value read out of the executed result of an earlier turn."""
 
     turn: int
     path: str
+
+
+# The FIU catalog and the AML glossary are English-only in the platform, and so is the
+# notice detect_aml_patterns returns when a scan finds nothing. A Korean summary that
+# pastes those sentences in is not Korean prose, so `{name:ko}` renders the Korean the
+# row says (L2-012). The build fails on a value that is not in this table, so the
+# rendering cannot drift away from the result it came from.
+KO_SOURCE = {
+    "Excessive number of transactions and bulk operations via internet banking throughout "
+    "the day, including night/early morning hours":
+        "심야·새벽을 포함해 하루 종일 인터넷뱅킹으로 거래 건수가 과다하거나 대량 이체가 이뤄지는 유형",
+    "Transactions split among multiple people or structured below threshold to avoid "
+    "reporting (structuring)":
+        "보고를 피하려고 여러 사람에게 나누거나 기준 금액 아래로 쪼개 거래하는 유형(구조화)",
+    "Depositing large funds, issuing a balance certificate, and withdrawing the full amount "
+    "the next day":
+        "거액을 입금한 뒤 잔액증명서를 발급받고 다음 날 전액을 인출하는 유형",
+    "24-hour bulk transactions via internet banking with parties unrelated to business":
+        "업무와 관계없는 상대와 인터넷뱅킹으로 24시간 대량 거래를 하는 유형",
+    "Transferring funds received from unknown counterparties to a third party":
+        "출처를 알 수 없는 상대에게서 받은 자금을 제3자에게 다시 이체하는 유형",
+    "Non-face-to-face": "비대면",
+    "Creating complex transaction paths to conceal the source of funds. The second stage of "
+    "money laundering.":
+        "자금 출처를 숨기려고 복잡한 거래 경로를 만드는 행위이며 자금세탁의 두 번째 단계다",
+    "Dividing cash transactions below the reporting threshold to avoid CTR. Subject to STR "
+    "reporting.":
+        "CTR 보고를 피하려고 현금 거래를 보고 기준 미만으로 나누는 행위이며 STR 보고 대상이다",
+    "No chain of 3 or more consecutive fraud transfers found. The longest such chain in "
+    "HOFINET is 2 transfers.":
+        "연속된 이상거래 이체가 3단계 이상인 사슬은 없고 HOFINET에서 가장 긴 사슬은 2단계다",
+}
 
 
 @dataclass

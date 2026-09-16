@@ -27,7 +27,8 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
     __package__ = "_experiments.scripts.data_fixes.multiturn"
 
-from .spec import (CHECK_ONLY, FRAUD_TYPE_EN, FRAUD_TYPE_KR, Ref, Scenario, Turn)
+from .spec import (CHECK_ONLY, FRAUD_TYPE_EN, FRAUD_TYPE_KR, KO_SOURCE, Bi, Ref,
+                   Scenario, Turn)
 
 REPO = Path(__file__).resolve().parents[4]
 KR_DIR = REPO / "benchmarks_multiturn"
@@ -106,13 +107,28 @@ def particle(text: str, pair: str) -> str:
     return after_vowel if final == "" else after_consonant
 
 
-def _date(value) -> str:
+_MONTHS = ("January", "February", "March", "April", "May", "June",
+           "July", "August", "September", "October", "November", "December")
+
+
+def _date(value, lang: str) -> str:
     text = str(int(value))
-    return f"{text[:4]}년 {int(text[4:6])}월 {int(text[6:8])}일"
+    year, month, day = text[:4], int(text[4:6]), int(text[6:8])
+    if lang == "kr":
+        return f"{year}년 {month}월 {day}일"
+    return f"{day} {_MONTHS[month - 1]} {year}"
 
 
-def fill(text: str, values: dict) -> str:
-    """`{name}`, `{name:,}`, `{name:date}` and `{name:은는}` from the scenario's values.
+def korean(value) -> str:
+    """The Korean an English-only catalog, glossary or notice value stands for."""
+    text = str(value).strip()
+    if text not in KO_SOURCE:
+        raise BuildError(f"no Korean recorded for {text!r}; add it to spec.KO_SOURCE")
+    return KO_SOURCE[text]
+
+
+def fill(text: str, values: dict, lang: str = "kr") -> str:
+    """`{name}`, `{name:,}`, `{name:date}`, `{name:ko}` and `{name:은는}` from the values.
 
     Turn texts carry JSON drafts, so a plain ``str.format`` is not usable here.
     """
@@ -126,11 +142,17 @@ def fill(text: str, values: dict) -> str:
         if spec in _PARTICLES:
             spec, pair = "", spec
         if spec == "date":
-            rendered = _date(value)
+            rendered = _date(value, lang)
+        elif spec == "ko":
+            rendered = korean(value)
         elif isinstance(value, list):
-            rendered = ", ".join(str(v) for v in value) or "없음"
+            joined = ", ".join(str(v) for v in value)
+            rendered = joined or ("없음" if lang == "kr" else "none")
         elif isinstance(value, bool):
-            rendered = "충족" if value else "미충족"
+            if lang == "kr":
+                rendered = "충족" if value else "미충족"
+            else:
+                rendered = "met" if value else "not met"
         else:
             if spec == "," and isinstance(value, float):
                 spec = ",.0f"
@@ -140,21 +162,23 @@ def fill(text: str, values: dict) -> str:
     return _PLACEHOLDER.sub(one, text)
 
 
-def resolve(value, results: dict[int, dict], values: dict):
-    """Ref -> the real value; str -> formatted with the scenario's values."""
+def resolve(value, results: dict[int, dict], values: dict, lang: str = "kr"):
+    """Ref -> the real value; Bi -> the arm's own text; str -> formatted with the values."""
     if isinstance(value, Ref):
         if value.turn not in results:
             raise BuildError(f"reference to turn {value.turn}, which has no result yet")
         return resolve_path(results[value.turn], value.path)
+    if isinstance(value, Bi):
+        return resolve(value.kr if lang == "kr" else value.en, results, values, lang)
     if isinstance(value, str):
         whole = _PLACEHOLDER.fullmatch(value)
         if whole and not whole.group(2) and whole.group(1) in values:
             return values[whole.group(1)]   # a gold argument keeps its type
-        return fill(value, values)
+        return fill(value, values, lang)
     if isinstance(value, dict):
-        return {k: resolve(v, results, values) for k, v in value.items()}
+        return {k: resolve(v, results, values, lang) for k, v in value.items()}
     if isinstance(value, (list, tuple)):
-        out = [resolve(v, results, values) for v in value]
+        out = [resolve(v, results, values, lang) for v in value]
         return tuple(out) if isinstance(value, tuple) else out
     return value
 
@@ -198,6 +222,18 @@ def note(turn: Turn, lang: str) -> str:
     return (f"정답 도구 {turn.tool}" if lang == "kr" else f"gold tool {turn.tool}")
 
 
+def run(sc: Scenario, number: int, turn: Turn, call: dict, execute) -> dict:
+    """Execute one gold call and return its result, or fail the build."""
+    raw = execute(turn.tool, dict(call))
+    try:
+        result = json.loads(raw)
+    except ValueError as exc:
+        raise BuildError(f"{sc.id} turn {number}: result is not JSON ({exc})") from exc
+    if isinstance(result, dict) and "error" in result:
+        raise BuildError(f"{sc.id} turn {number}: {turn.tool} -> {result['error']}")
+    return result
+
+
 def build_scenario(sc: Scenario, execute) -> tuple[dict, dict, list[dict]]:
     """Returns (Korean scenario, English scenario, changelog rows)."""
     results: dict[int, dict] = {}
@@ -206,11 +242,12 @@ def build_scenario(sc: Scenario, execute) -> tuple[dict, dict, list[dict]]:
 
     for number, turn in enumerate(sc.turns, start=1):
         args = resolve(turn.args, results, values)
+        args_en = resolve(turn.args, results, values, "en")
         conds = [resolve(c, results, values) for c in turn.conds]
         sql = resolve(turn.sql, results, values) if turn.sql else None
 
         entry_kr = {"turn": number, "content": resolve(turn.kr, results, values)}
-        entry_en = {"turn": number, "content": resolve(turn.en, results, values)}
+        entry_en = {"turn": number, "content": resolve(turn.en, results, values, "en")}
 
         if turn.tool is None:
             entry_kr["tool_calls"] = entry_en["tool_calls"] = []
@@ -219,25 +256,31 @@ def build_scenario(sc: Scenario, execute) -> tuple[dict, dict, list[dict]]:
                 entry_kr["expect_clarification"] = entry_en["expect_clarification"] = True
         else:
             gold = gold_arguments(turn, args, conds)
-            call = call_arguments(turn, args, sql)
-            raw = execute(turn.tool, dict(call))
-            try:
-                result = json.loads(raw)
-            except ValueError as exc:
-                raise BuildError(f"{sc.id} turn {number}: result is not JSON ({exc})") from exc
-            if isinstance(result, dict) and "error" in result:
-                raise BuildError(f"{sc.id} turn {number}: {turn.tool} -> {result['error']}")
+            result = run(sc, number, turn, call_arguments(turn, args, sql), execute)
             results[number] = result
 
             gold_call = {"name": turn.tool, "arguments": gold}
             if sql is not None:
                 gold_call["reference_sql"] = sql
-            entry_kr["tool_calls"] = entry_en["tool_calls"] = [gold_call]
+            entry_kr["tool_calls"] = [gold_call]
             if sql is not None:
                 # The platform's gold-call harness looks for the SQL under this shape.
                 entry_kr["reference_calls"] = entry_en["reference_calls"] = {
                     "query_transactions": {"sql": sql}}
-            entry_kr["tool_result"] = entry_en["tool_result"] = result
+            entry_kr["tool_result"] = result
+            if args_en == args:
+                entry_en["tool_calls"] = [gold_call]
+                entry_en["tool_result"] = result
+            else:
+                # An argument the model writes in the language of the question (D13):
+                # the English arm carries its own call and the result that call returns.
+                gold_en = gold_arguments(turn, args_en, conds)
+                gold_call_en = {"name": turn.tool, "arguments": gold_en}
+                if sql is not None:
+                    gold_call_en["reference_sql"] = sql
+                entry_en["tool_calls"] = [gold_call_en]
+                entry_en["tool_result"] = run(
+                    sc, number, turn, call_arguments(turn, args_en, sql), execute)
 
         if turn.ctx:
             from_turn, path, to_param = turn.ctx
@@ -271,7 +314,7 @@ def build_scenario(sc: Scenario, execute) -> tuple[dict, dict, list[dict]]:
 
     kr = {"id": sc.id, "scenario": resolve(sc.kr, results, values), "sub_category": sc.sub,
           "fraud_type": sc.ft, "fraud_type_name": FRAUD_TYPE_KR[sc.ft], "turns": kr_turns}
-    en = {"id": sc.id, "scenario": resolve(sc.en, results, values), "sub_category": sc.sub,
+    en = {"id": sc.id, "scenario": resolve(sc.en, results, values, "en"), "sub_category": sc.sub,
           "fraud_type": sc.ft, "fraud_type_name": FRAUD_TYPE_EN[sc.ft], "turns": en_turns}
     return kr, en, log
 

@@ -19,7 +19,7 @@ from __future__ import annotations
 import json
 
 from .spec import Ref as R
-from .spec import STR_SECTION_VI, Scenario as S, Turn as T
+from .spec import STR_SECTION_VI, Bi, Scenario as S, Turn as T
 
 COLS = ("date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, "
         "fund_type, media_type, amount, fraud_type")
@@ -27,12 +27,23 @@ COLS = ("date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, 
 
 # A listing query has to be a total order, or two rows that tie on the ordering
 # columns come back in either order and the injected result is not reproducible.
-TIEBREAK = "sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type"
+# The tie-break columns are appended to the caller's order, minus the ones it
+# already sorts on: a column repeated in ORDER BY changes nothing, and this
+# string is the reference answer a reviewer reads and the assistant turn the
+# oracle history injects (L2-009).
+TIEBREAK = ("sender_acc", "receiver_acc", "date", "amount", "time_slot", "media_type", "fund_type")
+
+
+def order_by(order: str) -> str:
+    """`order`, then every tie-break column it does not already sort on."""
+    terms = [t.strip() for t in order.split(",") if t.strip()]
+    already = {t.split()[0] for t in terms}
+    return ", ".join(terms + [c for c in TIEBREAK if c not in already])
 
 
 def rows(where: str, order: str = "amount DESC, date, receiver_acc", limit: int = 20) -> str:
     return (f"SELECT {COLS} FROM hofinet WHERE {where} "
-            f"ORDER BY {order}, {TIEBREAK} LIMIT {limit}")
+            f"ORDER BY {order_by(order)} LIMIT {limit}")
 
 
 def predict_args(turn: int) -> dict:
@@ -45,8 +56,10 @@ def predict_args(turn: int) -> dict:
             "amount": R(turn, "result[0].amount")}
 
 
-def str_args(ft: int, summary: str, tools: list[str]) -> dict:
-    return {"summary": summary, "fraud_type": STR_SECTION_VI[ft], "tools_used": tools}
+def str_args(ft: int, summary_kr: str, summary_en: str, tools: list[str]) -> dict:
+    """The gold `generate_str` arguments; the summary is written in the arm's language (D13)."""
+    return {"summary": Bi(summary_kr, summary_en), "fraud_type": STR_SECTION_VI[ft],
+            "tools_used": tools}
 
 
 # A deliberately incomplete STR draft: it fills the first four sections and
@@ -61,15 +74,20 @@ DRAFT_046 = {
                                "TransactionChannel": "Internet Banking",
                                "TotalAmount_KRW": 172000000},
 }
+# The same shape, on the account mt_str_023 investigates. The first draft named
+# account 9000000000041932, which is a real HOFINET account but not the one the
+# scenario queries in turn 3 and reports on in turn 5, so the story did not hold
+# (L3-018). These are the real 2024 same-day-withdrawal (type 5) transfers from
+# 9000000004387158 to its busiest type-5 counterparty that year.
 DRAFT_023 = {
-    "Header": {"ReportingDate": "2024-12-31"},
+    "Header": {"ReportingDate": "2024-05-31"},
     "I_ReportingInstitution": {"WithdrawalInstitutionCode": "159"},
-    "II_Transactor": {"WithdrawalAccountNumber": "9000000000041932",
-                      "ReceivingAccountNumber": "9000000002364786"},
-    "III_TransactionDetails": {"TransactionPeriod": "20240101-20241231",
-                               "TransactionCount": 6,
+    "II_Transactor": {"WithdrawalAccountNumber": "9000000004387158",
+                      "ReceivingAccountNumber": "9000000004416541"},
+    "III_TransactionDetails": {"TransactionPeriod": "20240123-20240501",
+                               "TransactionCount": 2,
                                "TransactionChannel": "Internet Banking",
-                               "TotalAmount_KRW": 320000000},
+                               "TotalAmount_KRW": 120000000},
 }
 
 
@@ -110,11 +128,17 @@ SCENARIOS: list[S] = [
           en="Put the analysis together and draft an STR for a sudden change in transaction pattern.",
           tool="generate_str",
           args=str_args(1,
-            "출금계좌 {acc}(출금기관 {bank})의 전체 거래는 {ntot}건이고 이상거래는 {nfrn}건({nfr}%)이다. "
-            "2024년 갑작스러운 거래패턴의 변화 유형 상위 {n}건 가운데 가장 큰 건은 {top_date:date}에 "
-            "입금계좌 {top_rcv:으로로} 이체한 {top_amt:,}원이며 예측 모델 위험 점수는 {score:copula}다. "
-            "1단계 네트워크에는 연결 계좌 {neigh}개가 있다. "
-            "거래 규모와 상대 계좌 수가 종전 패턴과 달라 갑작스러운 거래패턴의 변화로 판단한다.",
+            "출금계좌 {acc}(출금기관 {bank})의 전체 거래는 {ntot}건이고 이상거래는 "
+            "{nfrn}건({nfr}%)이다. 2024년 갑작스러운 거래패턴의 변화 유형 상위 {n}건 가운데 가장 큰 "
+            "건은 {top_date:date}에 입금계좌 {top_rcv:으로로} 이체한 {top_amt:,}원이며 예측 모델 "
+            "위험 점수는 {score:copula}다. 1단계 네트워크에는 연결 계좌 {neigh}개가 있다. 거래 "
+            "규모와 상대 계좌 수가 종전 패턴과 달라 갑작스러운 거래패턴의 변화로 판단한다.",
+            "Withdrawal account {acc} (institution {bank}) has {ntot} transactions in all, {nfrn} "
+            "of them flagged ({nfr}%). Among its top {n} sudden-change-in-transaction-pattern rows "
+            "of 2024 the largest is {top_amt:,} KRW transferred to receiving account {top_rcv} on "
+            "{top_date:date}, with a model risk score of {score}. Its one-hop network holds {neigh} "
+            "connected accounts. The size of the transfers and the number of counterparties depart "
+            "from the earlier pattern, so this is judged a sudden change in transaction pattern.",
             ["query_transactions", "predict_fraud", "analyze_network"])),
       ]),
 
@@ -152,11 +176,16 @@ SCENARIOS: list[S] = [
           en="Draft the STR for concurrent multiple transactions.",
           tool="generate_str",
           args=str_args(4,
-            "출금계좌 {acc}(출금기관 {bank})의 2024년 다중거래의 동시 요청 유형 상위 {n}건을 확인했고 "
-            "최대 건은 {top_date:date}에 매체구분 {media} 채널로 이체한 {top_amt:,}원이다. "
-            "해당 건의 예측 모델 위험 점수는 {score:copula}다. "
-            "같은 기간 CTR 고액거래 조회에서 상위 {ctr_n}건이 나왔다. "
-            "동일 시점에 다수 거래가 몰리는 형태여서 다중거래의 동시 요청으로 판단한다.",
+            "출금계좌 {acc}(출금기관 {bank})의 2024년 다중거래의 동시 요청 유형 상위 {n}건을 "
+            "확인했고 최대 건은 {top_date:date}에 매체구분 {media} 채널로 이체한 {top_amt:,}원이다. "
+            "해당 건의 예측 모델 위험 점수는 {score:copula}다. 같은 기간 CTR 고액거래 조회에서 상위 "
+            "{ctr_n}건이 나왔다. 동일 시점에 다수 거래가 몰리는 형태여서 다중거래의 동시 요청으로 "
+            "판단한다.",
+            "The top {n} concurrent-multiple-transaction rows of 2024 for withdrawal account {acc} "
+            "(institution {bank}) were reviewed; the largest is {top_amt:,} KRW sent over media "
+            "type {media} on {top_date:date}, with a model risk score of {score}. A CTR high-value "
+            "query over the same period returned {ctr_n} rows. Several transfers fall on the same "
+            "moment, so this is judged a concurrent multiple transaction request.",
             ["query_transactions", "predict_fraud", "detect_ctr_candidates"])),
       ]),
 
@@ -195,10 +224,16 @@ SCENARIOS: list[S] = [
           en="Pull the analysis together and draft an STR for split transactions.",
           tool="generate_str",
           args=str_args(3,
-            "출금기관 {bank} 소속 출금계좌 {acc:은는} 2024년에 분할 거래 유형 이상거래 {acc_n}건, {acc_amt:,}원을 "
-            "실행해 해당 기관에서 건수가 가장 많다. 계좌 전체 거래는 {tot}건이고 이상거래 비율은 {fr}%다. "
-            "최다 상대 계좌는 {cp:copula}며 위험도 평가는 {risk}점({level})이다. "
-            "같은 상대에게 소액을 반복 이체하는 형태여서 분할 거래로 판단한다.",
+            "출금기관 {bank} 소속 출금계좌 {acc:은는} 2024년에 분할 거래 유형 이상거래 {acc_n}건, "
+            "{acc_amt:,}원을 실행해 해당 기관에서 건수가 가장 많다. 계좌 전체 거래는 {tot}건이고 "
+            "이상거래 비율은 {fr}%다. 최다 상대 계좌는 {cp:copula}며 위험도 평가는 "
+            "{risk}점({level})이다. 같은 상대에게 소액을 반복 이체하는 형태여서 분할 거래로 "
+            "판단한다.",
+            "Withdrawal account {acc}, at institution {bank}, made {acc_n} split-transaction rows "
+            "worth {acc_amt:,} KRW in 2024, the highest count at that institution. The account has "
+            "{tot} transactions in all and a suspicious-transaction ratio of {fr}%. Its busiest "
+            "counterparty is {cp}, and its behavioural risk score is {risk} ({level}). Small "
+            "amounts go repeatedly to the same counterparty, so this is judged a split transaction.",
             ["query_transactions", "get_account_profile", "score_account_risk"])),
       ]),
 
@@ -231,11 +266,17 @@ SCENARIOS: list[S] = [
           en="Draft the STR for split transactions.",
           tool="generate_str",
           args=str_args(3,
-            "출금계좌 {acc}(출금기관 {bank})의 2024년 분할 거래 유형 상위 {n}건 중 최대 금액은 {top_amt:,}원이다. "
-            "자금 분산 분석 결과 상대 계좌 {cp}곳에 총 {stx}건, 건당 평균 {savg:,.0f}원을 이체했고 "
-            "그중 {sfrn}건이 이상거래로 분류됐다. "
-            "1단계 네트워크의 이상거래 비율은 {nfr}%다. "
-            "소액을 다수 상대에게 쪼개 보내는 형태여서 분할 거래로 판단한다.",
+            "출금계좌 {acc}(출금기관 {bank})의 2024년 분할 거래 유형 상위 {n}건 중 최대 금액은 "
+            "{top_amt:,}원이다. 자금 분산 분석 결과 상대 계좌 {cp}곳에 총 {stx}건, 건당 평균 "
+            "{savg:,.0f}원을 이체했고 그중 {sfrn}건이 이상거래로 분류됐다. 1단계 네트워크의 "
+            "이상거래 비율은 {nfr}%다. 소액을 다수 상대에게 쪼개 보내는 형태여서 분할 거래로 "
+            "판단한다.",
+            "Among the top {n} split-transaction rows of 2024 for withdrawal account {acc} "
+            "(institution {bank}) the largest is {top_amt:,} KRW. The dispersion analysis shows "
+            "{stx} transfers to {cp} counterparty accounts, {savg:,.0f} KRW on average, {sfrn} of "
+            "them flagged. The one-hop network carries a suspicious-transaction ratio of {nfr}%. "
+            "Small amounts are split across many counterparties, so this is judged a split "
+            "transaction.",
             ["query_transactions", "detect_smurfing_network", "analyze_network"])),
       ]),
 
@@ -267,11 +308,17 @@ SCENARIOS: list[S] = [
           en="Draft the STR for same-day withdrawal after a large deposit.",
           tool="generate_str",
           args=str_args(5,
-            "거액 입금 후 당일 인출 유형은 HOFINET 전체에서 {t5n}건, {t5amt:,}원이고 상위 출금기관은 {t5bank:copula}다. "
-            "출금계좌 {acc}(출금기관 {bank})의 해당 유형 상위 {n}건 중 최대 건은 {top_date:date}에 "
-            "매체구분 {media} 채널로 이체한 {top_amt:,}원이다. "
-            "해당 건의 예측 모델 위험 점수는 {score:copula}다. "
-            "거액이 들어온 당일에 같은 규모가 빠져나가는 형태여서 거액 입금 후 당일 인출로 판단한다.",
+            "거액 입금 후 당일 인출 유형은 HOFINET 전체에서 {t5n}건, {t5amt:,}원이고 상위 "
+            "출금기관은 {t5bank:copula}다. 출금계좌 {acc}(출금기관 {bank})의 해당 유형 상위 {n}건 "
+            "중 최대 건은 {top_date:date}에 매체구분 {media} 채널로 이체한 {top_amt:,}원이다. 해당 "
+            "건의 예측 모델 위험 점수는 {score:copula}다. 거액이 들어온 당일에 같은 규모가 "
+            "빠져나가는 형태여서 거액 입금 후 당일 인출로 판단한다.",
+            "Across HOFINET the same-day-withdrawal-after-large-deposit type covers {t5n} rows "
+            "worth {t5amt:,} KRW, and institution {t5bank} leads it. Among the top {n} rows of that "
+            "type for withdrawal account {acc} (institution {bank}) the largest is {top_amt:,} KRW "
+            "sent over media type {media} on {top_date:date}, with a model risk score of {score}. A "
+            "large deposit leaves again on the day it arrives, so this is judged a same-day "
+            "withdrawal after a large deposit.",
             ["get_fraud_type_summary", "query_transactions", "predict_fraud"])),
       ]),
 
@@ -303,10 +350,16 @@ SCENARIOS: list[S] = [
           en="Draft the STR for late-night bulk transactions.",
           tool="generate_str",
           args=str_args(7,
-            "출금기관 {bank} 소속 출금계좌 {acc:은는} {d0:date|을를} 시작으로 거래시간대 {slot} 구간에서 "
-            "건당 {amt0:,}원 규모의 이체 {n}건을 실행했다. 위험도 평가는 {risk}점({level})이고 "
-            "심야 거래 비중 지표는 {night:copula}다. FIU 참고유형 {fiu_cat} 항목 '{fiu}'에 해당한다. "
-            "영업시간 외 시간대에 같은 금액이 반복되어 심야/새벽 대량 거래로 판단한다.",
+            "출금기관 {bank} 소속 출금계좌 {acc:은는} {d0:date|을를} 시작으로 거래시간대 {slot} "
+            "구간에서 건당 {amt0:,}원 규모의 이체 {n}건을 실행했다. 위험도 평가는 "
+            "{risk}점({level})이고 심야 거래 비중 지표는 {night:copula}다. FIU 참고유형 가운데 "
+            "{fiu_cat:ko} 분야의 {fiu:ko}에 해당한다. 영업시간 외 시간대에 같은 금액이 반복되어 "
+            "심야/새벽 대량 거래로 판단한다.",
+            "Withdrawal account {acc}, at institution {bank}, made {n} transfers of {amt0:,} KRW "
+            "each in time slot {slot}, starting on {d0:date}. Its behavioural risk score is {risk} "
+            "({level}) and its night-transaction share indicator is {night}. It matches the FIU "
+            "reference type '{fiu}' in the {fiu_cat} category. The same amount repeats outside "
+            "business hours, so this is judged a late-night/early-morning bulk transaction.",
             ["lookup_fiu_reference_types", "query_transactions", "score_account_risk"])),
       ]),
 
@@ -342,10 +395,17 @@ SCENARIOS: list[S] = [
           en="Draft the STR for a sudden change in transaction pattern.",
           tool="generate_str",
           args=str_args(1,
-            "2024년 채널 분석에서 이상거래 비율이 가장 높은 채널은 {ch}(매체구분 {chm}, {chr}%)이다. "
-            "이 채널의 갑작스러운 거래패턴의 변화 유형 상위 {n}건 중 최대 건은 {date:date}에 "
-            "출금기관 {bank} 소속 출금계좌 {acc:이가} 이체한 {amt:,}원이다. 해당 건의 예측 모델 위험 점수는 {score:copula}다. "
-            "평소 사용하지 않던 채널에서 거액이 나간 형태여서 갑작스러운 거래패턴의 변화로 판단한다.",
+            "2024년 채널 분석에서 이상거래 비율이 가장 높은 채널은 {ch}(매체구분 {chm}, "
+            "{chr}%)이다. 이 채널의 갑작스러운 거래패턴의 변화 유형 상위 {n}건 중 최대 건은 "
+            "{date:date}에 출금기관 {bank} 소속 출금계좌 {acc:이가} 이체한 {amt:,}원이다. 해당 건의 "
+            "예측 모델 위험 점수는 {score:copula}다. 평소 사용하지 않던 채널에서 거액이 나간 "
+            "형태여서 갑작스러운 거래패턴의 변화로 판단한다.",
+            "In the 2024 channel analysis the highest suspicious-transaction ratio belongs to {ch} "
+            "(media type {chm}, {chr}%). Among the top {n} sudden-change rows on that channel the "
+            "largest is {amt:,} KRW sent on {date:date} by withdrawal account {acc} at institution "
+            "{bank}, with a model risk score of {score}. A large amount left over a channel the "
+            "account does not normally use, so this is judged a sudden change in transaction "
+            "pattern.",
             ["analyze_channel_risk", "query_transactions", "predict_fraud"])),
       ]),
 
@@ -384,10 +444,15 @@ SCENARIOS: list[S] = [
           en="Draft the STR for a transaction with a new counterparty.",
           tool="generate_str",
           args=str_args(2,
-            "HOFINET 전체 거래는 {tot}건이고 이상거래는 {frn}건({frr}%)이다. "
-            "위험도 랭킹 1순위는 {rdate:date}에 출금계좌 {racc:이가} 입금계좌 {rrcv:으로로} 이체한 {ramt:,}원이며 "
-            "랭킹 점수는 {rscore}, 재예측 점수는 {score:copula}다. "
-            "거래 상대가 종전 거래 이력에 없던 계좌여서 신규 수신처 거래로 판단한다.",
+            "HOFINET 전체 거래는 {tot}건이고 이상거래는 {frn}건({frr}%)이다. 위험도 랭킹 1순위는 "
+            "{rdate:date}에 출금계좌 {racc:이가} 입금계좌 {rrcv:으로로} 이체한 {ramt:,}원이며 랭킹 "
+            "점수는 {rscore}, 재예측 점수는 {score:copula}다. 거래 상대가 종전 거래 이력에 없던 "
+            "계좌여서 신규 수신처 거래로 판단한다.",
+            "HOFINET holds {tot} transactions in all, {frn} of them flagged ({frr}%). The top row "
+            "of the risk ranking is {ramt:,} KRW sent by withdrawal account {racc} to receiving "
+            "account {rrcv} on {rdate:date}, ranked at {rscore} and re-scored at {score}. The "
+            "counterparty does not appear in the account's earlier history, so this is judged a "
+            "transaction with a new counterparty.",
             ["get_statistics", "rank_risky_transactions", "predict_fraud"])),
       ]),
 
@@ -424,10 +489,17 @@ SCENARIOS: list[S] = [
           en="Draft the STR for a transaction with a new counterparty.",
           tool="generate_str",
           args=str_args(2,
-            "2024년 4분기 기관간 흐름에서 출금기관 {sb}에서 입금기관 {rb:으로로} 가는 구간의 이상거래 비율이 "
-            "{fratio}%로 가장 높고 거래는 {ftx}건이다. 2024년 전체로 보면 이 구간의 이상거래는 {n}건이며 "
-            "최대 건은 {date:date}에 출금계좌 {acc:이가} 이체한 {amt:,}원이다. 해당 건의 예측 모델 위험 점수는 {score:copula}다. "
-            "이전 거래 이력이 없는 상대 기관으로 자금이 몰려 신규 수신처 거래로 판단한다.",
+            "2024년 4분기 기관간 흐름에서 출금기관 {sb}에서 입금기관 {rb:으로로} 가는 구간의 "
+            "이상거래 비율이 {fratio}%로 가장 높고 거래는 {ftx}건이다. 2024년 전체로 보면 이 구간의 "
+            "이상거래는 {n}건이며 최대 건은 {date:date}에 출금계좌 {acc:이가} 이체한 {amt:,}원이다. "
+            "해당 건의 예측 모델 위험 점수는 {score:copula}다. 이전 거래 이력이 없는 상대 기관으로 "
+            "자금이 몰려 신규 수신처 거래로 판단한다.",
+            "In the fourth-quarter 2024 cross-institution flow the leg from withdrawal institution "
+            "{sb} to deposit institution {rb} carries the highest suspicious-transaction ratio at "
+            "{fratio}% over {ftx} transactions. Over 2024 as a whole that leg holds {n} flagged "
+            "rows, the largest being {amt:,} KRW sent by withdrawal account {acc} on {date:date}, "
+            "with a model risk score of {score}. Funds concentrate on a counterpart institution "
+            "with no earlier history, so this is judged a transaction with a new counterparty.",
             ["analyze_cross_institution_flow", "query_transactions", "predict_fraud"])),
       ]),
 
@@ -462,11 +534,18 @@ SCENARIOS: list[S] = [
           en="Draft the STR for a transaction with a new counterparty.",
           tool="generate_str",
           args=str_args(2,
-            "출금계좌 {dacc:은는} {dlast:date|을를} 마지막으로 {ddays}일 동안 거래가 없다가 {dre:date}에 {damt:,}원으로 "
-            "재활성화됐다. 계좌 전체 거래는 {tot}건, {tamt:,}원이고 이상거래 비율은 {fr}%이며 "
-            "주 이체 채널은 {media:copula}다. "
-            "같은 달 CTR 분할거래 조회 상위 {ctr_n}건 가운데 최다 건수는 {ctr_acc}의 {ctr_tx}건이다. "
-            "장기 휴면 계좌가 종전에 없던 상대와 거래를 재개해 신규 수신처 거래로 판단한다.",
+            "출금계좌 {dacc:은는} {dlast:date|을를} 마지막으로 {ddays}일 동안 거래가 없다가 "
+            "{dre:date}에 {damt:,}원으로 재활성화됐다. 계좌 전체 거래는 {tot}건, {tamt:,}원이고 "
+            "이상거래 비율은 {fr}%이며 주 이체 채널은 {media:copula}다. 같은 달 CTR 분할거래 조회 "
+            "상위 {ctr_n}건 가운데 최다 건수는 {ctr_acc}의 {ctr_tx}건이다. 장기 휴면 계좌가 종전에 "
+            "없던 상대와 거래를 재개해 신규 수신처 거래로 판단한다.",
+            "Withdrawal account {dacc} was last active on {dlast:date}, stayed silent for {ddays} "
+            "days and was reactivated on {dre:date} with {damt:,} KRW. The account has {tot} "
+            "transactions worth {tamt:,} KRW in all, a suspicious-transaction ratio of {fr}% and "
+            "{media} as its main channel. A CTR structuring query over the same month returned "
+            "{ctr_n} rows, the busiest being {ctr_tx} transfers by account {ctr_acc}. A "
+            "long-dormant account resumed with a counterparty it had never used, so this is judged "
+            "a transaction with a new counterparty.",
             ["detect_dormant_reactivation", "get_account_profile", "detect_ctr_candidates"])),
       ]),
 
@@ -502,9 +581,14 @@ SCENARIOS: list[S] = [
           tool="generate_str",
           args=str_args(3,
             "모니터링 R003(동일 금액 반복) 알림에서 출금계좌 {r3acc:이가} {r3amt:,}원을 {r3n}회, "
-            "상대 계좌 {r3rcv}곳에 반복 이체한 것으로 나타났다. "
-            "이 계좌(출금기관 {bank})의 2024년 4분기 거래 상위 {n}건을 확인했고 위험도 평가는 {risk}점({level})이다. "
-            "같은 금액을 다수 상대에게 반복해 보내는 형태여서 분할 거래로 판단한다.",
+            "상대 계좌 {r3rcv}곳에 반복 이체한 것으로 나타났다. 이 계좌(출금기관 {bank})의 2024년 "
+            "4분기 거래 상위 {n}건을 확인했고 위험도 평가는 {risk}점({level})이다. 같은 금액을 다수 "
+            "상대에게 반복해 보내는 형태여서 분할 거래로 판단한다.",
+            "The R003 monitoring rule (repeated identical amount) shows withdrawal account {r3acc} "
+            "sending {r3amt:,} KRW {r3n} times to {r3rcv} counterparty accounts. The top {n} "
+            "fourth-quarter 2024 transactions of that account (institution {bank}) were reviewed, "
+            "and its behavioural risk score is {risk} ({level}). The same amount goes repeatedly to "
+            "many counterparties, so this is judged a split transaction.",
             ["detect_monitoring_alerts", "query_transactions", "score_account_risk"])),
       ]),
 
@@ -538,11 +622,17 @@ SCENARIOS: list[S] = [
           en="Draft the STR for late-night bulk transactions.",
           tool="generate_str",
           args=str_args(7,
-            "분기 트렌드 {pn}개 구간에서 마지막 분기 {lastq}의 이상거래 비율은 {lastr}%다. "
-            "2024년 3분기 대비 4분기는 거래 건수가 {dcnt}%, 이상거래 건수가 {dfr}% 변화했다. "
-            "출금기관 {bank} 소속 출금계좌 {acc:은는} 거래시간대 {slot} 구간에서 심야/새벽 대량 거래 유형 {n}건을 "
-            "실행했고 {d0:date}의 {amt:,}원이 가장 크다. "
-            "영업시간 외 시간대에 대량 이체가 몰려 심야/새벽 대량 거래로 판단한다.",
+            "분기 트렌드 {pn}개 구간에서 마지막 분기 {lastq}의 이상거래 비율은 {lastr}%다. 2024년 "
+            "3분기 대비 4분기는 거래 건수가 {dcnt}%, 이상거래 건수가 {dfr}% 변화했다. 출금기관 "
+            "{bank} 소속 출금계좌 {acc:은는} 거래시간대 {slot} 구간에서 심야/새벽 대량 거래 유형 "
+            "{n}건을 실행했고 {d0:date}의 {amt:,}원이 가장 크다. 영업시간 외 시간대에 대량 이체가 "
+            "몰려 심야/새벽 대량 거래로 판단한다.",
+            "Over {pn} quarterly periods the last one, {lastq}, carries a suspicious-transaction "
+            "ratio of {lastr}%. Between the third and the fourth quarter of 2024 the transaction "
+            "count moved by {dcnt}% and the flagged count by {dfr}%. Withdrawal account {acc}, at "
+            "institution {bank}, made {n} late-night/early-morning bulk rows in time slot {slot}, "
+            "the largest being {amt:,} KRW on {d0:date}. Bulk transfers concentrate outside "
+            "business hours, so this is judged a late-night/early-morning bulk transaction.",
             ["get_trend_analysis", "compare_periods", "query_transactions"])),
       ]),
 
@@ -575,11 +665,18 @@ SCENARIOS: list[S] = [
           en="Draft the STR for a sudden change in transaction pattern.",
           tool="generate_str",
           args=str_args(1,
-            "입금계좌 {racc:은는} 송금 계좌 {snd}곳, 송금 기관 {sbank}곳에서 이체 {rtx}건, {ramt:,}원을 받았고 "
-            "이상거래 비율은 {rfr}%다. 최다 송금 계좌는 {top_s:copula}다. "
-            "자금 수집 분석에서 상대 {cp}곳, 건당 평균 {cavg:,.0f}원이 확인된다. "
-            "그래프 위험 점수는 {grisk:copula}고 이웃 계좌 이상거래 비율은 {gnb}%다. "
-            "유입 상대와 규모가 종전과 달라져 갑작스러운 거래패턴의 변화로 판단한다.",
+            "입금계좌 {racc:은는} 송금 계좌 {snd}곳, 송금 기관 {sbank}곳에서 이체 {rtx}건, "
+            "{ramt:,}원을 받았고 이상거래 비율은 {rfr}%다. 최다 송금 계좌는 {top_s:copula}다. 자금 "
+            "수집 분석에서 상대 {cp}곳, 건당 평균 {cavg:,.0f}원이 확인된다. 그래프 위험 점수는 "
+            "{grisk:copula}고 이웃 계좌 이상거래 비율은 {gnb}%다. 유입 상대와 규모가 종전과 달라져 "
+            "갑작스러운 거래패턴의 변화로 판단한다.",
+            "Receiving account {racc} took {rtx} transfers worth {ramt:,} KRW from {snd} sending "
+            "accounts at {sbank} institutions, with a suspicious-transaction ratio of {rfr}%. Its "
+            "busiest sender is {top_s}. The collection analysis finds {cp} counterparties at "
+            "{cavg:,.0f} KRW per transfer on average. Its graph risk score is {grisk} and the "
+            "suspicious-transaction ratio of its neighbours is {gnb}%. The inbound counterparties "
+            "and the size of the flows changed, so this is judged a sudden change in transaction "
+            "pattern.",
             ["get_receiving_account_profile", "detect_smurfing_network", "detect_aml_patterns"])),
       ]),
 ]
