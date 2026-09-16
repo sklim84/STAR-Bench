@@ -84,3 +84,55 @@ def test_a_configuration_that_fits_no_host_is_named():
     check = serving._host_profiles(registry, plan)
     assert not check.ok
     assert "no listed host" in check.detail
+
+
+# ---------------------------------------------------------------------------
+# The one deliberate deviation from a final decision (D07 concurrency)
+# ---------------------------------------------------------------------------
+
+def _plan(**overrides):
+    plan = json.loads(serving.PLAN_PATH.read_text(encoding="utf-8"))
+    plan.update(overrides)
+    return plan
+
+
+def test_the_real_plan_declares_and_measures_the_concurrency_deviation():
+    check = serving._concurrency_deviation(real_registry, _plan())
+    assert check.ok, check.detail
+    assert str(real_registry.CONCURRENCY) in check.detail
+
+
+def test_a_plan_without_a_concurrency_block_fails():
+    plan = _plan()
+    plan.pop("concurrency")
+    assert not serving._concurrency_deviation(real_registry, plan).ok
+
+
+def test_a_deviating_default_with_no_agreement_run_fails():
+    plan = _plan()
+    plan["concurrency"] = dict(plan["concurrency"], agreement_run={})
+    check = serving._concurrency_deviation(real_registry, plan)
+    assert not check.ok
+    assert "batching-agreement" in check.detail
+
+
+def test_the_agreement_run_must_be_two_batched_and_one_serial():
+    plan = _plan()
+    run = dict(plan["concurrency"]["agreement_run"])
+    run["runs"] = [{"label": "a", "concurrency": real_registry.CONCURRENCY}]
+    plan["concurrency"] = dict(plan["concurrency"], agreement_run=run)
+    assert not serving._concurrency_deviation(real_registry, plan).ok
+
+
+def test_the_agreement_run_must_name_a_registry_configuration():
+    plan = _plan()
+    run = dict(plan["concurrency"]["agreement_run"], config_id="not-a-config")
+    plan["concurrency"] = dict(plan["concurrency"], agreement_run=run)
+    assert not serving._concurrency_deviation(real_registry, plan).ok
+
+
+def test_the_plan_and_the_registry_must_agree_on_the_default():
+    plan = _plan()
+    plan["concurrency"] = dict(plan["concurrency"],
+                               registry_default=real_registry.CONCURRENCY + 1)
+    assert not serving._concurrency_deviation(real_registry, plan).ok

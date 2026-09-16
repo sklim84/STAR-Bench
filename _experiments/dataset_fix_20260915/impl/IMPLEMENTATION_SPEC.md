@@ -31,6 +31,16 @@ D05 One labeled mode per model; T/NT pairs only for Qwen3.5 (enable_thinking) an
 D06 Deterministic DuckDB/NetworkX replacement for all Memgraph-backed paths (detect_aml_patterns all modes,
     analyze_network hops>2). Document that rings/layering do not occur in HOFINET; funnel requires outbound flows to exist.
 D07 All 28 configurations and all four 2×2 cells on ONE pinned local vLLM stack, concurrency 1, ≥32k context.
+    DEVIATION (2026-09-16, deliberate): the registry default is `CONCURRENCY = 8`, not 1. 28 configurations ×
+    3 columns do not fit the 2026-09-25 deadline one request at a time, and the tool-layer race that forced
+    serial execution is fixed (per-call DuckDB cursors; 504 tagged concurrent calls at 6 and 10 workers
+    identical to serial, 0 errors, 0 wrong tags). Everything else in D07 stands: one stack, ≥32k context, one
+    pinned revision per configuration. What batching can still change is the server's own decoding, so the
+    cost is measured rather than assumed: `preflight/run_plan.json` carries a batching-agreement run
+    (`qwen35-4b-nt`, full single-turn benchmark, twice at 8 and once at 1, three separate output directories),
+    `run_master.sh --agreement` runs it, and gate 5 fails while the registry default differs from 1 and the
+    plan holds no such run. The agreement number is measured after the rerun and reported in the appendix;
+    a configuration whose agreement is low enough to move a ranking is rerun with `--concurrency 1`.
 D08 System prompt: fix factual errors (fraud_description real values, date range/format, account id format), remove the
     15-step recommended flow, neutral wording. Prompt ablation (listing reporting tools) is re-run later from tracked code.
 D09 Delete the 143 `*_ex01..08` duplicate cases.

@@ -13,6 +13,14 @@
 #   --query-lang    kr | en
 #   --only          comma-separated configuration ids, instead of all of them
 #   --out-root      parent directory for the fresh output directories
+#   --agreement     also run the batching-agreement measurement from run_plan.json
+#   --agreement-only  run only that measurement
+#
+# The batching-agreement run is what makes the concurrency deviation from D07
+# measurable: one small configuration on the full single-turn benchmark twice at
+# the registry default and once at 1, into three separate output directories, so
+# the agreement rate between two batched runs and between batched and serial can
+# be computed before any headline number is quoted.
 #
 # Every job runs alone on the cards the plan assigns. A job that fails is
 # reported at the end and the script exits non-zero; the old orchestrator
@@ -33,6 +41,8 @@ QUERY_LANG="kr"
 ONLY=""
 OUT_ROOT=""
 PORT="11434"
+AGREEMENT=""
+AGREEMENT_ONLY=""
 EXTRA=()
 
 while [[ $# -gt 0 ]]; do
@@ -45,6 +55,8 @@ while [[ $# -gt 0 ]]; do
         --only)          ONLY="$2"; shift 2 ;;
         --out-root)      OUT_ROOT="$2"; shift 2 ;;
         --port)          PORT="$2"; shift 2 ;;
+        --agreement)     AGREEMENT="1"; shift ;;
+        --agreement-only) AGREEMENT="1"; AGREEMENT_ONLY="1"; shift ;;
         --)              shift; EXTRA=("$@"); break ;;
         *) echo "unknown option: $1" >&2; exit 2 ;;
     esac
@@ -68,6 +80,7 @@ declare -a SKIPPED=()
 declare -a FAILED=()
 declare -a DONE=()
 
+if [[ -z "$AGREEMENT_ONLY" ]]; then
 for column in ${COLUMNS//,/ }; do
     for line in "${PLAN[@]}"; do
         IFS=$'\t' read -r config tp gpu reason <<< "$line"
@@ -90,6 +103,49 @@ for column in ${COLUMNS//,/ }; do
         fi
     done
 done
+fi
+
+# --- batching agreement (the D07 concurrency deviation) ----------------------
+if [[ -n "$AGREEMENT" ]]; then
+    mapfile -t AGREE < <(python - <<'PYEOF'
+import json, pathlib
+plan = json.loads(pathlib.Path("_experiments/scripts/preflight/run_plan.json").read_text(encoding="utf-8"))
+block = plan.get("concurrency") or {}
+run = block.get("agreement_run") or {}
+for entry in run.get("runs", []):
+    print("\t".join([str(run.get("config_id")), str(run.get("column")),
+                     str(run.get("tools_lang")), str(run.get("query_lang")),
+                     str(entry.get("label")), str(entry.get("concurrency"))]))
+PYEOF
+)
+    if [[ ${#AGREE[@]} -eq 0 ]]; then
+        ts "run_plan.json holds no batching-agreement run"
+        exit 2
+    fi
+    for line in "${AGREE[@]}"; do
+        IFS=$'\t' read -r acfg acol atl aql alabel aconc <<< "$line"
+        agpu=""
+        for pline in "${PLAN[@]}"; do
+            IFS=$'\t' read -r pcfg ptp pgpu preason <<< "$pline"
+            [[ "$pcfg" == "$acfg" ]] && agpu="$pgpu"
+        done
+        if [[ -z "$agpu" || "$agpu" == "-" ]]; then
+            SKIPPED+=("agreement/$acfg: not runnable on this host")
+            continue
+        fi
+        ts "=== batching agreement / $acfg / $alabel (concurrency $aconc) ==="
+        if bash "$RUN_ONE" --config "$acfg" --gpu "$agpu" --mode "$acol" \
+                --tools-lang "$atl" --query-lang "$aql" \
+                --host-profile "$HOST_PROFILE" --port "$PORT" \
+                --out-root "$OUT_ROOT/batching_agreement/$alabel" \
+                -- --concurrency "$aconc" "${EXTRA[@]}"; then
+            DONE+=("agreement/$acfg/$alabel")
+        else
+            FAILED+=("agreement/$acfg/$alabel (rc=$?)")
+            ts "FAILED: agreement/$acfg/$alabel"
+        fi
+    done
+fi
 
 echo
 ts "finished: ${#DONE[@]} run(s)"

@@ -11,6 +11,11 @@ orchestrator pinned every two-card model to devices 0 and 1 whatever lane asked
 `run_plan.json` is the list of configurations the rerun covers. The gate fails
 when the registry and the plan disagree in either direction, so a configuration
 cannot quietly leave the table.
+
+It also carries the one deliberate deviation from a final decision: D07 says
+concurrency 1 and the registry runs 8. The deviation is allowed only while the
+plan says what measures it, so the gate fails when the registry default is not
+the decision value and the plan holds no batching-agreement run.
 """
 
 from __future__ import annotations
@@ -54,6 +59,7 @@ def run(ctx: Context) -> GateResult:
     plan = json.loads(PLAN_PATH.read_text(encoding="utf-8"))
     checks = [
         _plan_matches_registry(registry, plan),
+        _concurrency_deviation(registry, plan),
         _registry_complete(registry),
         _template_hashes(ctx, registry),
         _host_profiles(registry, plan),
@@ -81,6 +87,50 @@ def _plan_matches_registry(registry, plan: dict) -> Check:
                       f"({', '.join(plan['columns'])})",
                  f"python -m _experiments.scripts.runner.plan --format tsv",
                  {"configurations": planned, "columns": plan["columns"]})
+
+
+def _concurrency_deviation(registry, plan: dict) -> Check:
+    """A default that is not D07's 1 has to be declared and measured, not silent."""
+    block = plan.get("concurrency")
+    if not isinstance(block, dict):
+        return Check("the concurrency deviation is declared and measured", False,
+                     "run_plan.json has no `concurrency` block; D07 pins concurrency 1 and "
+                     f"the registry default is {registry.CONCURRENCY}")
+    default = registry.CONCURRENCY
+    decision = block.get("decision_value")
+    problems = []
+    if block.get("registry_default") != default:
+        problems.append(f"the plan says the registry default is {block.get('registry_default')} "
+                        f"and runner/registry.py says {default}")
+    if not str(block.get("_why", "")).strip():
+        problems.append("the deviation carries no reason")
+    run = block.get("agreement_run") or {}
+    if default != decision:
+        known = {cfg.config_id for cfg in registry.CONFIGS}
+        runs = run.get("runs") or []
+        values = sorted(r.get("concurrency") for r in runs)
+        if run.get("config_id") not in known:
+            problems.append(f"the batching-agreement run names {run.get('config_id')!r}, "
+                            f"which is not a registry configuration")
+        if run.get("column") not in plan.get("columns", []):
+            problems.append(f"the batching-agreement run covers column {run.get('column')!r}, "
+                            f"which the plan does not list")
+        if values != sorted([decision, default, default]):
+            problems.append(f"the batching-agreement run is {values}, expected one run at "
+                            f"{decision} and two at {default}")
+        if len({r.get("label") for r in runs}) != len(runs):
+            problems.append("the batching-agreement runs do not have distinct labels")
+    detail = "; ".join(problems) if problems else (
+        f"concurrency {default} (D07 says {decision}), measured by {run.get('config_id')} "
+        f"{run.get('column')} run " + " and ".join(
+            f"{sum(1 for r in run.get('runs', []) if r.get('concurrency') == n)}x at {n}"
+            for n in sorted({r.get("concurrency") for r in run.get("runs", [])}, reverse=True))
+        if default != decision else f"concurrency {default}, which is what D07 asks for")
+    return Check("the concurrency deviation is declared and measured", not problems, detail,
+                 "bash _experiments/scripts/run_master.sh --agreement-only --host-gpus 2 "
+                 "--tools-lang kr --out-root <fresh dir>",
+                 {"registry_default": default, "decision_value": decision,
+                  "agreement_run": run})
 
 
 def _registry_complete(registry) -> Check:

@@ -1,6 +1,23 @@
 {
  "_why": "The configurations and columns the rerun covers (register step 11). Gate 5 fails when this list and runner/registry.py disagree in either direction, so a row cannot leave the main table without someone saying so. Hosts are the machines named in IMPLEMENTATION_SPEC.md: co-author 1 has 2-card 48 GB hosts, co-author 2 a 4-card 48 GB host and on-demand 80 GB hosts.",
  "columns": ["single", "oracle", "e2e"],
+ "concurrency": {
+  "_why": "D07 says concurrency 1. The rerun runs 8 cases in flight per configuration, because 28 configurations x 3 columns do not fit the 2026-09-25 deadline one request at a time, and the tool-layer race that forced serial execution is fixed (per-call DuckDB cursors; 504 tagged concurrent calls identical to serial). The deviation is deliberate and its cost is measured rather than assumed: the agreement run below is run before any headline number is quoted, and a configuration whose agreement is low enough to move a ranking is rerun at --concurrency 1, which is one flag and no code change.",
+  "registry_default": 8,
+  "decision_value": 1,
+  "agreement_run": {
+   "config_id": "qwen35-4b-nt",
+   "column": "single",
+   "tools_lang": "kr",
+   "query_lang": "kr",
+   "reports": "share of cases with the same tool-call sequence, and the difference in h and a, between the two batched runs and between batched and serial",
+   "runs": [
+    {"label": "batched_a", "concurrency": 8},
+    {"label": "batched_b", "concurrency": 8},
+    {"label": "serial", "concurrency": 1}
+   ]
+  }
+ },
  "hosts": [
   {"name": "two-card 48 GB", "gpus": 2, "profile": "48g"},
   {"name": "four-card 48 GB", "gpus": 4, "profile": "48g"},
