@@ -59,6 +59,13 @@ def main(argv: list[str] | None = None) -> int:
     rc = lint([])
     if rc:
         return rc
+    print("\n=== gold call execution ===")
+    from .verify_gold_calls import main as verify  # noqa: PLC0415
+
+    for path in (KR, EN):
+        rc = verify(["--benchmark", str(path), "--gate"])
+        if rc:
+            return rc
     print("\n=== gold self-test ===")
     from _experiments.scripts.scoring.gold_selftest import main as selftest  # noqa: PLC0415
 

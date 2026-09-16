@@ -11,8 +11,8 @@ the paper can state it.
 * tool_count        0 for one gold tool, 1 for two, 2 for three or more.
 * argument_derivation  how many gold values are NOT written in the question and
                     have to be derived from it (a fraud type from its name, a date
-                    range from "the first half of 2024", a threshold from a phrase):
-                    0 for none, 1 for one, 2 for two or more.
+                    range from "the first half of 2024", a SQL predicate from a
+                    phrase): 0 for none, 1 for one, 2 for two or more.
 * tool_overlap      0 when no other tool answers anything like this one, 1 when one
                     to three do, 2 when four or more do. The overlap map is the one
                     D11 fixed, tool by tool.
@@ -81,6 +81,15 @@ def derivation_steps(case: dict) -> int:
         if not isinstance(checks, dict):
             continue
         for key, value in checks.items():
+            if key == "sql_conditions":
+                for cond in value if isinstance(value, list) else []:
+                    wanted = cond["value"] if isinstance(cond["value"], list) else [cond["value"]]
+                    if any(str(v) not in question for v in wanted):
+                        steps += 1
+                continue
+            if key in ("hops_min", "hops_max"):
+                steps += str(value) not in question
+                continue
             if key in SPECIAL or isinstance(value, (dict, list, bool)):
                 continue
             if str(value) not in question:

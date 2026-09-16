@@ -13,7 +13,8 @@
         }
       }
     },
-    "difficulty": "easy"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=ring)."
   },
   {
     "id": "st_ap_002",
@@ -29,11 +30,12 @@
         }
       }
     },
-    "difficulty": "easy"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=layering)."
   },
   {
     "id": "st_ap_003",
-    "question": "분할 거래(funnel) 패턴을 탐지해줘",
+    "question": "입금 상대는 많고 출금 상대는 소수인 funnel(집금) 계좌 패턴을 탐지해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -45,11 +47,12 @@
         }
       }
     },
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "note": "Expects detect_aml_patterns (pattern_type=funnel)."
   },
   {
     "id": "st_ap_004",
-    "question": "계좌 1234567890과 계좌 9876543210 사이의 최단 거래 경로를 찾아줘",
+    "question": "계좌 9000000000024638과 계좌 9000000000036484 사이의 최단 거래 경로를 찾아줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -58,16 +61,17 @@
       "param_checks": {
         "detect_aml_patterns": {
           "pattern_type": "shortest_path",
-          "account_a": 1234567890,
-          "account_b": 9876543210
+          "account_a": 9000000000024638,
+          "account_b": 9000000000036484
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=shortest_path; account_a=9000000000024638; account_b=9000000000036484)."
   },
   {
     "id": "st_ap_005",
-    "question": "계좌 5555555555의 위험도 점수를 산출해줘",
+    "question": "계좌 9000000000017070의 위험도 점수를 그래프 DB 기반으로 산출해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -76,11 +80,12 @@
       "param_checks": {
         "detect_aml_patterns": {
           "pattern_type": "risk_score",
-          "account_id": 5555555555
+          "account_id": 9000000000017070
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=risk_score; account_id=9000000000017070)."
   },
   {
     "id": "st_ap_006",
@@ -97,7 +102,7 @@
       }
     },
     "difficulty": "medium",
-    "note": "순환거래=ring 패턴으로 인식해야 함"
+    "note": "Expects detect_aml_patterns (pattern_type=ring)."
   },
   {
     "id": "st_ap_007",
@@ -113,11 +118,83 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=layering)."
   },
   {
     "id": "st_ap_008",
-    "question": "다수의 계좌에서 돈을 받아 소수 계좌로 집중시키는 분할 거래 패턴을 탐지해줘",
+    "question": "다수의 계좌에서 돈을 받아 소수의 계좌로만 내보내는 funnel 계좌를 탐지해줘",
+    "expected": {
+      "primary_tool": "detect_aml_patterns",
+      "tools_must_include": [
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "detect_aml_patterns": {
+          "pattern_type": "funnel"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_aml_patterns (pattern_type=funnel)."
+  },
+  {
+    "id": "st_ap_009",
+    "question": "계좌 9000000000029571에서 계좌 9000000000034017까지 어떻게 연결되어 있는지 최단경로로 알려줘",
+    "expected": {
+      "primary_tool": "detect_aml_patterns",
+      "tools_must_include": [
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "detect_aml_patterns": {
+          "pattern_type": "shortest_path",
+          "account_a": 9000000000029571,
+          "account_b": 9000000000034017
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=shortest_path; account_a=9000000000029571; account_b=9000000000034017)."
+  },
+  {
+    "id": "st_ap_010",
+    "question": "계좌 9000000000036484의 AML 위험도를 그래프 분석으로 산출해줘",
+    "expected": {
+      "primary_tool": "detect_aml_patterns",
+      "tools_must_include": [
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "detect_aml_patterns": {
+          "pattern_type": "risk_score",
+          "account_id": 9000000000036484
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=risk_score; account_id=9000000000036484)."
+  },
+  {
+    "id": "st_ap_011",
+    "question": "자금세탁 의심 거래에서 순환 구조가 있는지 그래프로 확인해줘",
+    "expected": {
+      "primary_tool": "detect_aml_patterns",
+      "tools_must_include": [
+        "detect_aml_patterns"
+      ],
+      "param_checks": {
+        "detect_aml_patterns": {
+          "pattern_type": "ring"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=ring)."
+  },
+  {
+    "id": "st_ap_012",
+    "question": "보이스피싱 자금이 모이는 계좌를 찾아줘. 입금 상대는 많고 출금은 소수 계좌로만 나가는 구조야",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -130,76 +207,7 @@
       }
     },
     "difficulty": "medium",
-    "note": "funnel=대포통장 패턴"
-  },
-  {
-    "id": "st_ap_009",
-    "question": "계좌 3333333333에서 계좌 4444444444까지 어떻게 연결되어 있는지 최단경로로 알려줘",
-    "expected": {
-      "primary_tool": "detect_aml_patterns",
-      "tools_must_include": [
-        "detect_aml_patterns"
-      ],
-      "param_checks": {
-        "detect_aml_patterns": {
-          "pattern_type": "shortest_path",
-          "account_a": 3333333333,
-          "account_b": 4444444444
-        }
-      }
-    },
-    "difficulty": "medium"
-  },
-  {
-    "id": "st_ap_010",
-    "question": "계좌 9876543210의 AML 위험도를 그래프 분석으로 산출해줘",
-    "expected": {
-      "primary_tool": "detect_aml_patterns",
-      "tools_must_include": [
-        "detect_aml_patterns"
-      ],
-      "param_checks": {
-        "detect_aml_patterns": {
-          "pattern_type": "risk_score",
-          "account_id": 9876543210
-        }
-      }
-    },
-    "difficulty": "medium"
-  },
-  {
-    "id": "st_ap_011",
-    "question": "갑작스러운 거래패턴의 변화 의심 거래에서 순환 구조가 있는지 그래프로 확인해줘",
-    "expected": {
-      "primary_tool": "detect_aml_patterns",
-      "tools_must_include": [
-        "detect_aml_patterns"
-      ],
-      "param_checks": {
-        "detect_aml_patterns": {
-          "pattern_type": "ring"
-        }
-      }
-    },
-    "difficulty": "hard",
-    "note": "순환 구조=ring 패턴으로 인식해야 함"
-  },
-  {
-    "id": "st_ap_012",
-    "question": "다중거래의 동시 요청에 자주 쓰이는 분할 거래 계좌를 찾아줘. 입금 계좌가 많고 출금은 집중되는 구조야",
-    "expected": {
-      "primary_tool": "detect_aml_patterns",
-      "tools_must_include": [
-        "detect_aml_patterns"
-      ],
-      "param_checks": {
-        "detect_aml_patterns": {
-          "pattern_type": "funnel"
-        }
-      }
-    },
-    "difficulty": "hard",
-    "note": "funnel 패턴 설명으로 funnel을 선택해야 함"
+    "note": "Expects detect_aml_patterns (pattern_type=funnel)."
   },
   {
     "id": "st_ap_013",
@@ -217,7 +225,8 @@
         }
       }
     },
-    "difficulty": "hard"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=ring; min_len=5; max_len=10)."
   },
   {
     "id": "st_ap_014",
@@ -234,11 +243,12 @@
         }
       }
     },
-    "difficulty": "hard"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=layering; min_layers=5)."
   },
   {
     "id": "st_ap_015",
-    "question": "계좌 3333333333의 그래프 위험도를 계산해줘",
+    "question": "계좌 9000000000029571의 그래프 위험도를 계산해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -247,15 +257,16 @@
       "param_checks": {
         "detect_aml_patterns": {
           "pattern_type": "risk_score",
-          "account_id": 3333333333
+          "account_id": 9000000000029571
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=risk_score; account_id=9000000000029571)."
   },
   {
     "id": "st_ap_016",
-    "question": "계좌 4444444444와 계좌 7777777777 사이의 자금 경로를 최단경로로 분석해줘",
+    "question": "계좌 9000000000034017와 계좌 9000000000026712 사이의 자금 경로를 최단경로로 분석해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -264,16 +275,17 @@
       "param_checks": {
         "detect_aml_patterns": {
           "pattern_type": "shortest_path",
-          "account_a": 4444444444,
-          "account_b": 7777777777
+          "account_a": 9000000000034017,
+          "account_b": 9000000000026712
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=shortest_path; account_a=9000000000034017; account_b=9000000000026712)."
   },
   {
     "id": "st_ap_017",
-    "question": "갑작스러운 거래패턴의 변화 형태 중 스머핑(분산 입금 후 집결) 패턴을 탐지해줘",
+    "question": "자금세탁 형태 중 다수 입금·소수 출금 구조의 funnel 계좌 패턴을 탐지해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -285,12 +297,12 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "스머핑(분산입금→집결)=funnel 패턴"
+    "difficulty": "easy",
+    "note": "Expects detect_aml_patterns (pattern_type=funnel)."
   },
   {
     "id": "st_ap_018",
-    "question": "계좌 1111111111과 계좌 2222222222 간의 최단 거래 연결을 찾아줘",
+    "question": "계좌 9000000000043931과 계좌 9000000000034076 간의 최단 거래 연결을 찾아줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -299,12 +311,13 @@
       "param_checks": {
         "detect_aml_patterns": {
           "pattern_type": "shortest_path",
-          "account_a": 1111111111,
-          "account_b": 2222222222
+          "account_a": 9000000000043931,
+          "account_b": 9000000000034076
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=shortest_path; account_a=9000000000043931; account_b=9000000000034076)."
   },
   {
     "id": "st_ap_019",
@@ -322,11 +335,12 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=ring; min_len=3; max_len=4)."
   },
   {
     "id": "st_ap_020",
-    "question": "계좌 6666666666의 위험도를 그래프 DB로 산출해줘",
+    "question": "계좌 9000000004388166의 위험도를 그래프 DB로 산출해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -335,11 +349,12 @@
       "param_checks": {
         "detect_aml_patterns": {
           "pattern_type": "risk_score",
-          "account_id": 6666666666
+          "account_id": 9000000004388166
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=risk_score; account_id=9000000004388166)."
   },
   {
     "id": "st_ap_021",
@@ -356,11 +371,12 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=layering; min_layers=4)."
   },
   {
     "id": "st_ap_022",
-    "question": "계좌 8888888888의 AML 그래프 위험 점수를 알려줘",
+    "question": "계좌 9000000000022515의 AML 그래프 위험 점수를 알려줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -369,15 +385,16 @@
       "param_checks": {
         "detect_aml_patterns": {
           "pattern_type": "risk_score",
-          "account_id": 8888888888
+          "account_id": 9000000000022515
         }
       }
     },
-    "difficulty": "easy"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=risk_score; account_id=9000000000022515)."
   },
   {
     "id": "st_ap_023",
-    "question": "금융사기에 활용되는 분할 거래 패턴 20건을 탐지해줘",
+    "question": "금융사기에 쓰이는 funnel(다수 입금·소수 출금) 계좌 패턴 20건을 탐지해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -390,11 +407,12 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "easy",
+    "note": "Expects detect_aml_patterns (pattern_type=funnel; limit=20)."
   },
   {
     "id": "st_ap_024",
-    "question": "계좌 5544332211에서 계좌 1122334455로의 자금 이동 경로를 그래프로 찾아줘",
+    "question": "계좌 9000000000043970에서 계좌 9000000000016180로의 자금 이동 경로를 그래프로 찾아줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -403,12 +421,13 @@
       "param_checks": {
         "detect_aml_patterns": {
           "pattern_type": "shortest_path",
-          "account_a": 5544332211,
-          "account_b": 1122334455
+          "account_a": 9000000000043970,
+          "account_b": 9000000000016180
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=shortest_path; account_a=9000000000043970; account_b=9000000000016180)."
   },
   {
     "id": "st_ap_025",
@@ -425,7 +444,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=layering; limit=30)."
   },
   {
     "id": "st_ap_026",
@@ -443,7 +463,8 @@
         }
       }
     },
-    "difficulty": "hard"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=ring; max_len=10; limit=5)."
   },
   {
     "id": "st_ap_027",
@@ -460,11 +481,12 @@
         }
       }
     },
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "note": "Expects detect_aml_patterns (pattern_type=ring; limit=10)."
   },
   {
     "id": "st_ap_028",
-    "question": "갑작스러운 거래패턴의 변화 의심 계좌 중 입금이 분산되고 출금이 집중되는 계좌를 탐지해줘",
+    "question": "자금세탁 의심 계좌 중 입금 상대는 분산되고 출금은 소수 계좌로만 나가는 funnel 계좌를 탐지해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -476,7 +498,8 @@
         }
       }
     },
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "note": "Expects detect_aml_patterns (pattern_type=funnel)."
   },
   {
     "id": "st_ap_029",
@@ -493,11 +516,12 @@
         }
       }
     },
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "note": "Expects detect_aml_patterns (pattern_type=layering; limit=15)."
   },
   {
     "id": "st_ap_030",
-    "question": "계좌 2233445566과 계좌 6655443322 사이의 거래 경로를 최단경로로 찾아줘",
+    "question": "계좌 9000000000022564과 계좌 9000000000035927 사이의 거래 경로를 최단경로로 찾아줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -506,16 +530,17 @@
       "param_checks": {
         "detect_aml_patterns": {
           "pattern_type": "shortest_path",
-          "account_a": 2233445566,
-          "account_b": 6655443322
+          "account_a": 9000000000022564,
+          "account_b": 9000000000035927
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=shortest_path; account_a=9000000000022564; account_b=9000000000035927)."
   },
   {
     "id": "st_ap_031",
-    "question": "계좌 7788991122의 위험도 점수를 그래프 분석으로 산출해줘",
+    "question": "계좌 9000000002263015의 위험도 점수를 그래프 분석으로 산출해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -524,11 +549,12 @@
       "param_checks": {
         "detect_aml_patterns": {
           "pattern_type": "risk_score",
-          "account_id": 7788991122
+          "account_id": 9000000002263015
         }
       }
     },
-    "difficulty": "easy"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=risk_score; account_id=9000000002263015)."
   },
   {
     "id": "st_ap_032",
@@ -546,7 +572,8 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=ring; min_len=4; max_len=8)."
   },
   {
     "id": "st_ap_033",
@@ -563,11 +590,12 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=layering; min_layers=2)."
   },
   {
     "id": "st_ap_034",
-    "question": "계좌 9900112233에서 계좌 3322110099까지 자금이 어떻게 흐르는지 최단 경로로 분석해줘",
+    "question": "계좌 9000000000018485에서 계좌 9000000000024336까지 자금이 어떻게 흐르는지 최단 경로로 분석해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -576,16 +604,17 @@
       "param_checks": {
         "detect_aml_patterns": {
           "pattern_type": "shortest_path",
-          "account_a": 9900112233,
-          "account_b": 3322110099
+          "account_a": 9000000000018485,
+          "account_b": 9000000000024336
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=shortest_path; account_a=9000000000018485; account_b=9000000000024336)."
   },
   {
     "id": "st_ap_035",
-    "question": "계좌 5577991133의 AML 위험 점수를 계산해줘",
+    "question": "계좌 9000000001372521의 AML 위험 점수를 그래프 분석으로 계산해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -594,15 +623,16 @@
       "param_checks": {
         "detect_aml_patterns": {
           "pattern_type": "risk_score",
-          "account_id": 5577991133
+          "account_id": 9000000001372521
         }
       }
     },
-    "difficulty": "easy"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=risk_score; account_id=9000000001372521)."
   },
   {
     "id": "st_ap_036",
-    "question": "분할 거래 의심 계좌를 25건 탐지해줘",
+    "question": "입금 상대가 많고 출금 상대가 소수인 funnel 의심 계좌를 25건 탐지해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -615,7 +645,8 @@
         }
       }
     },
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "note": "Expects detect_aml_patterns (pattern_type=funnel; limit=25)."
   },
   {
     "id": "st_ap_037",
@@ -632,8 +663,8 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "다단계 이동=layering 패턴으로 인식해야 함"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=layering; min_layers=6)."
   },
   {
     "id": "st_ap_038",
@@ -649,12 +680,12 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "폐쇄 루프=ring 패턴으로 인식해야 함"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=ring)."
   },
   {
     "id": "st_ap_039",
-    "question": "여러 출처에서 소규모로 입금받아 한 계좌로 집결시키는 집금책 계좌를 탐지해줘",
+    "question": "여러 출처에서 소규모로 입금받아 소수 계좌로만 내보내는 집금책 funnel 계좌를 탐지해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -666,12 +697,12 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "집금책 구조=funnel 패턴"
+    "difficulty": "easy",
+    "note": "Expects detect_aml_patterns (pattern_type=funnel)."
   },
   {
     "id": "st_ap_040",
-    "question": "계좌 1199228833의 그래프 기반 AML 위험도를 산출해줘",
+    "question": "계좌 9000000000449975의 그래프 기반 AML 위험도를 산출해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -680,15 +711,16 @@
       "param_checks": {
         "detect_aml_patterns": {
           "pattern_type": "risk_score",
-          "account_id": 1199228833
+          "account_id": 9000000000449975
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=risk_score; account_id=9000000000449975)."
   },
   {
     "id": "st_ap_041",
-    "question": "계좌 6644882200과 계좌 0022884466 간의 연결 경로를 최단경로로 탐색해줘",
+    "question": "계좌 9000000000028788과 계좌 9000000000019300 간의 연결 경로를 최단경로로 탐색해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -697,12 +729,13 @@
       "param_checks": {
         "detect_aml_patterns": {
           "pattern_type": "shortest_path",
-          "account_a": 6644882200,
-          "account_b": 22884466
+          "account_a": 9000000000028788,
+          "account_b": 9000000000019300
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=shortest_path; account_a=9000000000028788; account_b=9000000000019300)."
   },
   {
     "id": "st_ap_042",
@@ -721,7 +754,8 @@
         }
       }
     },
-    "difficulty": "hard"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=ring; min_len=2; max_len=3; limit=5)."
   },
   {
     "id": "st_ap_043",
@@ -739,27 +773,35 @@
         }
       }
     },
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=layering; min_layers=3; limit=20)."
   },
   {
     "id": "st_ap_irr_001",
-    "question": "FATF(국제갑작스러운 거래패턴의 변화방지기구)의 40대 권고안 중 핵심 내용을 요약해줘",
+    "question": "FATF(국제자금세탁방지기구)의 40대 권고안 중 핵심 내용을 요약해줘",
     "expected": {
       "primary_tool": "",
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "irrelevance: AML 국제 기준이지만 패턴 탐지 도구와 무관한 정책 설명"
+    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
   },
   {
     "id": "st_ap_irr_002",
     "question": "금융정보분석원(FIU)에 의심거래보고서(STR)를 제출해야 하는 기준 금액이 얼마야?",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "get_aml_glossary",
+      "tools_must_include": [
+        "get_aml_glossary"
+      ],
+      "param_checks": {
+        "get_aml_glossary": {
+          "term": "STR"
+        }
+      }
     },
     "difficulty": "easy",
-    "note": "irrelevance: STR 관련 도메인이지만 법적 기준 안내는 그래프 패턴 탐지 도구 범위 밖"
+    "note": "Expects get_aml_glossary (term=STR)."
   },
   {
     "id": "st_ap_irr_003",
@@ -769,17 +811,17 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "irrelevance: 그래프 DB 비교 설명 — AML 패턴 탐지 도구 실행과 무관"
+    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
   },
   {
     "id": "st_ap_irr_004",
-    "question": "갑작스러운 거래패턴의 변화 방지를 위한 국내 법제도 현황을 설명해줘",
+    "question": "자금세탁 방지를 위한 국내 법제도 현황을 설명해줘",
     "expected": {
       "primary_tool": "",
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "irrelevance: AML 법제도 설명 — 패턴 탐지 도구와 무관"
+    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
   },
   {
     "id": "st_ap_irr_005",
@@ -789,154 +831,48 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "irrelevance: STR 작성 요건 안내는 generate_str 영역 — 패턴 탐지 도구와 무관"
+    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
   },
   {
     "id": "st_ap_irr_006",
     "question": "전체 거래 데이터에서 이상거래 비율이 얼마야?",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
+      "primary_tool": "get_statistics",
+      "tools_must_include": [
+        "get_statistics"
+      ],
+      "param_checks": {}
     },
     "difficulty": "easy",
-    "note": "irrelevance: 통계 조회는 get_statistics가 적합 — detect_aml_patterns 도구 범위 밖"
+    "note": "Expects get_statistics."
   },
   {
     "id": "st_ap_irr_007",
-    "question": "계좌 5555555555의 거래 내역을 SQL로 조회해줘",
+    "question": "계좌 9000000000017070의 거래 내역을 SQL로 조회해줘",
     "expected": {
-      "primary_tool": "",
-      "tools_must_include": []
-    },
-    "difficulty": "easy",
-    "note": "irrelevance: SQL 거래 조회는 query_transactions가 적합 — AML 패턴 탐지 도구와 다른 기능"
-  },
-  {
-    "id": "st_ap_ex01",
-    "question": "순환거래 패턴이 있는지 탐지해줘",
-    "expected": {
-      "primary_tool": "detect_aml_patterns",
+      "primary_tool": "query_transactions",
       "tools_must_include": [
-        "detect_aml_patterns"
+        "query_transactions"
       ],
       "param_checks": {
-        "detect_aml_patterns": {
-          "pattern_type": "ring"
+        "query_transactions": {
+          "sql_conditions": [
+            {
+              "column": "sender_acc",
+              "op": "=",
+              "value": 9000000000017070
+            }
+          ],
+          "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, time_slot, receiver_bank, receiver_acc, amount, is_fraud FROM hofinet WHERE sender_acc = 9000000000017070 ORDER BY date DESC LIMIT 100"
         }
       }
     },
-    "difficulty": "easy"
-  },
-  {
-    "id": "st_ap_ex02",
-    "question": "순환거래 패턴이 있는지 탐지해줘",
-    "expected": {
-      "primary_tool": "detect_aml_patterns",
-      "tools_must_include": [
-        "detect_aml_patterns"
-      ],
-      "param_checks": {
-        "detect_aml_patterns": {
-          "pattern_type": "ring"
-        }
-      }
-    },
-    "difficulty": "easy"
-  },
-  {
-    "id": "st_ap_ex03",
-    "question": "순환거래 패턴이 있는지 탐지해줘",
-    "expected": {
-      "primary_tool": "detect_aml_patterns",
-      "tools_must_include": [
-        "detect_aml_patterns"
-      ],
-      "param_checks": {
-        "detect_aml_patterns": {
-          "pattern_type": "ring"
-        }
-      }
-    },
-    "difficulty": "easy"
-  },
-  {
-    "id": "st_ap_ex04",
-    "question": "순환거래 패턴이 있는지 탐지해줘",
-    "expected": {
-      "primary_tool": "detect_aml_patterns",
-      "tools_must_include": [
-        "detect_aml_patterns"
-      ],
-      "param_checks": {
-        "detect_aml_patterns": {
-          "pattern_type": "ring"
-        }
-      }
-    },
-    "difficulty": "easy"
-  },
-  {
-    "id": "st_ap_ex05",
-    "question": "순환거래 패턴이 있는지 탐지해줘",
-    "expected": {
-      "primary_tool": "detect_aml_patterns",
-      "tools_must_include": [
-        "detect_aml_patterns"
-      ],
-      "param_checks": {
-        "detect_aml_patterns": {
-          "pattern_type": "ring"
-        }
-      }
-    },
-    "difficulty": "easy"
-  },
-  {
-    "id": "st_ap_ex06",
-    "question": "순환거래 패턴이 있는지 탐지해줘",
-    "expected": {
-      "primary_tool": "detect_aml_patterns",
-      "tools_must_include": [
-        "detect_aml_patterns"
-      ],
-      "param_checks": {
-        "detect_aml_patterns": {
-          "pattern_type": "ring"
-        }
-      }
-    },
-    "difficulty": "easy"
-  },
-  {
-    "id": "st_ap_ex07",
-    "question": "순환거래 패턴이 있는지 탐지해줘",
-    "expected": {
-      "primary_tool": "detect_aml_patterns",
-      "tools_must_include": [
-        "detect_aml_patterns"
-      ],
-      "param_checks": {
-        "detect_aml_patterns": {
-          "pattern_type": "ring"
-        }
-      }
-    },
-    "difficulty": "easy"
-  },
-  {
-    "id": "st_ap_ex08",
-    "question": "순환거래 패턴이 있는지 탐지해줘",
-    "expected": {
-      "primary_tool": "detect_aml_patterns",
-      "tools_must_include": [
-        "detect_aml_patterns"
-      ],
-      "param_checks": {
-        "detect_aml_patterns": {
-          "pattern_type": "ring"
-        }
-      }
-    },
-    "difficulty": "easy"
+    "difficulty": "medium",
+    "note": "Expects query_transactions (must restrict sender_acc = 9000000000017070; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
   }
 ]

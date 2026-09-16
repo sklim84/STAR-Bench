@@ -1,5 +1,5 @@
 {
-  "rule": "tool_count + argument_derivation + tool_overlap + information_gap\n\n* tool_count        0 for one gold tool, 1 for two, 2 for three or more.\n* argument_derivation  how many gold values are NOT written in the question and\n                    have to be derived from it (a fraud type from its name, a date\n                    range from \"the first half of 2024\", a threshold from a phrase):\n                    0 for none, 1 for one, 2 for two or more.\n* tool_overlap      0 when no other tool answers anything like this one, 1 when one\n                    to three do, 2 when four or more do. The overlap map is the one\n                    D11 fixed, tool by tool.\n* information_gap   1 when the case expects no tool call at all, because the model\n                    has to decide that from the question alone.\n\n    0-1 points -> easy, 2 -> medium, 3 or more -> hard.",
+  "rule": "tool_count + argument_derivation + tool_overlap + information_gap\n\n* tool_count        0 for one gold tool, 1 for two, 2 for three or more.\n* argument_derivation  how many gold values are NOT written in the question and\n                    have to be derived from it (a fraud type from its name, a date\n                    range from \"the first half of 2024\", a SQL predicate from a\n                    phrase): 0 for none, 1 for one, 2 for two or more.\n* tool_overlap      0 when no other tool answers anything like this one, 1 when one\n                    to three do, 2 when four or more do. The overlap map is the one\n                    D11 fixed, tool by tool.\n* information_gap   1 when the case expects no tool call at all, because the model\n                    has to decide that from the question alone.\n\n    0-1 points -> easy, 2 -> medium, 3 or more -> hard.",
   "before": {
     "easy": 530,
     "hard": 173,
@@ -7,8 +7,8 @@
   },
   "after": {
     "easy": 667,
-    "hard": 175,
-    "medium": 273
+    "hard": 201,
+    "medium": 247
   },
   "per_case": {
     "st_acr_001": {
@@ -6678,14 +6678,14 @@
       "n_overlapping_tools": 0
     },
     "st_gir_irr_006": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_gir_irr_007": {
@@ -8779,14 +8779,14 @@
       "n_overlapping_tools": 4
     },
     "st_mtool_002": {
-      "points": 3,
+      "points": 4,
       "difficulty": "hard",
       "tool_count": 1,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 2,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_mtool_003": {
@@ -10495,47 +10495,47 @@
       "n_overlapping_tools": 4
     },
     "st_qt_003": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_004": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_005": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_006": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_007": {
@@ -10550,25 +10550,25 @@
       "n_overlapping_tools": 4
     },
     "st_qt_008": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_009": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_010": {
@@ -10583,14 +10583,14 @@
       "n_overlapping_tools": 4
     },
     "st_qt_011": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_012": {
@@ -10627,14 +10627,14 @@
       "n_overlapping_tools": 4
     },
     "st_qt_015": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_016": {
@@ -10649,36 +10649,36 @@
       "n_overlapping_tools": 4
     },
     "st_qt_017": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_018": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 4,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 2,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 2,
       "n_overlapping_tools": 4
     },
     "st_qt_019": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_020": {
@@ -10693,25 +10693,25 @@
       "n_overlapping_tools": 4
     },
     "st_qt_021": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_022": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 4,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 2,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 3,
       "n_overlapping_tools": 4
     },
     "st_qt_023": {
@@ -10836,14 +10836,14 @@
       "n_overlapping_tools": 4
     },
     "st_qt_030": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_031": {
@@ -10880,14 +10880,14 @@
       "n_overlapping_tools": 4
     },
     "st_qt_034": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_035": {
@@ -10913,58 +10913,58 @@
       "n_overlapping_tools": 4
     },
     "st_qt_037": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_038": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_039": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 4,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 2,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 2,
       "n_overlapping_tools": 4
     },
     "st_qt_040": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_041": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_042": {
@@ -10979,14 +10979,14 @@
       "n_overlapping_tools": 4
     },
     "st_qt_043": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 4,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 2,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 2,
       "n_overlapping_tools": 4
     },
     "st_qt_irr_005": {
@@ -11034,14 +11034,14 @@
       "n_overlapping_tools": 4
     },
     "st_qt_045": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_046": {
@@ -11056,14 +11056,14 @@
       "n_overlapping_tools": 4
     },
     "st_qt_047": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_048": {
@@ -11100,14 +11100,14 @@
       "n_overlapping_tools": 4
     },
     "st_qt_051": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_052": {
@@ -11122,14 +11122,14 @@
       "n_overlapping_tools": 4
     },
     "st_qt_053": {
-      "points": 2,
-      "difficulty": "medium",
+      "points": 3,
+      "difficulty": "hard",
       "tool_count": 0,
-      "argument_derivation": 0,
+      "argument_derivation": 1,
       "tool_overlap": 2,
       "information_gap": 0,
       "n_tools": 1,
-      "n_derived": 0,
+      "n_derived": 1,
       "n_overlapping_tools": 4
     },
     "st_qt_irr_008": {

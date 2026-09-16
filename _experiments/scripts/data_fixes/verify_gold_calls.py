@@ -67,6 +67,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--out")
     ap.add_argument("--only-account-calls", action="store_true",
                     help="report only calls that carry an account argument")
+    ap.add_argument("--gate", action="store_true",
+                    help="exit non-zero when a SQL or account-bearing gold call answers nothing; "
+                         "the empty ring, layering and funnel scans are HOFINET's own shape (D06)")
     args = ap.parse_args(argv)
 
     from _experiments.scripts._platform import ensure_platform_on_path  # noqa: PLC0415
@@ -99,11 +102,14 @@ def main(argv: list[str] | None = None) -> int:
                "problems": problems}
     if args.out:
         dump_json(args.out, summary)
+    blocking = [p for p in problems
+                if p["has_account"] or p["tool"] == "query_transactions"]
+    summary["n_blocking"] = len(blocking)
     print(f"{len(rows)} gold calls executed, {len(problems)} answer nothing "
-          f"({summary['n_account_problems']} of them carry an account)")
-    for row in problems[:40]:
+          f"({summary['n_account_problems']} of them carry an account, {len(blocking)} blocking)")
+    for row in (blocking or problems)[:40]:
         print(f"  {row['case_id']} {row['tool']} [{row['state']}] {row['reason']}")
-    return 0
+    return 1 if (args.gate and blocking) else 0
 
 
 if __name__ == "__main__":
