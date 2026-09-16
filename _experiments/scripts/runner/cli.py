@@ -29,6 +29,9 @@ def add_common_arguments(ap: argparse.ArgumentParser) -> None:
     g.add_argument("--served-model-name", help="name the endpoint knows the model by")
     g.add_argument("--tools-lang", required=True, choices=arms.ARM_NAMES,
                    help="schema arm: kr (tools_kr.py) or en (platform agent.TOOLS)")
+    g.add_argument("--prompt-variant", default="baseline",
+                   help="system-prompt variant from _experiments/scripts/prompt_variants "
+                        "(default: baseline, which is what the main table runs)")
     g.add_argument("--query-lang", choices=("kr", "en"),
                    help="language of the questions (default: from the benchmark directory)")
     g.add_argument("--max-tokens", type=int, help="override the output budget")
@@ -122,7 +125,7 @@ def resolve(args, *, cases: list[dict], setting: str, query_lang_default: str,
     if not args.config and not args.model:
         raise SystemExit("pass --config <registry id> or --model <model id>")
 
-    arm = arms.load_arm(args.tools_lang)
+    arm = arms.load_arm(args.tools_lang, prompt_variant=args.prompt_variant)
     query_lang = args.query_lang or query_lang_default
 
     if args.config:
@@ -160,6 +163,7 @@ def resolve(args, *, cases: list[dict], setting: str, query_lang_default: str,
     if args.max_model_len:
         config["max_model_len"] = args.max_model_len
 
+    config["prompt_variant"] = arm.prompt_variant
     prov = provenance.collect(arm=arm, config=config)
     problems = provenance.check_pin(prov, provenance.expected_pin(args.pin),
                                     strict=not args.no_env_check)
@@ -180,7 +184,9 @@ def resolve(args, *, cases: list[dict], setting: str, query_lang_default: str,
     if args.preflight_only:
         raise SystemExit(0)
 
-    run_id = args.run_id or records.new_run_id(f"{run_prefix}-{args.tools_lang}-{setting}")
+    suffix = "" if arm.prompt_variant == "baseline" else f"-{arm.prompt_variant}"
+    run_id = args.run_id or records.new_run_id(
+        f"{run_prefix}-{args.tools_lang}-{setting}{suffix}")
     writer = records.RecordWriter(args.out, run_id, partial=args.partial)
     return RunSetup(args=args, arm=arm, config_block=config, chat_options=options, writer=writer,
                     run_id=run_id, query_lang=query_lang, provenance_block=prov, serving=serving)

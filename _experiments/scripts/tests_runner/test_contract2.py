@@ -231,3 +231,18 @@ def test_a_long_tool_result_is_truncated_for_the_model_but_kept_whole_in_the_rec
     sent = [m for m in server.requests[1]["messages"] if m["role"] == "tool"][0]["content"]
     assert len(sent) < len(payload)
     assert "truncated by the benchmark runner" in sent
+
+
+def test_the_prompt_variant_is_recorded_and_lands_in_the_run_id(server, single_benchmark,
+                                                                tmp_path, fake_tools):
+    server.always(text("끝"))
+    out = tmp_path / "r"
+    argv = base_argv(server, out) + ["--cases-dir", str(single_benchmark),
+                                     "--prompt-variant", "list_reporting_tools"]
+    benchmark.main(argv, executor=fake_tools)
+    recs = [rec for f in sorted(out.glob("*.jsonl")) for rec in records.read_records(f)]
+    assert all(r["config"]["prompt_variant"] == "list_reporting_tools" for r in recs)
+    assert all(r["provenance"]["prompt_variant"] == "list_reporting_tools" for r in recs)
+    assert "list_reporting_tools" in recs[0]["run_id"]
+    system = server.requests[0]["messages"][0]["content"]
+    assert "generate_str" in system

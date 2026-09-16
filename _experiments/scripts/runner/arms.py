@@ -24,11 +24,14 @@ from __future__ import annotations
 
 import hashlib
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
+from pathlib import Path
 
-__all__ = ["Arm", "load_arm", "ARM_NAMES", "schema_signature", "parity_problems"]
+__all__ = ["Arm", "load_arm", "ARM_NAMES", "schema_signature", "parity_problems",
+           "PROMPT_VARIANT_DIR", "prompt_variants"]
 
 ARM_NAMES = ("kr", "en")
+PROMPT_VARIANT_DIR = Path(__file__).resolve().parents[1] / "prompt_variants"
 
 
 def _sha256(obj) -> str:
@@ -44,6 +47,7 @@ class Arm:
     system_prompt: str
     tools_sha256: str
     prompt_sha256: str
+    prompt_variant: str = "baseline"
 
     @property
     def tool_names(self) -> list[str]:
@@ -57,7 +61,14 @@ def _platform():
     return agent
 
 
-def load_arm(lang: str) -> Arm:
+def prompt_variants() -> list[str]:
+    names = {"baseline"}
+    for path in PROMPT_VARIANT_DIR.glob("*.*.txt"):
+        names.add(path.name.split(".")[0])
+    return sorted(names)
+
+
+def load_arm(lang: str, *, prompt_variant: str = "baseline") -> Arm:
     if lang not in ARM_NAMES:
         raise ValueError(f"unknown schema arm {lang!r}; expected one of {ARM_NAMES}")
     if lang == "en":
@@ -66,8 +77,14 @@ def load_arm(lang: str) -> Arm:
     else:
         from _experiments.scripts import tools_kr
         tools, prompt = tools_kr.TOOLS_KR, tools_kr.SYSTEM_PROMPT_KR
-    return Arm(lang=lang, tools=tools, system_prompt=prompt,
-               tools_sha256=_sha256(tools), prompt_sha256=_sha256(prompt))
+    if prompt_variant != "baseline":
+        path = PROMPT_VARIANT_DIR / f"{prompt_variant}.{lang}.txt"
+        if not path.is_file():
+            raise ValueError(f"no prompt variant {prompt_variant!r} for the {lang} arm; "
+                             f"expected {path}")
+        prompt = prompt.rstrip() + "\n\n" + path.read_text(encoding="utf-8").strip()
+    return Arm(lang=lang, tools=tools, system_prompt=prompt, tools_sha256=_sha256(tools),
+               prompt_sha256=_sha256(prompt), prompt_variant=prompt_variant)
 
 
 # ---------------------------------------------------------------------------

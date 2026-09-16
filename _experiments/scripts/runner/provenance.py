@@ -106,6 +106,7 @@ def collect(*, arm, config: dict, check_columns: bool = True) -> dict:
         "system_prompt_sha256": arm.prompt_sha256,
         "tools_sha256": arm.tools_sha256,
         "tools_lang": arm.lang,
+        "prompt_variant": arm.prompt_variant,
         "streamlit_stubbed": platform.get("streamlit_stubbed"),
         "database": platform.get("database"),
         "library_versions": platform.get("library_versions"),

@@ -118,3 +118,25 @@ def test_the_generated_arm_is_up_to_date():
     out = subprocess.run([sys.executable, "-m", "_experiments.scripts.gen_tools_kr", "--check"],
                          cwd=_ROOT, capture_output=True, text=True)
     assert out.returncode == 0, out.stderr or out.stdout
+
+
+def test_a_prompt_variant_changes_the_prompt_hash_and_is_named():
+    base = arms.load_arm("kr")
+    variant = arms.load_arm("kr", prompt_variant="list_reporting_tools")
+    assert variant.prompt_variant == "list_reporting_tools"
+    assert variant.prompt_sha256 != base.prompt_sha256
+    assert variant.system_prompt.startswith(base.system_prompt.rstrip())
+    assert "generate_str" in variant.system_prompt
+    assert base.prompt_variant == "baseline"
+
+
+def test_every_variant_exists_for_both_arms():
+    for name in arms.prompt_variants():
+        for lang in arms.ARM_NAMES:
+            arm = arms.load_arm(lang, prompt_variant=name)
+            assert arm.prompt_variant == name
+
+
+def test_an_unknown_variant_is_refused():
+    with pytest.raises(ValueError, match="no prompt variant"):
+        arms.load_arm("kr", prompt_variant="does_not_exist")
