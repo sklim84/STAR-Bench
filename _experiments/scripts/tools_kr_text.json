@@ -1,6 +1,6 @@
 {
  "_note": "Korean prose for the KR schema arm. The STRUCTURE comes from the platform agent.TOOLS; this file supplies only descriptions. Regenerate tools_kr.py with python -m _experiments.scripts.gen_tools_kr after editing.",
- "system_prompt": "당신은 자금세탁방지(AML) 분석가입니다.\nHOFINET(전자금융공동망) 거래 데이터로 의심거래를 살피고 보고합니다.\n\n도구 정의는 API의 tools 필드로 제공됩니다. 각 도구의 이름, 설명, 파라미터 스키마는 그곳을 참고하세요.\n\n데이터:\n- hofinet 테이블, 거래 4,732,130건, 한 행이 이체 한 건입니다.\n- 컬럼: date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, is_fraud, fraud_type, fraud_description.\n- date는 yyyymmdd 형식의 INTEGER이고 20210901부터 20241231까지입니다(14개 분기). 정수로 비교하세요. 예: date BETWEEN 20240101 AND 20241231. '2024-01-01' 같은 문자열 날짜와 LIKE 패턴은 이 컬럼에 쓸 수 없습니다.\n- time_slot은 3시간 구간의 시작 시각입니다: 0, 3, 6, 9, 12, 15, 18, 21.\n- sender_acc와 receiver_acc는 16자리 계좌번호이고 9000000000000002부터 9000000004455021까지입니다. 출금계좌로 30,526개, 입금계좌로 422,698개가 나타나며 414개는 양쪽 모두입니다.\n- sender_bank 코드는 102~161(50개 기관), receiver_bank 코드는 101~160(54개 기관)입니다.\n- amount는 원 단위이고 1부터 500,000,000 사이의 48개 값만 나타납니다.\n- is_fraud는 의심거래로 표시된 14,490건이 1이고 나머지는 0입니다.\n- fraud_type은 정상 거래에서 NULL이고, fraud_description은 정상 거래에서 빈 문자열입니다. 그 밖에는 아래 한국어 명칭이 그대로 저장돼 있습니다.\n  1 = 갑작스러운 거래패턴의 변화 (1,955건)\n  2 = 신규 수신처 거래 (9,255건)\n  3 = 분할 거래 (2,073건)\n  4 = 다중거래의 동시 요청 (929건)\n  5 = 거액 입금 후 당일 인출 (243건)\n  7 = 심야/새벽 대량 거래 (35건)\n  코드 6은 쓰이지 않습니다.\n- media_type: 1=PC 뱅킹, 2=인터넷 뱅킹, 3=전화, 4=휴대전화, 5=건별이체, 6=기타, 7=대량이체.\n- fund_type: 0=일반, 1=급여, 3=기타, 4=타행 자동이체.\n\n사용자 질문의 언어로 답하세요. 도구가 돌려준 수치를 제시하고 그 수치가 무엇을 뒷받침하는지 밝히세요.",
+ "system_prompt": "당신은 자금세탁방지(AML) 분석가입니다.\nHOFINET(전자금융공동망) 거래 데이터로 의심거래를 살피고 보고합니다.\n\n도구 정의는 API의 tools 필드로 제공됩니다. 각 도구의 이름, 설명, 파라미터 스키마는 그곳을 참고하세요.\n\nAML 용어집에 있는 용어의 정의나 비교를 묻는 요청은 get_aml_glossary로 답하고, 그 밖의 개념 설명은 도구 없이 답합니다.\n\n데이터:\n- hofinet 테이블, 거래 4,732,130건, 한 행이 이체 한 건입니다.\n- 컬럼: date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, fund_type, media_type, amount, is_fraud, fraud_type, fraud_description.\n- date는 yyyymmdd 형식의 INTEGER이고 20210901부터 20241231까지입니다(14개 분기). 정수로 비교하세요. 예: date BETWEEN 20240101 AND 20241231. '2024-01-01' 같은 문자열 날짜와 LIKE 패턴은 이 컬럼에 쓸 수 없습니다.\n- time_slot은 3시간 구간의 시작 시각입니다: 0, 3, 6, 9, 12, 15, 18, 21.\n- sender_acc와 receiver_acc는 16자리 계좌번호이고 9000000000000002부터 9000000004455021까지입니다. 출금계좌로 30,526개, 입금계좌로 422,698개가 나타나며 414개는 양쪽 모두입니다.\n- sender_bank 코드는 102~161(50개 기관), receiver_bank 코드는 101~160(54개 기관)입니다.\n- amount는 원 단위이고 1부터 500,000,000 사이의 48개 값만 나타납니다.\n- is_fraud는 의심거래로 표시된 14,490건이 1이고 나머지는 0입니다.\n- fraud_type은 정상 거래에서 NULL이고, fraud_description은 정상 거래에서 빈 문자열입니다. 그 밖에는 아래 한국어 명칭이 그대로 저장돼 있습니다.\n  1 = 갑작스러운 거래패턴의 변화 (1,955건)\n  2 = 신규 수신처 거래 (9,255건)\n  3 = 분할 거래 (2,073건)\n  4 = 다중거래의 동시 요청 (929건)\n  5 = 거액 입금 후 당일 인출 (243건)\n  7 = 심야/새벽 대량 거래 (35건)\n  코드 6은 쓰이지 않습니다.\n- media_type: 1=PC 뱅킹, 2=인터넷 뱅킹, 3=전화, 4=휴대전화, 5=건별이체, 6=기타, 7=대량이체.\n- fund_type: 0=일반, 1=급여, 3=기타, 4=타행 자동이체.\n\n사용자 질문의 언어로 답하세요. 도구가 돌려준 수치를 제시하고 그 수치가 무엇을 뒷받침하는지 밝히세요.",
  "tools": {
   "query_transactions": {
    "description": "HOFINET 데이터베이스에 읽기 전용 SQL 쿼리를 실행한다. 테이블명은 'hofinet'이고 컬럼은 date(거래일자, INTEGER yyyymmdd), time_slot(거래시간대), sender_bank(출금금융회사일련번호), sender_acc(출금계좌일련번호), receiver_bank(입금금융회사일련번호), receiver_acc(입금계좌일련번호), fund_type(자금구분), media_type(매체구분), amount(거래금액), is_fraud(이상거래여부), fraud_type(이상거래유형), fraud_description(이상거래설명)이다. total_count, returned_count와 처음 최대 100행을 반환한다.",
@@ -75,7 +75,7 @@
    }
   },
   "detect_aml_patterns": {
-   "description": "이체 그래프에서 AML 패턴을 탐지한다. ring: 이상거래로 표시된 이체가 min_len~max_len개 이어져 출발 계좌로 돌아오는 순환. layering: 이상거래로 표시된 이체가 min_layers개 이상 연속되는 사슬. funnel: 서로 다른 계좌 min_inflow곳 이상에서 받아 1~max_outflow곳으로 내보내는 계좌(수집·중계 계좌). shortest_path: 두 계좌 사이의 최단 이체 사슬(방향은 어느 쪽이든). risk_score: 자신과 거래상대의 이상거래 비중, 순환 참여, 입출금 불균형으로 계산한 계좌 그래프 위험 점수(0~1).",
+   "description": "이체 그래프에서 AML 패턴을 탐지한다. ring: 이상거래로 표시된 이체가 min_len~max_len개 이어져 출발 계좌로 돌아오는 순환. layering: 이상거래로 표시된 이체가 min_layers개 이상 연속되는 사슬. HOFINET의 이체 그래프에는 순환이 없으므로 이 데이터셋에서 ring과 layering은 결과를 내지 않는다. funnel: 서로 다른 계좌 min_inflow곳 이상에서 받아 1~max_outflow곳으로 내보내는 계좌(수집 계좌). HOFINET에서 받기도 하고 보내기도 하는 계좌는 최소 4곳으로 내보내므로 max_outflow가 4보다 작으면 아무것도 걸리지 않는다. shortest_path: 두 계좌 사이의 최단 이체 사슬(방향은 어느 쪽이든). risk_score: 자신과 거래상대의 이상거래 비중, 순환 참여, 입출금 불균형으로 계산한 계좌 그래프 위험 점수(0~1).",
    "params": {
     "pattern_type": "탐지할 패턴 유형",
     "account_id": "대상 계좌 ID(risk_score에 필수)",
@@ -84,8 +84,8 @@
     "min_len": "최소 순환 길이(기본 3)",
     "max_len": "최대 순환 길이(기본 6)",
     "min_layers": "최소 레이어링 단계 수(기본 3)",
-    "min_inflow": "퍼널 최소 유입 계좌 수(기본 10)",
-    "max_outflow": "퍼널 최대 유출 계좌 수(기본 3)",
+    "min_inflow": "funnel: 퍼널이 자금을 받는 서로 다른 계좌의 최소 수(기본 5)",
+    "max_outflow": "funnel: 퍼널이 자금을 내보내는 서로 다른 계좌의 최대 수. 내보내는 거래상대가 최소 한 곳은 있어야 한다(기본 5)",
     "limit": "반환할 최대 결과 수(기본 20)"
    }
   },

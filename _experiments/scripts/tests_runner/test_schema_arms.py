@@ -120,6 +120,26 @@ def test_the_fraud_type_enum_dropped_the_unused_code(both):
         assert tool["function"]["parameters"]["properties"]["fraud_type"]["enum"] == [1, 2, 3, 4, 5, 7]
 
 
+def test_the_glossary_scope_rule_is_in_both_prompts(both):
+    en, kr = both
+    assert "get_aml_glossary" in en.system_prompt
+    assert "get_aml_glossary" in kr.system_prompt
+    assert "도구 없이" in kr.system_prompt
+
+
+def test_the_funnel_defaults_that_fire_on_hofinet_are_in_both_arms(both):
+    for arm in both:
+        props = next(t for t in arm.tools
+                     if t["function"]["name"] == "detect_aml_patterns")["function"]["parameters"]["properties"]
+        assert props["min_inflow"]["default"] == 5
+        assert props["max_outflow"]["default"] == 5
+    _en, kr = both
+    description = next(t for t in kr.tools
+                       if t["function"]["name"] == "detect_aml_patterns")["function"]["description"]
+    assert "순환이 없으므로" in description
+    assert "max_outflow가 4보다 작으면" in description
+
+
 def test_tools_en_is_retired():
     from _experiments.scripts import tools_en
     with pytest.raises(AttributeError, match="retired"):
