@@ -161,3 +161,79 @@ def test_the_real_multi_turn_gold_renders_a_query_for_every_sql_turn():
                     assert args.get("sql", "").lstrip().upper().startswith(("SELECT", "WITH")), \
                         (scenario["id"], turn["turn"])
     assert sql_turns > 0
+
+
+# ---------------------------------------------------------------------------
+# The round ceiling, and the language of the injected clarification reply
+# ---------------------------------------------------------------------------
+
+def test_a_turn_over_the_call_ceiling_is_recorded_as_one(server, multiturn_benchmark,
+                                                         tmp_path, fake_tools):
+    """L5-024: the single-turn loop reports the ceiling; this one truncated silently."""
+    from _experiments.scripts.runner.loop import MAX_CALLS_PER_ROUND
+
+    many = tool_call("get_statistics", {})
+    many["choices"][0]["message"]["tool_calls"] = [
+        {"id": f"c{i}", "type": "function",
+         "function": {"name": "get_statistics", "arguments": "{}"}}
+        for i in range(MAX_CALLS_PER_ROUND + 4)]
+    server.always(many)
+    recs = _run(server, multiturn_benchmark, tmp_path / "r", fake_tools,
+                extra=["--setting", "e2e"])
+
+    first = recs[0]
+    assert len(first["rounds"][0]["tool_calls"]) == MAX_CALLS_PER_ROUND
+    assert first["rounds"][0]["error"]["type"] == "call_limit"
+    assert str(MAX_CALLS_PER_ROUND + 4) in first["rounds"][0]["error"]["message"]
+    assert first["error"]["type"] == "call_limit"
+    assert first["stop_reason"] == "max_calls"
+
+
+def test_a_turn_within_the_ceiling_carries_no_call_limit_error(server, multiturn_benchmark,
+                                                               tmp_path, fake_tools):
+    server.always(tool_call("get_statistics", {}))
+    recs = _run(server, multiturn_benchmark, tmp_path / "r", fake_tools,
+                extra=["--setting", "e2e"])
+    assert recs[0]["rounds"][0]["error"] is None
+    assert recs[0]["error"] is None
+    assert recs[0]["stop_reason"] == "tool_call"
+
+
+def test_the_injected_clarification_reply_follows_the_language_of_the_arm():
+    """A Korean sentence used to be injected into every English-arm history."""
+    from _experiments.scripts.runner import loop
+
+    assert loop.clarification_reply("en") == loop.CLARIFICATION_REPLIES["en"]
+    assert loop.clarification_reply("kr") == loop.CLARIFICATION_REPLIES["kr"]
+    assert loop.clarification_reply(None) == loop.CLARIFICATION_REPLIES["kr"]
+
+    turn = {"turn": 3, "content": "which account?"}
+    english = loop._oracle_turns(turn, 3, loop.clarification_reply("en"))
+    assert english == [{"role": "assistant", "content": loop.CLARIFICATION_REPLIES["en"]}]
+    korean = loop._oracle_turns(turn, 3, loop.clarification_reply("kr"))
+    assert korean == [{"role": "assistant", "content": loop.CLARIFICATION_REPLIES["kr"]}]
+
+
+def test_an_english_run_never_puts_a_korean_reply_in_the_history(
+        server, multiturn_benchmark, tmp_path, fake_tools):
+    from _experiments.scripts.runner.loop import CLARIFICATION_REPLIES
+
+    server.always(text(""))
+    _run(server, multiturn_benchmark, tmp_path / "en", fake_tools,
+         extra=["--query-lang", "en", "--setting", "e2e"])
+    injected = [m["content"] for r in server.requests for m in r["messages"]
+                if m["role"] == "assistant" and not m.get("tool_calls")]
+    assert CLARIFICATION_REPLIES["en"] in injected
+    assert CLARIFICATION_REPLIES["kr"] not in injected
+
+
+def test_a_korean_run_keeps_the_korean_reply(server, multiturn_benchmark, tmp_path, fake_tools):
+    from _experiments.scripts.runner.loop import CLARIFICATION_REPLIES
+
+    server.always(text(""))
+    _run(server, multiturn_benchmark, tmp_path / "kr", fake_tools,
+         extra=["--query-lang", "kr", "--setting", "e2e"])
+    injected = [m["content"] for r in server.requests for m in r["messages"]
+                if m["role"] == "assistant" and not m.get("tool_calls")]
+    assert CLARIFICATION_REPLIES["kr"] in injected
+    assert CLARIFICATION_REPLIES["en"] not in injected
