@@ -25,8 +25,14 @@ COLS = ("date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, 
         "fund_type, media_type, amount, fraud_type")
 
 
+# A listing query has to be a total order, or two rows that tie on the ordering
+# columns come back in either order and the injected result is not reproducible.
+TIEBREAK = "sender_acc, receiver_acc, date, amount, time_slot, media_type, fund_type"
+
+
 def rows(where: str, order: str = "amount DESC, date, receiver_acc", limit: int = 20) -> str:
-    return f"SELECT {COLS} FROM hofinet WHERE {where} ORDER BY {order} LIMIT {limit}"
+    return (f"SELECT {COLS} FROM hofinet WHERE {where} "
+            f"ORDER BY {order}, {TIEBREAK} LIMIT {limit}")
 
 
 def predict_args(turn: int) -> dict:

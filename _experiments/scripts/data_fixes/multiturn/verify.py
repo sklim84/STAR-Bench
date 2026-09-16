@@ -15,6 +15,8 @@ What it asserts:
   names an argument the gold call of its own turn takes (L2-013).
 * No old crime name, no institution id outside the HOFINET ranges, and no
   account id that is not a HOFINET account (L2-006, L2-008, L3-018).
+* Every stored `tool_result` is still exactly what the platform returns for that
+  turn's gold call, so the injected history cannot drift from the tool layer (D03).
 * No tool result is large enough to be truncated before it reaches the model.
 """
 
@@ -151,6 +153,24 @@ def check_entities(kr: list[dict], en: list[dict], accounts, senders, receivers,
                             fail(f"{sc['id']} turn {turn['turn']}: invalid institution {cond['value']}")
 
 
+def check_results_are_live(kr: list[dict], fail):
+    """Re-execute every gold call and compare it with the stored result (D03)."""
+    from .build import call_arguments, tool_executor
+    from .spec import Turn
+
+    execute = tool_executor()
+    for sc in kr:
+        for turn in sc["turns"]:
+            for call in turn.get("tool_calls") or []:
+                spec = Turn(kr="", en="", tool=call["name"])
+                args = call.get("arguments") or {}
+                sql = call.get("reference_sql")
+                fresh = json.loads(execute(call["name"], call_arguments(spec, args, sql)))
+                if fresh != turn.get("tool_result"):
+                    fail(f"{sc['id']} turn {turn['turn']}: the stored result is no longer what "
+                         f"{call['name']} returns")
+
+
 def check_sizes(kr: list[dict], fail):
     for sc in kr:
         for turn in sc["turns"]:
@@ -215,6 +235,7 @@ def main() -> int:
     check_parity(kr, en, fail)
     check_gold(kr, schemas, fail)
     check_entities(kr, en, accounts, senders, receivers, fail)
+    check_results_are_live(kr, fail)
     check_sizes(kr, fail)
 
     report = distribution(kr)
