@@ -1,0 +1,1919 @@
+{
+ "generated_at": "2026-09-16T09:12:17+00:00",
+ "command": "python -m _experiments.scripts.preflight.run --all --report",
+ "ok": false,
+ "versions": {
+  "star_bench_commit": "8fd2d13a1c6e87044772f0277eb7e0e070c1cc35",
+  "star_bench_dirty": false,
+  "star_bench_root": "/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench",
+  "platform_commit": "807560badadcbe608837e2cba408329d01a75585",
+  "platform_dirty": false,
+  "platform_root": "/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench-Web",
+  "data_sha256": "88a393845b4f227501dda5cf131f20fda68df378a27b67cf4d586e9196aa1302",
+  "db_sha256": "a93ebc65ac33ab85032bbcd446cab230ce2549f2fda35643818bbc78114e0b0c",
+  "model_file_sha256": "96c9c16e632d84a754ad9a49bd5048d7c9271f398505e57f9ba84e2e36ee3204",
+  "platform_prompt_sha256": "ad90f2e7bc74dd032b427261a20d7fb78bc691c59c614c8904ef884d965348ca",
+  "platform_tools_sha256": "06bc60620eb3185c1f9b9253a80fe8326a5565a066c1a7370aaecbfb6c5ce7f8",
+  "streamlit_stubbed": true,
+  "library_versions": {
+   "duckdb": "1.5.5",
+   "pandas": "2.3.3",
+   "numpy": "2.3.5",
+   "pyarrow": "25.0.1",
+   "xgboost": "3.4.1",
+   "scikit-learn": "1.9.0",
+   "networkx": "3.6.1"
+  },
+  "python": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python",
+  "platform_python": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python"
+ },
+ "gates": [
+  {
+   "gate": "env",
+   "number": 1,
+   "title": "environment",
+   "ok": false,
+   "skipped": false,
+   "note": "",
+   "elapsed_s": 1.26,
+   "checks": [
+    {
+     "name": "evaluation dependency pins",
+     "ok": false,
+     "detail": "evaluation stack (requirements-eval.txt): 16 pinned package(s), 15 match\nconflict: scikit-learn: installed 1.9.0, pinned 1.9.1",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.env.check_env"
+    },
+    {
+     "name": "the scorer parses SQL with sqlglot",
+     "ok": true,
+     "detail": "sqlglot 30.18.0, IN and BETWEEN predicates read",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -c 'import json;from _experiments.scripts.scoring import sql;print(json.dumps({'\"'\"'version'\"'\"': sql.sqlglot_version(), '\"'\"'pin'\"'\"': sql.SQLGLOT_PIN, '\"'\"'parser'\"'\"': sql.extract_atoms(\"SELECT * FROM hofinet WHERE fraud_type IN (1, 2) AND amount BETWEEN 3 AND 4\")[1], '\"'\"'atoms'\"'\"': sql.extract_atoms(\"SELECT * FROM hofinet WHERE fraud_type IN (1, 2) AND amount BETWEEN 3 AND 4\")[0]}))'",
+     "data": {
+      "sqlglot_version": "30.18.0",
+      "parser": "sqlglot"
+     }
+    },
+    {
+     "name": "platform tool layer imports",
+     "ok": true,
+     "detail": "23 tools from /home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench-Web",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.preflight._probe",
+     "data": {
+      "tool_count": 23,
+      "platform_root": "/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench-Web"
+     }
+    },
+    {
+     "name": "platform commit is recorded and the tree is clean",
+     "ok": true,
+     "detail": "807560badadc, clean",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.preflight._probe",
+     "data": {
+      "platform_commit": "807560badadcbe608837e2cba408329d01a75585",
+      "platform_dirty": false
+     }
+    },
+    {
+     "name": "STAR-Bench commit is recorded and the tree is clean",
+     "ok": true,
+     "detail": "8fd2d13a1c6e, no tracked file modified; warning: 3 untracked file(s) inside the repository (_experiments/human_eval/A.json, _experiments/human_eval/str_eval_items.json, _experiments/human_eval/str_eval_mapping.json)",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.preflight._probe",
+     "data": {
+      "star_bench_commit": "8fd2d13a1c6e87044772f0277eb7e0e070c1cc35",
+      "star_bench_dirty": false,
+      "modified": [],
+      "report_files_modified": [],
+      "untracked_count": 3,
+      "untracked": [
+       "_experiments/human_eval/A.json",
+       "_experiments/human_eval/str_eval_items.json",
+       "_experiments/human_eval/str_eval_mapping.json"
+      ]
+     }
+    },
+    {
+     "name": "parquet, database, model and prompt hashes are readable",
+     "ok": true,
+     "detail": "parquet 88a393845b4f, db a93ebc65ac33, model 96c9c16e632d",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.preflight._probe",
+     "data": {
+      "data_sha256": "88a393845b4f227501dda5cf131f20fda68df378a27b67cf4d586e9196aa1302",
+      "db_sha256": "a93ebc65ac33ab85032bbcd446cab230ce2549f2fda35643818bbc78114e0b0c",
+      "model_file_sha256": "96c9c16e632d84a754ad9a49bd5048d7c9271f398505e57f9ba84e2e36ee3204",
+      "system_prompt_sha256": "ad90f2e7bc74dd032b427261a20d7fb78bc691c59c614c8904ef884d965348ca",
+      "tools_sha256": "06bc60620eb3185c1f9b9253a80fe8326a5565a066c1a7370aaecbfb6c5ce7f8"
+     }
+    },
+    {
+     "name": "hofinet columns are the released English ones",
+     "ok": true,
+     "detail": "12 columns, 4732130 rows",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.preflight._probe",
+     "data": {
+      "hofinet_columns": [
+       "date",
+       "time_slot",
+       "sender_bank",
+       "sender_acc",
+       "receiver_bank",
+       "receiver_acc",
+       "fund_type",
+       "media_type",
+       "amount",
+       "is_fraud",
+       "fraud_type",
+       "fraud_description"
+      ]
+     }
+    },
+    {
+     "name": "Streamlit cache is stubbed",
+     "ok": true,
+     "detail": "tool results are not memoised",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.preflight._probe",
+     "data": {
+      "streamlit_stubbed": true
+     }
+    },
+    {
+     "name": "model revisions are pinned",
+     "ok": false,
+     "detail": "26 of 28 configurations have no snapshot revision in _experiments/scripts/model_revisions.json; whoever downloads the model fills it and the runner refuses to serve without it: ax-light (skt/A.X-4.0-Light), ax-4.0 (skt/A.X-4.0), exaone-1.2b (LGAI-EXAONE/EXAONE-4.0-1.2B), exaone-32b (LGAI-EXAONE/EXAONE-4.0-32B), kanana-2-inst (kakaocorp/kanana-2-30b-a3b-instruct), kanana-2-think (kakaocorp/kanana-2-30b-a3b-thinking-2601), gpt-oss-20b-nt (openai/gpt-oss-20b), gpt-oss-20b-t (openai/gpt-oss-20b), gpt-oss-120b-nt (openai/gpt-oss-120b), gpt-oss-120b-t (openai/gpt-oss-120b), llama-3.2-3b (meta-llama/Llama-3.2-3B-Instruct), llama-3.3-70b (meta-llama/Llama-3.3-70B-Instruct), hermes-3-8b (NousResearch/Hermes-3-Llama-3.1-8B), ministral-3b (mistralai/Ministral-3-3B-Instruct-2512), mistral-small (mistralai/Mistral-Small-3.2-24B-Instruct-2506), phi-4-mini (microsoft/Phi-4-mini-instruct), qwen35-4b-nt (Qwen/Qwen3.5-4B), qwen35-4b-t (Qwen/Qwen3.5-4B), qwen35-27b-nt (Qwen/Qwen3.5-27B), qwen35-27b-t (Qwen/Qwen3.5-27B), qwen36-27b (Qwen/Qwen3.6-27B), qwen36-35b-a3b (Qwen/Qwen3.6-35B-A3B), xlam-3b (Salesforce/xLAM-2-3b-fc-r), xlam-70b (Salesforce/Llama-xLAM-2-70b-fc-r), gemma-4-e4b (google/gemma-4-E4B-it), gemma-4-31b (google/gemma-4-31B-it)",
+     "command": "cat _experiments/scripts/model_revisions.json",
+     "data": {
+      "unpinned": [
+       "ax-light (skt/A.X-4.0-Light)",
+       "ax-4.0 (skt/A.X-4.0)",
+       "exaone-1.2b (LGAI-EXAONE/EXAONE-4.0-1.2B)",
+       "exaone-32b (LGAI-EXAONE/EXAONE-4.0-32B)",
+       "kanana-2-inst (kakaocorp/kanana-2-30b-a3b-instruct)",
+       "kanana-2-think (kakaocorp/kanana-2-30b-a3b-thinking-2601)",
+       "gpt-oss-20b-nt (openai/gpt-oss-20b)",
+       "gpt-oss-20b-t (openai/gpt-oss-20b)",
+       "gpt-oss-120b-nt (openai/gpt-oss-120b)",
+       "gpt-oss-120b-t (openai/gpt-oss-120b)",
+       "llama-3.2-3b (meta-llama/Llama-3.2-3B-Instruct)",
+       "llama-3.3-70b (meta-llama/Llama-3.3-70B-Instruct)",
+       "hermes-3-8b (NousResearch/Hermes-3-Llama-3.1-8B)",
+       "ministral-3b (mistralai/Ministral-3-3B-Instruct-2512)",
+       "mistral-small (mistralai/Mistral-Small-3.2-24B-Instruct-2506)",
+       "phi-4-mini (microsoft/Phi-4-mini-instruct)",
+       "qwen35-4b-nt (Qwen/Qwen3.5-4B)",
+       "qwen35-4b-t (Qwen/Qwen3.5-4B)",
+       "qwen35-27b-nt (Qwen/Qwen3.5-27B)",
+       "qwen35-27b-t (Qwen/Qwen3.5-27B)",
+       "qwen36-27b (Qwen/Qwen3.6-27B)",
+       "qwen36-35b-a3b (Qwen/Qwen3.6-35B-A3B)",
+       "xlam-3b (Salesforce/xLAM-2-3b-fc-r)",
+       "xlam-70b (Salesforce/Llama-xLAM-2-70b-fc-r)",
+       "gemma-4-e4b (google/gemma-4-E4B-it)",
+       "gemma-4-31b (google/gemma-4-31B-it)"
+      ],
+      "requested": [
+       "ax-light",
+       "ax-4.0",
+       "exaone-1.2b",
+       "exaone-32b",
+       "kanana-2-inst",
+       "kanana-2-think",
+       "dragon-llama-fin",
+       "dragon-qwen-fin",
+       "gpt-oss-20b-nt",
+       "gpt-oss-20b-t",
+       "gpt-oss-120b-nt",
+       "gpt-oss-120b-t",
+       "llama-3.2-3b",
+       "llama-3.3-70b",
+       "hermes-3-8b",
+       "ministral-3b",
+       "mistral-small",
+       "phi-4-mini",
+       "qwen35-4b-nt",
+       "qwen35-4b-t",
+       "qwen35-27b-nt",
+       "qwen35-27b-t",
+       "qwen36-27b",
+       "qwen36-35b-a3b",
+       "xlam-3b",
+       "xlam-70b",
+       "gemma-4-e4b",
+       "gemma-4-31b"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "gate": "tests",
+   "number": 2,
+   "title": "code tests",
+   "ok": true,
+   "skipped": false,
+   "note": "",
+   "elapsed_s": 76.4,
+   "checks": [
+    {
+     "name": "platform test suite",
+     "ok": true,
+     "detail": "496 passed, 14 skipped, 2 deselected in 21.05s",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m pytest -rs -q"
+    },
+    {
+     "name": "scoring test suite",
+     "ok": true,
+     "detail": "178 passed in 1.15s",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m pytest -rs -q _experiments/scripts/tests"
+    },
+    {
+     "name": "runner test suite",
+     "ok": true,
+     "detail": "145 passed in 43.32s",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m pytest -rs -q _experiments/scripts/tests_runner"
+    },
+    {
+     "name": "pre-flight test suite",
+     "ok": true,
+     "detail": "70 passed in 6.99s",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m pytest -rs -q _experiments/scripts/tests_preflight"
+    },
+    {
+     "name": "Korean arm is generated from the platform schema",
+     "ok": true,
+     "detail": "/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench/_experiments/scripts/tools_kr.py is up to date (23 tools)",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.gen_tools_kr --check"
+    }
+   ]
+  },
+  {
+   "gate": "data",
+   "number": 3,
+   "title": "benchmark data",
+   "ok": true,
+   "skipped": false,
+   "note": "",
+   "elapsed_s": 11.03,
+   "checks": [
+    {
+     "name": "single-turn linter",
+     "ok": true,
+     "detail": "1258 cases, 0 violations",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.data_fixes.lint_benchmarks"
+    },
+    {
+     "name": "multi-turn rebuild verification",
+     "ok": true,
+     "detail": "no problems",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.data_fixes.multiturn.verify"
+    },
+    {
+     "name": "2026-09 expansion cases",
+     "ok": true,
+     "detail": "143 new cases, 151 gold calls executed, 0 problems",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.data_fixes.new_cases.verify --gate --out /tmp/tmpey22evrc.json"
+    },
+    {
+     "name": "Korean and English carry the same cases and the same gold",
+     "ok": true,
+     "detail": "same ids in the same order, same gold, same difficulty, same note",
+     "data": {
+      "problems": []
+     }
+    },
+    {
+     "name": "case counts are the ones the write-up reports",
+     "ok": true,
+     "detail": "benchmarks 1258 cases, benchmarks_en 1258 cases, benchmarks_multiturn 50 cases/219 turns, benchmarks_multiturn_en 50 cases/219 turns",
+     "command": "cat _experiments/scripts/preflight/expected_counts.json",
+     "data": {
+      "benchmarks": {
+       "cases": 1258
+      },
+      "benchmarks_en": {
+       "cases": 1258
+      },
+      "benchmarks_multiturn": {
+       "cases": 50,
+       "turns": 219
+      },
+      "benchmarks_multiturn_en": {
+       "cases": 50,
+       "turns": 219
+      }
+     }
+    },
+    {
+     "name": "no duplicate question in benchmarks",
+     "ok": true,
+     "detail": "1258 distinct questions",
+     "data": {
+      "duplicates": {}
+     }
+    },
+    {
+     "name": "no duplicate question in benchmarks_en",
+     "ok": true,
+     "detail": "1258 distinct questions",
+     "data": {
+      "duplicates": {}
+     }
+    },
+    {
+     "name": "no duplicate scenario in benchmarks_multiturn",
+     "ok": true,
+     "detail": "50 distinct scenarios",
+     "data": {
+      "duplicates": []
+     }
+    },
+    {
+     "name": "no duplicate scenario in benchmarks_multiturn_en",
+     "ok": true,
+     "detail": "50 distinct scenarios",
+     "data": {
+      "duplicates": []
+     }
+    }
+   ]
+  },
+  {
+   "gate": "gold",
+   "number": 4,
+   "title": "gold answers",
+   "ok": true,
+   "skipped": false,
+   "note": "",
+   "elapsed_s": 46.63,
+   "checks": [
+    {
+     "name": "gold self-test on benchmarks",
+     "ok": true,
+     "detail": "single-turn gold self-test: 1258/1258 perfect",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks --out /tmp/tmppoteh3p9.json",
+     "data": {
+      "defects": []
+     }
+    },
+    {
+     "name": "gold self-test on benchmarks_en",
+     "ok": true,
+     "detail": "single-turn gold self-test: 1258/1258 perfect",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks_en --out /tmp/tmpcfs8yska.json",
+     "data": {
+      "defects": []
+     }
+    },
+    {
+     "name": "gold self-test on benchmarks_multiturn",
+     "ok": true,
+     "detail": "multi-turn gold self-test (oracle): 50/50 perfect; multi-turn gold self-test (e2e): 50/50 perfect",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks_multiturn --out /tmp/tmp64hvuhhs.json",
+     "data": {
+      "defects": []
+     }
+    },
+    {
+     "name": "gold self-test on benchmarks_multiturn_en",
+     "ok": true,
+     "detail": "multi-turn gold self-test (oracle): 50/50 perfect; multi-turn gold self-test (e2e): 50/50 perfect",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks_multiturn_en --out /tmp/tmpw9i67gvb.json",
+     "data": {
+      "defects": []
+     }
+    },
+    {
+     "name": "a fresh gold self-test matches the tracked summary",
+     "ok": true,
+     "detail": "4 directory(ies) current: benchmarks 1258/1258, benchmarks_en 1258/1258, benchmarks_multiturn 50/50, benchmarks_multiturn_en 50/50",
+     "command": "python -m _experiments.scripts.preflight.run --only gold --update-gold-expected",
+     "data": {
+      "problems": []
+     }
+    },
+    {
+     "name": "gold calls execute on benchmarks",
+     "ok": true,
+     "detail": "1249 calls: ok 1221, empty 28 (allowed), error 0, skipped 0 (allowed)",
+     "command": "STAR_BENCH_GOLD_DIRS=/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench/benchmarks:/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench/benchmarks_en:/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench/benchmarks_multiturn:/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench/benchmarks_multiturn_en /tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.preflight._gold_driver   # same functions as: python scripts/gold_calls.py ../STAR-Bench/benchmarks ...",
+     "data": {
+      "totals": {
+       "ok": 1221,
+       "empty": 28,
+       "error": 0,
+       "skipped": 0
+      },
+      "per_tool": {
+       "analyze_channel_risk": {
+        "ok": 58,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "analyze_cross_institution_flow": {
+        "ok": 56,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "analyze_network": {
+        "ok": 63,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "compare_periods": {
+        "ok": 58,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_aml_patterns": {
+        "ok": 35,
+        "empty": 28,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_ctr_candidates": {
+        "ok": 64,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_dormant_reactivation": {
+        "ok": 58,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_monitoring_alerts": {
+        "ok": 63,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_smurfing_network": {
+        "ok": 59,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_account_profile": {
+        "ok": 57,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_aml_glossary": {
+        "ok": 42,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_fraud_type_summary": {
+        "ok": 60,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_institution_report": {
+        "ok": 55,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_receiving_account_profile": {
+        "ok": 54,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_statistics": {
+        "ok": 70,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_trend_analysis": {
+        "ok": 58,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "lookup_fiu_reference_types": {
+        "ok": 31,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "predict_fraud": {
+        "ok": 56,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "query_transactions": {
+        "ok": 77,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "rank_risky_transactions": {
+        "ok": 59,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "score_account_risk": {
+        "ok": 58,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "validate_str_fields": {
+        "ok": 30,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "gold calls execute on benchmarks_en",
+     "ok": true,
+     "detail": "1249 calls: ok 1221, empty 28 (allowed), error 0, skipped 0 (allowed)",
+     "command": "STAR_BENCH_GOLD_DIRS=/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench/benchmarks:/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench/benchmarks_en:/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench/benchmarks_multiturn:/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench/benchmarks_multiturn_en /tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.preflight._gold_driver   # same functions as: python scripts/gold_calls.py ../STAR-Bench/benchmarks ...",
+     "data": {
+      "totals": {
+       "ok": 1221,
+       "empty": 28,
+       "error": 0,
+       "skipped": 0
+      },
+      "per_tool": {
+       "analyze_channel_risk": {
+        "ok": 58,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "analyze_cross_institution_flow": {
+        "ok": 56,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "analyze_network": {
+        "ok": 63,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "compare_periods": {
+        "ok": 58,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_aml_patterns": {
+        "ok": 35,
+        "empty": 28,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_ctr_candidates": {
+        "ok": 64,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_dormant_reactivation": {
+        "ok": 58,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_monitoring_alerts": {
+        "ok": 63,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_smurfing_network": {
+        "ok": 59,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_account_profile": {
+        "ok": 57,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_aml_glossary": {
+        "ok": 42,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_fraud_type_summary": {
+        "ok": 60,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_institution_report": {
+        "ok": 55,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_receiving_account_profile": {
+        "ok": 54,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_statistics": {
+        "ok": 70,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_trend_analysis": {
+        "ok": 58,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "lookup_fiu_reference_types": {
+        "ok": 31,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "predict_fraud": {
+        "ok": 56,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "query_transactions": {
+        "ok": 77,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "rank_risky_transactions": {
+        "ok": 59,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "score_account_risk": {
+        "ok": 58,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "validate_str_fields": {
+        "ok": 30,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "gold calls execute on benchmarks_multiturn",
+     "ok": true,
+     "detail": "200 calls: ok 199, empty 1 (allowed), error 0, skipped 0 (allowed)",
+     "command": "STAR_BENCH_GOLD_DIRS=/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench/benchmarks:/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench/benchmarks_en:/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench/benchmarks_multiturn:/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench/benchmarks_multiturn_en /tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.preflight._gold_driver   # same functions as: python scripts/gold_calls.py ../STAR-Bench/benchmarks ...",
+     "data": {
+      "totals": {
+       "ok": 199,
+       "empty": 1,
+       "error": 0,
+       "skipped": 0
+      },
+      "per_tool": {
+       "analyze_channel_risk": {
+        "ok": 3,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "analyze_cross_institution_flow": {
+        "ok": 2,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "analyze_network": {
+        "ok": 8,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "compare_periods": {
+        "ok": 4,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_aml_patterns": {
+        "ok": 4,
+        "empty": 1,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_ctr_candidates": {
+        "ok": 7,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_dormant_reactivation": {
+        "ok": 2,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_monitoring_alerts": {
+        "ok": 6,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_smurfing_network": {
+        "ok": 6,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "generate_str": {
+        "ok": 45,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_account_profile": {
+        "ok": 10,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_aml_glossary": {
+        "ok": 2,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_fraud_type_summary": {
+        "ok": 5,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_institution_report": {
+        "ok": 8,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_receiving_account_profile": {
+        "ok": 5,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_statistics": {
+        "ok": 4,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_trend_analysis": {
+        "ok": 2,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "lookup_fiu_reference_types": {
+        "ok": 6,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "predict_fraud": {
+        "ok": 17,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "query_transactions": {
+        "ok": 38,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "rank_risky_transactions": {
+        "ok": 1,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "score_account_risk": {
+        "ok": 12,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "validate_str_fields": {
+        "ok": 2,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "gold calls execute on benchmarks_multiturn_en",
+     "ok": true,
+     "detail": "200 calls: ok 199, empty 1 (allowed), error 0, skipped 0 (allowed)",
+     "command": "STAR_BENCH_GOLD_DIRS=/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench/benchmarks:/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench/benchmarks_en:/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench/benchmarks_multiturn:/home/recordame/workspace/seonkyu/AML-Assistant/STAR-Bench/benchmarks_multiturn_en /tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.preflight._gold_driver   # same functions as: python scripts/gold_calls.py ../STAR-Bench/benchmarks ...",
+     "data": {
+      "totals": {
+       "ok": 199,
+       "empty": 1,
+       "error": 0,
+       "skipped": 0
+      },
+      "per_tool": {
+       "analyze_channel_risk": {
+        "ok": 3,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "analyze_cross_institution_flow": {
+        "ok": 2,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "analyze_network": {
+        "ok": 8,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "compare_periods": {
+        "ok": 4,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_aml_patterns": {
+        "ok": 4,
+        "empty": 1,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_ctr_candidates": {
+        "ok": 7,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_dormant_reactivation": {
+        "ok": 2,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_monitoring_alerts": {
+        "ok": 6,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "detect_smurfing_network": {
+        "ok": 6,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "generate_str": {
+        "ok": 45,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_account_profile": {
+        "ok": 10,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_aml_glossary": {
+        "ok": 2,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_fraud_type_summary": {
+        "ok": 5,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_institution_report": {
+        "ok": 8,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_receiving_account_profile": {
+        "ok": 5,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_statistics": {
+        "ok": 4,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "get_trend_analysis": {
+        "ok": 2,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "lookup_fiu_reference_types": {
+        "ok": 6,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "predict_fraud": {
+        "ok": 17,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "query_transactions": {
+        "ok": 38,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "rank_risky_transactions": {
+        "ok": 1,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "score_account_risk": {
+        "ok": 12,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       },
+       "validate_str_fields": {
+        "ok": 2,
+        "empty": 0,
+        "error": 0,
+        "skipped": 0
+       }
+      }
+     }
+    },
+    {
+     "name": "every expected empty is on the allow-list",
+     "ok": true,
+     "detail": "29 allow-list entries, all still empty",
+     "command": "cat _experiments/scripts/preflight/allow_empty.json",
+     "data": {
+      "stale": [],
+      "unexpected": []
+     }
+    }
+   ]
+  },
+  {
+   "gate": "serving",
+   "number": 5,
+   "title": "serving readiness",
+   "ok": true,
+   "skipped": false,
+   "note": "",
+   "elapsed_s": 0.06,
+   "checks": [
+    {
+     "name": "no configuration is missing from the run plan",
+     "ok": true,
+     "detail": "28 configurations, 3 columns (single, oracle, e2e)",
+     "command": "python -m _experiments.scripts.runner.plan --format tsv",
+     "data": {
+      "configurations": [
+       "ax-light",
+       "ax-4.0",
+       "exaone-1.2b",
+       "exaone-32b",
+       "kanana-2-inst",
+       "kanana-2-think",
+       "dragon-llama-fin",
+       "dragon-qwen-fin",
+       "gpt-oss-20b-nt",
+       "gpt-oss-20b-t",
+       "gpt-oss-120b-nt",
+       "gpt-oss-120b-t",
+       "llama-3.2-3b",
+       "llama-3.3-70b",
+       "hermes-3-8b",
+       "ministral-3b",
+       "mistral-small",
+       "phi-4-mini",
+       "qwen35-4b-nt",
+       "qwen35-4b-t",
+       "qwen35-27b-nt",
+       "qwen35-27b-t",
+       "qwen36-27b",
+       "qwen36-35b-a3b",
+       "xlam-3b",
+       "xlam-70b",
+       "gemma-4-e4b",
+       "gemma-4-31b"
+      ],
+      "columns": [
+       "single",
+       "oracle",
+       "e2e"
+      ]
+     }
+    },
+    {
+     "name": "the concurrency deviation is declared and measured",
+     "ok": true,
+     "detail": "concurrency 8 (D07 says 1), measured by qwen35-4b-nt single run 2x at 8 and 1x at 1",
+     "command": "bash _experiments/scripts/run_master.sh --agreement-only --host-gpus 2 --tools-lang kr --out-root <fresh dir>",
+     "data": {
+      "registry_default": 8,
+      "decision_value": 1,
+      "agreement_run": {
+       "config_id": "qwen35-4b-nt",
+       "column": "single",
+       "tools_lang": "kr",
+       "query_lang": "kr",
+       "reports": "share of cases with the same tool-call sequence, and the difference in h and a, between the two batched runs and between batched and serial",
+       "runs": [
+        {
+         "label": "batched_a",
+         "concurrency": 8
+        },
+        {
+         "label": "batched_b",
+         "concurrency": 8
+        },
+        {
+         "label": "serial",
+         "concurrency": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "every registry entry is complete and distinct",
+     "ok": true,
+     "detail": "28 configurations, each with a parser, one labelled mode, >= 32768 context and its own model/mode pair",
+     "data": {
+      "problems": []
+     }
+    },
+    {
+     "name": "repaired chat templates match their published hashes",
+     "ok": true,
+     "detail": "3 served template(s) and 3 published hash(es) agree",
+     "command": "cat _experiments/scripts/chat_templates/hashes.json",
+     "data": {
+      "problems": [],
+      "served": [
+       [
+        "kanana-2-inst",
+        "lmalign_v1.jinja",
+        "8817945446b3e1b55c4a9ae66ab13af1ca0d7f12128314d03f8d25bd6328fedf"
+       ],
+       [
+        "dragon-llama-fin",
+        "llama3_tools.jinja",
+        "6a09afa2de3d12755f73cabdeafe8ce244fc2699c7d78aad84b401a04aa63a2e"
+       ],
+       [
+        "llama-3.2-3b",
+        "llama3_tools.jinja",
+        "6a09afa2de3d12755f73cabdeafe8ce244fc2699c7d78aad84b401a04aa63a2e"
+       ],
+       [
+        "llama-3.3-70b",
+        "llama3_tools.jinja",
+        "6a09afa2de3d12755f73cabdeafe8ce244fc2699c7d78aad84b401a04aa63a2e"
+       ],
+       [
+        "phi-4-mini",
+        "phi4_mini_tools.jinja",
+        "802cb284daab595258e00f2f82cf9c4cfd9e01029ef166b863db24869692af86"
+       ]
+      ]
+     }
+    },
+    {
+     "name": "every configuration fits a host the rerun has",
+     "ok": true,
+     "detail": "two-card 48 GB: 23/28 configurations; four-card 48 GB: 28/28 configurations; on-demand 80 GB: 28/28 configurations",
+     "command": "python -m _experiments.scripts.runner.plan --host-gpus 4 --host-profile 48g",
+     "data": {
+      "placement": {
+       "ax-light": [
+        "two-card 48 GB (tp=1)",
+        "four-card 48 GB (tp=1)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "ax-4.0": [
+        "four-card 48 GB (tp=4)",
+        "on-demand 80 GB (tp=2)"
+       ],
+       "exaone-1.2b": [
+        "two-card 48 GB (tp=1)",
+        "four-card 48 GB (tp=1)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "exaone-32b": [
+        "two-card 48 GB (tp=2)",
+        "four-card 48 GB (tp=2)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "kanana-2-inst": [
+        "two-card 48 GB (tp=2)",
+        "four-card 48 GB (tp=2)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "kanana-2-think": [
+        "two-card 48 GB (tp=2)",
+        "four-card 48 GB (tp=2)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "dragon-llama-fin": [
+        "two-card 48 GB (tp=1)",
+        "four-card 48 GB (tp=1)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "dragon-qwen-fin": [
+        "two-card 48 GB (tp=1)",
+        "four-card 48 GB (tp=1)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "gpt-oss-20b-nt": [
+        "two-card 48 GB (tp=1)",
+        "four-card 48 GB (tp=1)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "gpt-oss-20b-t": [
+        "two-card 48 GB (tp=1)",
+        "four-card 48 GB (tp=1)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "gpt-oss-120b-nt": [
+        "four-card 48 GB (tp=4)",
+        "on-demand 80 GB (tp=2)"
+       ],
+       "gpt-oss-120b-t": [
+        "four-card 48 GB (tp=4)",
+        "on-demand 80 GB (tp=2)"
+       ],
+       "llama-3.2-3b": [
+        "two-card 48 GB (tp=1)",
+        "four-card 48 GB (tp=1)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "llama-3.3-70b": [
+        "four-card 48 GB (tp=4)",
+        "on-demand 80 GB (tp=2)"
+       ],
+       "hermes-3-8b": [
+        "two-card 48 GB (tp=1)",
+        "four-card 48 GB (tp=1)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "ministral-3b": [
+        "two-card 48 GB (tp=1)",
+        "four-card 48 GB (tp=1)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "mistral-small": [
+        "two-card 48 GB (tp=2)",
+        "four-card 48 GB (tp=2)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "phi-4-mini": [
+        "two-card 48 GB (tp=1)",
+        "four-card 48 GB (tp=1)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "qwen35-4b-nt": [
+        "two-card 48 GB (tp=1)",
+        "four-card 48 GB (tp=1)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "qwen35-4b-t": [
+        "two-card 48 GB (tp=1)",
+        "four-card 48 GB (tp=1)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "qwen35-27b-nt": [
+        "two-card 48 GB (tp=2)",
+        "four-card 48 GB (tp=2)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "qwen35-27b-t": [
+        "two-card 48 GB (tp=2)",
+        "four-card 48 GB (tp=2)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "qwen36-27b": [
+        "two-card 48 GB (tp=2)",
+        "four-card 48 GB (tp=2)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "qwen36-35b-a3b": [
+        "two-card 48 GB (tp=2)",
+        "four-card 48 GB (tp=2)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "xlam-3b": [
+        "two-card 48 GB (tp=1)",
+        "four-card 48 GB (tp=1)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "xlam-70b": [
+        "four-card 48 GB (tp=4)",
+        "on-demand 80 GB (tp=2)"
+       ],
+       "gemma-4-e4b": [
+        "two-card 48 GB (tp=1)",
+        "four-card 48 GB (tp=1)",
+        "on-demand 80 GB (tp=1)"
+       ],
+       "gemma-4-31b": [
+        "two-card 48 GB (tp=2)",
+        "four-card 48 GB (tp=2)",
+        "on-demand 80 GB (tp=1)"
+       ]
+      }
+     }
+    },
+    {
+     "name": "the Korean prompt fits every configuration",
+     "ok": true,
+     "detail": "tightest is kanana-2-think single with 6885 tokens of headroom, measured with byte estimate (tokenizer unavailable offline)",
+     "command": "/tmp/claude-1001/-home-recordame-workspace-seonkyu-AML-Assistant/bcc3dd42-ce7d-49f0-b796-7888ef67b761/scratchpad/plotenv/bin/python -m _experiments.scripts.preflight._budget_driver",
+     "data": {
+      "rows": [
+       {
+        "config_id": "ax-light",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "ax-light",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 8192,
+        "headroom": 47845,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "ax-4.0",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "ax-4.0",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 8192,
+        "headroom": 47845,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "exaone-1.2b",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "exaone-1.2b",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 8192,
+        "headroom": 47845,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "exaone-32b",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "exaone-32b",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 8192,
+        "headroom": 47845,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "kanana-2-inst",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "kanana-2-inst",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 8192,
+        "headroom": 47845,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "kanana-2-think",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 16384,
+        "headroom": 6885,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "kanana-2-think",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 16384,
+        "headroom": 39653,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "dragon-llama-fin",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "dragon-llama-fin",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "dragon-qwen-fin",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 16384,
+        "headroom": 6885,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "dragon-qwen-fin",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 16384,
+        "headroom": 39653,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "gpt-oss-20b-nt",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 16384,
+        "headroom": 6885,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "gpt-oss-20b-nt",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 16384,
+        "headroom": 39653,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "gpt-oss-20b-t",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 16384,
+        "headroom": 6885,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "gpt-oss-20b-t",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 16384,
+        "headroom": 39653,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "gpt-oss-120b-nt",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 16384,
+        "headroom": 6885,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "gpt-oss-120b-nt",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 16384,
+        "headroom": 39653,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "gpt-oss-120b-t",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 16384,
+        "headroom": 6885,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "gpt-oss-120b-t",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 16384,
+        "headroom": 39653,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "llama-3.2-3b",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "llama-3.2-3b",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 8192,
+        "headroom": 47845,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "llama-3.3-70b",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "llama-3.3-70b",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 8192,
+        "headroom": 47845,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "hermes-3-8b",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "hermes-3-8b",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "ministral-3b",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "ministral-3b",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 8192,
+        "headroom": 47845,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "mistral-small",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "mistral-small",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 8192,
+        "headroom": 47845,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "phi-4-mini",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "phi-4-mini",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 8192,
+        "headroom": 47845,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "qwen35-4b-nt",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 16384,
+        "headroom": 6885,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "qwen35-4b-nt",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 16384,
+        "headroom": 39653,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "qwen35-4b-t",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 16384,
+        "headroom": 6885,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "qwen35-4b-t",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 16384,
+        "headroom": 39653,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "qwen35-27b-nt",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 16384,
+        "headroom": 6885,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "qwen35-27b-nt",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 16384,
+        "headroom": 39653,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "qwen35-27b-t",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 16384,
+        "headroom": 6885,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "qwen35-27b-t",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 16384,
+        "headroom": 39653,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "qwen36-27b",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 16384,
+        "headroom": 6885,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "qwen36-27b",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 16384,
+        "headroom": 39653,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "qwen36-35b-a3b",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 16384,
+        "headroom": 6885,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "qwen36-35b-a3b",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 16384,
+        "headroom": 39653,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "xlam-3b",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "xlam-3b",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "xlam-70b",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "xlam-70b",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "gemma-4-e4b",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "gemma-4-e4b",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 8192,
+        "headroom": 47845,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "gemma-4-31b",
+        "setting": "single",
+        "prompt_tokens": 9499,
+        "max_model_len": 32768,
+        "max_tokens": 8192,
+        "headroom": 15077,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       },
+       {
+        "config_id": "gemma-4-31b",
+        "setting": "e2e",
+        "prompt_tokens": 9499,
+        "max_model_len": 65536,
+        "max_tokens": 8192,
+        "headroom": 47845,
+        "tokenizer": "byte estimate (tokenizer unavailable offline)",
+        "longest_question_id": "st_strv_005",
+        "ok": true
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "gate": "canary",
+   "number": 6,
+   "title": "canary run",
+   "ok": true,
+   "skipped": true,
+   "note": "needs a served model; run the `canary` subcommand",
+   "elapsed_s": 0.0,
+   "checks": []
+  }
+ ]
+}
