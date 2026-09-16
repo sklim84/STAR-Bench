@@ -65,7 +65,9 @@ def _add_shared(parser: argparse.ArgumentParser) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
-    if not argv or argv[0].startswith("-"):
+    # `gates` is the default subcommand, so `--all` works without naming it.
+    if argv[:1] != ["canary"] and argv[:1] != ["gates"] and argv[:1] != ["-h"] \
+            and argv[:1] != ["--help"]:
         argv = ["gates", *argv]
 
     ap = argparse.ArgumentParser(prog="preflight", description=__doc__,
