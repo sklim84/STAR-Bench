@@ -16,6 +16,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
@@ -84,11 +85,34 @@ def working_tree_status(root: Path | str | None = None) -> dict:
         return {"readable": False, "modified": [], "untracked": []}
     modified, untracked = [], []
     for line in out.splitlines():
-        if not line.strip():
+        entry = _status_entry(line)
+        if entry is None:
             continue
-        code, _, name = line[:2], line[2:3], line[3:]
-        (untracked if code == "??" else modified).append(name.strip())
+        code, name = entry
+        (untracked if code == "??" else modified).append(name)
     return {"readable": True, "modified": sorted(modified), "untracked": sorted(untracked)}
+
+
+_STATUS_LINE = re.compile(r"^\s*(\?\?|[A-Z!][A-Z ]?|[A-Z])\s+(.+)$")
+
+
+def _status_entry(line: str) -> tuple[str, str] | None:
+    """(status, path) from one `git status --porcelain` line.
+
+    The status columns are not sliced by position: the command's output is read
+    stripped, so the first line of a tree whose first entry is an unstaged
+    change has already lost its leading blank and a fixed slice ate the first
+    character of the path.
+    """
+    match = _STATUS_LINE.match(line.rstrip())
+    if not match:
+        return None
+    code, name = match.group(1).strip() or "?", match.group(2).strip()
+    if " -> " in name:                      # a rename: the new path is the one that exists
+        name = name.split(" -> ", 1)[1]
+    if name.startswith('"') and name.endswith('"'):
+        name = name[1:-1]                   # git quotes a path with unusual characters
+    return code, name
 
 
 def benchmark_digest(cases_dir: Path | str | None) -> dict:

@@ -118,3 +118,34 @@ def test_the_benchmark_hash_moves_when_a_case_file_changes(tmp_path):
     second = provenance.benchmark_digest(tmp_path)
     assert first["benchmark_sha256"] != second["benchmark_sha256"]
     assert [f["name"] for f in provenance.benchmark_file_hashes(tmp_path)] == ["cases_demo.json"]
+
+
+# ---------------------------------------------------------------------------
+# What the working tree holds, read for gate 1 (V-10)
+# ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize("line,expected", [
+    (" M _experiments/scripts/preflight/reports/preflight_report.json",
+     ("M", "_experiments/scripts/preflight/reports/preflight_report.json")),
+    # git's output is read stripped, so the first line of a tree whose first
+    # entry is an unstaged change arrives without its leading blank. A fixed
+    # slice ate the leading underscore of the path and the gate reported a file
+    # that does not exist.
+    ("M _experiments/scripts/preflight/reports/preflight_report.json",
+     ("M", "_experiments/scripts/preflight/reports/preflight_report.json")),
+    ("?? _experiments/human_eval/A.json", ("??", "_experiments/human_eval/A.json")),
+    ("A  _experiments/scripts/preflight/gold_selftest_expected.json",
+     ("A", "_experiments/scripts/preflight/gold_selftest_expected.json")),
+    ("RM _experiments/scripts/run_rerun_all.sh -> _experiments/scripts/archive/run_rerun_all.sh",
+     ("RM", "_experiments/scripts/archive/run_rerun_all.sh")),
+    ("", None),
+])
+def test_a_git_status_line_is_read_whole(line, expected):
+    assert provenance._status_entry(line) == expected
+
+
+def test_the_working_tree_status_separates_tracked_changes_from_untracked_files():
+    status = provenance.working_tree_status()
+    assert status["readable"] is True
+    assert all(not name.startswith("?") for name in status["modified"])
+    assert all(name == name.strip() and name for name in status["modified"] + status["untracked"])
