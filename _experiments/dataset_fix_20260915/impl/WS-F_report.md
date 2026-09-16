@@ -17,7 +17,8 @@ Nothing else was touched: where a gate found a problem it is reported below, not
 | `b4965ed` | the `run` command, the written report, 41 tests |
 | `bccb6a6` | package README, the repository README section, two reporting fixes |
 | `b81ddfe` | top-level `--help` lists both subcommands |
-| `764eb35` | the canary record count in the threshold sources, this report and the generated `impl/preflight_report.md` |
+| `7e3f67d` | the canary record count in the threshold sources |
+| (last) | this report and the generated `impl/preflight_report.md` |
 
 ## The command
 
@@ -41,8 +42,9 @@ minutes and touches no GPU.
 
 ## Result of the run
 
-`python -m _experiments.scripts.preflight.run --all --report`, 2026-09-16, on
-`STAR-Bench@764eb35` and `STAR-Bench-Web@1309117`:
+`python -m _experiments.scripts.preflight.run --all --report`, 2026-09-16, against
+`STAR-Bench-Web@1309117`. The STAR-Bench commit of the run and every hash it read are in
+the generated `impl/preflight_report.md`:
 
 ```
 [FAIL] gate 1 environment            7/8 checks     2.8s
@@ -55,7 +57,7 @@ minutes and touches no GPU.
 FAILED: gate 1 environment
 ```
 
-Two minutes and eight seconds, 36 checks, one failure. Provenance of that run:
+About two minutes, 36 checks, one failure. Provenance of that run:
 platform `1309117`, parquet `88a393845b4f`, database `a93ebc65ac33`, model
 `96c9c16e632d`, platform prompt `ad90f2e7bc74`, platform tools `06bc60620eb3`,
 `streamlit_stubbed` true, both working trees clean.
