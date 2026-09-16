@@ -708,13 +708,17 @@
   },
   {
     "id": "st_ctr_041",
-    "question": "We need to filter out transactions that pose a risk of not being reported to the regulatory authority in advance. Please check for both high-value transactions and split transactions.",
+    "question": "We need to filter out transactions that risk going unreported to the regulator. Please check for suspected structuring, split below the reporting threshold.",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
         "detect_ctr_candidates"
       ],
-      "param_checks": {}
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
     },
     "difficulty": "hard"
   },

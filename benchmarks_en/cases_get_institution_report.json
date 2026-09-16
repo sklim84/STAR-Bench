@@ -749,11 +749,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "sender_bank",
-            "is_fraud"
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT sender_bank, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY sender_bank ORDER BY fraud_count DESC LIMIT 10"
         }
       }
     },

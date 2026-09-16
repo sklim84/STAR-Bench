@@ -14,10 +14,27 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "134"
+          "sql_conditions": [
+            {
+              "column": "sender_bank",
+              "op": "=",
+              "value": 134
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        },
+        "analyze_network": {
+          "account_id": 9000000000017028
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT sender_acc, COUNT(*) AS fraud_count FROM hofinet WHERE sender_bank = 134 AND is_fraud = 1 GROUP BY sender_acc ORDER BY fraud_count DESC LIMIT 10"
         }
       }
     },
@@ -39,10 +56,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "is_fraud"
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT sender_bank, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY sender_bank ORDER BY fraud_count DESC LIMIT 10"
         }
       }
     },
@@ -126,8 +152,17 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "134"
+          "sql_conditions": [
+            {
+              "column": "sender_bank",
+              "op": "=",
+              "value": 134
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
         },
@@ -138,6 +173,11 @@
           "amount": 5000000,
           "sender_bank": 134,
           "receiver_bank": 119
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, time_slot, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 134 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -154,14 +194,23 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "9000000000036484"
+          "sql_conditions": [
+            {
+              "column": "sender_acc",
+              "op": "=",
+              "value": 9000000000036484
+            }
           ],
           "sql_valid": true
         },
         "detect_aml_patterns": {
           "pattern_type": "risk_score",
           "account_id": 9000000000036484
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, time_slot, receiver_bank, amount, is_fraud FROM hofinet WHERE sender_acc = 9000000000036484 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -184,8 +233,17 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "123"
+          "sql_conditions": [
+            {
+              "column": "sender_bank",
+              "op": "=",
+              "value": 123
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
         },
@@ -196,6 +254,11 @@
           "fund_type": 0,
           "media_type": 1,
           "amount": 8000000
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, time_slot, sender_acc, receiver_acc, amount FROM hofinet WHERE sender_bank = 123 AND is_fraud = 1 ORDER BY amount DESC LIMIT 100"
         }
       }
     },
@@ -237,8 +300,17 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "134"
+          "sql_conditions": [
+            {
+              "column": "sender_bank",
+              "op": "=",
+              "value": 134
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
         },
@@ -247,6 +319,11 @@
         },
         "detect_aml_patterns": {
           "pattern_type": "ring"
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_acc, receiver_acc, amount FROM hofinet WHERE sender_bank = 134 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -271,10 +348,19 @@
           "fraud_type": 4
         },
         "query_transactions": {
-          "sql_contains": [
-            "fraud_type"
+          "sql_conditions": [
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 4
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 4 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -371,10 +457,19 @@
           "period2_end": 20240630
         },
         "query_transactions": {
-          "sql_contains": [
-            "fraud_type"
+          "sql_conditions": [
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 4
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 4 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -428,10 +523,24 @@
           "bank_id": 147
         },
         "query_transactions": {
-          "sql_contains": [
-            "147"
+          "sql_conditions": [
+            {
+              "column": "sender_bank",
+              "op": "=",
+              "value": 147
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 147 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -654,8 +763,17 @@
           "bank_id": 158
         },
         "query_transactions": {
-          "sql_contains": [
-            "158"
+          "sql_conditions": [
+            {
+              "column": "sender_bank",
+              "op": "=",
+              "value": 158
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
         },
@@ -666,6 +784,11 @@
           "fund_type": 1,
           "media_type": 1,
           "amount": 20000000
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 158 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -875,14 +998,18 @@
   },
   {
     "id": "st_mtool_034",
-    "question": "스머핑(분산입금) 네트워크를 탐지하고 전체 통계도 확인해줘",
+    "question": "입금이 한 계좌로 모이는(inbound) 스머핑 네트워크를 탐지하고 전체 통계도 확인해줘",
     "expected": {
       "primary_tool": "detect_smurfing_network",
       "tools_must_include": [
         "detect_smurfing_network",
         "get_statistics"
       ],
-      "param_checks": {}
+      "param_checks": {
+        "detect_smurfing_network": {
+          "direction": "inbound"
+        }
+      }
     },
     "difficulty": "easy",
     "note": "스머핑 탐지 + 통계 체인"
@@ -979,7 +1106,7 @@
   },
   {
     "id": "st_mtool_039",
-    "question": "스머핑 네트워크를 탐지하고, 대포통장 패턴도 함께 탐지해줘",
+    "question": "입금이 모이는(inbound) 스머핑 네트워크를 탐지하고, 입금 상대가 많고 출금이 소수인 funnel 패턴도 함께 탐지해줘",
     "expected": {
       "primary_tool": "detect_smurfing_network",
       "tools_must_include": [
@@ -987,6 +1114,9 @@
         "detect_aml_patterns"
       ],
       "param_checks": {
+        "detect_smurfing_network": {
+          "direction": "inbound"
+        },
         "detect_aml_patterns": {
           "pattern_type": "funnel"
         }
@@ -1033,10 +1163,19 @@
           "account_id": 9000000004388166
         },
         "query_transactions": {
-          "sql_contains": [
-            "9000000004388166"
+          "sql_conditions": [
+            {
+              "column": "sender_acc",
+              "op": "=",
+              "value": 9000000004388166
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, receiver_acc, amount, is_fraud FROM hofinet WHERE sender_acc = 9000000004388166 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -1045,7 +1184,7 @@
   },
   {
     "id": "st_mtool_042",
-    "question": "채널별 위험도를 분석하고, 고액거래를 CTR 대상으로 탐지하고, 스머핑 네트워크도 탐지해줘",
+    "question": "채널별 위험도를 분석하고, 고액거래를 CTR 대상으로 탐지하고, 입금이 모이는(inbound) 스머핑 네트워크도 탐지해줘",
     "expected": {
       "primary_tool": "analyze_channel_risk",
       "tools_must_include": [
@@ -1061,6 +1200,9 @@
       "param_checks": {
         "detect_ctr_candidates": {
           "mode": "high_value"
+        },
+        "detect_smurfing_network": {
+          "direction": "inbound"
         }
       }
     },
@@ -1146,7 +1288,7 @@
   },
   {
     "id": "st_mtool_045",
-    "question": "휴면계좌 재활성화를 탐지하고, 스머핑 네트워크도 함께 탐지해줘",
+    "question": "휴면계좌 재활성화를 탐지하고, 입금이 모이는(inbound) 스머핑 네트워크도 함께 탐지해줘",
     "expected": {
       "primary_tool": "detect_dormant_reactivation",
       "tools_must_include": [
@@ -1157,7 +1299,11 @@
         "detect_dormant_reactivation",
         "detect_smurfing_network"
       ],
-      "param_checks": {}
+      "param_checks": {
+        "detect_smurfing_network": {
+          "direction": "inbound"
+        }
+      }
     },
     "difficulty": "easy",
     "note": "휴면계좌 탐지 → 스머핑 탐지 체인"
@@ -1311,7 +1457,7 @@
   },
   {
     "id": "st_mtool_052",
-    "question": "스머핑 네트워크를 탐지하고, 탐지된 결과를 바탕으로 계좌 9000000004388203의 위험도도 평가해줘",
+    "question": "입금이 모이는(inbound) 스머핑 네트워크를 탐지하고, 탐지 결과를 바탕으로 계좌 9000000004388203의 위험도도 평가해줘",
     "expected": {
       "primary_tool": "detect_smurfing_network",
       "tools_must_include": [
@@ -1323,6 +1469,9 @@
         "score_account_risk"
       ],
       "param_checks": {
+        "detect_smurfing_network": {
+          "direction": "inbound"
+        },
         "score_account_risk": {
           "account_id": 9000000004388203
         }
@@ -1417,10 +1566,19 @@
           "account_id": 9000000000034017
         },
         "query_transactions": {
-          "sql_contains": [
-            "9000000000034017"
+          "sql_conditions": [
+            {
+              "column": "receiver_acc",
+              "op": "=",
+              "value": 9000000000034017
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, sender_acc, amount, is_fraud FROM hofinet WHERE receiver_acc = 9000000000034017 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -1564,13 +1722,27 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "150"
+          "sql_conditions": [
+            {
+              "column": "sender_bank",
+              "op": "=",
+              "value": 150
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
         },
         "get_institution_report": {
           "bank_id": 150
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 150 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -1587,13 +1759,22 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "4"
+          "sql_conditions": [
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 4
+            }
           ],
           "sql_valid": true
         },
         "rank_risky_transactions": {
           "top_k": 10
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_acc, receiver_acc, amount FROM hofinet WHERE fraud_type = 4 ORDER BY amount DESC LIMIT 100"
         }
       }
     },
@@ -1692,8 +1873,29 @@
           "pattern_type": "shortest_path",
           "account_a": 9000000000022515,
           "account_b": 9000000000026712
+        },
+        "score_account_risk": {
+          "account_id": 9000000000022515
         }
-      }
+      },
+      "alternatives": [
+        {
+          "tools_must_include": [
+            "detect_aml_patterns",
+            "score_account_risk"
+          ],
+          "param_checks": {
+            "detect_aml_patterns": {
+              "pattern_type": "shortest_path",
+              "account_a": 9000000000022515,
+              "account_b": 9000000000026712
+            },
+            "score_account_risk": {
+              "account_id": 9000000000026712
+            }
+          }
+        }
+      ]
     },
     "difficulty": "hard"
   },
@@ -1708,13 +1910,22 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "3"
+          "sql_conditions": [
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 3
+            }
           ],
           "sql_valid": true
         },
         "analyze_network": {
           "account_id": 9000000000106920
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_acc, receiver_acc, amount FROM hofinet WHERE fraud_type = 3 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -1734,10 +1945,24 @@
           "bank_id": 102
         },
         "query_transactions": {
-          "sql_contains": [
-            "102"
+          "sql_conditions": [
+            {
+              "column": "sender_bank",
+              "op": "=",
+              "value": 102
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 102 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -1950,10 +2175,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "134"
+          "sql_conditions": [
+            {
+              "column": "sender_bank",
+              "op": "=",
+              "value": 134
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 134 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -1973,10 +2212,19 @@
           "fraud_type": 5
         },
         "query_transactions": {
-          "sql_contains": [
-            "5"
+          "sql_conditions": [
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 5
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 5 ORDER BY date DESC LIMIT 20"
         }
       }
     },
@@ -2049,8 +2297,17 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "107"
+          "sql_conditions": [
+            {
+              "column": "sender_bank",
+              "op": "=",
+              "value": 107
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
         },
@@ -2061,6 +2318,11 @@
           "fund_type": 3,
           "media_type": 4,
           "amount": 2000000
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 107 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -2094,13 +2356,22 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "7"
+          "sql_conditions": [
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 7
+            }
           ],
           "sql_valid": true
         },
         "get_trend_analysis": {
           "unit": "monthly"
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 7 ORDER BY date DESC LIMIT 100"
         }
       }
     },

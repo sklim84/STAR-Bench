@@ -821,11 +821,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "sender_acc",
-            "9000000000017070"
+          "sql_conditions": [
+            {
+              "column": "sender_acc",
+              "op": "=",
+              "value": 9000000000017070
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, time_slot, receiver_bank, receiver_acc, amount, is_fraud FROM hofinet WHERE sender_acc = 9000000000017070 ORDER BY date DESC LIMIT 100"
         }
       }
     },

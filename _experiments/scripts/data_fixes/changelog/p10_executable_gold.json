@@ -1,0 +1,804 @@
+{
+  "pass": "p10_executable_gold",
+  "description": "Pin the required arguments the gold calls still omitted (L1-016, D19).",
+  "n_changes": 28,
+  "n_cases": 8,
+  "by_issue": {
+    "L1-016/D19": 28
+  },
+  "notes": [
+    "st_mtool_084 keeps its advisory: the account of the second call is the top row of a rank_risky_transactions sample, which is not stable enough to pin"
+  ],
+  "changes": [
+    {
+      "case_id": "st_ctr_041",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-016/D19",
+      "why": "`mode` is required and the question asked for both values, which one call cannot deliver; st_ctr_042 carries the high-value half",
+      "before": "감독 기관에 미보고될 위험이 있는 거래를 사전에 걸러내야 해. 고액거래와 분할거래 두 가지 유형 모두 포함해서 확인해줘",
+      "after": "감독 기관에 미보고될 위험이 있는 거래를 사전에 걸러내야 해. 보고 기준 미만으로 쪼갠 구조화 의심 건을 확인해줘"
+    },
+    {
+      "case_id": "st_ctr_041",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "`mode` is required and the question asked for both values, which one call cannot deliver; st_ctr_042 carries the high-value half",
+      "before": {
+        "primary_tool": "detect_ctr_candidates",
+        "tools_must_include": [
+          "detect_ctr_candidates"
+        ],
+        "param_checks": {}
+      },
+      "after": {
+        "primary_tool": "detect_ctr_candidates",
+        "tools_must_include": [
+          "detect_ctr_candidates"
+        ],
+        "param_checks": {
+          "detect_ctr_candidates": {
+            "mode": "structuring"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_ctr_041",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-016/D19",
+      "why": "`mode` is required and the question asked for both values, which one call cannot deliver; st_ctr_042 carries the high-value half",
+      "before": "We need to filter out transactions that pose a risk of not being reported to the regulatory authority in advance. Please check for both high-value transactions and split transactions.",
+      "after": "We need to filter out transactions that risk going unreported to the regulator. Please check for suspected structuring, split below the reporting threshold."
+    },
+    {
+      "case_id": "st_ctr_041",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "`mode` is required and the question asked for both values, which one call cannot deliver; st_ctr_042 carries the high-value half",
+      "before": {
+        "primary_tool": "detect_ctr_candidates",
+        "tools_must_include": [
+          "detect_ctr_candidates"
+        ],
+        "param_checks": {}
+      },
+      "after": {
+        "primary_tool": "detect_ctr_candidates",
+        "tools_must_include": [
+          "detect_ctr_candidates"
+        ],
+        "param_checks": {
+          "detect_ctr_candidates": {
+            "mode": "structuring"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_034",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016)",
+      "before": "스머핑(분산입금) 네트워크를 탐지하고 전체 통계도 확인해줘",
+      "after": "입금이 한 계좌로 모이는(inbound) 스머핑 네트워크를 탐지하고 전체 통계도 확인해줘"
+    },
+    {
+      "case_id": "st_mtool_034",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016)",
+      "before": {
+        "primary_tool": "detect_smurfing_network",
+        "tools_must_include": [
+          "detect_smurfing_network",
+          "get_statistics"
+        ],
+        "param_checks": {}
+      },
+      "after": {
+        "primary_tool": "detect_smurfing_network",
+        "tools_must_include": [
+          "detect_smurfing_network",
+          "get_statistics"
+        ],
+        "param_checks": {
+          "detect_smurfing_network": {
+            "direction": "inbound"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_034",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016)",
+      "before": "Please detect the smurfing (structured deposit) network and provide the overall statistics.",
+      "after": "Please detect the inbound smurfing network, where funds collect into one account, and also check the overall statistics."
+    },
+    {
+      "case_id": "st_mtool_034",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016)",
+      "before": {
+        "primary_tool": "detect_smurfing_network",
+        "tools_must_include": [
+          "detect_smurfing_network",
+          "get_statistics"
+        ],
+        "param_checks": {}
+      },
+      "after": {
+        "primary_tool": "detect_smurfing_network",
+        "tools_must_include": [
+          "detect_smurfing_network",
+          "get_statistics"
+        ],
+        "param_checks": {
+          "detect_smurfing_network": {
+            "direction": "inbound"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_039",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016); the mule-account wording also blurred the funnel boundary (L1-003)",
+      "before": "스머핑 네트워크를 탐지하고, 대포통장 패턴도 함께 탐지해줘",
+      "after": "입금이 모이는(inbound) 스머핑 네트워크를 탐지하고, 입금 상대가 많고 출금이 소수인 funnel 패턴도 함께 탐지해줘"
+    },
+    {
+      "case_id": "st_mtool_039",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016); the mule-account wording also blurred the funnel boundary (L1-003)",
+      "before": {
+        "primary_tool": "detect_smurfing_network",
+        "tools_must_include": [
+          "detect_smurfing_network",
+          "detect_aml_patterns"
+        ],
+        "param_checks": {
+          "detect_aml_patterns": {
+            "pattern_type": "funnel"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "detect_smurfing_network",
+        "tools_must_include": [
+          "detect_smurfing_network",
+          "detect_aml_patterns"
+        ],
+        "param_checks": {
+          "detect_smurfing_network": {
+            "direction": "inbound"
+          },
+          "detect_aml_patterns": {
+            "pattern_type": "funnel"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_039",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016); the mule-account wording also blurred the funnel boundary (L1-003)",
+      "before": "Please detect the smurfing network and also identify patterns related to mule accounts.",
+      "after": "Please detect the inbound smurfing network and also the funnel pattern with many incoming and few outgoing counterparties."
+    },
+    {
+      "case_id": "st_mtool_039",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016); the mule-account wording also blurred the funnel boundary (L1-003)",
+      "before": {
+        "primary_tool": "detect_smurfing_network",
+        "tools_must_include": [
+          "detect_smurfing_network",
+          "detect_aml_patterns"
+        ],
+        "param_checks": {
+          "detect_aml_patterns": {
+            "pattern_type": "funnel"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "detect_smurfing_network",
+        "tools_must_include": [
+          "detect_smurfing_network",
+          "detect_aml_patterns"
+        ],
+        "param_checks": {
+          "detect_smurfing_network": {
+            "direction": "inbound"
+          },
+          "detect_aml_patterns": {
+            "pattern_type": "funnel"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_042",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016)",
+      "before": "채널별 위험도를 분석하고, 고액거래를 CTR 대상으로 탐지하고, 스머핑 네트워크도 탐지해줘",
+      "after": "채널별 위험도를 분석하고, 고액거래를 CTR 대상으로 탐지하고, 입금이 모이는(inbound) 스머핑 네트워크도 탐지해줘"
+    },
+    {
+      "case_id": "st_mtool_042",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016)",
+      "before": {
+        "primary_tool": "analyze_channel_risk",
+        "tools_must_include": [
+          "analyze_channel_risk",
+          "detect_ctr_candidates",
+          "detect_smurfing_network"
+        ],
+        "tool_order": [
+          "analyze_channel_risk",
+          "detect_ctr_candidates",
+          "detect_smurfing_network"
+        ],
+        "param_checks": {
+          "detect_ctr_candidates": {
+            "mode": "high_value"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "analyze_channel_risk",
+        "tools_must_include": [
+          "analyze_channel_risk",
+          "detect_ctr_candidates",
+          "detect_smurfing_network"
+        ],
+        "tool_order": [
+          "analyze_channel_risk",
+          "detect_ctr_candidates",
+          "detect_smurfing_network"
+        ],
+        "param_checks": {
+          "detect_ctr_candidates": {
+            "mode": "high_value"
+          },
+          "detect_smurfing_network": {
+            "direction": "inbound"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_042",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016)",
+      "before": "Analyze the risk by channel, detect high-value transactions as CTR candidates, and detect smurfing networks as well.",
+      "after": "Analyze the risk by channel, detect high-value transactions as CTR candidates, and also detect the inbound smurfing network."
+    },
+    {
+      "case_id": "st_mtool_042",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016)",
+      "before": {
+        "primary_tool": "analyze_channel_risk",
+        "tools_must_include": [
+          "analyze_channel_risk",
+          "detect_ctr_candidates",
+          "detect_smurfing_network"
+        ],
+        "tool_order": [
+          "analyze_channel_risk",
+          "detect_ctr_candidates",
+          "detect_smurfing_network"
+        ],
+        "param_checks": {
+          "detect_ctr_candidates": {
+            "mode": "high_value"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "analyze_channel_risk",
+        "tools_must_include": [
+          "analyze_channel_risk",
+          "detect_ctr_candidates",
+          "detect_smurfing_network"
+        ],
+        "tool_order": [
+          "analyze_channel_risk",
+          "detect_ctr_candidates",
+          "detect_smurfing_network"
+        ],
+        "param_checks": {
+          "detect_ctr_candidates": {
+            "mode": "high_value"
+          },
+          "detect_smurfing_network": {
+            "direction": "inbound"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_045",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016)",
+      "before": "휴면계좌 재활성화를 탐지하고, 스머핑 네트워크도 함께 탐지해줘",
+      "after": "휴면계좌 재활성화를 탐지하고, 입금이 모이는(inbound) 스머핑 네트워크도 함께 탐지해줘"
+    },
+    {
+      "case_id": "st_mtool_045",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016)",
+      "before": {
+        "primary_tool": "detect_dormant_reactivation",
+        "tools_must_include": [
+          "detect_dormant_reactivation",
+          "detect_smurfing_network"
+        ],
+        "tool_order": [
+          "detect_dormant_reactivation",
+          "detect_smurfing_network"
+        ],
+        "param_checks": {}
+      },
+      "after": {
+        "primary_tool": "detect_dormant_reactivation",
+        "tools_must_include": [
+          "detect_dormant_reactivation",
+          "detect_smurfing_network"
+        ],
+        "tool_order": [
+          "detect_dormant_reactivation",
+          "detect_smurfing_network"
+        ],
+        "param_checks": {
+          "detect_smurfing_network": {
+            "direction": "inbound"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_045",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016)",
+      "before": "Detect dormant account reactivations and also identify smurfing networks.",
+      "after": "Detect dormant account reactivations and also the inbound smurfing network."
+    },
+    {
+      "case_id": "st_mtool_045",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016)",
+      "before": {
+        "primary_tool": "detect_dormant_reactivation",
+        "tools_must_include": [
+          "detect_dormant_reactivation",
+          "detect_smurfing_network"
+        ],
+        "tool_order": [
+          "detect_dormant_reactivation",
+          "detect_smurfing_network"
+        ],
+        "param_checks": {}
+      },
+      "after": {
+        "primary_tool": "detect_dormant_reactivation",
+        "tools_must_include": [
+          "detect_dormant_reactivation",
+          "detect_smurfing_network"
+        ],
+        "tool_order": [
+          "detect_dormant_reactivation",
+          "detect_smurfing_network"
+        ],
+        "param_checks": {
+          "detect_smurfing_network": {
+            "direction": "inbound"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_052",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016)",
+      "before": "스머핑 네트워크를 탐지하고, 탐지된 결과를 바탕으로 계좌 9000000004388203의 위험도도 평가해줘",
+      "after": "입금이 모이는(inbound) 스머핑 네트워크를 탐지하고, 탐지 결과를 바탕으로 계좌 9000000004388203의 위험도도 평가해줘"
+    },
+    {
+      "case_id": "st_mtool_052",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016)",
+      "before": {
+        "primary_tool": "detect_smurfing_network",
+        "tools_must_include": [
+          "detect_smurfing_network",
+          "score_account_risk"
+        ],
+        "tool_order": [
+          "detect_smurfing_network",
+          "score_account_risk"
+        ],
+        "param_checks": {
+          "score_account_risk": {
+            "account_id": 9000000004388203
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "detect_smurfing_network",
+        "tools_must_include": [
+          "detect_smurfing_network",
+          "score_account_risk"
+        ],
+        "tool_order": [
+          "detect_smurfing_network",
+          "score_account_risk"
+        ],
+        "param_checks": {
+          "detect_smurfing_network": {
+            "direction": "inbound"
+          },
+          "score_account_risk": {
+            "account_id": 9000000004388203
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_052",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016)",
+      "before": "Detect the smurfing network and, based on the detected results, assess the risk level of account 9000000004388203.",
+      "after": "Detect the inbound smurfing network and, from what it finds, assess the risk of account 9000000004388203."
+    },
+    {
+      "case_id": "st_mtool_052",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "detect_smurfing_network requires `direction`, and the question named none, so the gold call could not be executed and the near-identical st_mp_009 is a clarification case for exactly that gap (L1-016)",
+      "before": {
+        "primary_tool": "detect_smurfing_network",
+        "tools_must_include": [
+          "detect_smurfing_network",
+          "score_account_risk"
+        ],
+        "tool_order": [
+          "detect_smurfing_network",
+          "score_account_risk"
+        ],
+        "param_checks": {
+          "score_account_risk": {
+            "account_id": 9000000004388203
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "detect_smurfing_network",
+        "tools_must_include": [
+          "detect_smurfing_network",
+          "score_account_risk"
+        ],
+        "tool_order": [
+          "detect_smurfing_network",
+          "score_account_risk"
+        ],
+        "param_checks": {
+          "detect_smurfing_network": {
+            "direction": "inbound"
+          },
+          "score_account_risk": {
+            "account_id": 9000000004388203
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_068",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "score_account_risk requires account_id and the question names two accounts, so either one is a correct call; the gold now pins one and accepts the other",
+      "before": {
+        "primary_tool": "detect_aml_patterns",
+        "tools_must_include": [
+          "detect_aml_patterns",
+          "score_account_risk"
+        ],
+        "param_checks": {
+          "detect_aml_patterns": {
+            "pattern_type": "shortest_path",
+            "account_a": 9000000000022515,
+            "account_b": 9000000000026712
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "detect_aml_patterns",
+        "tools_must_include": [
+          "detect_aml_patterns",
+          "score_account_risk"
+        ],
+        "param_checks": {
+          "detect_aml_patterns": {
+            "pattern_type": "shortest_path",
+            "account_a": 9000000000022515,
+            "account_b": 9000000000026712
+          },
+          "score_account_risk": {
+            "account_id": 9000000000022515
+          }
+        },
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "detect_aml_patterns",
+              "score_account_risk"
+            ],
+            "param_checks": {
+              "detect_aml_patterns": {
+                "pattern_type": "shortest_path",
+                "account_a": 9000000000022515,
+                "account_b": 9000000000026712
+              },
+              "score_account_risk": {
+                "account_id": 9000000000026712
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_mtool_068",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "score_account_risk requires account_id and the question names two accounts, so either one is a correct call; the gold now pins one and accepts the other",
+      "before": {
+        "primary_tool": "detect_aml_patterns",
+        "tools_must_include": [
+          "detect_aml_patterns",
+          "score_account_risk"
+        ],
+        "param_checks": {
+          "detect_aml_patterns": {
+            "pattern_type": "shortest_path",
+            "account_a": 9000000000022515,
+            "account_b": 9000000000026712
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "detect_aml_patterns",
+        "tools_must_include": [
+          "detect_aml_patterns",
+          "score_account_risk"
+        ],
+        "param_checks": {
+          "detect_aml_patterns": {
+            "pattern_type": "shortest_path",
+            "account_a": 9000000000022515,
+            "account_b": 9000000000026712
+          },
+          "score_account_risk": {
+            "account_id": 9000000000022515
+          }
+        },
+        "alternatives": [
+          {
+            "tools_must_include": [
+              "detect_aml_patterns",
+              "score_account_risk"
+            ],
+            "param_checks": {
+              "detect_aml_patterns": {
+                "pattern_type": "shortest_path",
+                "account_a": 9000000000022515,
+                "account_b": 9000000000026712
+              },
+              "score_account_risk": {
+                "account_id": 9000000000026712
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "st_mtool_001",
+      "lang": "kr",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "the second call's account comes from the first call's result; the reference SQL returns 9000000000017028 (98 flagged transfers), so the chain is now checkable and the gold call executable",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions",
+          "analyze_network"
+        ],
+        "tool_order": [
+          "query_transactions",
+          "analyze_network"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "sender_bank",
+                "op": "=",
+                "value": 134
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT sender_acc, COUNT(*) AS fraud_count FROM hofinet WHERE sender_bank = 134 AND is_fraud = 1 GROUP BY sender_acc ORDER BY fraud_count DESC LIMIT 10"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions",
+          "analyze_network"
+        ],
+        "tool_order": [
+          "query_transactions",
+          "analyze_network"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "sender_bank",
+                "op": "=",
+                "value": 134
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          },
+          "analyze_network": {
+            "account_id": 9000000000017028
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT sender_acc, COUNT(*) AS fraud_count FROM hofinet WHERE sender_bank = 134 AND is_fraud = 1 GROUP BY sender_acc ORDER BY fraud_count DESC LIMIT 10"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "st_mtool_001",
+      "lang": "en",
+      "field": "expected",
+      "issue": "L1-016/D19",
+      "why": "the second call's account comes from the first call's result; the reference SQL returns 9000000000017028 (98 flagged transfers), so the chain is now checkable and the gold call executable",
+      "before": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions",
+          "analyze_network"
+        ],
+        "tool_order": [
+          "query_transactions",
+          "analyze_network"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "sender_bank",
+                "op": "=",
+                "value": 134
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT sender_acc, COUNT(*) AS fraud_count FROM hofinet WHERE sender_bank = 134 AND is_fraud = 1 GROUP BY sender_acc ORDER BY fraud_count DESC LIMIT 10"
+          }
+        }
+      },
+      "after": {
+        "primary_tool": "query_transactions",
+        "tools_must_include": [
+          "query_transactions",
+          "analyze_network"
+        ],
+        "tool_order": [
+          "query_transactions",
+          "analyze_network"
+        ],
+        "param_checks": {
+          "query_transactions": {
+            "sql_conditions": [
+              {
+                "column": "sender_bank",
+                "op": "=",
+                "value": 134
+              },
+              {
+                "column": "is_fraud",
+                "op": "=",
+                "value": 1
+              }
+            ],
+            "sql_valid": true
+          },
+          "analyze_network": {
+            "account_id": 9000000000017028
+          }
+        },
+        "reference_calls": {
+          "query_transactions": {
+            "sql": "SELECT sender_acc, COUNT(*) AS fraud_count FROM hofinet WHERE sender_bank = 134 AND is_fraud = 1 GROUP BY sender_acc ORDER BY fraud_count DESC LIMIT 10"
+          }
+        }
+      }
+    }
+  ]
+}

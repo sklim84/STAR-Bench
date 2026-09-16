@@ -9,11 +9,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "134",
-            "is_fraud"
+          "sql_conditions": [
+            {
+              "column": "sender_bank",
+              "op": "=",
+              "value": 134
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT COUNT(*) AS fraud_count FROM hofinet WHERE sender_bank = 134 AND is_fraud = 1"
         }
       }
     },
@@ -29,10 +42,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "4"
+          "sql_conditions": [
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 4
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 4 LIMIT 10"
         }
       }
     },
@@ -48,11 +70,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "media_type",
-            "2"
+          "sql_conditions": [
+            {
+              "column": "media_type",
+              "op": "=",
+              "value": 2
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE media_type = 2 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -68,11 +103,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "amount",
-            "10000000"
+          "sql_conditions": [
+            {
+              "column": "amount",
+              "op": ">=",
+              "value": 10000000
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount >= 10000000 AND is_fraud = 1 ORDER BY amount DESC LIMIT 100"
         }
       }
     },
@@ -89,11 +137,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "time_slot",
-            "3"
+          "sql_conditions": [
+            {
+              "column": "time_slot",
+              "op": "=",
+              "value": 3
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE time_slot = 3 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -101,7 +162,7 @@
   },
   {
     "id": "st_qt_006",
-    "question": "Please query the suspicious transactions of type transfer (fund category 4).",
+    "question": "Please query the suspicious transactions with fund type 3 (other).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -109,11 +170,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "fund_type",
-            "4"
+          "sql_conditions": [
+            {
+              "column": "fund_type",
+              "op": "=",
+              "value": 3
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fund_type = 3 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -129,11 +203,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "sender_acc",
-            "9000000000024638"
+          "sql_conditions": [
+            {
+              "column": "sender_acc",
+              "op": "=",
+              "value": 9000000000024638
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, time_slot, receiver_bank, amount, is_fraud FROM hofinet WHERE sender_acc = 9000000000024638 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -149,11 +231,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "sender_bank",
-            "GROUP BY"
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT sender_bank, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY sender_bank ORDER BY fraud_count DESC"
         }
       }
     },
@@ -169,12 +259,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "fraud_type",
-            "AVG",
-            "amount"
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT fraud_type, AVG(amount) AS avg_amount FROM hofinet WHERE is_fraud = 1 GROUP BY fraud_type ORDER BY fraud_type"
         }
       }
     },
@@ -190,12 +287,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "fraud_type",
-            "3",
-            "amount"
+          "sql_conditions": [
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 3
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_acc, receiver_acc, amount FROM hofinet WHERE fraud_type = 3 ORDER BY amount DESC LIMIT 100"
         }
       }
     },
@@ -211,12 +315,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "media_type",
-            "4",
-            "sender_acc"
+          "sql_conditions": [
+            {
+              "column": "media_type",
+              "op": "=",
+              "value": 4
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT sender_acc, SUM(amount) AS total_amount FROM hofinet WHERE media_type = 4 AND is_fraud = 1 GROUP BY sender_acc ORDER BY total_amount DESC LIMIT 5"
         }
       }
     },
@@ -232,10 +348,29 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "date"
+          "sql_conditions": [
+            {
+              "column": "date",
+              "op": ">=",
+              "value": 20240101
+            },
+            {
+              "column": "date",
+              "op": "<=",
+              "value": 20240331
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE date BETWEEN 20240101 AND 20240331 AND is_fraud = 1 ORDER BY date LIMIT 100"
         }
       }
     },
@@ -251,10 +386,22 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "fraud_type"
+          "sql_conditions": [
+            {
+              "column": "fraud_type",
+              "op": "IN",
+              "value": [
+                1,
+                4
+              ]
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT fraud_type, date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type IN (1, 4) ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -271,11 +418,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "receiver_bank",
-            "119"
+          "sql_conditions": [
+            {
+              "column": "receiver_bank",
+              "op": "=",
+              "value": 119
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, sender_acc, amount FROM hofinet WHERE receiver_bank = 119 AND is_fraud = 1 ORDER BY date DESC LIMIT 20"
         }
       }
     },
@@ -291,11 +451,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "time_slot",
-            "GROUP BY"
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT time_slot, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY time_slot ORDER BY fraud_count DESC"
         }
       }
     },
@@ -311,11 +479,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "fraud_type",
-            "1"
+          "sql_conditions": [
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 1 ORDER BY date DESC LIMIT 30"
         }
       }
     },
@@ -331,11 +507,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "receiver_acc",
-            "9000000000036484"
+          "sql_conditions": [
+            {
+              "column": "receiver_acc",
+              "op": "=",
+              "value": 9000000000036484
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, sender_acc, amount FROM hofinet WHERE receiver_acc = 9000000000036484 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -351,11 +540,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "amount",
-            "50000000"
+          "sql_conditions": [
+            {
+              "column": "amount",
+              "op": ">=",
+              "value": 50000000
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount >= 50000000 AND is_fraud = 1 ORDER BY amount DESC LIMIT 100"
         }
       }
     },
@@ -371,11 +573,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "media_type",
-            "GROUP BY"
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT media_type, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY media_type ORDER BY fraud_count DESC"
         }
       }
     },
@@ -391,12 +601,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "fraud_type",
-            "3",
-            "118"
+          "sql_conditions": [
+            {
+              "column": "sender_bank",
+              "op": "=",
+              "value": 118
+            },
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 3
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT sender_acc, SUM(amount) AS total_amount FROM hofinet WHERE sender_bank = 118 AND fraud_type = 3 GROUP BY sender_acc ORDER BY total_amount DESC LIMIT 5"
         }
       }
     },
@@ -404,7 +626,7 @@
   },
   {
     "id": "st_qt_021",
-    "question": "Please query suspicious transfers (fund type 4) made via mobile phone (media type 4).",
+    "question": "Please query the suspicious transactions with fund type 3 (other) made via mobile phone (media type 4).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -412,11 +634,29 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "media_type",
-            "fund_type"
+          "sql_conditions": [
+            {
+              "column": "media_type",
+              "op": "=",
+              "value": 4
+            },
+            {
+              "column": "fund_type",
+              "op": "=",
+              "value": 3
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE media_type = 4 AND fund_type = 3 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -432,10 +672,29 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "date"
+          "sql_conditions": [
+            {
+              "column": "date",
+              "op": ">=",
+              "value": 20230101
+            },
+            {
+              "column": "date",
+              "op": "<=",
+              "value": 20231231
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date / 100 AS month, COUNT(*) AS fraud_count FROM hofinet WHERE date BETWEEN 20230101 AND 20231231 AND is_fraud = 1 GROUP BY month ORDER BY month"
         }
       }
     },
@@ -451,12 +710,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "sender_bank",
-            "SUM",
-            "amount"
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT sender_bank, SUM(amount) AS total_amount FROM hofinet WHERE is_fraud = 1 GROUP BY sender_bank ORDER BY total_amount DESC LIMIT 10"
         }
       }
     },
@@ -472,10 +738,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "time_slot"
+          "sql_conditions": [
+            {
+              "column": "time_slot",
+              "op": "=",
+              "value": 21
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT COUNT(*) AS fraud_count FROM hofinet WHERE time_slot = 21 AND is_fraud = 1"
         }
       }
     },
@@ -491,12 +771,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "fraud_type",
-            "5",
-            "amount"
+          "sql_conditions": [
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 5
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 5 AND amount >= (SELECT AVG(amount) FROM hofinet WHERE fraud_type = 5) ORDER BY amount DESC LIMIT 100"
         }
       }
     },
@@ -512,11 +799,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "receiver_bank",
-            "122"
+          "sql_conditions": [
+            {
+              "column": "receiver_bank",
+              "op": "=",
+              "value": 122
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, sender_acc, amount FROM hofinet WHERE receiver_bank = 122 AND is_fraud = 1 ORDER BY amount DESC LIMIT 100"
         }
       }
     },
@@ -572,11 +872,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "fraud_type",
-            "3"
+          "sql_conditions": [
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 3
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 3 LIMIT 20"
         }
       }
     },
@@ -592,11 +900,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "sender_bank",
-            "128"
+          "sql_conditions": [
+            {
+              "column": "sender_bank",
+              "op": "=",
+              "value": 128
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, time_slot, receiver_bank, amount, is_fraud FROM hofinet WHERE sender_bank = 128 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -612,11 +928,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "receiver_acc",
-            "9000000000024638"
+          "sql_conditions": [
+            {
+              "column": "receiver_acc",
+              "op": "=",
+              "value": 9000000000024638
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, sender_acc, amount, is_fraud FROM hofinet WHERE receiver_acc = 9000000000024638 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -632,11 +956,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "amount",
-            "1000000"
+          "sql_conditions": [
+            {
+              "column": "amount",
+              "op": "<=",
+              "value": 1000000
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount <= 1000000 AND is_fraud = 1 ORDER BY amount DESC LIMIT 100"
         }
       }
     },
@@ -652,11 +989,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "fraud_type",
-            "2"
+          "sql_conditions": [
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 2
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 2 ORDER BY date DESC LIMIT 50"
         }
       }
     },
@@ -672,11 +1017,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "fund_type",
-            "1"
+          "sql_conditions": [
+            {
+              "column": "fund_type",
+              "op": "=",
+              "value": 1
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fund_type = 1 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -692,10 +1050,29 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "date"
+          "sql_conditions": [
+            {
+              "column": "date",
+              "op": ">=",
+              "value": 20221001
+            },
+            {
+              "column": "date",
+              "op": "<=",
+              "value": 20221231
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT COUNT(*) AS fraud_count FROM hofinet WHERE date BETWEEN 20221001 AND 20221231 AND is_fraud = 1"
         }
       }
     },
@@ -711,11 +1088,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "receiver_bank",
-            "GROUP BY"
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT receiver_bank, SUM(amount) AS total_amount FROM hofinet WHERE is_fraud = 1 GROUP BY receiver_bank ORDER BY total_amount DESC"
         }
       }
     },
@@ -731,11 +1116,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "sender_acc",
-            "GROUP BY"
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT sender_acc, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY sender_acc ORDER BY fraud_count DESC LIMIT 10"
         }
       }
     },
@@ -751,12 +1144,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "fraud_type",
-            "1",
-            "amount"
+          "sql_conditions": [
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT MAX(amount) AS max_amount, MIN(amount) AS min_amount FROM hofinet WHERE fraud_type = 1"
         }
       }
     },
@@ -772,10 +1172,27 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "media_type"
+          "sql_conditions": [
+            {
+              "column": "media_type",
+              "op": "IN",
+              "value": [
+                3,
+                4
+              ]
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT media_type, date, sender_bank, receiver_bank, amount FROM hofinet WHERE media_type IN (3, 4) AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
@@ -792,12 +1209,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "fraud_type",
-            "GROUP BY",
-            "amount"
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT fraud_type, COUNT(*) AS fraud_count, SUM(amount) AS total_amount FROM hofinet WHERE is_fraud = 1 GROUP BY fraud_type ORDER BY total_amount DESC"
         }
       }
     },
@@ -813,12 +1237,34 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "sender_bank",
-            "134",
-            "amount"
+          "sql_conditions": [
+            {
+              "column": "sender_bank",
+              "op": "=",
+              "value": 134
+            },
+            {
+              "column": "date",
+              "op": ">=",
+              "value": 20230101
+            },
+            {
+              "column": "date",
+              "op": "<=",
+              "value": 20230630
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT COUNT(*) AS fraud_count FROM hofinet WHERE sender_bank = 134 AND date BETWEEN 20230101 AND 20230630 AND is_fraud = 1 AND amount >= (SELECT AVG(amount) FROM hofinet WHERE sender_bank = 134 AND date BETWEEN 20230101 AND 20230630 AND is_fraud = 1)"
         }
       }
     },
@@ -834,12 +1280,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "sender_acc",
-            "date",
-            "GROUP BY"
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT sender_acc, date, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY sender_acc, date HAVING COUNT(*) >= 3 ORDER BY fraud_count DESC LIMIT 100"
         }
       }
     },
@@ -855,11 +1308,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "date",
-            "GROUP BY"
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY date ORDER BY date LIMIT 100"
         }
       }
     },
@@ -875,10 +1336,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "is_fraud"
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount, fraud_type FROM hofinet WHERE is_fraud = 1 LIMIT 5"
         }
       }
     },
@@ -894,11 +1364,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "amount",
-            "50000"
+          "sql_conditions": [
+            {
+              "column": "amount",
+              "op": "<=",
+              "value": 50000
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount <= 50000 AND is_fraud = 1 ORDER BY amount LIMIT 100"
         }
       }
     },
@@ -954,11 +1437,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "sender_bank",
-            "123"
+          "sql_conditions": [
+            {
+              "column": "sender_bank",
+              "op": "=",
+              "value": 123
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, time_slot, receiver_bank, amount, is_fraud FROM hofinet WHERE sender_bank = 123 ORDER BY date DESC LIMIT 15"
         }
       }
     },
@@ -974,12 +1465,27 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "amount",
-            "10000000",
-            "50000000"
+          "sql_conditions": [
+            {
+              "column": "amount",
+              "op": "BETWEEN",
+              "value": [
+                10000000,
+                50000000
+              ]
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount BETWEEN 10000000 AND 50000000 AND is_fraud = 1 ORDER BY amount DESC LIMIT 100"
         }
       }
     },
@@ -996,11 +1502,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "fraud_type",
-            "7"
+          "sql_conditions": [
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 7
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 7 LIMIT 10"
         }
       }
     },
@@ -1016,13 +1530,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "fraud_type",
-            "AVG",
-            "MAX",
-            "GROUP BY"
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT fraud_type, AVG(amount) AS avg_amount, MAX(amount) AS max_amount FROM hofinet WHERE is_fraud = 1 GROUP BY fraud_type ORDER BY fraud_type"
         }
       }
     },
@@ -1038,11 +1558,29 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "date",
-            "fraud_type"
+          "sql_conditions": [
+            {
+              "column": "date",
+              "op": ">=",
+              "value": 20230401
+            },
+            {
+              "column": "date",
+              "op": "<=",
+              "value": 20230630
+            },
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE date BETWEEN 20230401 AND 20230630 AND fraud_type = 1 ORDER BY date LIMIT 100"
         }
       }
     },
@@ -1059,13 +1597,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "receiver_acc",
-            "fraud_type",
-            "GROUP BY",
-            "HAVING"
+          "sql_conditions": [
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 4
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT receiver_acc, COUNT(*) AS fraud_count FROM hofinet WHERE fraud_type = 4 GROUP BY receiver_acc HAVING COUNT(*) >= 2 ORDER BY fraud_count DESC LIMIT 100"
         }
       }
     },
@@ -1082,11 +1626,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "amount",
-            "CASE"
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT CASE WHEN amount < 1000000 THEN 'small' WHEN amount < 10000000 THEN 'medium' ELSE 'large' END AS band, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY band ORDER BY fraud_count DESC"
         }
       }
     },
@@ -1103,11 +1655,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "sender_bank",
-            "GROUP BY"
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "WITH per_bank AS (SELECT sender_bank, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY sender_bank) SELECT sender_bank, fraud_count FROM per_bank WHERE fraud_count > (SELECT AVG(fraud_count) FROM per_bank) ORDER BY fraud_count DESC"
         }
       }
     },
@@ -1116,7 +1676,7 @@
   },
   {
     "id": "st_qt_052",
-    "question": "Please query for accounts that have sent 5 or more transfers (funds classification 4) on the same day from the same withdrawal account to different deposit accounts, indicating suspicious transactions.",
+    "question": "Please query the accounts that sent five or more salary (fund type 1) suspicious transactions to different receiving accounts from the same sending account on one day.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1124,13 +1684,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "sender_acc",
-            "date",
-            "GROUP BY",
-            "HAVING"
+          "sql_conditions": [
+            {
+              "column": "fund_type",
+              "op": "=",
+              "value": 1
+            },
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT sender_acc, date, COUNT(DISTINCT receiver_acc) AS receivers FROM hofinet WHERE fund_type = 1 AND is_fraud = 1 GROUP BY sender_acc, date HAVING COUNT(DISTINCT receiver_acc) >= 5 ORDER BY receivers DESC LIMIT 100"
         }
       }
     },
@@ -1147,11 +1718,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_contains": [
-            "fraud_type",
-            "GROUP BY"
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            }
           ],
           "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT fraud_type, COUNT(*) AS fraud_count, ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS percent FROM hofinet WHERE is_fraud = 1 GROUP BY fraud_type ORDER BY fraud_count DESC"
         }
       }
     },

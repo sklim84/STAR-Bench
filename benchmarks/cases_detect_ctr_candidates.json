@@ -708,13 +708,17 @@
   },
   {
     "id": "st_ctr_041",
-    "question": "감독 기관에 미보고될 위험이 있는 거래를 사전에 걸러내야 해. 고액거래와 분할거래 두 가지 유형 모두 포함해서 확인해줘",
+    "question": "감독 기관에 미보고될 위험이 있는 거래를 사전에 걸러내야 해. 보고 기준 미만으로 쪼갠 구조화 의심 건을 확인해줘",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
         "detect_ctr_candidates"
       ],
-      "param_checks": {}
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      }
     },
     "difficulty": "hard"
   },
