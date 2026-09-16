@@ -812,5 +812,98 @@
     },
     "difficulty": "easy",
     "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+  },
+  {
+    "id": "st_dorm_045",
+    "question": "120일 이상 거래가 없다가 다시 사용된 계좌를 탐지해줘",
+    "expected": {
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation"
+      ],
+      "param_checks": {
+        "detect_dormant_reactivation": {
+          "dormant_days": 120
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_dormant_reactivation (dormant_days=120).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_dorm_046",
+    "question": "450일 넘게 휴면이던 계좌의 재활성화 거래를 찾아줘",
+    "expected": {
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation"
+      ],
+      "param_checks": {
+        "detect_dormant_reactivation": {
+          "dormant_days": 450
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_dormant_reactivation (dormant_days=450).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_dorm_047",
+    "question": "240일 이상 미사용 계좌 중 재활성화 금액이 1억원 이상인 건을 조회해줘",
+    "expected": {
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation"
+      ],
+      "param_checks": {
+        "detect_dormant_reactivation": {
+          "dormant_days": 240,
+          "min_reactivation_amount": 100000000
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_dormant_reactivation (dormant_days=240; min_reactivation_amount=100000000).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_dorm_048",
+    "question": "800일 이상 잠자던 계좌가 다시 쓰인 사례를 보여줘",
+    "expected": {
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation"
+      ],
+      "param_checks": {
+        "detect_dormant_reactivation": {
+          "dormant_days": 800
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_dormant_reactivation (dormant_days=800).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_dorm_049",
+    "question": "150일 이상 휴면 상태였다가 1000만원 이상 거래로 재활성화된 계좌를 상위 25건 조회해줘",
+    "expected": {
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation"
+      ],
+      "param_checks": {
+        "detect_dormant_reactivation": {
+          "dormant_days": 150,
+          "min_reactivation_amount": 10000000,
+          "limit": 25
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_dormant_reactivation (dormant_days=150; min_reactivation_amount=10000000; limit=25).",
+    "source": "2026-09 expansion"
   }
 ]

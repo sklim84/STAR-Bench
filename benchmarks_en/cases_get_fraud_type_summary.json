@@ -795,5 +795,119 @@
     },
     "difficulty": "easy",
     "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+  },
+  {
+    "id": "st_gfs_044",
+    "question": "Please give the status of sudden change in transaction pattern (type 1) suspicious transactions at withdrawal institution 159.",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 1,
+          "bank_id": 159
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects get_fraud_type_summary (fraud_type=1; bank_id=159).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_gfs_045",
+    "question": "Please summarize the statistics of transaction with new counterparty suspicious transactions at withdrawal institution 134.",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 2,
+          "bank_id": 134
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects get_fraud_type_summary (fraud_type=2; bank_id=134).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_gfs_046",
+    "question": "Please give the count and the amount of split transaction (type 3) suspicious transactions at withdrawal institution 159.",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 3,
+          "bank_id": 159
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects get_fraud_type_summary (fraud_type=3; bank_id=159).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_gfs_047",
+    "question": "Please retrieve the status of concurrent multiple transactions suspicious transactions narrowed to withdrawal institution 147.",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 4,
+          "bank_id": 147
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects get_fraud_type_summary (fraud_type=4; bank_id=147).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_gfs_048",
+    "question": "Please summarize same-day withdrawal after large deposit suspicious transactions for withdrawal institution 159.",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 5,
+          "bank_id": 159
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects get_fraud_type_summary (fraud_type=5; bank_id=159).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_gfs_049",
+    "question": "Please show the statistics of late-night/early-morning bulk transaction suspicious transactions narrowed to withdrawal institution 159.",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 7,
+          "bank_id": 159
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects get_fraud_type_summary (fraud_type=7; bank_id=159).",
+    "source": "2026-09 expansion"
   }
 ]

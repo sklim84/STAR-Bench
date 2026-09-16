@@ -831,5 +831,124 @@
     },
     "difficulty": "easy",
     "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+  },
+  {
+    "id": "st_ctr_044",
+    "question": "Please retrieve up to the top 50 high-value transactions of 300,000,000 KRW or more.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value",
+          "threshold": 300000000,
+          "limit": 50
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects detect_ctr_candidates (mode=high_value; threshold=300000000; limit=50).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_ctr_045",
+    "question": "Please detect suspected structuring: transactions split below a 20,000,000 KRW reporting threshold.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring",
+          "threshold": 20000000
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects detect_ctr_candidates (mode=structuring; threshold=20000000).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_ctr_046",
+    "question": "Please retrieve the transactions subject to currency transaction reporting in the second half of 2022.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value",
+          "date_from": 20220701,
+          "date_to": 20221231
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects detect_ctr_candidates (mode=high_value; date_from=20220701; date_to=20221231).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_ctr_047",
+    "question": "Please detect suspected structuring transactions in the fourth quarter of 2021.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring",
+          "date_from": 20211001,
+          "date_to": 20211231
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects detect_ctr_candidates (mode=structuring; date_from=20211001; date_to=20211231).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_ctr_048",
+    "question": "Please pull up to the top 50 high_value reporting candidates.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value",
+          "limit": 50
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_ctr_candidates (mode=high_value; limit=50).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_ctr_049",
+    "question": "Please find suspected structuring in the second quarter of 2023: transactions split below a 5,000,000 KRW threshold.",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring",
+          "threshold": 5000000,
+          "date_from": 20230401,
+          "date_to": 20230630
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects detect_ctr_candidates (mode=structuring; threshold=5000000; date_from=20230401; date_to=20230630).",
+    "source": "2026-09 expansion"
   }
 ]

@@ -831,5 +831,124 @@
     },
     "difficulty": "easy",
     "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+  },
+  {
+    "id": "st_ctr_044",
+    "question": "3억원 이상 고액거래를 상위 50건까지 조회해줘",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value",
+          "threshold": 300000000,
+          "limit": 50
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects detect_ctr_candidates (mode=high_value; threshold=300000000; limit=50).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_ctr_045",
+    "question": "2000만원 보고 기준 미만으로 쪼갠 구조화(structuring) 의심 건을 탐지해줘",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring",
+          "threshold": 20000000
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects detect_ctr_candidates (mode=structuring; threshold=20000000).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_ctr_046",
+    "question": "2022년 하반기 고액현금거래보고 대상 거래를 조회해줘",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value",
+          "date_from": 20220701,
+          "date_to": 20221231
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects detect_ctr_candidates (mode=high_value; date_from=20220701; date_to=20221231).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_ctr_047",
+    "question": "2021년 4분기 구조화(structuring) 의심 거래를 탐지해줘",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring",
+          "date_from": 20211001,
+          "date_to": 20211231
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects detect_ctr_candidates (mode=structuring; date_from=20211001; date_to=20211231).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_ctr_048",
+    "question": "고액거래(high_value) 보고 후보를 상위 50건까지 뽑아줘",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "high_value",
+          "limit": 50
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_ctr_candidates (mode=high_value; limit=50).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_ctr_049",
+    "question": "2023년 2분기에 500만원 기준 아래로 나눠 거래한 구조화(structuring) 의심 건을 찾아줘",
+    "expected": {
+      "primary_tool": "detect_ctr_candidates",
+      "tools_must_include": [
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "detect_ctr_candidates": {
+          "mode": "structuring",
+          "threshold": 5000000,
+          "date_from": 20230401,
+          "date_to": 20230630
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects detect_ctr_candidates (mode=structuring; threshold=5000000; date_from=20230401; date_to=20230630).",
+    "source": "2026-09 expansion"
   }
 ]

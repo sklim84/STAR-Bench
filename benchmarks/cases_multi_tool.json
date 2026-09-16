@@ -2490,5 +2490,797 @@
     },
     "difficulty": "hard",
     "note": "Expects get_statistics, get_trend_analysis (unit=monthly); called in the order get_statistics -> get_trend_analysis."
+  },
+  {
+    "id": "st_mtool_101",
+    "question": "구조화(structuring)에 해당하는 FIU 의심거래 참고유형을 확인하고, 같은 관점에서 보고 기준 미만으로 쪼갠 거래도 탐지해줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types",
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "structuring"
+        },
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      },
+      "tool_order": [
+        "lookup_fiu_reference_types",
+        "detect_ctr_candidates"
+      ]
+    },
+    "difficulty": "medium",
+    "note": "Expects lookup_fiu_reference_types (keyword=structuring), detect_ctr_candidates (mode=structuring); called in the order lookup_fiu_reference_types -> detect_ctr_candidates.",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_102",
+    "question": "AML 용어집에서 CTR 항목의 보고 기준 금액을 확인하고, 그 기준 이상인 고액거래도 조회해줘",
+    "expected": {
+      "primary_tool": "get_aml_glossary",
+      "tools_must_include": [
+        "get_aml_glossary",
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "get_aml_glossary": {
+          "term": "CTR"
+        },
+        "detect_ctr_candidates": {
+          "mode": "high_value"
+        }
+      },
+      "tool_order": [
+        "get_aml_glossary",
+        "detect_ctr_candidates"
+      ]
+    },
+    "difficulty": "hard",
+    "note": "Expects get_aml_glossary (term=CTR), detect_ctr_candidates (mode=high_value); called in the order get_aml_glossary -> detect_ctr_candidates.",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_103",
+    "question": "AML 용어집의 Structuring 항목 정의를 확인하고, 유입 거래 상대가 많은 자금 집결 계좌도 탐지해줘",
+    "expected": {
+      "primary_tool": "get_aml_glossary",
+      "tools_must_include": [
+        "get_aml_glossary",
+        "detect_smurfing_network"
+      ],
+      "param_checks": {
+        "get_aml_glossary": {
+          "term": "Structuring"
+        },
+        "detect_smurfing_network": {
+          "direction": "inbound"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects get_aml_glossary (term=Structuring), detect_smurfing_network (direction=inbound).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_104",
+    "question": "다음 STR 초안의 필수 항목을 점검하고, 초안에 적힌 의심 유형인 분할 거래(유형3)의 전체 통계도 알려줘: {\"Header\": {\"ReportingDate\": \"20220630\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 159}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000004242511\", \"ReceivingAccountNumber\": \"9000000004320756\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20220603-20220629\", \"TransactionCount\": 5, \"TransactionChannel\": \"Bulk Transfer\", \"TotalAmount_KRW\": 20000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Split Transaction\"}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"5 transfers totalling 20,000,000 KRW were sent to the same receiving account between 20220603 and 20220629, each one below the reporting threshold.\", \"OverallOpinion\": \"Recommended for reporting to the FIU.\"}}",
+    "expected": {
+      "primary_tool": "validate_str_fields",
+      "tools_must_include": [
+        "validate_str_fields",
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "validate_str_fields": {
+          "str_draft": {
+            "Header": {
+              "ReportingDate": "20220630"
+            },
+            "I_ReportingInstitution": {
+              "WithdrawalInstitutionCode": 159
+            },
+            "II_Transactor": {
+              "WithdrawalAccountNumber": "9000000004242511",
+              "ReceivingAccountNumber": "9000000004320756"
+            },
+            "III_TransactionDetails": {
+              "TransactionPeriod": "20220603-20220629",
+              "TransactionCount": 5,
+              "TransactionChannel": "Bulk Transfer",
+              "TotalAmount_KRW": 20000000
+            },
+            "VI_TransactionType": {
+              "PrimarySuspicionType": "Split Transaction"
+            },
+            "VII_Narrative": {
+              "SuspicionJudgmentReason": "5 transfers totalling 20,000,000 KRW were sent to the same receiving account between 20220603 and 20220629, each one below the reporting threshold.",
+              "OverallOpinion": "Recommended for reporting to the FIU."
+            }
+          }
+        },
+        "get_fraud_type_summary": {
+          "fraud_type": 3
+        }
+      },
+      "tool_order": [
+        "validate_str_fields",
+        "get_fraud_type_summary"
+      ]
+    },
+    "difficulty": "medium",
+    "note": "Expects validate_str_fields (str_draft as given in the question), get_fraud_type_summary (fraud_type=3); called in the order validate_str_fields -> get_fraud_type_summary.",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_105",
+    "question": "아래 STR 초안에서 빠진 필수 항목을 확인하고, 초안의 출금계좌 프로파일도 조회해줘: {\"Header\": {\"ReportingDate\": \"20240531\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 147}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000004236284\", \"ReceivingAccountNumber\": \"9000000004371903\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20240510-20240513\", \"TransactionCount\": 13, \"TotalAmount_KRW\": 640000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Concurrent Multiple Transactions\"}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"13 transfers totalling 640,000,000 KRW to the same receiving account were requested together between 20240510 and 20240513.\"}}",
+    "expected": {
+      "primary_tool": "validate_str_fields",
+      "tools_must_include": [
+        "validate_str_fields",
+        "get_account_profile"
+      ],
+      "param_checks": {
+        "validate_str_fields": {
+          "str_draft": {
+            "Header": {
+              "ReportingDate": "20240531"
+            },
+            "I_ReportingInstitution": {
+              "WithdrawalInstitutionCode": 147
+            },
+            "II_Transactor": {
+              "WithdrawalAccountNumber": "9000000004236284",
+              "ReceivingAccountNumber": "9000000004371903"
+            },
+            "III_TransactionDetails": {
+              "TransactionPeriod": "20240510-20240513",
+              "TransactionCount": 13,
+              "TotalAmount_KRW": 640000000
+            },
+            "VI_TransactionType": {
+              "PrimarySuspicionType": "Concurrent Multiple Transactions"
+            },
+            "VII_Narrative": {
+              "SuspicionJudgmentReason": "13 transfers totalling 640,000,000 KRW to the same receiving account were requested together between 20240510 and 20240513."
+            }
+          }
+        },
+        "get_account_profile": {
+          "account_id": 9000000004236284
+        }
+      },
+      "tool_order": [
+        "validate_str_fields",
+        "get_account_profile"
+      ]
+    },
+    "difficulty": "medium",
+    "note": "Expects validate_str_fields (str_draft as given in the question), get_account_profile (account_id=9000000004236284); called in the order validate_str_fields -> get_account_profile.",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_106",
+    "question": "아래 STR 초안의 필수 항목을 검증하고, 초안의 의심 유형인 분할 거래에 대응하는 FIU 참고유형도 찾아줘: {\"Header\": {\"ReportingDate\": \"20220630\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 159}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000039222\", \"ReceivingAccountNumber\": \"9000000000888766\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20220605-20220625\", \"TransactionCount\": 4, \"TransactionChannel\": \"Bulk Transfer\", \"TotalAmount_KRW\": 16000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Split Transaction\"}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"4 transfers totalling 16,000,000 KRW were sent to the same receiving account between 20220605 and 20220625, each one below the reporting threshold.\"}}",
+    "expected": {
+      "primary_tool": "validate_str_fields",
+      "tools_must_include": [
+        "validate_str_fields",
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "validate_str_fields": {
+          "str_draft": {
+            "Header": {
+              "ReportingDate": "20220630"
+            },
+            "I_ReportingInstitution": {
+              "WithdrawalInstitutionCode": 159
+            },
+            "II_Transactor": {
+              "WithdrawalAccountNumber": "9000000000039222",
+              "ReceivingAccountNumber": "9000000000888766"
+            },
+            "III_TransactionDetails": {
+              "TransactionPeriod": "20220605-20220625",
+              "TransactionCount": 4,
+              "TransactionChannel": "Bulk Transfer",
+              "TotalAmount_KRW": 16000000
+            },
+            "VI_TransactionType": {
+              "PrimarySuspicionType": "Split Transaction"
+            },
+            "VII_Narrative": {
+              "SuspicionJudgmentReason": "4 transfers totalling 16,000,000 KRW were sent to the same receiving account between 20220605 and 20220625, each one below the reporting threshold."
+            }
+          }
+        },
+        "lookup_fiu_reference_types": {
+          "keyword": "structuring"
+        }
+      },
+      "tool_order": [
+        "validate_str_fields",
+        "lookup_fiu_reference_types"
+      ]
+    },
+    "difficulty": "hard",
+    "note": "Expects validate_str_fields (str_draft as given in the question), lookup_fiu_reference_types (keyword=structuring); called in the order validate_str_fields -> lookup_fiu_reference_types.",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_107",
+    "question": "2023년 4분기와 2024년 4분기 거래 통계를 비교하고, 건수가 가장 많은 신규 수신처 거래 유형의 기관별 분포도 알려줘",
+    "expected": {
+      "primary_tool": "compare_periods",
+      "tools_must_include": [
+        "compare_periods",
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "compare_periods": {
+          "period1_start": 20231001,
+          "period1_end": 20231231,
+          "period2_start": 20241001,
+          "period2_end": 20241231
+        },
+        "get_fraud_type_summary": {
+          "fraud_type": 2
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects compare_periods (period1_start=20231001; period1_end=20231231; period2_start=20241001; period2_end=20241231), get_fraud_type_summary (fraud_type=2).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_108",
+    "question": "2024년 상반기와 하반기 거래 통계를 비교하고, 하반기 구간의 채널별 이상거래 비율도 분석해줘",
+    "expected": {
+      "primary_tool": "compare_periods",
+      "tools_must_include": [
+        "compare_periods",
+        "analyze_channel_risk"
+      ],
+      "param_checks": {
+        "compare_periods": {
+          "period1_start": 20240101,
+          "period1_end": 20240630,
+          "period2_start": 20240701,
+          "period2_end": 20241231
+        },
+        "analyze_channel_risk": {
+          "date_from": 20240701,
+          "date_to": 20241231
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects compare_periods (period1_start=20240101; period1_end=20240630; period2_start=20240701; period2_end=20241231), analyze_channel_risk (date_from=20240701; date_to=20241231).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_109",
+    "question": "2022년과 2023년 연간 거래 통계를 비교하고, 2023년 구간의 고액거래 CTR 보고 후보도 조회해줘",
+    "expected": {
+      "primary_tool": "compare_periods",
+      "tools_must_include": [
+        "compare_periods",
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "compare_periods": {
+          "period1_start": 20220101,
+          "period1_end": 20221231,
+          "period2_start": 20230101,
+          "period2_end": 20231231
+        },
+        "detect_ctr_candidates": {
+          "mode": "high_value",
+          "date_from": 20230101,
+          "date_to": 20231231
+        }
+      },
+      "tool_order": [
+        "compare_periods",
+        "detect_ctr_candidates"
+      ]
+    },
+    "difficulty": "hard",
+    "note": "Expects compare_periods (period1_start=20220101; period1_end=20221231; period2_start=20230101; period2_end=20231231), detect_ctr_candidates (mode=high_value; date_from=20230101; date_to=20231231); called in the order compare_periods -> detect_ctr_candidates.",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_110",
+    "question": "계좌 9000000004242077의 R003 동일 금액 반복 송금 알림을 확인하고, 그 계좌의 거래 프로파일도 보여줘",
+    "expected": {
+      "primary_tool": "detect_monitoring_alerts",
+      "tools_must_include": [
+        "detect_monitoring_alerts",
+        "get_account_profile"
+      ],
+      "param_checks": {
+        "detect_monitoring_alerts": {
+          "rule_id": "R003",
+          "account_id": 9000000004242077
+        },
+        "get_account_profile": {
+          "account_id": 9000000004242077
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects detect_monitoring_alerts (rule_id=R003; account_id=9000000004242077), get_account_profile (account_id=9000000004242077).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_111",
+    "question": "계좌 9000000004243626의 R002 동일일 다건거래 알림을 조회하고, 그 계좌의 행동 위험 점수도 산출해줘",
+    "expected": {
+      "primary_tool": "detect_monitoring_alerts",
+      "tools_must_include": [
+        "detect_monitoring_alerts",
+        "score_account_risk"
+      ],
+      "param_checks": {
+        "detect_monitoring_alerts": {
+          "rule_id": "R002",
+          "account_id": 9000000004243626
+        },
+        "score_account_risk": {
+          "account_id": 9000000004243626
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects detect_monitoring_alerts (rule_id=R002; account_id=9000000004243626), score_account_risk (account_id=9000000004243626).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_112",
+    "question": "1000건 샘플에서 위험도 상위 20건을 랭킹하고, 거래시간대 21, 출금사 159, 입금사 133, 일반(자금구분 0), 인터넷뱅킹(매체구분 2), 5000만원인 개별 거래의 위험 점수도 예측해줘",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions",
+        "predict_fraud"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 1000,
+          "top_k": 20
+        },
+        "predict_fraud": {
+          "time_slot": 21,
+          "sender_bank": 159,
+          "receiver_bank": 133,
+          "fund_type": 0,
+          "media_type": 2,
+          "amount": 50000000
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects rank_risky_transactions (sample_size=1000; top_k=20), predict_fraud (time_slot=21; sender_bank=159; receiver_bank=133; fund_type=0; media_type=2; amount=50000000).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_113",
+    "question": "금융회사 151의 입출금 양방향 현황 리포트를 확인하고, 2000건 샘플에서 위험도 상위 30건도 뽑아줘",
+    "expected": {
+      "primary_tool": "get_institution_report",
+      "tools_must_include": [
+        "get_institution_report",
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "get_institution_report": {
+          "bank_id": 151
+        },
+        "rank_risky_transactions": {
+          "sample_size": 2000,
+          "top_k": 30
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects get_institution_report (bank_id=151), rank_risky_transactions (sample_size=2000; top_k=30).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_114",
+    "question": "출금금융회사 147의 다중거래의 동시 요청 이상거래 통계를 확인하고, 그 기관의 입출금 현황 리포트도 만들어줘",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary",
+        "get_institution_report"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 4,
+          "bank_id": 147
+        },
+        "get_institution_report": {
+          "bank_id": 147
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects get_fraud_type_summary (fraud_type=4; bank_id=147), get_institution_report (bank_id=147).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_115",
+    "question": "장기간 휴면이던 계좌가 큰 자금으로 다시 움직이는 경우에 해당하는 FIU 참고유형을 찾고, 실제로 180일 이상 휴면 후 재활성화된 계좌도 탐지해줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types",
+        "detect_dormant_reactivation"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "dormancy"
+        },
+        "detect_dormant_reactivation": {
+          "dormant_days": 180
+        }
+      },
+      "tool_order": [
+        "lookup_fiu_reference_types",
+        "detect_dormant_reactivation"
+      ]
+    },
+    "difficulty": "hard",
+    "note": "Expects lookup_fiu_reference_types (keyword=dormancy), detect_dormant_reactivation (dormant_days=180); called in the order lookup_fiu_reference_types -> detect_dormant_reactivation.",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_116",
+    "question": "송금(wire transfer)이 등장하는 FIU 의심거래 참고유형을 조회하고, 2024년 기관 간 자금 흐름이 집중된 기관쌍도 분석해줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types",
+        "analyze_cross_institution_flow"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "wire transfer"
+        },
+        "analyze_cross_institution_flow": {
+          "date_from": 20240101,
+          "date_to": 20241231
+        }
+      },
+      "tool_order": [
+        "lookup_fiu_reference_types",
+        "analyze_cross_institution_flow"
+      ]
+    },
+    "difficulty": "hard",
+    "note": "Expects lookup_fiu_reference_types (keyword=wire transfer), analyze_cross_institution_flow (date_from=20240101; date_to=20241231); called in the order lookup_fiu_reference_types -> analyze_cross_institution_flow.",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_117",
+    "question": "AML 용어집에서 STR 항목의 정의와 출처를 확인하고, STR 후보를 찾기 위해 전체 모니터링 규칙도 실행해줘",
+    "expected": {
+      "primary_tool": "get_aml_glossary",
+      "tools_must_include": [
+        "get_aml_glossary",
+        "detect_monitoring_alerts"
+      ],
+      "param_checks": {
+        "get_aml_glossary": {
+          "term": "STR"
+        },
+        "detect_monitoring_alerts": {
+          "rule_id": "all"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects get_aml_glossary (term=STR), detect_monitoring_alerts (rule_id=all).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_118",
+    "question": "출금금융회사 159의 분할 거래(유형3) 이상거래 통계를 확인하고, 해당 거래 원본도 SQL로 조회해줘",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary",
+        "query_transactions"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 3,
+          "bank_id": 159
+        },
+        "query_transactions": {
+          "sql_conditions": [
+            {
+              "column": "fraud_type",
+              "op": "=",
+              "value": 3
+            },
+            {
+              "column": "sender_bank",
+              "op": "=",
+              "value": 159
+            }
+          ],
+          "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, time_slot, sender_acc, receiver_acc, amount FROM hofinet WHERE fraud_type = 3 AND sender_bank = 159 ORDER BY date DESC LIMIT 100"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects get_fraud_type_summary (fraud_type=3; bank_id=159), query_transactions (must restrict fraud_type = 3 and sender_bank = 159; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable.",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_119",
+    "question": "2024년 1분기와 2분기 거래 통계를 비교하고, 2024년 상반기 중 거래시간대 21에 발생한 이상거래를 SQL로 조회해줘",
+    "expected": {
+      "primary_tool": "compare_periods",
+      "tools_must_include": [
+        "compare_periods",
+        "query_transactions"
+      ],
+      "param_checks": {
+        "compare_periods": {
+          "period1_start": 20240101,
+          "period1_end": 20240331,
+          "period2_start": 20240401,
+          "period2_end": 20240630
+        },
+        "query_transactions": {
+          "sql_conditions": [
+            {
+              "column": "is_fraud",
+              "op": "=",
+              "value": 1
+            },
+            {
+              "column": "time_slot",
+              "op": "=",
+              "value": 21
+            },
+            {
+              "column": "date",
+              "op": "BETWEEN",
+              "value": [
+                20240101,
+                20240630
+              ]
+            }
+          ],
+          "sql_valid": true
+        }
+      },
+      "reference_calls": {
+        "query_transactions": {
+          "sql": "SELECT date, time_slot, sender_bank, receiver_bank, amount, fraud_type FROM hofinet WHERE is_fraud = 1 AND time_slot = 21 AND date BETWEEN 20240101 AND 20240630 ORDER BY date DESC LIMIT 100"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects compare_periods (period1_start=20240101; period1_end=20240331; period2_start=20240401; period2_end=20240630), query_transactions (must restrict is_fraud = 1 and time_slot = 21 and date BETWEEN 20240101 and 20240630; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable.",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_120",
+    "question": "아래 STR 초안의 필수 항목을 검증하고, 초안의 입금계좌가 어디에서 자금을 받았는지 입금 프로파일로도 확인해줘: {\"Header\": {}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 147}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000021942\", \"ReceivingAccountNumber\": \"9000000002264298\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20221013-20221021\", \"TransactionCount\": 28, \"TransactionChannel\": \"Internet Banking\", \"TotalAmount_KRW\": 1940000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Concurrent Multiple Transactions\"}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"28 transfers totalling 1,940,000,000 KRW to the same receiving account were requested together between 20221013 and 20221021.\"}}",
+    "expected": {
+      "primary_tool": "validate_str_fields",
+      "tools_must_include": [
+        "validate_str_fields",
+        "get_receiving_account_profile"
+      ],
+      "param_checks": {
+        "validate_str_fields": {
+          "str_draft": {
+            "Header": {},
+            "I_ReportingInstitution": {
+              "WithdrawalInstitutionCode": 147
+            },
+            "II_Transactor": {
+              "WithdrawalAccountNumber": "9000000000021942",
+              "ReceivingAccountNumber": "9000000002264298"
+            },
+            "III_TransactionDetails": {
+              "TransactionPeriod": "20221013-20221021",
+              "TransactionCount": 28,
+              "TransactionChannel": "Internet Banking",
+              "TotalAmount_KRW": 1940000000
+            },
+            "VI_TransactionType": {
+              "PrimarySuspicionType": "Concurrent Multiple Transactions"
+            },
+            "VII_Narrative": {
+              "SuspicionJudgmentReason": "28 transfers totalling 1,940,000,000 KRW to the same receiving account were requested together between 20221013 and 20221021."
+            }
+          }
+        },
+        "get_receiving_account_profile": {
+          "account_id": 9000000002264298
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects validate_str_fields (str_draft as given in the question), get_receiving_account_profile (account_id=9000000002264298).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_121",
+    "question": "2024년에 30곳 이상에서 자금을 받은 집결 계좌를 탐지하고, 같은 기간 기관 간 자금 흐름이 집중된 기관쌍도 분석해줘",
+    "expected": {
+      "primary_tool": "detect_smurfing_network",
+      "tools_must_include": [
+        "detect_smurfing_network",
+        "analyze_cross_institution_flow"
+      ],
+      "param_checks": {
+        "detect_smurfing_network": {
+          "direction": "inbound",
+          "min_counterparts": 30,
+          "date_from": 20240101,
+          "date_to": 20241231
+        },
+        "analyze_cross_institution_flow": {
+          "date_from": 20240101,
+          "date_to": 20241231
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects detect_smurfing_network (direction=inbound; min_counterparts=30; date_from=20240101; date_to=20241231), analyze_cross_institution_flow (date_from=20240101; date_to=20241231).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_122",
+    "question": "여러 곳에서 자금을 받아 소수 계좌로만 내보내는 깔때기(funnel) 계좌를 탐지하고, 계좌 9000000004374328의 거래 프로파일도 조회해줘",
+    "expected": {
+      "primary_tool": "detect_aml_patterns",
+      "tools_must_include": [
+        "detect_aml_patterns",
+        "get_account_profile"
+      ],
+      "param_checks": {
+        "detect_aml_patterns": {
+          "pattern_type": "funnel"
+        },
+        "get_account_profile": {
+          "account_id": 9000000004374328
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects detect_aml_patterns (pattern_type=funnel), get_account_profile (account_id=9000000004374328).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_123",
+    "question": "2023년 분기별 이상거래 추이를 확인하고, 2023년 하반기 심야 대량 거래(R001) 알림도 조회해줘",
+    "expected": {
+      "primary_tool": "get_trend_analysis",
+      "tools_must_include": [
+        "get_trend_analysis",
+        "detect_monitoring_alerts"
+      ],
+      "param_checks": {
+        "get_trend_analysis": {
+          "unit": "quarterly",
+          "date_from": 20230101,
+          "date_to": 20231231
+        },
+        "detect_monitoring_alerts": {
+          "rule_id": "R001",
+          "date_from": 20230701,
+          "date_to": 20231231
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects get_trend_analysis (unit=quarterly; date_from=20230101; date_to=20231231), detect_monitoring_alerts (rule_id=R001; date_from=20230701; date_to=20231231).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_124",
+    "question": "AML 용어집의 Structuring 정의와 그에 해당하는 FIU 참고유형을 각각 확인하고, 실제 데이터에서 보고 기준 미만으로 쪼갠 의심 거래도 탐지해줘",
+    "expected": {
+      "primary_tool": "get_aml_glossary",
+      "tools_must_include": [
+        "get_aml_glossary",
+        "lookup_fiu_reference_types",
+        "detect_ctr_candidates"
+      ],
+      "param_checks": {
+        "get_aml_glossary": {
+          "term": "Structuring"
+        },
+        "lookup_fiu_reference_types": {
+          "keyword": "structuring"
+        },
+        "detect_ctr_candidates": {
+          "mode": "structuring"
+        }
+      },
+      "tool_order": [
+        "get_aml_glossary",
+        "lookup_fiu_reference_types",
+        "detect_ctr_candidates"
+      ]
+    },
+    "difficulty": "hard",
+    "note": "Expects get_aml_glossary (term=Structuring), lookup_fiu_reference_types (keyword=structuring), detect_ctr_candidates (mode=structuring); called in the order get_aml_glossary -> lookup_fiu_reference_types -> detect_ctr_candidates.",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mtool_125",
+    "question": "아래 STR 초안의 필수 항목을 점검하고, 초안의 출금계좌 프로파일과 그 계좌의 R003 동일 금액 반복 송금 알림도 함께 확인해줘: {\"Header\": {\"ReportingDate\": \"20240731\"}, \"I_ReportingInstitution\": {\"WithdrawalInstitutionCode\": 159, \"MLROName\": \"Reporting Officer\"}, \"II_Transactor\": {\"WithdrawalAccountNumber\": \"9000000000041188\", \"ReceivingAccountNumber\": \"9000000003707223\"}, \"III_TransactionDetails\": {\"TransactionPeriod\": \"20240715-20240723\", \"TransactionCount\": 7, \"TransactionChannel\": \"Internet Banking\", \"TotalAmount_KRW\": 28000000}, \"VI_TransactionType\": {\"PrimarySuspicionType\": \"Split Transaction\"}, \"VII_Narrative\": {\"SuspicionJudgmentReason\": \"7 transfers totalling 28,000,000 KRW were sent to the same receiving account between 20240715 and 20240723, each one below the reporting threshold.\"}}",
+    "expected": {
+      "primary_tool": "validate_str_fields",
+      "tools_must_include": [
+        "validate_str_fields",
+        "get_account_profile",
+        "detect_monitoring_alerts"
+      ],
+      "param_checks": {
+        "validate_str_fields": {
+          "str_draft": {
+            "Header": {
+              "ReportingDate": "20240731"
+            },
+            "I_ReportingInstitution": {
+              "WithdrawalInstitutionCode": 159,
+              "MLROName": "Reporting Officer"
+            },
+            "II_Transactor": {
+              "WithdrawalAccountNumber": "9000000000041188",
+              "ReceivingAccountNumber": "9000000003707223"
+            },
+            "III_TransactionDetails": {
+              "TransactionPeriod": "20240715-20240723",
+              "TransactionCount": 7,
+              "TransactionChannel": "Internet Banking",
+              "TotalAmount_KRW": 28000000
+            },
+            "VI_TransactionType": {
+              "PrimarySuspicionType": "Split Transaction"
+            },
+            "VII_Narrative": {
+              "SuspicionJudgmentReason": "7 transfers totalling 28,000,000 KRW were sent to the same receiving account between 20240715 and 20240723, each one below the reporting threshold."
+            }
+          }
+        },
+        "get_account_profile": {
+          "account_id": 9000000000041188
+        },
+        "detect_monitoring_alerts": {
+          "rule_id": "R003",
+          "account_id": 9000000000041188
+        }
+      },
+      "tool_order": [
+        "validate_str_fields",
+        "get_account_profile",
+        "detect_monitoring_alerts"
+      ]
+    },
+    "difficulty": "hard",
+    "note": "Expects validate_str_fields (str_draft as given in the question), get_account_profile (account_id=9000000000041188), detect_monitoring_alerts (rule_id=R003; account_id=9000000000041188); called in the order validate_str_fields -> get_account_profile -> detect_monitoring_alerts.",
+    "source": "2026-09 expansion"
   }
 ]

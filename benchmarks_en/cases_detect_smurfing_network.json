@@ -868,5 +868,106 @@
     },
     "difficulty": "easy",
     "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+  },
+  {
+    "id": "st_smurf_045",
+    "question": "Please check whether account 9000000004238701 disperses funds to 30 or more receiving accounts.",
+    "expected": {
+      "primary_tool": "detect_smurfing_network",
+      "tools_must_include": [
+        "detect_smurfing_network"
+      ],
+      "param_checks": {
+        "detect_smurfing_network": {
+          "account_id": 9000000004238701,
+          "direction": "outbound",
+          "min_counterparts": 30
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects detect_smurfing_network (account_id=9000000004238701; direction=outbound; min_counterparts=30).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_smurf_046",
+    "question": "Please check in the inbound direction whether funds reach account 9000000004410299 from 25 or more accounts.",
+    "expected": {
+      "primary_tool": "detect_smurfing_network",
+      "tools_must_include": [
+        "detect_smurfing_network"
+      ],
+      "param_checks": {
+        "detect_smurfing_network": {
+          "account_id": 9000000004410299,
+          "direction": "inbound",
+          "min_counterparts": 25
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_smurfing_network (account_id=9000000004410299; direction=inbound; min_counterparts=25).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_smurf_047",
+    "question": "Please retrieve the collection accounts that received funds from 30 or more counterparties during 2023.",
+    "expected": {
+      "primary_tool": "detect_smurfing_network",
+      "tools_must_include": [
+        "detect_smurfing_network"
+      ],
+      "param_checks": {
+        "detect_smurfing_network": {
+          "direction": "inbound",
+          "min_counterparts": 30,
+          "date_from": 20230101,
+          "date_to": 20231231
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects detect_smurfing_network (direction=inbound; min_counterparts=30; date_from=20230101; date_to=20231231).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_smurf_048",
+    "question": "Please show only the top 15 dispersion accounts that send funds to 40 or more accounts.",
+    "expected": {
+      "primary_tool": "detect_smurfing_network",
+      "tools_must_include": [
+        "detect_smurfing_network"
+      ],
+      "param_checks": {
+        "detect_smurfing_network": {
+          "direction": "outbound",
+          "min_counterparts": 40,
+          "limit": 15
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects detect_smurfing_network (direction=outbound; min_counterparts=40; limit=15).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_smurf_049",
+    "question": "Please analyze in the inbound direction whether more than 50 counterparties sent money to account 9000000000805452.",
+    "expected": {
+      "primary_tool": "detect_smurfing_network",
+      "tools_must_include": [
+        "detect_smurfing_network"
+      ],
+      "param_checks": {
+        "detect_smurfing_network": {
+          "account_id": 9000000000805452,
+          "direction": "inbound",
+          "min_counterparts": 50
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects detect_smurfing_network (account_id=9000000000805452; direction=inbound; min_counterparts=50).",
+    "source": "2026-09 expansion"
   }
 ]

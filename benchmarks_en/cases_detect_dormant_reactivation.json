@@ -812,5 +812,98 @@
     },
     "difficulty": "easy",
     "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+  },
+  {
+    "id": "st_dorm_045",
+    "question": "Please detect accounts used again after 120 days or more without a transaction.",
+    "expected": {
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation"
+      ],
+      "param_checks": {
+        "detect_dormant_reactivation": {
+          "dormant_days": 120
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_dormant_reactivation (dormant_days=120).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_dorm_046",
+    "question": "Please find the reactivation transactions of accounts dormant for more than 450 days.",
+    "expected": {
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation"
+      ],
+      "param_checks": {
+        "detect_dormant_reactivation": {
+          "dormant_days": 450
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_dormant_reactivation (dormant_days=450).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_dorm_047",
+    "question": "Please retrieve accounts unused for 240 days or more whose reactivation amount is 100,000,000 KRW or more.",
+    "expected": {
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation"
+      ],
+      "param_checks": {
+        "detect_dormant_reactivation": {
+          "dormant_days": 240,
+          "min_reactivation_amount": 100000000
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_dormant_reactivation (dormant_days=240; min_reactivation_amount=100000000).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_dorm_048",
+    "question": "Please show the cases where an account dormant for 800 days or more was used again.",
+    "expected": {
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation"
+      ],
+      "param_checks": {
+        "detect_dormant_reactivation": {
+          "dormant_days": 800
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_dormant_reactivation (dormant_days=800).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_dorm_049",
+    "question": "Please retrieve the top 25 accounts that were dormant for 150 days or more and were reactivated with a transaction of 10,000,000 KRW or more.",
+    "expected": {
+      "primary_tool": "detect_dormant_reactivation",
+      "tools_must_include": [
+        "detect_dormant_reactivation"
+      ],
+      "param_checks": {
+        "detect_dormant_reactivation": {
+          "dormant_days": 150,
+          "min_reactivation_amount": 10000000,
+          "limit": 25
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_dormant_reactivation (dormant_days=150; min_reactivation_amount=10000000; limit=25).",
+    "source": "2026-09 expansion"
   }
 ]

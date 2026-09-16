@@ -868,5 +868,106 @@
     },
     "difficulty": "easy",
     "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+  },
+  {
+    "id": "st_smurf_045",
+    "question": "계좌 9000000004238701이 30곳 이상 수취 계좌로 자금을 분산하는지 확인해줘",
+    "expected": {
+      "primary_tool": "detect_smurfing_network",
+      "tools_must_include": [
+        "detect_smurfing_network"
+      ],
+      "param_checks": {
+        "detect_smurfing_network": {
+          "account_id": 9000000004238701,
+          "direction": "outbound",
+          "min_counterparts": 30
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects detect_smurfing_network (account_id=9000000004238701; direction=outbound; min_counterparts=30).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_smurf_046",
+    "question": "계좌 9000000004410299로 25곳 이상에서 자금이 유입되는지 inbound 방향으로 확인해줘",
+    "expected": {
+      "primary_tool": "detect_smurfing_network",
+      "tools_must_include": [
+        "detect_smurfing_network"
+      ],
+      "param_checks": {
+        "detect_smurfing_network": {
+          "account_id": 9000000004410299,
+          "direction": "inbound",
+          "min_counterparts": 25
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_smurfing_network (account_id=9000000004410299; direction=inbound; min_counterparts=25).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_smurf_047",
+    "question": "2023년 한 해 동안 30곳 이상 거래처로부터 자금을 받은 집결 계좌를 조회해줘",
+    "expected": {
+      "primary_tool": "detect_smurfing_network",
+      "tools_must_include": [
+        "detect_smurfing_network"
+      ],
+      "param_checks": {
+        "detect_smurfing_network": {
+          "direction": "inbound",
+          "min_counterparts": 30,
+          "date_from": 20230101,
+          "date_to": 20231231
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects detect_smurfing_network (direction=inbound; min_counterparts=30; date_from=20230101; date_to=20231231).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_smurf_048",
+    "question": "40개 이상 계좌로 자금을 내보내는 분산 계좌를 상위 15건만 보여줘",
+    "expected": {
+      "primary_tool": "detect_smurfing_network",
+      "tools_must_include": [
+        "detect_smurfing_network"
+      ],
+      "param_checks": {
+        "detect_smurfing_network": {
+          "direction": "outbound",
+          "min_counterparts": 40,
+          "limit": 15
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects detect_smurfing_network (direction=outbound; min_counterparts=40; limit=15).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_smurf_049",
+    "question": "계좌 9000000000805452로 50곳이 넘는 상대방이 송금했는지 유입 방향으로 분석해줘",
+    "expected": {
+      "primary_tool": "detect_smurfing_network",
+      "tools_must_include": [
+        "detect_smurfing_network"
+      ],
+      "param_checks": {
+        "detect_smurfing_network": {
+          "account_id": 9000000000805452,
+          "direction": "inbound",
+          "min_counterparts": 50
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects detect_smurfing_network (account_id=9000000000805452; direction=inbound; min_counterparts=50).",
+    "source": "2026-09 expansion"
   }
 ]

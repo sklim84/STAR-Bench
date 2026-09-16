@@ -197,7 +197,7 @@ def main() -> int:
 
     fraud_bank = query("""
         SELECT fraud_type, sender_bank, COUNT(*)::BIGINT AS n FROM hofinet WHERE is_fraud = 1
-        GROUP BY 1, 2 HAVING COUNT(*) >= 50 ORDER BY fraud_type, n DESC
+        GROUP BY 1, 2 HAVING COUNT(*) >= 10 ORDER BY fraud_type, n DESC
     """)
 
     payload = {

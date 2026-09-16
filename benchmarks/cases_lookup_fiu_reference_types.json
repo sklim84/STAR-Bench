@@ -136,5 +136,318 @@
     },
     "difficulty": "medium",
     "note": "Expects lookup_fiu_reference_types (keyword=corporate)."
+  },
+  {
+    "id": "st_fiu_009",
+    "question": "ATM을 이용한 입금이나 출금과 관련된 FIU 의심거래 참고유형을 검색해줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "ATM"
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects lookup_fiu_reference_types (keyword=ATM).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_fiu_010",
+    "question": "불법 도박 사이트와 연계된 것으로 의심되는 거래의 FIU 참고유형을 조회해줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "gambling"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects lookup_fiu_reference_types (keyword=gambling).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_fiu_011",
+    "question": "잔액증명서 발급을 목적으로 한 입출금에 해당하는 FIU 의심거래 참고유형을 업권 구분 없이 찾아줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "balance certificate"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects lookup_fiu_reference_types (keyword=balance certificate).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_fiu_012",
+    "question": "증권업에서 실제 거래 의사 없이 잔액증명서 발급만을 위한 입출금에 해당하는 FIU 참고유형을 조회해줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "balance certificate",
+          "industry": "securities"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects lookup_fiu_reference_types (keyword=balance certificate; industry=securities).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_fiu_013",
+    "question": "페이퍼컴퍼니 계좌를 이용한 거래에 해당하는 FIU 의심거래 참고유형을 검색해줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "shell corporation"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects lookup_fiu_reference_types (keyword=shell corporation).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_fiu_014",
+    "question": "선불카드나 상품권 잔액 환불 거래에 해당하는 FIU 참고유형을 찾아줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "prepaid card"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects lookup_fiu_reference_types (keyword=prepaid card).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_fiu_015",
+    "question": "미성년자나 고령자 등 타인 명의 계좌를 이용한 거래의 FIU 의심거래 참고유형을 조회해줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "minors"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects lookup_fiu_reference_types (keyword=minors).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_fiu_016",
+    "question": "탈세 혐의가 의심되는 입금 거래에 해당하는 FIU 참고유형을 검색해줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "tax evasion"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects lookup_fiu_reference_types (keyword=tax evasion).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_fiu_017",
+    "question": "인터넷뱅킹을 통해 이뤄진 의심거래에 해당하는 FIU 참고유형을 은행업 기준으로 찾아줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "internet banking",
+          "industry": "banking"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects lookup_fiu_reference_types (keyword=internet banking; industry=banking).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_fiu_018",
+    "question": "출처를 알 수 없는 상대방에게서 받은 자금과 관련된 FIU 의심거래 참고유형을 조회해줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "unknown counterparties"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects lookup_fiu_reference_types (keyword=unknown counterparties).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_fiu_019",
+    "question": "국가 간 가격 차이를 이용한 자금세탁 의심거래 FIU 참고유형을 찾아줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "Kimchi Premium"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects lookup_fiu_reference_types (keyword=Kimchi Premium).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_fiu_020",
+    "question": "차명계좌를 이용하거나 타인 계좌로 이체하는 증권업 의심거래 FIU 참고유형을 조회해줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "borrowed names",
+          "industry": "securities"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects lookup_fiu_reference_types (keyword=borrowed names; industry=securities).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_fiu_021",
+    "question": "특정 종목을 집중 매매한 뒤 전량 매도하는 증권업 의심거래 FIU 참고유형을 찾아줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "liquidation",
+          "industry": "securities"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects lookup_fiu_reference_types (keyword=liquidation; industry=securities).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_fiu_022",
+    "question": "단기간에 비대면으로 다수 계좌를 개설하는 증권업 의심거래 FIU 참고유형을 조회해줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "multiple accounts",
+          "industry": "securities"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects lookup_fiu_reference_types (keyword=multiple accounts; industry=securities).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_fiu_023",
+    "question": "고객 정보 제공을 거부하거나 제공한 정보가 일치하지 않는 경우의 FIU 참고유형을 찾아줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "refusal"
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects lookup_fiu_reference_types (keyword=refusal).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_fiu_024",
+    "question": "법인 계좌와 대표자 개인 계좌 사이 거래를 은행업 FIU 참고유형에서 조회해줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "representative",
+          "industry": "banking"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects lookup_fiu_reference_types (keyword=representative; industry=banking).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_fiu_025",
+    "question": "현금 입출금과 관련된 은행업 FIU 의심거래 참고유형 목록을 뽑아줘",
+    "expected": {
+      "primary_tool": "lookup_fiu_reference_types",
+      "tools_must_include": [
+        "lookup_fiu_reference_types"
+      ],
+      "param_checks": {
+        "lookup_fiu_reference_types": {
+          "keyword": "cash",
+          "industry": "banking"
+        }
+      }
+    },
+    "difficulty": "hard",
+    "note": "Expects lookup_fiu_reference_types (keyword=cash; industry=banking).",
+    "source": "2026-09 expansion"
   }
 ]

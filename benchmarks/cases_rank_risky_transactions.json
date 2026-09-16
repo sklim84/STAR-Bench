@@ -791,5 +791,99 @@
     },
     "difficulty": "easy",
     "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+  },
+  {
+    "id": "st_rrt_044",
+    "question": "800건 샘플에서 위험 점수 상위 12건을 추출해줘",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 800,
+          "top_k": 12
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects rank_risky_transactions (sample_size=800; top_k=12).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_rrt_045",
+    "question": "1800건 표본을 모델로 채점해서 위험도 상위 45건을 뽑아줘",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 1800,
+          "top_k": 45
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects rank_risky_transactions (sample_size=1800; top_k=45).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_rrt_046",
+    "question": "이 도구가 한 번에 돌려줄 수 있는 최대 건수까지 위험 거래를 랭킹해줘",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 100
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects rank_risky_transactions (top_k=100).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_rrt_047",
+    "question": "4800건 배치 예측을 돌린 뒤 위험도 상위 75건을 우선조사 목록으로 만들어줘",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 4800,
+          "top_k": 75
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects rank_risky_transactions (sample_size=4800; top_k=75).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_rrt_048",
+    "question": "2600건 샘플 중 위험 점수가 가장 높은 35건을 정렬해서 보여줘",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 2600,
+          "top_k": 35
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects rank_risky_transactions (sample_size=2600; top_k=35).",
+    "source": "2026-09 expansion"
   }
 ]

@@ -791,5 +791,99 @@
     },
     "difficulty": "easy",
     "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+  },
+  {
+    "id": "st_rrt_044",
+    "question": "Please extract the top 12 by risk score from a sample of 800 transactions.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 800,
+          "top_k": 12
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects rank_risky_transactions (sample_size=800; top_k=12).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_rrt_045",
+    "question": "Please score a sample of 1,800 transactions with the model and pull the top 45 by risk.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 1800,
+          "top_k": 45
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects rank_risky_transactions (sample_size=1800; top_k=45).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_rrt_046",
+    "question": "Please rank the risky transactions up to the largest number this tool returns at once.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "top_k": 100
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects rank_risky_transactions (top_k=100).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_rrt_047",
+    "question": "Please run a batch prediction over 4,800 transactions and build a priority investigation list of the top 75 by risk.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 4800,
+          "top_k": 75
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects rank_risky_transactions (sample_size=4800; top_k=75).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_rrt_048",
+    "question": "Please sort and show the 35 highest-risk-score transactions out of a sample of 2,600.",
+    "expected": {
+      "primary_tool": "rank_risky_transactions",
+      "tools_must_include": [
+        "rank_risky_transactions"
+      ],
+      "param_checks": {
+        "rank_risky_transactions": {
+          "sample_size": 2600,
+          "top_k": 35
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects rank_risky_transactions (sample_size=2600; top_k=35).",
+    "source": "2026-09 expansion"
   }
 ]

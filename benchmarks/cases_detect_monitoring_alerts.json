@@ -837,5 +837,100 @@
     },
     "difficulty": "easy",
     "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+  },
+  {
+    "id": "st_mon_044",
+    "question": "계좌 9000000000044046이 같은 날 10건 이상 거래한 적이 있는지 R002 규칙으로 확인해줘",
+    "expected": {
+      "primary_tool": "detect_monitoring_alerts",
+      "tools_must_include": [
+        "detect_monitoring_alerts"
+      ],
+      "param_checks": {
+        "detect_monitoring_alerts": {
+          "rule_id": "R002",
+          "account_id": 9000000000044046
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_monitoring_alerts (rule_id=R002; account_id=9000000000044046).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mon_045",
+    "question": "계좌 9000000004390593이 동일 금액을 반복 송금했는지 모니터링 규칙 알림으로 확인해줘",
+    "expected": {
+      "primary_tool": "detect_monitoring_alerts",
+      "tools_must_include": [
+        "detect_monitoring_alerts"
+      ],
+      "param_checks": {
+        "detect_monitoring_alerts": {
+          "rule_id": "R003",
+          "account_id": 9000000004390593
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects detect_monitoring_alerts (rule_id=R003; account_id=9000000004390593).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mon_046",
+    "question": "계좌 9000000004230447의 심야 대량 거래 알림(R001)을 조회해줘",
+    "expected": {
+      "primary_tool": "detect_monitoring_alerts",
+      "tools_must_include": [
+        "detect_monitoring_alerts"
+      ],
+      "param_checks": {
+        "detect_monitoring_alerts": {
+          "rule_id": "R001",
+          "account_id": 9000000004230447
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_monitoring_alerts (rule_id=R001; account_id=9000000004230447).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mon_047",
+    "question": "계좌 9000000004237974의 거래가 한 입금 기관에 절반 이상 몰렸는지 모니터링 규칙으로 확인해줘",
+    "expected": {
+      "primary_tool": "detect_monitoring_alerts",
+      "tools_must_include": [
+        "detect_monitoring_alerts"
+      ],
+      "param_checks": {
+        "detect_monitoring_alerts": {
+          "rule_id": "R004",
+          "account_id": 9000000004237974
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects detect_monitoring_alerts (rule_id=R004; account_id=9000000004237974).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_mon_048",
+    "question": "계좌 9000000004236923의 거래량이 직전 동일 기간 대비 급증했는지 R005 규칙 알림으로 확인해줘",
+    "expected": {
+      "primary_tool": "detect_monitoring_alerts",
+      "tools_must_include": [
+        "detect_monitoring_alerts"
+      ],
+      "param_checks": {
+        "detect_monitoring_alerts": {
+          "rule_id": "R005",
+          "account_id": 9000000004236923
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects detect_monitoring_alerts (rule_id=R005; account_id=9000000004236923).",
+    "source": "2026-09 expansion"
   }
 ]

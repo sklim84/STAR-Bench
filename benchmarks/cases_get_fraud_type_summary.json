@@ -795,5 +795,119 @@
     },
     "difficulty": "easy",
     "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+  },
+  {
+    "id": "st_gfs_044",
+    "question": "출금금융회사 159의 갑작스러운 거래패턴의 변화(유형1) 이상거래 현황을 알려줘",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 1,
+          "bank_id": 159
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects get_fraud_type_summary (fraud_type=1; bank_id=159).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_gfs_045",
+    "question": "출금금융회사 134에서 발생한 신규 수신처 거래 이상거래 통계를 요약해줘",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 2,
+          "bank_id": 134
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects get_fraud_type_summary (fraud_type=2; bank_id=134).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_gfs_046",
+    "question": "출금금융회사 159의 분할 거래(유형3) 이상거래 건수와 금액을 알려줘",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 3,
+          "bank_id": 159
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects get_fraud_type_summary (fraud_type=3; bank_id=159).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_gfs_047",
+    "question": "다중거래의 동시 요청 이상거래 현황을 출금금융회사 147로 좁혀서 조회해줘",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 4,
+          "bank_id": 147
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects get_fraud_type_summary (fraud_type=4; bank_id=147).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_gfs_048",
+    "question": "거액 입금 후 당일 인출 이상거래를 출금금융회사 159 기준으로 요약해줘",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 5,
+          "bank_id": 159
+        }
+      }
+    },
+    "difficulty": "easy",
+    "note": "Expects get_fraud_type_summary (fraud_type=5; bank_id=159).",
+    "source": "2026-09 expansion"
+  },
+  {
+    "id": "st_gfs_049",
+    "question": "심야/새벽 대량 거래 이상거래를 출금금융회사 159로 좁혀서 통계를 보여줘",
+    "expected": {
+      "primary_tool": "get_fraud_type_summary",
+      "tools_must_include": [
+        "get_fraud_type_summary"
+      ],
+      "param_checks": {
+        "get_fraud_type_summary": {
+          "fraud_type": 7,
+          "bank_id": 159
+        }
+      }
+    },
+    "difficulty": "medium",
+    "note": "Expects get_fraud_type_summary (fraud_type=7; bank_id=159).",
+    "source": "2026-09 expansion"
   }
 ]
