@@ -1,0 +1,45 @@
+{
+ "_why": "Anomaly gates for the canary run (register step 10). Every number below has a source. Where the source is the 2026 run, it is the Korean-arm checkpoints under _experiments/results_kr/checkpoint/ (37 configurations, 46,546 case-runs, read on 2026-09-16); those runs are the ones the audit found broken, so the thresholds are set where a broken configuration lands, not where a good one does. A canary is a shape check, not a quality check: a model that calls the wrong tool passes, a model whose serving is broken does not.",
+ "thresholds": {
+  "no_tool_call_rate_max": {
+   "value": 0.40,
+   "why": "Share of canary cases whose gold expects a tool and that produced no tool call at all. In the 2026 Korean arm the median configuration answered 11.1% of its cases without a call; the three worst were xLAM-2-1b 75.0%, A.X-4.0-Light 52.6% and Phi-4-mini 31.2%, and Phi-4-mini's was later traced to a 12,288-token context that did not fit the prompt (C2-001). 0.40 sits above every configuration that was merely weak and below the ones whose serving was wrong."
+  },
+  "system_error_rate_max": {
+   "value": 0.01,
+   "why": "Share of canary records carrying an error block or stop_reason 'error'. The spec's number. In 2026 Llama-3.2-3B hit 16.1%, Llama-3.1-8B 8.3% and Llama-Open-Finance-8B 7.2% of cases with an api_error that was scored as a zero (L5-019); the runner now records errors explicitly, so anything above 1% of 43 records (one record) means the server or the template is wrong, not the model."
+  },
+  "length_finish_rate_max": {
+   "value": 0.02,
+   "why": "Share of records where a round stopped on finish_reason 'length'. The spec's number. A reasoning configuration that runs out of its 16k output budget produces a truncated tool call, which the fallback parser then reads as no call at all (D05, L5-006); 2% of 43 records is one record, so a systematic budget problem trips it and a single long answer does not."
+  },
+  "fallback_share_max": {
+   "value": 0.20,
+   "why": "Share of tool calls recorded with source 'fallback' rather than 'native'. The spec's number. Qwen-Open-Finance-R-8B was served with a parser that never matched, so every one of its calls came through the fallback parser; the registry now puts it on hermes (L5-010) and the record's source field is the measurement. Above 20% the tool-call parser in the registry entry is the wrong one for the template."
+  },
+  "empty_result_share_margin": {
+   "value": 0.10,
+   "why": "Allowed excess over the sample's own gold-call empty share, which is computed from allow_empty.json at run time (the ring and layering scans return nothing whatever the model does, D06). A model that calls the right tools cannot be far above its gold; a model calling get_account_profile on invented account ids sits far above it. The 2026 audit measured 42.8% of well-formed gold calls answering nothing, which is the failure this guards against."
+  },
+  "empty_result_share_floor": {
+   "value": 0.15,
+   "why": "Floor for the empty-result gate, so a sample whose gold happens to be all non-empty does not trip on one legitimately empty result. 0.15 of the roughly 55 executed calls in a canary is eight calls."
+  },
+  "prompt_headroom_min": {
+   "value": 2000,
+   "why": "Smallest context left after the server's own prompt_tokens and the output budget, over every round of the canary. The spec's number. The runner's own pre-flight asks for 6,000 (a 4,000-token tool result plus 2,000 slack, runner/preflight.py MIN_HEADROOM) from a byte estimate before the run; this one is measured from the server's usage counts during the run, so 2,000 is the point at which the next tool result cannot fit and the case is lost."
+  },
+  "latency_case_max_s": {
+   "value": 600,
+   "why": "Per-case wall clock. In the 2026 Korean arm the per-configuration median ranged from 0.2s (xLAM-2-1b) to 190s (gpt-oss-120b with high reasoning effort) and the slowest single case was 1,431s. 600s is above every configuration's median and below the tail, and it is twice the 300s client timeout, so a case that reaches it has already retried."
+  },
+  "latency_outlier_factor": {
+   "value": 12.0,
+   "why": "Slowest case divided by the canary's own median. Across the 37 2026 configurations the p95/median ratio was 2.4 at the median and 8.5 at the worst (Llama-3.1-8B, whose tail was retries on api_error). 12 is above the worst healthy run, so tripping it means a subset of cases is behaving differently from the rest, which is what a template or parser problem looks like."
+  },
+  "latency_outlier_floor_s": {
+   "value": 30,
+   "why": "A case is only called an outlier if it is also slower than this in absolute terms. Without it a fast configuration (median 0.2s in 2026) reports every 3-second case as a 15x outlier."
+  }
+ }
+}
