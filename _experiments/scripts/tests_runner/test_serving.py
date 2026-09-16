@@ -121,6 +121,14 @@ def test_the_mistral_models_are_served_with_the_vendor_format():
         assert "--config-format" in extra and "--load-format" in extra
 
 
+def test_the_kanana_parser_plugin_path_resolves():
+    for config_id in ("kanana-2-inst", "kanana-2-think"):
+        cfg = registry.by_id(config_id)
+        assert cfg.tool_parser_plugin_path.is_file(), config_id
+        args = registry.vllm_args(cfg, require_revision=False)
+        assert str(cfg.tool_parser_plugin_path) in args
+
+
 def test_the_serving_arguments_carry_the_pinned_revision_seed_and_parser():
     cfg = registry.by_id("dragon-llama-fin")
     args = registry.vllm_args(cfg)
@@ -147,8 +155,10 @@ def test_every_referenced_chat_template_exists_and_is_hashed():
         assert path.is_file(), cfg.config_id
         digest = registry.template_sha256(path)
         assert digest
-        if not Path(cfg.chat_template).is_absolute():
-            assert hashes[cfg.chat_template] == digest
+        assert not Path(cfg.chat_template).is_absolute(), "template paths stay repo-relative"
+        key = cfg.chat_template.replace("kanana_tool_calls/kanana_tool_calls/",
+                                        "kanana_tool_calls/")
+        assert hashes[key] == digest, cfg.config_id
 
 
 def test_the_four_gpu_entries_are_the_ones_that_do_not_fit_on_two_cards():

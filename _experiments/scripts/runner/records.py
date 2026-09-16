@@ -27,7 +27,8 @@ __all__ = [
     "new_run_id", "read_records", "case_ids_in", "RESUME_REFUSED", "ResumeRefused",
 ]
 
-STOP_REASONS = ("no_tool_call", "max_rounds", "error", "length", "max_calls")
+STOP_REASONS = ("no_tool_call", "tool_call", "max_rounds", "error", "length",
+                "max_calls")
 
 
 def _utcnow() -> str:

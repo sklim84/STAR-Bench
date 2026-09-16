@@ -32,14 +32,6 @@ from _experiments.scripts.runner.client import ModelClient  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
-CASE_FILES = (
-    "cases_query_transactions", "cases_get_statistics", "cases_get_account_profile",
-    "cases_detect_aml_patterns", "cases_analyze_network", "cases_predict_fraud",
-    "cases_score_account_risk", "cases_detect_smurfing_network",
-    "cases_get_receiving_account_profile", "cases_multi_tool",
-)
-
-
 def load_cases(cases_dir: Path) -> list[dict]:
     """Every case of the benchmark directory, in file order then case order."""
     cases: list[dict] = []

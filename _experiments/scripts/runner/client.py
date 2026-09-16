@@ -143,7 +143,7 @@ def parse_fallback_calls(content: str, round_idx: int) -> list[CallRecord]:
 
     calls: list[CallRecord] = []
     seen: set[str] = set()
-    for i, (name, args, fragment) in enumerate(found):
+    for name, args, _fragment in found:
         key = f"{name}|{json.dumps(args, sort_keys=True, ensure_ascii=False, default=str)}"
         if key in seen:
             continue
@@ -157,7 +157,6 @@ def parse_fallback_calls(content: str, round_idx: int) -> list[CallRecord]:
             id=fallback_call_id(round_idx, len(calls)), name=name, arguments_raw=raw,
             arguments=args, source="fallback", valid_json=valid,
             args_is_object=isinstance(args, dict)))
-        del i, fragment
     return calls
 
 

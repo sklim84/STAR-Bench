@@ -19,8 +19,7 @@ from __future__ import annotations
 
 import json
 import time
-from dataclasses import dataclass
-from typing import Any, Callable, Iterable
+from typing import Callable, Iterable
 
 from .client import ModelClient
 from .preflight import TOOL_RESULT_TOKENS, truncate
@@ -148,13 +147,6 @@ def run_case(case: dict, *, client: ModelClient, arm, executor: ToolExecutor,
 # ---------------------------------------------------------------------------
 
 CLARIFICATION_REPLY = "확인이 필요합니다. 추가 정보를 알려주세요."
-
-
-@dataclass
-class TurnPlan:
-    """What the runner injects after a turn in the oracle setting."""
-    tool_calls: list[dict]
-    tool_result: Any
 
 
 def _oracle_turns(turn: dict, turn_no: int) -> list[dict]:

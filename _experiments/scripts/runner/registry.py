@@ -34,8 +34,10 @@ __all__ = ["ServingConfig", "CONFIGS", "by_id", "main_table_configs", "vllm_args
 _SCRIPTS = Path(__file__).resolve().parents[1]
 TEMPLATE_DIR = _SCRIPTS / "chat_templates"
 REVISIONS_PATH = _SCRIPTS / "model_revisions.json"
-KANANA_PARSER_PLUGIN = _SCRIPTS / "kanana_tool_calls" / "kanana_tool_calls" / "functionary_kanana_tool_parser.py"
-KANANA_TEMPLATE = _SCRIPTS / "kanana_tool_calls" / "kanana_tool_calls" / "lmalign_v1.jinja"
+# Paths are kept relative to _experiments/scripts so the registry, the record and
+# the serving table read the same on every checkout.
+KANANA_PARSER_PLUGIN = "kanana_tool_calls/kanana_tool_calls/functionary_kanana_tool_parser.py"
+KANANA_TEMPLATE = "kanana_tool_calls/kanana_tool_calls/lmalign_v1.jinja"
 
 SEED = 20260925
 TEMPERATURE = 0.0
@@ -63,6 +65,15 @@ def _revisions() -> dict:
     return {}
 
 
+def _resolve(name: str | None) -> Path | None:
+    if not name:
+        return None
+    path = Path(name)
+    if path.is_absolute():
+        return path
+    return (_SCRIPTS / name) if "/" in name else (TEMPLATE_DIR / name)
+
+
 def template_sha256(path: Path | None) -> str | None:
     if path is None or not Path(path).is_file():
         return None
@@ -81,7 +92,9 @@ class ServingConfig:
     reasoning_mode: str = "none"          # none | always_on | think | nothink | effort_high | effort_low
     reasoning_control: str = "none"
     reasoning_parser: str | None = None
-    chat_template: str | None = None      # file name under chat_templates/, or an absolute path
+    # A bare file name is under chat_templates/; a name with a directory is
+    # relative to _experiments/scripts.
+    chat_template: str | None = None
     max_model_len: int = CONTEXT
     max_model_len_e2e: int | None = None
     max_tokens: int = BUDGET_PLAIN
@@ -98,10 +111,11 @@ class ServingConfig:
     # -- derived ---------------------------------------------------------
     @property
     def template_path(self) -> Path | None:
-        if not self.chat_template:
-            return None
-        path = Path(self.chat_template)
-        return path if path.is_absolute() else TEMPLATE_DIR / self.chat_template
+        return _resolve(self.chat_template)
+
+    @property
+    def tool_parser_plugin_path(self) -> Path | None:
+        return _resolve(self.tool_parser_plugin)
 
     @property
     def revision(self) -> str | None:
@@ -152,14 +166,14 @@ CONFIGS: tuple[ServingConfig, ...] = (
     _cfg(config_id="kanana-2-inst", label="Kanana-2-Instruct",
          model="kakaocorp/kanana-2-30b-a3b-instruct", group="Korean-Specialized",
          parser="functionary_kanana", tp=2, tp_80g=1,
-         chat_template=str(KANANA_TEMPLATE), tool_parser_plugin=str(KANANA_PARSER_PLUGIN),
+         chat_template=KANANA_TEMPLATE, tool_parser_plugin=KANANA_PARSER_PLUGIN,
          max_model_len_e2e=CONTEXT_E2E),
     _cfg(config_id="kanana-2-think", label="Kanana-2-Think",
          model="kakaocorp/kanana-2-30b-a3b-thinking-2601", group="Korean-Specialized",
          parser="functionary_kanana", tp=2, tp_80g=1,
          reasoning_mode="always_on", reasoning_control="always_on",
          reasoning_parser="deepseek_r1", chat_template=None,
-         tool_parser_plugin=str(KANANA_PARSER_PLUGIN), max_tokens=BUDGET_REASONING,
+         tool_parser_plugin=KANANA_PARSER_PLUGIN, max_tokens=BUDGET_REASONING,
          max_model_len_e2e=CONTEXT_E2E,
          smoke_required="reasoning tokens appear and tool calls survive the reasoning parser",
          notes="L5-008: served on its own template (the model's, not the instruct "
@@ -316,7 +330,7 @@ def vllm_args(cfg: ServingConfig, *, setting: str = "single", port: int = 11434,
     if cfg.reasoning_parser:
         args += ["--reasoning-parser", cfg.reasoning_parser]
     if cfg.tool_parser_plugin:
-        args += ["--tool-parser-plugin", cfg.tool_parser_plugin]
+        args += ["--tool-parser-plugin", str(cfg.tool_parser_plugin_path)]
     if cfg.template_path:
         args += ["--chat-template", str(cfg.template_path)]
     args += list(cfg.extra_args)
