@@ -70,5 +70,4 @@ spec and the data is its output:
 ## Register ids
 
 L6-034, L3-018, L3-004, L2-004 … L2-018, C2-008, C1-010, and decision D03.
-`_experiments/dataset_fix_20260915/impl/WS-E_report.md` maps each of them to what
 changed and how it was checked.

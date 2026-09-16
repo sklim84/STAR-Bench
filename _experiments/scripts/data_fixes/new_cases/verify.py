@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from collections import defaultdict
@@ -32,8 +33,11 @@ if __package__ in (None, ""):
 from ..common import Bench, EN, KR, dump_json, load_json
 
 MANIFEST = Path(__file__).resolve().parent / "new_cases.json"
-REVIEW_SHEET = (Path(__file__).resolve().parents[4] / "_experiments" / "dataset_fix_20260915"
-                / "impl" / "WS-G_review_sheet.json")
+# The review sheet is written where the caller asks (--review-sheet); the default is a
+# path outside the repository, because the domain review is internal material.
+REVIEW_SHEET = Path(
+    os.environ.get("STAR_BENCH_REVIEW_SHEET",
+                   Path(__file__).resolve().parent / "review_sheet.json"))
 SPECIAL = {"sql_conditions", "sql_valid", "sql_contains", "hops_min", "hops_max",
            "result_contains", "result_row_count_min", "result_row_count_max"}
 # Gold calls that are allowed to answer nothing, with the reason.
