@@ -9,6 +9,11 @@ python -m _experiments.scripts.data_fixes.run_all                 # re-check a f
 python -m _experiments.scripts.data_fixes.run_all --from 574c077  # replay from the snapshot
 ```
 
+`--from` writes the snapshot into the working tree only and resets the index straight back to
+HEAD. `git checkout <commit> -- <path>` also stages what it restores, and on a shared branch
+the next `git commit -a` from another work stream then commits the snapshot over the fixed
+data; that is what happened in d2a4000 and was undone in f790db3.
+
 Each pass writes `changelog/<pass>.json`: one entry per change, with the case id, the language,
 the field, the register issue, the reason, and the value before and after. The paper appendix
 cites those entries.

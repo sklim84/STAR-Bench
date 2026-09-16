@@ -31,10 +31,17 @@ PASSES = [
 
 
 def restore(commit: str) -> None:
+    """Put the snapshot in the working tree only.
+
+    `git checkout <commit> -- <path>` also writes the index, and on a shared branch the next
+    `git commit -a` from another work stream would then commit the snapshot over the fixed
+    data. The index is reset straight back to HEAD, so only the working tree carries it.
+    """
     for path in (KR, EN):
-        subprocess.run(["git", "checkout", commit, "--", str(path.relative_to(REPO))],
-                       cwd=REPO, check=True)
-    print(f"benchmarks restored from {commit}")
+        relative = str(path.relative_to(REPO))
+        subprocess.run(["git", "checkout", commit, "--", relative], cwd=REPO, check=True)
+        subprocess.run(["git", "reset", "-q", "HEAD", "--", relative], cwd=REPO, check=True)
+    print(f"benchmarks restored from {commit} (working tree only)")
 
 
 def main(argv: list[str] | None = None) -> int:

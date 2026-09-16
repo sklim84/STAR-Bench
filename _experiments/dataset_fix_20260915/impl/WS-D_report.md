@@ -164,6 +164,16 @@ mean rewriting the time slot, both institutions and the channel of 47 of the 55 
   spec, because `param_checks` is keyed by tool. All three accounts are real; the gold checks
   the first. Contract 1 cannot express "the same tool with three different arguments".
 
+## One accident on the shared branch
+
+`d2a4000` ("docs: record the runner and serving fixes…") committed all 48 benchmark files
+along with its own changes and put them back to the pre-audit snapshot. The cause was WS-D's
+own `run_all.py --from`, which used `git checkout <commit> -- <path>`: that stages what it
+restores, so a concurrent `git commit -a` picked the snapshot up. `f790db3` restored the
+fixed data and `run_all.py` now resets the index straight back to HEAD after restoring, so
+only the working tree ever carries the snapshot. Anyone rebasing or cherry-picking around
+those commits should take the benchmark files from `f790db3` or later.
+
 ## What other streams have to mirror
 
 See `impl/WS-D_tool_description_requests.md` for the full list. In short:
