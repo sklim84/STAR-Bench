@@ -505,7 +505,7 @@ SCENARIOS: list[S] = [
 
     # ---------------------------------------------------------------- 010
     S(id="mt_str_010", sub="base", ft=2,
-      kr="휴면계좌 재활성화 탐지 후 계좌 프로필과 CTR 분할거래 확인을 거쳐 STR 작성",
+      kr="휴면계좌 재활성화 탐지 후 계좌 프로필과 CTR 구조화 확인을 거쳐 STR 작성",
       en="Dormant-account reactivation, account profile, CTR structuring check, STR",
       vars={},
       why="With the default thresholds the reactivation scan really returns 9000000000023022 first "
@@ -536,7 +536,7 @@ SCENARIOS: list[S] = [
           args=str_args(2,
             "출금계좌 {dacc:은는} {dlast:date|을를} 마지막으로 {ddays}일 동안 거래가 없다가 "
             "{dre:date}에 {damt:,}원으로 재활성화됐다. 계좌 전체 거래는 {tot}건, {tamt:,}원이고 "
-            "이상거래 비율은 {fr}%이며 주 이체 채널은 {media:copula}다. 같은 달 CTR 분할거래 조회 "
+            "이상거래 비율은 {fr}%이며 주 이체 채널은 {media:copula}다. 같은 달 CTR 구조화 조회 "
             "상위 {ctr_n}건 가운데 최다 건수는 {ctr_acc}의 {ctr_tx}건이다. 장기 휴면 계좌가 종전에 "
             "없던 상대와 거래를 재개해 신규 수신처 거래로 판단한다.",
             "Withdrawal account {dacc} was last active on {dlast:date}, stayed silent for {ddays} "

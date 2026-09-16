@@ -355,7 +355,7 @@ SCENARIOS_B: list[S] = [
           en="Draft the STR for split transactions.",
           tool="generate_str",
           args=str_args(3,
-            "CTR 분할거래 기준({cthr:,}원)으로 2023년을 보면 출금계좌 {cacc:이가} {cdate:date} "
+            "CTR 구조화 기준({cthr:,}원)으로 2023년을 보면 출금계좌 {cacc:이가} {cdate:date} "
             "하루에 {ctx_n}건, 합계 {camt:,}원을 이체했고 단건 최대는 {cmax:,}원이다. 이 계좌의 "
             "전체 거래는 {cnt}건이고 위험도 평가는 {risk}점({level})이다. 보고 기준 미만으로 금액을 "
             "쪼개 같은 날 반복 이체한 형태여서 분할 거래로 판단한다.",

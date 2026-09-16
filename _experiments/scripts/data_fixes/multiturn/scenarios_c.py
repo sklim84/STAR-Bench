@@ -385,7 +385,7 @@ SCENARIOS_C: list[S] = [
 
     # ---------------------------------------------------------------- 039
     S(id="mt_str_039", sub="long_context", ft=1,
-      kr="R002 동일일 다건 알림에서 계좌를 특정해 거래 조회와 CTR 분할거래 확인 후 STR 작성",
+      kr="R002 동일일 다건 알림에서 계좌를 특정해 거래 조회와 CTR 구조화 확인 후 STR 작성",
       en="R002 same-day burst alert, query the account, CTR structuring check, draft the STR",
       vars={},
       why="R002 really flags 9000000000044046 first in 2024Q4 (164 transfers on 31 December); the "
@@ -419,7 +419,7 @@ SCENARIOS_C: list[S] = [
           args=str_args(1,
             "모니터링 R002에서 출금기관 {bank} 소속 출금계좌 {racc:이가} {rdate:date} 하루에 "
             "{rn}건, {ramt:,}원을 이체한 것으로 나타났다. 그날 거래 상위 {n}건의 최대 금액은 "
-            "{amt:,}원이고 그중 이상거래로 분류된 건은 {rfr}건이다. 같은 분기 CTR 분할거래 조회 "
+            "{amt:,}원이고 그중 이상거래로 분류된 건은 {rfr}건이다. 같은 분기 CTR 구조화 조회 "
             "상위 {cn}건 가운데 최다는 {cacc}의 {ctx_n}건이다. 하루 거래 건수가 평소 수준을 크게 "
             "벗어나 갑작스러운 거래패턴의 변화로 판단한다.",
             "The R002 monitoring rule shows withdrawal account {racc}, at institution {bank}, "
@@ -887,7 +887,7 @@ SCENARIOS_C: list[S] = [
           args=str_args(3,
             "모니터링 R003에서 출금계좌 {racc:이가} {ramt:,}원을 {rrep}회, 상대 계좌 {rrcv}곳에 "
             "반복 이체해 합계 {rtot:,}원이 확인된다. 이 계좌의 전체 거래는 {tot}건이고 이상거래는 "
-            "{frn}건({fr}%)이다. 2024년 CTR 분할거래 조회 상위 {cn}건 가운데 최다는 {cacc:이가} "
+            "{frn}건({fr}%)이다. 2024년 CTR 구조화 조회 상위 {cn}건 가운데 최다는 {cacc:이가} "
             "하루 {ctx_n}건, {camt:,}원이다. structuring은 {gdef:ko}. 동일 금액을 반복해 다수 상대에게 "
             "보내는 형태여서 분할 거래로 판단한다.",
             "The R003 monitoring rule shows withdrawal account {racc} sending {ramt:,} KRW {rrep} "
