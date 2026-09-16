@@ -74,18 +74,68 @@ def resolve_path(obj, path: str):
 
 _PLACEHOLDER = re.compile(r"\{([A-Za-z_][A-Za-z_0-9]*)(:[^}]*)?\}")
 
+# Korean particles pick their form from the sound the value ends on. Written out
+# once here rather than by hand in 50 scenarios, which is where the 4/28 bulk
+# substitution left "분할 거래이" and "변화으로" behind (L2-010).
+_PARTICLES = {"은는": ("은", "는"), "이가": ("이", "가"), "을를": ("을", "를"),
+              "과와": ("과", "와"), "으로로": ("으로", "로"), "copula": ("이", "")}
+# How each digit is read: 0 영, 1 일, 2 이, 3 삼, 4 사, 5 오, 6 육, 7 칠, 8 팔, 9 구.
+_DIGIT_FINAL = {"0": "ㅇ", "1": "ㄹ", "2": "", "3": "ㅁ", "4": "",
+                "5": "", "6": "ㄱ", "7": "ㄹ", "8": "ㄹ", "9": ""}
+
+
+def _final_consonant(text: str) -> str:
+    """The closing consonant of the last syllable, '' when the sound ends on a vowel."""
+    for char in reversed(text):
+        if char.isdigit():
+            return _DIGIT_FINAL[char]
+        code = ord(char) - 0xAC00
+        if 0 <= code < 11172:
+            jong = code % 28
+            return "" if jong == 0 else "ㄹ" if jong == 8 else "X"
+        if char.isalpha():
+            return "X"
+    return ""
+
+
+def particle(text: str, pair: str) -> str:
+    after_consonant, after_vowel = _PARTICLES[pair]
+    final = _final_consonant(text)
+    if pair == "으로로":   # 로 also follows ㄹ
+        return after_vowel if final in ("", "ㄹ") else after_consonant
+    return after_vowel if final == "" else after_consonant
+
+
+def _date(value) -> str:
+    text = str(int(value))
+    return f"{text[:4]}년 {int(text[4:6])}월 {int(text[6:8])}일"
+
 
 def fill(text: str, values: dict) -> str:
-    """`{name}` and `{name:,}` from the scenario's values; other braces stay put.
+    """`{name}`, `{name:,}`, `{name:date}` and `{name:은는}` from the scenario's values.
 
     Turn texts carry JSON drafts, so a plain ``str.format`` is not usable here.
     """
 
     def one(match):
-        name, spec = match.group(1), match.group(2) or ""
+        name, spec = match.group(1), (match.group(2) or "")[1:]
         if name not in values:
             return match.group(0)
-        return format(values[name], spec[1:])
+        value = values[name]
+        spec, _, pair = spec.partition("|")
+        if spec in _PARTICLES:
+            spec, pair = "", spec
+        if spec == "date":
+            rendered = _date(value)
+        elif isinstance(value, list):
+            rendered = ", ".join(str(v) for v in value) or "없음"
+        elif isinstance(value, bool):
+            rendered = "충족" if value else "미충족"
+        else:
+            if spec == "," and isinstance(value, float):
+                spec = ",.0f"
+            rendered = format(value, spec)
+        return rendered + (particle(rendered, pair) if pair else "")
 
     return _PLACEHOLDER.sub(one, text)
 
@@ -97,6 +147,9 @@ def resolve(value, results: dict[int, dict], values: dict):
             raise BuildError(f"reference to turn {value.turn}, which has no result yet")
         return resolve_path(results[value.turn], value.path)
     if isinstance(value, str):
+        whole = _PLACEHOLDER.fullmatch(value)
+        if whole and not whole.group(2) and whole.group(1) in values:
+            return values[whole.group(1)]   # a gold argument keeps its type
         return fill(value, values)
     if isinstance(value, dict):
         return {k: resolve(v, results, values) for k, v in value.items()}
@@ -137,6 +190,11 @@ def note(turn: Turn, lang: str) -> str:
     if turn.abstain:
         return ("도구 호출 없이 판단을 답하는 것이 정답" if lang == "kr"
                 else "answering without a tool call is correct")
+    if turn.ctx:
+        source, path, param = turn.ctx
+        return (f"정답 도구 {turn.tool}. 턴 {source} 결과의 {path} 값을 {param}으로 이어가야 한다"
+                if lang == "kr" else
+                f"gold tool {turn.tool}; {path} from turn {source} has to be carried into {param}")
     return (f"정답 도구 {turn.tool}" if lang == "kr" else f"gold tool {turn.tool}")
 
 

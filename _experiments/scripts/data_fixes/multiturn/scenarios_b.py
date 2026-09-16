@@ -22,7 +22,7 @@ SCENARIOS_B: list[S] = [
           clarify=True,
           point_kr="계좌번호가 없어 어떤 조회도 특정할 수 없다",
           point_en="no account is given, so no query can be aimed at anything"),
-        T(kr="출금계좌 {acc}이야. 이 계좌의 갑작스러운 거래패턴의 변화 유형 거래를 금액 순으로 조회해줘.",
+        T(kr="출금계좌 {acc:copula}야. 이 계좌의 갑작스러운 거래패턴의 변화 유형 거래를 금액 순으로 조회해줘.",
           en="The account is {acc}. List its sudden-pattern-change transactions, largest amount first.",
           tool="query_transactions",
           sql=rows("sender_acc = {acc} AND fraud_type = 1"),
@@ -38,7 +38,7 @@ SCENARIOS_B: list[S] = [
           tool="generate_str",
           args=str_args(1,
             "출금계좌 {acc}(출금기관 {bank})의 갑작스러운 거래패턴의 변화 유형 거래 상위 {n}건을 확인했다. "
-            "최대 건은 {date}에 입금계좌 {rcv}로 보낸 {amt:,}원이고 위험 점수는 {score}다. "
+            "최대 건은 {date:date}에 입금계좌 {rcv:으로로} 보낸 {amt:,}원이고 위험 점수는 {score:copula}다. "
             "거래 규모가 평소와 달라 갑작스러운 거래패턴의 변화로 판단한다.",
             ["query_transactions", "predict_fraud"])),
       ]),
@@ -55,7 +55,7 @@ SCENARIOS_B: list[S] = [
           clarify=True,
           point_kr="'그 계좌'가 가리키는 대상이 대화에 없다",
           point_en="'that account' refers to nothing in the conversation so far"),
-        T(kr="출금계좌 {acc}이야. 2024년 다중거래의 동시 요청 유형 거래를 금액 순으로 조회해줘.",
+        T(kr="출금계좌 {acc:copula}야. 2024년 다중거래의 동시 요청 유형 거래를 금액 순으로 조회해줘.",
           en="The account is {acc}. List its 2024 concurrent-multiple-transaction rows, largest amount first.",
           tool="query_transactions",
           sql=rows("sender_acc = {acc} AND fraud_type = 4 AND date BETWEEN 20240101 AND 20241231"),
@@ -76,7 +76,7 @@ SCENARIOS_B: list[S] = [
           tool="generate_str",
           args=str_args(4,
             "출금계좌 {acc}(출금기관 {bank})의 2024년 다중거래의 동시 요청 유형 거래 상위 {n}건을 확인했다. "
-            "최대 건은 {date}의 {amt:,}원이고 위험 점수는 {score}다. "
+            "최대 건은 {date:date}의 {amt:,}원이고 위험 점수는 {score:copula}다. "
             "FIU 참고유형 '{fiu}'와 형태가 겹친다. "
             "같은 날 다수 이체가 동시에 요청되어 다중거래의 동시 요청으로 판단한다.",
             ["query_transactions", "predict_fraud", "lookup_fiu_reference_types"])),
@@ -121,8 +121,8 @@ SCENARIOS_B: list[S] = [
           tool="generate_str",
           args=str_args(2,
             "출금기관 {bank}의 출금 거래는 {otot}건이고 이상거래는 {ofr}건({ofrr}%)이며 가장 많은 유형은 "
-            "{ttype}이다. 2024년 상반기 대비 하반기에 이상거래 건수는 {dfr}%, 이상거래 비율은 {dppt}%p 변화했다. "
-            "하반기 신규 수신처 거래 유형 상위 {n}건 가운데 최대 건은 {date}에 출금계좌 {acc}가 보낸 {amt:,}원이다. "
+            "{ttype:copula}다. 2024년 상반기 대비 하반기에 이상거래 건수는 {dfr}%, 이상거래 비율은 {dppt}%p 변화했다. "
+            "하반기 신규 수신처 거래 유형 상위 {n}건 가운데 최대 건은 {date:date}에 출금계좌 {acc:이가} 보낸 {amt:,}원이다. "
             "거래 이력이 없던 상대로 자금이 이동해 신규 수신처 거래로 판단한다.",
             ["get_institution_report", "compare_periods", "query_transactions"])),
       ]),
@@ -156,7 +156,7 @@ SCENARIOS_B: list[S] = [
           en="Draft the STR for split transactions.",
           tool="generate_str",
           args=str_args(3,
-            "입금계좌 {racc}는 송금 계좌 {cp}곳에서 {stx}건을 받았고 그중 {sfr}건이 이상거래로 분류됐다. "
+            "입금계좌 {racc:은는} 송금 계좌 {cp}곳에서 {stx}건을 받았고 그중 {sfr}건이 이상거래로 분류됐다. "
             "건당 평균 금액은 {savg:,.0f}원이다. 같은 기준의 funnel 스캔에서는 {fn}개 계좌가 나왔고 "
             "이 계좌는 포함되지 않아 수집 후 재이체 형태는 확인되지 않는다. "
             "소수 송금인이 소액을 반복 이체해 모아 주는 형태여서 분할 거래로 판단한다.",
@@ -176,7 +176,7 @@ SCENARIOS_B: list[S] = [
           clarify=True,
           point_kr="get_institution_report의 필수 인자 bank_id가 없다",
           point_en="get_institution_report needs its required bank_id"),
-        T(kr="출금기관 {bank}으로 해줘.",
+        T(kr="출금기관 {bank:으로로} 해줘.",
           en="Use institution {bank}.",
           tool="get_institution_report", args={"bank_id": "{bank}"},
           bind={"otot": R(2, "outbound.total_count"), "ofr": R(2, "outbound.fraud_count"),
@@ -195,8 +195,8 @@ SCENARIOS_B: list[S] = [
           tool="generate_str",
           args=str_args(1,
             "출금기관 {bank}의 출금 거래 {otot}건 가운데 이상거래는 {ofr}건({ofrr}%)이다. "
-            "2024년 갑작스러운 거래패턴의 변화 유형 상위 {n}건 중 최대 건은 {date} 거래시간대 {slot} 구간에 "
-            "출금계좌 {acc}가 보낸 {amt:,}원이다. "
+            "2024년 갑작스러운 거래패턴의 변화 유형 상위 {n}건 중 최대 건은 {date:date} 거래시간대 {slot} 구간에 "
+            "출금계좌 {acc:이가} 보낸 {amt:,}원이다. "
             "기관 평균을 크게 벗어난 금액이 한 계좌에서 나가 갑작스러운 거래패턴의 변화로 판단한다.",
             ["get_institution_report", "query_transactions"])),
       ]),
@@ -236,8 +236,8 @@ SCENARIOS_B: list[S] = [
           tool="generate_str",
           args=str_args(4,
             "HOFINET 전체 거래 {tot}건 가운데 이상거래는 {frn}건이다. "
-            "다중거래의 동시 요청 유형은 {t4n}건, {t4amt:,}원이고 출금기관 {t4bank}이 {t4bn}건으로 가장 많다. "
-            "출금기관 {bank}의 2024년 해당 유형 상위 {n}건 중 최대 건은 {date}에 출금계좌 {acc}가 보낸 {amt:,}원이다. "
+            "다중거래의 동시 요청 유형은 {t4n}건, {t4amt:,}원이고 출금기관 {t4bank:이가} {t4bn}건으로 가장 많다. "
+            "출금기관 {bank}의 2024년 해당 유형 상위 {n}건 중 최대 건은 {date:date}에 출금계좌 {acc:이가} 보낸 {amt:,}원이다. "
             "같은 날 같은 계좌에서 다수 이체가 동시에 요청되어 다중거래의 동시 요청으로 판단한다.",
             ["get_statistics", "get_fraud_type_summary", "query_transactions"])),
       ]),
@@ -280,7 +280,7 @@ SCENARIOS_B: list[S] = [
             "레이어링은 다음과 같이 정의된다. {gdef} "
             "3단계 이상 레이어링 탐지 결과는 {ln}건이다. {lnotice} "
             "출금계좌 {acc}(출금기관 {bank})의 갑작스러운 거래패턴의 변화 유형 거래 상위 {n}건 중 "
-            "최대 건은 {date}의 {amt:,}원이다. "
+            "최대 건은 {date:date}의 {amt:,}원이다. "
             "다단계 분산은 확인되지 않지만 단일 계좌의 거래 규모 변화가 커 갑작스러운 거래패턴의 변화로 판단한다.",
             ["get_aml_glossary", "detect_aml_patterns", "query_transactions"])),
       ]),
@@ -315,7 +315,7 @@ SCENARIOS_B: list[S] = [
           en="Draft the STR for split transactions.",
           tool="generate_str",
           args=str_args(3,
-            "CTR 분할거래 기준({cthr:,}원)으로 2023년을 보면 출금계좌 {cacc}가 {cdate} 하루에 {ctx_n}건, "
+            "CTR 분할거래 기준({cthr:,}원)으로 2023년을 보면 출금계좌 {cacc:이가} {cdate:date} 하루에 {ctx_n}건, "
             "합계 {camt:,}원을 이체했고 단건 최대는 {cmax:,}원이다. "
             "이 계좌의 전체 거래는 {cnt}건이고 위험도 평가는 {risk}점({level})이다. "
             "보고 기준 미만으로 금액을 쪼개 같은 날 반복 이체한 형태여서 분할 거래로 판단한다.",
@@ -355,8 +355,8 @@ SCENARIOS_B: list[S] = [
           tool="generate_str",
           args=str_args(2,
             "2023년 이상거래는 {f1}건, 2024년은 {f2}건으로 {dfr}% 변화했다. "
-            "2024년 하반기 신규 수신처 거래 유형 상위 {n}건 중 최대 건은 {date}에 출금계좌 {acc}가 "
-            "입금계좌 {rcv}로 보낸 {amt:,}원이다. "
+            "2024년 하반기 신규 수신처 거래 유형 상위 {n}건 중 최대 건은 {date:date}에 출금계좌 {acc:이가} "
+            "입금계좌 {rcv:으로로} 보낸 {amt:,}원이다. "
             "거래 이력이 없던 상대로 거액이 이동해 신규 수신처 거래로 판단한다.",
             ["compare_periods", "query_transactions"])),
       ]),
@@ -396,8 +396,8 @@ SCENARIOS_B: list[S] = [
           args=str_args(5,
             "FIU 참고유형 검색에서 {fiu_n}건이 나왔고 그중 '{fiu}'가 이 사안과 같은 형태다. "
             "출금계좌 {acc}(출금기관 {bank})의 거액 입금 후 당일 인출 유형 거래 상위 {n}건 중 "
-            "최대 건은 {date}의 {amt:,}원이다. "
-            "초안 검증 결과 필수 항목 충족 여부는 {valid}이고 미기재 항목은 {missing}이다. "
+            "최대 건은 {date:date}의 {amt:,}원이다. "
+            "초안 검증 결과 필수 항목 충족 여부는 {valid:copula}고 미기재 항목은 {missing:copula}다. "
             "거액이 들어온 직후 같은 규모가 빠져나가 거액 입금 후 당일 인출로 판단한다.",
             ["lookup_fiu_reference_types", "query_transactions", "validate_str_fields"])),
       ]),
@@ -415,7 +415,7 @@ SCENARIOS_B: list[S] = [
           clarify=True,
           point_kr="get_account_profile의 필수 인자 account_id가 없다",
           point_en="get_account_profile needs its required account_id"),
-        T(kr="출금계좌 {acc}이야. 프로필을 확인해줘.",
+        T(kr="출금계좌 {acc:copula}야. 프로필을 확인해줘.",
           en="The account is {acc}. Show me its profile.",
           tool="get_account_profile", args={"account_id": "{acc}"},
           bind={"tot": R(2, "total_count"), "fr": R(2, "fraud_ratio_percent"),
@@ -437,7 +437,7 @@ SCENARIOS_B: list[S] = [
           tool="generate_str",
           args=str_args(3,
             "출금계좌 {acc}(출금기관 {bank})의 전체 거래는 {tot}건, {tamt:,}원이고 이상거래 비율은 {fr}%다. "
-            "최다 상대 계좌 {cp}로 {cpn}건이 나갔고, 이 입금계좌는 송금 계좌 {snd}곳에서 {rtx}건을 받으며 "
+            "최다 상대 계좌 {cp:으로로} {cpn}건이 나갔고, 이 입금계좌는 송금 계좌 {snd}곳에서 {rtx}건을 받으며 "
             "이상거래 비율은 {rfr}%다. 출금계좌의 1단계 네트워크는 연결 계좌 {neigh}개, 이상거래 {nfrn}건이다. "
             "소액을 여러 상대에게 나눠 보내고 특정 계좌로 모이는 형태여서 분할 거래로 판단한다.",
             ["get_account_profile", "get_receiving_account_profile", "analyze_network"])),
@@ -456,7 +456,7 @@ SCENARIOS_B: list[S] = [
           clarify=True,
           point_kr="계좌번호가 없어 조회 대상을 특정할 수 없다",
           point_en="no account number, so there is nothing to query"),
-        T(kr="출금계좌 {acc}이야. 이 계좌 거래를 금액 순으로 조회해줘.",
+        T(kr="출금계좌 {acc:copula}야. 이 계좌 거래를 금액 순으로 조회해줘.",
           en="The account is {acc}. List its transactions, largest amount first.",
           tool="query_transactions",
           sql=rows("sender_acc = {acc}"),
@@ -516,7 +516,7 @@ SCENARIOS_B: list[S] = [
           tool="generate_str",
           args=str_args(4,
             "거래시간대 9, 출금기관 159, 입금기관 155, 자금구분 0, 매체구분 2, {amt:,}원 조건의 위험 점수는 "
-            "{score}({lvl})다. 같은 조건의 실제 거래는 2022년 7월 22일 {n}건이고 출금계좌는 {acc}이다. "
+            "{score}, 위험 수준은 {lvl}이다. 같은 조건의 실제 거래는 2022년 7월 22일 {n}건이고 출금계좌는 {acc:copula}다. "
             "이 계좌의 전체 거래는 {tot}건, 이상거래는 {frn}건({fr}%)이다. "
             "하루에 동일 규모 이체가 몰려 다중거래의 동시 요청으로 판단한다.",
             ["predict_fraud", "query_transactions", "get_account_profile"])),
@@ -599,7 +599,7 @@ SCENARIOS_B: list[S] = [
           en="Draft the STR for split transactions.",
           tool="generate_str",
           args=str_args(3,
-            "출금계좌 {acc}(출금기관 {bank})의 분할 거래 유형은 입금계좌 {rcv}로 {rn}건, {ramt:,}원이 몰려 있다. "
+            "출금계좌 {acc}(출금기관 {bank})의 분할 거래 유형은 입금계좌 {rcv:으로로} {rn}건, {ramt:,}원이 몰려 있다. "
             "이 입금계좌는 송금 계좌 {snd}곳, 송금 기관 {sbank}곳에서 {rtx}건을 받았고 이상거래 비율은 {rfr}%다. "
             "수집 패턴 분석에서 상대 {cp}곳, 건당 평균 {cavg:,.0f}원이 확인된다. "
             "금액을 쪼개 한 계좌로 모으는 형태여서 분할 거래로 판단한다.",
@@ -679,9 +679,10 @@ SCENARIOS_B: list[S] = [
           en="Draft the STR for a sudden change in transaction pattern.",
           tool="generate_str",
           args=str_args(1,
-            "CTR 고액거래 기준({cthr:,}원)으로 2024년 1순위는 {cdate}에 출금계좌 {cacc}(출금기관 {cbank})가 "
+            "CTR 고액거래 기준({cthr:,}원)으로 2024년 1순위는 {cdate:date}에 출금기관 {cbank} 소속 "
+            "출금계좌 {cacc:이가} "
             "보낸 {camt:,}원이다. 이 계좌의 1단계 네트워크는 연결 계좌 {neigh}개, 이상거래 {nfrn}건({nfr}%)이다. "
-            "그래프 위험 점수는 {grisk}이고 입출금 불균형 지표는 {gimb}%다. "
+            "그래프 위험 점수는 {grisk:copula}고 입출금 불균형 지표는 {gimb}%다. "
             "거래 규모가 종전 수준을 벗어나 갑작스러운 거래패턴의 변화로 판단한다.",
             ["detect_ctr_candidates", "analyze_network", "detect_aml_patterns"])),
       ]),
