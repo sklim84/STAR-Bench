@@ -9,33 +9,20 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_bank",
-              "op": "=",
-              "value": 134
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "134",
+            "이상거래여부"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT COUNT(*) AS fraud_count FROM hofinet WHERE sender_bank = 134 AND is_fraud = 1"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict sender_bank = 134 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "출금금융회사 134에서 발생한 이상거래 건수를 조회해줘"
   },
   {
     "id": "st_qt_002",
-    "question": "Please retrieve only 10 transactions of the concurrent multiple transactions type (suspicious transaction type 4).",
+    "question": "Please retrieve only 10 transactions of type voice phishing (suspicious transaction type 4).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -43,28 +30,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fraud_type",
-              "op": "=",
-              "value": 4
-            }
+          "sql_contains": [
+            "4"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 4 LIMIT 10"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict fraud_type = 4; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "보이스피싱 유형(이상거래유형 4)의 거래를 10건만 조회해줘"
   },
   {
     "id": "st_qt_003",
-    "question": "Please query the suspicious transactions that occurred via internet banking (media type 2).",
+    "question": "Please query the suspicious transactions that occurred through ATM (Media Type 2).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -72,29 +50,16 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "media_type",
-              "op": "=",
-              "value": 2
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "매체구분",
+            "2"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE media_type = 2 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict media_type = 2 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "ATM(매체구분 2)으로 발생한 이상거래를 조회해줘"
   },
   {
     "id": "st_qt_004",
@@ -106,33 +71,21 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "amount",
-              "op": ">=",
-              "value": 10000000
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "거래금액",
+            "10000000"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount >= 10000000 AND is_fraud = 1 ORDER BY amount DESC LIMIT 100"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict amount >= 10000000 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "note": "1000만원 = 10,000,000 단위 변환이 필요",
+    "question_ko": "거래금액이 1000만원 이상인 이상거래를 조회해줘"
   },
   {
     "id": "st_qt_005",
-    "question": "Please query the suspicious transactions that occurred around 3 AM (time slot 3).",
+    "question": "Please query the suspicious transactions that occurred around 3 AM (transaction time zone 3).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -140,33 +93,20 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "time_slot",
-              "op": "=",
-              "value": 3
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "거래시간대",
+            "3"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE time_slot = 3 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict time_slot = 3 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "새벽 3시대(거래시간대 3)에 발생한 이상거래를 조회해줘"
   },
   {
     "id": "st_qt_006",
-    "question": "Please query the suspicious transactions with fund type 3 (other).",
+    "question": "Please query the suspicious transactions of type transfer (fund category 4).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -174,33 +114,20 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fund_type",
-              "op": "=",
-              "value": 3
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "자금구분",
+            "4"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fund_type = 3 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict fund_type = 3 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "이체(자금구분 4) 유형의 이상거래를 조회해줘"
   },
   {
     "id": "st_qt_007",
-    "question": "Please retrieve the transaction history for withdrawal account 9000000000024638.",
+    "question": "Please retrieve the transaction history for withdrawal account 1234567890.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -208,24 +135,16 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_acc",
-              "op": "=",
-              "value": 9000000000024638
-            }
+          "sql_contains": [
+            "출금계좌일련번호",
+            "1234567890"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, time_slot, receiver_bank, amount, is_fraud FROM hofinet WHERE sender_acc = 9000000000024638 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict sender_acc = 9000000000024638; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "출금계좌 1234567890의 거래 내역을 조회해줘"
   },
   {
     "id": "st_qt_008",
@@ -237,24 +156,16 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "출금금융회사일련번호",
+            "GROUP BY"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT sender_bank, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY sender_bank ORDER BY fraud_count DESC"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "question_ko": "이상거래 건수를 출금금융회사별로 집계해줘"
   },
   {
     "id": "st_qt_009",
@@ -266,28 +177,21 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "이상거래유형",
+            "AVG",
+            "거래금액"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT fraud_type, AVG(amount) AS avg_amount FROM hofinet WHERE is_fraud = 1 GROUP BY fraud_type ORDER BY fraud_type"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "question_ko": "이상거래 유형별 평균 거래금액을 계산해줘"
   },
   {
     "id": "st_qt_010",
-    "question": "Please query suspicious transactions of the 'split transaction' type (suspicious transaction type 3) in descending order of transaction amount.",
+    "question": "Please query the suspicious transactions of type \"mule account\" (suspicious transaction type 3) and sort them in descending order by transaction amount.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -295,28 +199,21 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fraud_type",
-              "op": "=",
-              "value": 3
-            }
+          "sql_contains": [
+            "이상거래유형",
+            "3",
+            "거래금액"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_acc, receiver_acc, amount FROM hofinet WHERE fraud_type = 3 ORDER BY amount DESC LIMIT 100"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict fraud_type = 3; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "question_ko": "대포통장 유형(이상거래유형 3) 이상거래를 거래금액 내림차순으로 조회해줘"
   },
   {
     "id": "st_qt_011",
-    "question": "Please provide the top 5 withdrawal accounts with the highest total transaction amount among suspicious transactions made via mobile phone (media type 4).",
+    "question": "Please provide the top 5 withdrawal accounts with the highest total transaction amounts among suspicious transactions conducted through internet banking (media type 4).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -324,29 +221,17 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "media_type",
-              "op": "=",
-              "value": 4
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "매체구분",
+            "4",
+            "출금계좌일련번호"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT sender_acc, SUM(amount) AS total_amount FROM hofinet WHERE media_type = 4 AND is_fraud = 1 GROUP BY sender_acc ORDER BY total_amount DESC LIMIT 5"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict media_type = 4 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "hard",
+    "question_ko": "인터넷뱅킹(매체구분 4)을 통한 이상거래 중 거래금액 합계가 가장 큰 출금계좌 5개를 알려줘"
   },
   {
     "id": "st_qt_012",
@@ -358,38 +243,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "date",
-              "op": ">=",
-              "value": 20240101
-            },
-            {
-              "column": "date",
-              "op": "<=",
-              "value": 20240331
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "거래일자"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE date BETWEEN 20240101 AND 20240331 AND is_fraud = 1 ORDER BY date LIMIT 100"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict date >= 20240101 and date <= 20240331 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "question_ko": "2024년 1분기(20240101~20240331)에 발생한 이상거래를 조회해줘"
   },
   {
     "id": "st_qt_013",
-    "question": "Please query suspicious transactions of sudden change in transaction pattern (Type 1) and concurrent multiple transactions (Type 4) together.",
+    "question": "Please query for suspicious transactions related to money laundering (Type 1) and voice phishing (Type 4) together.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -397,31 +263,20 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fraud_type",
-              "op": "IN",
-              "value": [
-                1,
-                4
-              ]
-            }
+          "sql_contains": [
+            "이상거래유형"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT fraud_type, date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type IN (1, 4) ORDER BY date DESC LIMIT 100"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict fraud_type IN (1, 4); the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "note": "IN (1,4) 또는 OR 조건으로 처리 가능",
+    "question_ko": "자금세탁(유형 1)과 보이스피싱(유형 4) 이상거래를 함께 조회해줘"
   },
   {
     "id": "st_qt_014",
-    "question": "Show me the most recent 20 suspicious transactions that came into deposit financial institution 119.",
+    "question": "Show me the most recent 20 suspicious transactions that came into deposit financial institution 201.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -429,29 +284,16 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "receiver_bank",
-              "op": "=",
-              "value": 119
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "입금금융회사일련번호",
+            "201"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, sender_acc, amount FROM hofinet WHERE receiver_bank = 119 AND is_fraud = 1 ORDER BY date DESC LIMIT 20"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict receiver_bank = 119 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "입금금융회사 201로 들어온 이상거래 중 최근 20건을 보여줘"
   },
   {
     "id": "st_qt_015",
@@ -463,28 +305,20 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "거래시간대",
+            "GROUP BY"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT time_slot, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY time_slot ORDER BY fraud_count DESC"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "question_ko": "시간대별 이상거래 발생 건수를 조회해서 어느 시간대에 가장 많이 발생하는지 알려줘"
   },
   {
     "id": "st_qt_016",
-    "question": "Please retrieve the 30 most recent transactions of sudden change in transaction pattern (suspicious transaction type 1).",
+    "question": "Please retrieve the most recent 30 transactions classified as money laundering (suspicious transaction type 1).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -492,28 +326,20 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fraud_type",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "이상거래유형",
+            "1"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 1 ORDER BY date DESC LIMIT 30"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict fraud_type = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "자금세탁(이상거래유형 1) 거래를 최근 30건 조회해줘"
   },
   {
     "id": "st_qt_017",
-    "question": "Please retrieve all suspicious transactions that have been deposited into the specific account (deposit account 9000000000036484).",
+    "question": "Please retrieve all suspicious transactions that have been deposited into the specific account (deposit account 9876543210).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -521,29 +347,16 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "receiver_acc",
-              "op": "=",
-              "value": 9000000000036484
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "입금계좌일련번호",
+            "9876543210"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, sender_acc, amount FROM hofinet WHERE receiver_acc = 9000000000036484 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict receiver_acc = 9000000000036484 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "question_ko": "특정 계좌(입금계좌 9876543210)로 들어온 이상거래를 전부 조회해줘"
   },
   {
     "id": "st_qt_018",
@@ -555,33 +368,20 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "amount",
-              "op": ">=",
-              "value": 50000000
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "거래금액",
+            "50000000"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount >= 50000000 AND is_fraud = 1 ORDER BY amount DESC LIMIT 100"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict amount >= 50000000 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "question_ko": "거래금액이 5000만원 이상인 이상거래를 모두 조회해줘"
   },
   {
     "id": "st_qt_019",
-    "question": "Please aggregate the suspicious transaction count by media type with SQL.",
+    "question": "Please provide the count of suspicious transactions categorized by medium type.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -589,28 +389,20 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "매체구분",
+            "GROUP BY"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT media_type, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY media_type ORDER BY fraud_count DESC"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "question_ko": "매체구분별 이상거래 건수를 집계해줘"
   },
   {
     "id": "st_qt_020",
-    "question": "At withdrawal institution 118, please find the account with the largest total transaction amount among split transaction (suspicious transaction type 3) transactions.",
+    "question": "Please find the account with the highest total transaction amount for mule accounts (suspicious transaction type 3) at withdrawal site 305.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -618,33 +410,21 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_bank",
-              "op": "=",
-              "value": 118
-            },
-            {
-              "column": "fraud_type",
-              "op": "=",
-              "value": 3
-            }
+          "sql_contains": [
+            "이상거래유형",
+            "3",
+            "305"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT sender_acc, SUM(amount) AS total_amount FROM hofinet WHERE sender_bank = 118 AND fraud_type = 3 GROUP BY sender_acc ORDER BY total_amount DESC LIMIT 5"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict sender_bank = 118 and fraud_type = 3; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "hard",
+    "question_ko": "출금사 305에서 대포통장(이상거래유형 3) 거래 중 거래금액 합계가 가장 큰 계좌를 찾아줘"
   },
   {
     "id": "st_qt_021",
-    "question": "Please query the suspicious transactions with fund type 3 (other) made via mobile phone (media type 4).",
+    "question": "Please query the suspicious transactions related to transfers (transaction medium type 4) through internet banking (fund type 4).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -652,38 +432,20 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "media_type",
-              "op": "=",
-              "value": 4
-            },
-            {
-              "column": "fund_type",
-              "op": "=",
-              "value": 3
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "매체구분",
+            "자금구분"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE media_type = 4 AND fund_type = 3 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict media_type = 4 and fund_type = 3 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "인터넷뱅킹(매체구분 4)을 통한 이체(자금구분 4) 이상거래를 조회해줘"
   },
   {
     "id": "st_qt_022",
-    "question": "Please query the monthly count of suspicious transactions that occurred in 2023 with SQL.",
+    "question": "Please provide the monthly count of suspicious transactions that occurred in 2023.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -691,34 +453,15 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "date",
-              "op": ">=",
-              "value": 20230101
-            },
-            {
-              "column": "date",
-              "op": "<=",
-              "value": 20231231
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "거래일자"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date / 100 AS month, COUNT(*) AS fraud_count FROM hofinet WHERE date BETWEEN 20230101 AND 20231231 AND is_fraud = 1 GROUP BY month ORDER BY month"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict date >= 20230101 and date <= 20231231 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "question_ko": "2023년에 발생한 이상거래의 월별 건수를 조회해줘"
   },
   {
     "id": "st_qt_023",
@@ -730,28 +473,21 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "출금금융회사일련번호",
+            "SUM",
+            "거래금액"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT sender_bank, SUM(amount) AS total_amount FROM hofinet WHERE is_fraud = 1 GROUP BY sender_bank ORDER BY total_amount DESC LIMIT 10"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "hard",
+    "question_ko": "출금금융회사별로 이상거래 총 금액을 계산하고 상위 10개 기관을 조회해줘"
   },
   {
     "id": "st_qt_024",
-    "question": "Please provide the number of suspicious transactions that occurred at night (time slot 21).",
+    "question": "Please provide the number of suspicious transactions that occurred during the night (transaction time 22:00 or later).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -759,33 +495,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "time_slot",
-              "op": "=",
-              "value": 21
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "거래시간대"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT COUNT(*) AS fraud_count FROM hofinet WHERE time_slot = 21 AND is_fraud = 1"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict time_slot = 21 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "question_ko": "야간(거래시간대 22 이상)에 발생한 이상거래 건수를 조회해줘"
   },
   {
     "id": "st_qt_025",
-    "question": "Please query the suspicious transactions of same-day withdrawal after a large deposit (suspicious transaction type 5) whose amount is at or above the average transaction amount for that type.",
+    "question": "Please query for transactions related to illegal gambling (suspicious transaction type 5) that exceed the average transaction amount for this type.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -793,28 +515,21 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fraud_type",
-              "op": "=",
-              "value": 5
-            }
+          "sql_contains": [
+            "이상거래유형",
+            "5",
+            "거래금액"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 5 AND amount >= (SELECT AVG(amount) FROM hofinet WHERE fraud_type = 5) ORDER BY amount DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict fraud_type = 5; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "hard",
+    "question_ko": "불법도박(이상거래유형 5) 이상거래 중 해당 유형 평균 거래금액 이상인 거래를 조회해줘"
   },
   {
     "id": "st_qt_026",
-    "question": "Please query the suspicious transactions transferred to deposit financial institution 122, sorted by transaction amount in descending order.",
+    "question": "Please query the suspicious transactions transferred to deposit financial institution 305, sorted by transaction amount in descending order.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -822,29 +537,16 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "receiver_bank",
-              "op": "=",
-              "value": 122
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "입금금융회사일련번호",
+            "305"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, sender_acc, amount FROM hofinet WHERE receiver_bank = 122 AND is_fraud = 1 ORDER BY amount DESC LIMIT 100"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict receiver_bank = 122 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "question_ko": "입금금융회사 305로 이체된 이상거래를 거래금액 내림차순으로 조회해줘"
   },
   {
     "id": "st_qt_irr_001",
@@ -854,7 +556,8 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+    "note": "irrelevance: DB 보안 설명은 query_transactions 실행 도구 범위 밖",
+    "question_ko": "HOFINET 데이터베이스에서 SQL 인젝션 공격을 방어하는 방법을 설명해줘"
   },
   {
     "id": "st_qt_irr_002",
@@ -864,7 +567,8 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+    "note": "irrelevance: DB 비교 설명 — SQL 실행 도구와 무관",
+    "question_ko": "DuckDB와 PostgreSQL의 성능 차이를 비교해줘"
   },
   {
     "id": "st_qt_irr_003",
@@ -874,7 +578,8 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+    "note": "irrelevance: SQL 최적화 방법론 설명 — 실제 쿼리 실행과 무관",
+    "question_ko": "SQL 쿼리를 최적화하는 일반적인 방법을 설명해줘"
   },
   {
     "id": "st_qt_irr_004",
@@ -884,11 +589,12 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+    "note": "irrelevance: DB 개념 설명 — query_transactions 실행 도구와 무관",
+    "question_ko": "데이터베이스 뷰(View)와 테이블의 차이가 뭐야?"
   },
   {
     "id": "st_qt_027",
-    "question": "Please retrieve 20 transactions of the 'split transaction' type (suspicious transaction type 3).",
+    "question": "Please retrieve 20 transactions involving mule accounts (suspicious transaction type 3).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -896,28 +602,20 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fraud_type",
-              "op": "=",
-              "value": 3
-            }
+          "sql_contains": [
+            "이상거래유형",
+            "3"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 3 LIMIT 20"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict fraud_type = 3; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "대포통장(이상거래유형 3) 거래를 20건 조회해줘"
   },
   {
     "id": "st_qt_028",
-    "question": "Please query the transactions that occurred at financial institution 128 for withdrawals.",
+    "question": "Please query the transactions that occurred at financial institution 100 for withdrawals.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -925,28 +623,20 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_bank",
-              "op": "=",
-              "value": 128
-            }
+          "sql_contains": [
+            "출금금융회사일련번호",
+            "100"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, time_slot, receiver_bank, amount, is_fraud FROM hofinet WHERE sender_bank = 128 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict sender_bank = 128; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "출금금융회사 100에서 발생한 거래를 조회해줘"
   },
   {
     "id": "st_qt_029",
-    "question": "Please query the transactions deposited into account 9000000000024638.",
+    "question": "Please query the transactions deposited into account 1234567890.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -954,24 +644,16 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "receiver_acc",
-              "op": "=",
-              "value": 9000000000024638
-            }
+          "sql_contains": [
+            "입금계좌일련번호",
+            "1234567890"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, sender_acc, amount, is_fraud FROM hofinet WHERE receiver_acc = 9000000000024638 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict receiver_acc = 9000000000024638; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "계좌 1234567890으로 입금된 거래를 조회해줘"
   },
   {
     "id": "st_qt_030",
@@ -983,33 +665,20 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "amount",
-              "op": "<=",
-              "value": 1000000
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "거래금액",
+            "1000000"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount <= 1000000 AND is_fraud = 1 ORDER BY amount DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict amount <= 1000000 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "거래금액이 100만원 이하인 이상거래를 조회해줘"
   },
   {
     "id": "st_qt_031",
-    "question": "Please retrieve the latest 50 transactions of suspicious transaction type 2 (transaction with a new counterparty).",
+    "question": "Please retrieve the latest 50 transactions for suspicious transaction type 2 (new clients).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1017,28 +686,20 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fraud_type",
-              "op": "=",
-              "value": 2
-            }
+          "sql_contains": [
+            "이상거래유형",
+            "2"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 2 ORDER BY date DESC LIMIT 50"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict fraud_type = 2; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "이상거래유형 2(신규 거래처)의 거래를 최신 순으로 50건 조회해줘"
   },
   {
     "id": "st_qt_032",
-    "question": "Please query suspicious transactions with fund type 1 (salary).",
+    "question": "Please query for suspicious transactions categorized as 1 (deposit).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1046,29 +707,16 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fund_type",
-              "op": "=",
-              "value": 1
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "자금구분",
+            "1"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fund_type = 1 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict fund_type = 1 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "자금구분 1(입금) 이상거래를 조회해줘"
   },
   {
     "id": "st_qt_033",
@@ -1080,34 +728,15 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "date",
-              "op": ">=",
-              "value": 20221001
-            },
-            {
-              "column": "date",
-              "op": "<=",
-              "value": 20221231
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "거래일자"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT COUNT(*) AS fraud_count FROM hofinet WHERE date BETWEEN 20221001 AND 20221231 AND is_fraud = 1"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict date >= 20221001 and date <= 20221231 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "question_ko": "2022년 4분기(20221001~20221231)에 발생한 이상거래 건수를 조회해줘"
   },
   {
     "id": "st_qt_034",
@@ -1119,24 +748,16 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "입금금융회사일련번호",
+            "GROUP BY"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT receiver_bank, SUM(amount) AS total_amount FROM hofinet WHERE is_fraud = 1 GROUP BY receiver_bank ORDER BY total_amount DESC"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "question_ko": "입금금융회사별로 이상거래 총 금액을 집계해줘"
   },
   {
     "id": "st_qt_035",
@@ -1148,28 +769,20 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "출금계좌일련번호",
+            "GROUP BY"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT sender_acc, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY sender_acc ORDER BY fraud_count DESC LIMIT 10"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "question_ko": "이상거래 건수가 많은 출금계좌 상위 10개를 조회해줘"
   },
   {
     "id": "st_qt_036",
-    "question": "Please provide the maximum and minimum transaction amounts of suspicious transactions related to sudden change in transaction pattern (Type 1).",
+    "question": "Please provide the maximum and minimum transaction amounts for suspicious transactions related to money laundering (Type 1).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1177,28 +790,21 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fraud_type",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "이상거래유형",
+            "1",
+            "거래금액"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT MAX(amount) AS max_amount, MIN(amount) AS min_amount FROM hofinet WHERE fraud_type = 1"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict fraud_type = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "question_ko": "자금세탁(유형 1) 이상거래의 최대 거래금액과 최소 거래금액을 조회해줘"
   },
   {
     "id": "st_qt_037",
-    "question": "Please query suspicious transactions made via phone banking (media type 3) and mobile phone (media type 4) together.",
+    "question": "Please query the suspicious transactions conducted through mobile (media type 3) and internet banking (media type 4) together.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1206,36 +812,20 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "media_type",
-              "op": "IN",
-              "value": [
-                3,
-                4
-              ]
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "매체구분"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT media_type, date, sender_bank, receiver_bank, amount FROM hofinet WHERE media_type IN (3, 4) AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict media_type IN (3, 4) and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "note": "IN (3,4) 또는 OR 조건으로 처리 가능",
+    "question_ko": "모바일(매체구분 3)과 인터넷뱅킹(매체구분 4)을 통한 이상거래를 함께 조회해줘"
   },
   {
     "id": "st_qt_038",
-    "question": "Please query the transaction count and total amount per fraud type with SQL and sort them in descending order of total amount.",
+    "question": "Please retrieve the transaction count and total amount for each type of suspicious transaction, and sort the results in descending order based on the total amount.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1243,28 +833,21 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "이상거래유형",
+            "GROUP BY",
+            "거래금액"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT fraud_type, COUNT(*) AS fraud_count, SUM(amount) AS total_amount FROM hofinet WHERE is_fraud = 1 GROUP BY fraud_type ORDER BY total_amount DESC"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "hard",
+    "question_ko": "이상거래 유형별로 거래 건수와 총 금액을 함께 조회하고 총 금액 기준 내림차순으로 정렬해줘"
   },
   {
     "id": "st_qt_039",
-    "question": "Please provide the number of suspicious transactions from withdrawal financial institution 134 in the first half of 2023 whose transaction amount is at or above the average.",
+    "question": "Please provide the number of suspicious transactions from financial institution 134 in the first half of 2023 that have a transaction amount above the average.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1272,43 +855,21 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_bank",
-              "op": "=",
-              "value": 134
-            },
-            {
-              "column": "date",
-              "op": ">=",
-              "value": 20230101
-            },
-            {
-              "column": "date",
-              "op": "<=",
-              "value": 20230630
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "출금금융회사일련번호",
+            "134",
+            "거래금액"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT COUNT(*) AS fraud_count FROM hofinet WHERE sender_bank = 134 AND date BETWEEN 20230101 AND 20230630 AND is_fraud = 1 AND amount >= (SELECT AVG(amount) FROM hofinet WHERE sender_bank = 134 AND date BETWEEN 20230101 AND 20230630 AND is_fraud = 1)"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict sender_bank = 134 and date >= 20230101 and date <= 20230630 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "hard",
+    "question_ko": "2023년 상반기에 출금금융회사 134에서 발생한 이상거래 중 거래금액 평균 이상인 건수를 조회해줘"
   },
   {
     "id": "st_qt_040",
-    "question": "Please query the accounts and the number of transactions where three or more suspicious transactions occurred in the same withdrawal account in a single day.",
+    "question": "Please query the accounts and the number of transactions where more than three suspicious transactions occurred in the same withdrawal account in a single day.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1316,24 +877,17 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "출금계좌일련번호",
+            "거래일자",
+            "GROUP BY"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT sender_acc, date, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY sender_acc, date HAVING COUNT(*) >= 3 ORDER BY fraud_count DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "hard",
+    "question_ko": "같은 출금계좌에서 하루에 3건 이상 이상거래가 발생한 계좌와 건수를 조회해줘"
   },
   {
     "id": "st_qt_041",
@@ -1345,28 +899,20 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "거래일자",
+            "GROUP BY"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY date ORDER BY date LIMIT 100"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "question_ko": "거래일자별 이상거래 발생 건수를 조회해줘"
   },
   {
     "id": "st_qt_042",
-    "question": "Please query a sample of only 5 transactions whose is_fraud value is 1.",
+    "question": "Please query and provide a sample of 5 transactions involving suspicious activity for individual accounts.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1374,24 +920,15 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "이상거래여부"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount, fraud_type FROM hofinet WHERE is_fraud = 1 LIMIT 5"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "이상거래 여부가 1인 거래를 5건만 샘플로 조회해줘"
   },
   {
     "id": "st_qt_043",
@@ -1403,42 +940,27 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "amount",
-              "op": "<=",
-              "value": 50000
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "거래금액",
+            "50000"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount <= 50000 AND is_fraud = 1 ORDER BY amount LIMIT 100"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict amount <= 50000 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "이상거래 중 거래금액이 5만원 이하인 소액 이상거래를 조회해줘"
   },
   {
     "id": "st_qt_irr_005",
-    "question": "Please summarize the total transaction count and the suspicious transaction ratio of HOFINET.",
+    "question": "Please summarize the statistics of suspicious transaction types from the HOFINET data.",
     "expected": {
-      "primary_tool": "get_statistics",
-      "tools_must_include": [
-        "get_statistics"
-      ],
-      "param_checks": {}
+      "primary_tool": "",
+      "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "Expects get_statistics."
+    "note": "irrelevance: 집계 통계 요청은 get_statistics가 더 적합 — SQL 직접 실행 불필요",
+    "question_ko": "HOFINET 데이터의 이상거래 유형별 통계를 요약해줘"
   },
   {
     "id": "st_qt_irr_006",
@@ -1448,28 +970,23 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+    "note": "irrelevance: AML 임계값 설계 방법론 — SQL 실행 도구와 무관",
+    "question_ko": "AML 시스템에서 거래 모니터링 임계값을 어떻게 설정하는지 설명해줘"
   },
   {
     "id": "st_qt_irr_007",
-    "question": "Please analyze the transaction network for account 9000000000036484.",
+    "question": "Please analyze the transaction network for account 9876543210.",
     "expected": {
-      "primary_tool": "analyze_network",
-      "tools_must_include": [
-        "analyze_network"
-      ],
-      "param_checks": {
-        "analyze_network": {
-          "account_id": 9000000000036484
-        }
-      }
+      "primary_tool": "",
+      "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "Expects analyze_network (account_id=9000000000036484)."
+    "note": "irrelevance: 네트워크 분석 요청 — query_transactions가 아닌 analyze_network 필요",
+    "question_ko": "계좌 9876543210의 거래 네트워크를 분석해줘"
   },
   {
     "id": "st_qt_044",
-    "question": "Please retrieve 15 transactions from the withdrawal financial institution 123, sorted by transaction date in descending order.",
+    "question": "Please retrieve 15 transactions from the withdrawal financial institution 201, sorted by transaction date in descending order.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1477,24 +994,16 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_bank",
-              "op": "=",
-              "value": 123
-            }
+          "sql_contains": [
+            "출금금융회사일련번호",
+            "201"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, time_slot, receiver_bank, amount, is_fraud FROM hofinet WHERE sender_bank = 123 ORDER BY date DESC LIMIT 15"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict sender_bank = 123; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "출금금융회사 201에서 발생한 거래를 거래일자 내림차순으로 15건 조회해줘"
   },
   {
     "id": "st_qt_045",
@@ -1506,36 +1015,22 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "amount",
-              "op": "BETWEEN",
-              "value": [
-                10000000,
-                50000000
-              ]
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "거래금액",
+            "10000000",
+            "50000000"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE amount BETWEEN 10000000 AND 50000000 AND is_fraud = 1 ORDER BY amount DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict amount BETWEEN 10000000 and 50000000 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "note": "BETWEEN 또는 >= AND <= 조건 사용 가능",
+    "question_ko": "거래금액이 1000만원 이상 5000만원 이하인 이상거래를 조회해줘"
   },
   {
     "id": "st_qt_046",
-    "question": "Please retrieve 10 transactions of late-night/early-morning bulk transactions (suspicious transaction type 7).",
+    "question": "Please retrieve 10 transactions categorized as similar receipt (suspicious transaction (type 7).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1543,24 +1038,16 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fraud_type",
-              "op": "=",
-              "value": 7
-            }
+          "sql_contains": [
+            "이상거래유형",
+            "6"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 7 LIMIT 10"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict fraud_type = 7; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "easy",
+    "question_ko": "유사수신(이상거래유형 6) 거래를 10건 조회해줘"
   },
   {
     "id": "st_qt_047",
@@ -1572,28 +1059,22 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "이상거래유형",
+            "AVG",
+            "MAX",
+            "GROUP BY"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT fraud_type, AVG(amount) AS avg_amount, MAX(amount) AS max_amount FROM hofinet WHERE is_fraud = 1 GROUP BY fraud_type ORDER BY fraud_type"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "question_ko": "이상거래유형별로 평균 거래금액과 최대 거래금액을 함께 조회해줘"
   },
   {
     "id": "st_qt_048",
-    "question": "Please retrieve the suspicious transactions related to sudden change in transaction pattern (Type 1) that occurred in the second quarter of 2023 (20230401 to 20230630).",
+    "question": "Please retrieve the suspicious transaction data related to money laundering (Type 1) that occurred in the second quarter of 2023 (from 20230401 to 20230630).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1601,38 +1082,21 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "date",
-              "op": ">=",
-              "value": 20230401
-            },
-            {
-              "column": "date",
-              "op": "<=",
-              "value": 20230630
-            },
-            {
-              "column": "fraud_type",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "거래일자",
+            "이상거래유형"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE date BETWEEN 20230401 AND 20230630 AND fraud_type = 1 ORDER BY date LIMIT 100"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict date >= 20230401 and date <= 20230630 and fraud_type = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "note": "날짜 범위 + 유형 조건 복합 필터",
+    "question_ko": "2023년 2분기(20230401~20230630)에 발생한 자금세탁(유형 1) 이상거래를 조회해줘"
   },
   {
     "id": "st_qt_049",
-    "question": "Please aggregate the number of suspicious transactions related to concurrent multiple transactions (Type 4) by deposit account, and retrieve only accounts with 2 or more.",
+    "question": "Please aggregate the number of suspicious transactions related to voice phishing (Type 4) by deposit account, and only retrieve accounts with 2 or more transactions.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1640,24 +1104,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fraud_type",
-              "op": "=",
-              "value": 4
-            }
+          "sql_contains": [
+            "입금계좌일련번호",
+            "이상거래유형",
+            "GROUP BY",
+            "HAVING"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT receiver_acc, COUNT(*) AS fraud_count FROM hofinet WHERE fraud_type = 4 GROUP BY receiver_acc HAVING COUNT(*) >= 2 ORDER BY fraud_count DESC LIMIT 100"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict fraud_type = 4; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "note": "HAVING 절 사용 필요",
+    "question_ko": "입금계좌별로 보이스피싱(유형 4) 이상거래 건수를 집계하고 건수가 2건 이상인 계좌만 조회해줘"
   },
   {
     "id": "st_qt_050",
@@ -1669,24 +1128,17 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "거래금액",
+            "CASE"
           ],
           "sql_valid": true
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT CASE WHEN amount < 1000000 THEN 'small' WHEN amount < 10000000 THEN 'medium' ELSE 'large' END AS band, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY band ORDER BY fraud_count DESC"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "note": "CASE WHEN 구문으로 금액 구간 구분 필요",
+    "question_ko": "거래금액에 따라 소액(100만원 미만), 중액(100만원~1000만원), 대액(1000만원 이상)으로 구분하고 이상거래 건수를 각 구간별로 집계해줘"
   },
   {
     "id": "st_qt_051",
@@ -1698,28 +1150,21 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "출금금융회사일련번호",
+            "GROUP BY"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "WITH per_bank AS (SELECT sender_bank, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY sender_bank) SELECT sender_bank, fraud_count FROM per_bank WHERE fraud_count > (SELECT AVG(fraud_count) FROM per_bank) ORDER BY fraud_count DESC"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "hard",
+    "note": "서브쿼리로 평균 계산 후 HAVING 조건에 사용 필요",
+    "question_ko": "출금금융회사별 이상거래 건수를 집계하고 평균 이상거래 건수보다 많은 기관만 조회해줘"
   },
   {
     "id": "st_qt_052",
-    "question": "Please query the accounts that sent five or more salary (fund type 1) suspicious transactions to different receiving accounts from the same sending account on one day.",
+    "question": "Please query for accounts that have sent 5 or more transfers (funds classification 4) on the same day from the same withdrawal account to different deposit accounts, indicating suspicious transactions.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1727,33 +1172,23 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fund_type",
-              "op": "=",
-              "value": 1
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "출금계좌일련번호",
+            "거래일자",
+            "GROUP BY",
+            "HAVING"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT sender_acc, date, COUNT(DISTINCT receiver_acc) AS receivers FROM hofinet WHERE fund_type = 1 AND is_fraud = 1 GROUP BY sender_acc, date HAVING COUNT(DISTINCT receiver_acc) >= 5 ORDER BY receivers DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict fund_type = 1 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "hard",
+    "note": "GROUP BY + HAVING + COUNT(DISTINCT) 패턴 필요",
+    "question_ko": "같은 날 동일한 출금계좌에서 서로 다른 입금계좌로 5건 이상 이체(자금구분 4) 이상거래를 보낸 계좌를 조회해줘"
   },
   {
     "id": "st_qt_053",
-    "question": "Please calculate the share of each fraud type in all suspicious transactions (in percent) with SQL.",
+    "question": "Please calculate the percentage of transaction counts by type of suspicious transaction (compared to the total number of suspicious transactions).",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1761,24 +1196,17 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "이상거래유형",
+            "GROUP BY"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT fraud_type, COUNT(*) AS fraud_count, ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS percent FROM hofinet WHERE is_fraud = 1 GROUP BY fraud_type ORDER BY fraud_count DESC"
-        }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects query_transactions (must restrict is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "hard",
+    "note": "서브쿼리로 전체 이상거래 건수를 구한 뒤 비율 계산 필요",
+    "question_ko": "이상거래 유형별 거래 건수 비율(전체 이상거래 대비 %)을 계산해줘"
   },
   {
     "id": "st_qt_irr_008",
@@ -1788,6 +1216,112 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+    "note": "irrelevance: FDS 설계 방법론 질문 — SQL 실행 도구와 무관한 컨설팅 요청",
+    "question_ko": "데이터 분석가로서 이상거래 탐지 시스템을 설계하는 방법을 알려줘"
+  },
+  {
+    "id": "st_qt_ex01",
+    "question": "Please check the number of suspicious transactions that occurred at withdrawal financial institution 134.",
+    "expected": {
+      "primary_tool": "query_transactions",
+      "tools_must_include": [
+        "query_transactions"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "134",
+            "이상거래여부"
+          ],
+          "sql_valid": true
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "출금금융회사 134에서 발생한 이상거래 건수를 조회해줘"
+  },
+  {
+    "id": "st_qt_ex02",
+    "question": "Please check the number of suspicious transactions that occurred at withdrawal financial institution 134.",
+    "expected": {
+      "primary_tool": "query_transactions",
+      "tools_must_include": [
+        "query_transactions"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "134",
+            "이상거래여부"
+          ],
+          "sql_valid": true
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "출금금융회사 134에서 발생한 이상거래 건수를 조회해줘"
+  },
+  {
+    "id": "st_qt_ex03",
+    "question": "Please check the number of suspicious transactions that occurred at withdrawal financial institution 134.",
+    "expected": {
+      "primary_tool": "query_transactions",
+      "tools_must_include": [
+        "query_transactions"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "134",
+            "이상거래여부"
+          ],
+          "sql_valid": true
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "출금금융회사 134에서 발생한 이상거래 건수를 조회해줘"
+  },
+  {
+    "id": "st_qt_ex04",
+    "question": "Please check the number of suspicious transactions that occurred at withdrawal financial institution 134.",
+    "expected": {
+      "primary_tool": "query_transactions",
+      "tools_must_include": [
+        "query_transactions"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "134",
+            "이상거래여부"
+          ],
+          "sql_valid": true
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "출금금융회사 134에서 발생한 이상거래 건수를 조회해줘"
+  },
+  {
+    "id": "st_qt_ex05",
+    "question": "Please check the number of suspicious transactions that occurred at withdrawal financial institution 134.",
+    "expected": {
+      "primary_tool": "query_transactions",
+      "tools_must_include": [
+        "query_transactions"
+      ],
+      "param_checks": {
+        "query_transactions": {
+          "sql_contains": [
+            "134",
+            "이상거래여부"
+          ],
+          "sql_valid": true
+        }
+      }
+    },
+    "difficulty": "easy",
+    "question_ko": "출금금융회사 134에서 발생한 이상거래 건수를 조회해줘"
   }
 ]

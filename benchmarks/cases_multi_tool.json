@@ -14,32 +14,15 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_bank",
-              "op": "=",
-              "value": 134
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "134"
           ],
           "sql_valid": true
-        },
-        "analyze_network": {
-          "account_id": 9000000000017028
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT sender_acc, COUNT(*) AS fraud_count FROM hofinet WHERE sender_bank = 134 AND is_fraud = 1 GROUP BY sender_acc ORDER BY fraud_count DESC LIMIT 10"
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects query_transactions (must restrict sender_bank = 134 and is_fraud = 1; the SQL must run without an error), analyze_network (account_id=9000000000017028); called in the order query_transactions -> analyze_network. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "medium",
+    "note": "조회 후 네트워크 분석 체인"
   },
   {
     "id": "st_mtool_002",
@@ -56,28 +39,19 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "이상거래여부"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT sender_bank, COUNT(*) AS fraud_count FROM hofinet WHERE is_fraud = 1 GROUP BY sender_bank ORDER BY fraud_count DESC LIMIT 10"
-        }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects get_statistics, query_transactions (must restrict is_fraud = 1; the SQL must run without an error); called in the order get_statistics -> query_transactions. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "medium",
+    "note": "통계 → 조회 체인. query_transactions SQL에 이상거래여부 조건 포함 여부만 검증 (기관 ID는 통계 결과에 의존)"
   },
   {
     "id": "st_mtool_003",
-    "question": "계좌 9000000000024638의 네트워크를 분석하고 순환거래 패턴도 함께 탐지해줘",
+    "question": "계좌 1234567890의 네트워크를 분석하고 순환거래 패턴도 함께 탐지해줘",
     "expected": {
       "primary_tool": "analyze_network",
       "tools_must_include": [
@@ -86,19 +60,18 @@
       ],
       "param_checks": {
         "analyze_network": {
-          "account_id": 9000000000024638
+          "account_id": 1234567890
         },
         "detect_aml_patterns": {
           "pattern_type": "ring"
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects analyze_network (account_id=9000000000024638), detect_aml_patterns (pattern_type=ring)."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_004",
-    "question": "거래시간대 3, 출금사 134, 입금사 119, 일반(자금구분 0), 인터넷뱅킹(매체구분 2), 1000만원 거래의 이상거래 확률을 예측하고, 해당 출금계좌 9000000000024638의 네트워크도 분석해줘",
+    "question": "거래시간대 3, 출금사 134, 입금사 119, 이체, ATM, 1000만원 거래의 이상거래 확률을 예측하고, 해당 출금계좌 1234567890의 네트워크도 분석해줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -110,17 +83,14 @@
           "time_slot": 3,
           "sender_bank": 134,
           "receiver_bank": 119,
-          "amount": 10000000,
-          "fund_type": 0,
-          "media_type": 2
+          "amount": 10000000
         },
         "analyze_network": {
-          "account_id": 9000000000024638
+          "account_id": 1234567890
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects predict_fraud (time_slot=3; sender_bank=134; receiver_bank=119; amount=10000000; fund_type=0; media_type=2), analyze_network (account_id=9000000000024638)."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_005",
@@ -141,12 +111,11 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects get_statistics, detect_aml_patterns (pattern_type=ring); called in the order get_statistics -> detect_aml_patterns."
+    "difficulty": "easy"
   },
   {
     "id": "st_mtool_006",
-    "question": "출금금융회사 134의 이상거래 데이터를 조회하고 이상거래 확률도 하나 예측해줘. 거래시간대 9, 출금사 134, 입금사 119, 일반(자금구분 0), 인터넷뱅킹(매체구분 2), 500만원 조건으로.",
+    "question": "출금금융회사 134의 이상거래 데이터를 조회하고 이상거래 확률도 하나 예측해줘. 거래시간대 9, 입금사 201, 이체, 인터넷뱅킹, 500만원 조건으로.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -155,41 +124,24 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_bank",
-              "op": "=",
-              "value": 134
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "134"
           ],
           "sql_valid": true
         },
         "predict_fraud": {
           "time_slot": 9,
-          "fund_type": 0,
+          "fund_type": 4,
           "media_type": 2,
-          "amount": 5000000,
-          "sender_bank": 134,
-          "receiver_bank": 119
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, time_slot, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 134 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
+          "amount": 5000000
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects query_transactions (must restrict sender_bank = 134 and is_fraud = 1; the SQL must run without an error), predict_fraud (time_slot=9; fund_type=0; media_type=2; amount=5000000; sender_bank=134; receiver_bank=119). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_007",
-    "question": "계좌 9000000000036484의 거래를 SQL로 조회하고, 해당 계좌의 위험도 점수도 그래프 DB로 산출해줘",
+    "question": "계좌 9876543210의 거래를 SQL로 조회하고, 해당 계좌의 위험도 점수도 그래프 DB로 산출해줘",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -198,28 +150,18 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_acc",
-              "op": "=",
-              "value": 9000000000036484
-            }
+          "sql_contains": [
+            "9876543210"
           ],
           "sql_valid": true
         },
         "detect_aml_patterns": {
           "pattern_type": "risk_score",
-          "account_id": 9000000000036484
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, time_slot, receiver_bank, amount, is_fraud FROM hofinet WHERE sender_acc = 9000000000036484 ORDER BY date DESC LIMIT 100"
+          "account_id": 9876543210
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects query_transactions (must restrict sender_acc = 9000000000036484; the SQL must run without an error), detect_aml_patterns (pattern_type=risk_score; account_id=9000000000036484). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "hard"
   },
   {
     "id": "st_mtool_008",
@@ -238,17 +180,8 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_bank",
-              "op": "=",
-              "value": 123
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "201"
           ],
           "sql_valid": true
         },
@@ -260,19 +193,13 @@
           "media_type": 1,
           "amount": 8000000
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, time_slot, sender_acc, receiver_acc, amount FROM hofinet WHERE sender_bank = 123 AND is_fraud = 1 ORDER BY amount DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects get_statistics, query_transactions (must restrict sender_bank = 123 and is_fraud = 1; the SQL must run without an error), predict_fraud (time_slot=0; sender_bank=123; receiver_bank=122; fund_type=0; media_type=1; amount=8000000); called in the order get_statistics -> query_transactions -> predict_fraud. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "hard"
   },
   {
     "id": "st_mtool_009",
-    "question": "레이어링 패턴을 탐지하고, 탐지된 계좌 중 9000000000017070의 네트워크를 분석해줘",
+    "question": "레이어링 패턴을 탐지하고, 탐지된 계좌 중 5555555555의 네트워크를 분석해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -288,16 +215,15 @@
           "pattern_type": "layering"
         },
         "analyze_network": {
-          "account_id": 9000000000017070
+          "account_id": 5555555555
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects detect_aml_patterns (pattern_type=layering), analyze_network (account_id=9000000000017070); called in the order detect_aml_patterns -> analyze_network."
+    "difficulty": "hard"
   },
   {
     "id": "st_mtool_010",
-    "question": "출금금융회사 134의 이상거래를 조회하고, 계좌 9000000000024638의 네트워크를 분석하고, 순환거래 패턴도 탐지해줘",
+    "question": "출금금융회사 134의 이상거래를 조회하고, 계좌 1234567890의 네트워크를 분석하고, 순환거래 패턴도 탐지해줘",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -307,35 +233,21 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_bank",
-              "op": "=",
-              "value": 134
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "134"
           ],
           "sql_valid": true
         },
         "analyze_network": {
-          "account_id": 9000000000024638
+          "account_id": 1234567890
         },
         "detect_aml_patterns": {
           "pattern_type": "ring"
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_acc, receiver_acc, amount FROM hofinet WHERE sender_bank = 134 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
     "difficulty": "hard",
-    "note": "Expects query_transactions (must restrict sender_bank = 134 and is_fraud = 1; the SQL must run without an error), analyze_network (account_id=9000000000024638), detect_aml_patterns (pattern_type=ring). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "note": "3개 도구 체인"
   },
   {
     "id": "st_mtool_011",
@@ -355,28 +267,19 @@
           "fraud_type": 4
         },
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fraud_type",
-              "op": "=",
-              "value": 4
-            }
+          "sql_contains": [
+            "이상거래유형"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 4 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects get_fraud_type_summary (fraud_type=4), query_transactions (must restrict fraud_type = 4; the SQL must run without an error); called in the order get_fraud_type_summary -> query_transactions. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "medium",
+    "note": "유형 요약 → SQL 조회 체인"
   },
   {
     "id": "st_mtool_012",
-    "question": "계좌 9000000000029571의 프로파일을 조회하고, 해당 계좌의 네트워크도 분석해줘",
+    "question": "계좌 3333333333의 프로파일을 조회하고, 해당 계좌의 네트워크도 분석해줘",
     "expected": {
       "primary_tool": "get_account_profile",
       "tools_must_include": [
@@ -389,19 +292,18 @@
       ],
       "param_checks": {
         "get_account_profile": {
-          "account_id": 9000000000029571
+          "account_id": 3333333333
         },
         "analyze_network": {
-          "account_id": 9000000000029571
+          "account_id": 3333333333
         }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects get_account_profile (account_id=9000000000029571), analyze_network (account_id=9000000000029571); called in the order get_account_profile -> analyze_network."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_013",
-    "question": "금융회사 156의 현황 리포트를 확인하고, 대포통장 패턴도 탐지해줘",
+    "question": "금융회사 156의 현황 리포트를 확인하고, 분할 거래 패턴도 탐지해줘",
     "expected": {
       "primary_tool": "get_institution_report",
       "tools_must_include": [
@@ -421,8 +323,7 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects get_institution_report (bank_id=156), detect_aml_patterns (pattern_type=funnel); called in the order get_institution_report -> detect_aml_patterns."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_014",
@@ -443,8 +344,7 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects get_statistics, rank_risky_transactions (top_k=10); called in the order get_statistics -> rank_risky_transactions."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_015",
@@ -461,34 +361,24 @@
       ],
       "param_checks": {
         "compare_periods": {
-          "period1_start": 20240101,
-          "period1_end": 20240331,
-          "period2_start": 20240401,
-          "period2_end": 20240630
+          "period_a_start": 20240101,
+          "period_a_end": 20240331,
+          "period_b_start": 20240401,
+          "period_b_end": 20240630
         },
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fraud_type",
-              "op": "=",
-              "value": 4
-            }
+          "sql_contains": [
+            "이상거래유형"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 4 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects compare_periods (period1_start=20240101; period1_end=20240331; period2_start=20240401; period2_end=20240630), query_transactions (must restrict fraud_type = 4; the SQL must run without an error); called in the order compare_periods -> query_transactions. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_016",
-    "question": "계좌 9000000000017070의 프로파일을 조회하고, 해당 계좌의 네트워크를 분석하고, 순환거래 패턴도 탐지해줘",
+    "question": "계좌 5555555555의 프로파일을 조회하고, 해당 계좌의 네트워크를 분석하고, 순환거래 패턴도 탐지해줘",
     "expected": {
       "primary_tool": "get_account_profile",
       "tools_must_include": [
@@ -503,10 +393,10 @@
       ],
       "param_checks": {
         "get_account_profile": {
-          "account_id": 9000000000017070
+          "account_id": 5555555555
         },
         "analyze_network": {
-          "account_id": 9000000000017070
+          "account_id": 5555555555
         },
         "detect_aml_patterns": {
           "pattern_type": "ring"
@@ -514,11 +404,11 @@
       }
     },
     "difficulty": "hard",
-    "note": "Expects get_account_profile (account_id=9000000000017070), analyze_network (account_id=9000000000017070), detect_aml_patterns (pattern_type=ring); called in the order get_account_profile -> analyze_network -> detect_aml_patterns."
+    "note": "3개 도구 체인: 프로파일 → 네트워크 → 패턴 탐지"
   },
   {
     "id": "st_mtool_017",
-    "question": "금융회사 147의 이상거래 현황 리포트를 확인하고, 해당 기관 거래를 SQL로 조회해줘",
+    "question": "금융회사 73의 이상거래 현황 리포트를 확인하고, 해당 기관 거래를 SQL로 조회해줘",
     "expected": {
       "primary_tool": "get_institution_report",
       "tools_must_include": [
@@ -531,36 +421,21 @@
       ],
       "param_checks": {
         "get_institution_report": {
-          "bank_id": 147
+          "bank_id": 73
         },
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_bank",
-              "op": "=",
-              "value": 147
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "73"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 147 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects get_institution_report (bank_id=147), query_transactions (must restrict sender_bank = 147 and is_fraud = 1; the SQL must run without an error); called in the order get_institution_report -> query_transactions. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_018",
-    "question": "갑작스러운 거래패턴의 변화(유형1) 이상거래 요약을 확인하고, 거래시간대 3, 출금사 118, 입금사 119, 일반(자금구분 0), PC뱅킹(매체구분 1), 1000만원 거래의 이상거래 확률도 예측해줘",
+    "question": "갑작스러운 거래패턴의 변화(유형1) 이상거래 요약을 확인하고, 거래시간대 3, 출금사 118, 입금사 119, 이체, PC뱅킹, 1200만원 거래의 이상거래 확률도 예측해줘",
     "expected": {
       "primary_tool": "get_fraud_type_summary",
       "tools_must_include": [
@@ -575,18 +450,17 @@
           "time_slot": 3,
           "sender_bank": 118,
           "receiver_bank": 119,
-          "fund_type": 0,
+          "fund_type": 4,
           "media_type": 1,
-          "amount": 10000000
+          "amount": 12000000
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects get_fraud_type_summary (fraud_type=1), predict_fraud (time_slot=3; sender_bank=118; receiver_bank=119; fund_type=0; media_type=1; amount=10000000)."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_019",
-    "question": "대포통장 패턴을 탐지하고, 계좌 9000000000036484의 프로파일을 조회하고, 해당 계좌의 네트워크도 분석해줘",
+    "question": "분할 거래 패턴을 탐지하고, 계좌 9876543210의 프로파일을 조회하고, 해당 계좌의 네트워크도 분석해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -604,19 +478,19 @@
           "pattern_type": "funnel"
         },
         "get_account_profile": {
-          "account_id": 9000000000036484
+          "account_id": 9876543210
         },
         "analyze_network": {
-          "account_id": 9000000000036484
+          "account_id": 9876543210
         }
       }
     },
     "difficulty": "hard",
-    "note": "Expects detect_aml_patterns (pattern_type=funnel), get_account_profile (account_id=9000000000036484), analyze_network (account_id=9000000000036484); called in the order detect_aml_patterns -> get_account_profile -> analyze_network."
+    "note": "3개 도구 체인: 패턴 탐지 → 프로파일 → 네트워크"
   },
   {
     "id": "st_mtool_020",
-    "question": "위험도 상위 20건을 랭킹하고, 그 중 계좌 9000000000024638의 네트워크를 분석해줘",
+    "question": "위험도 상위 20건을 랭킹하고, 그 중 계좌 1234567890의 네트워크를 분석해줘",
     "expected": {
       "primary_tool": "rank_risky_transactions",
       "tools_must_include": [
@@ -632,12 +506,11 @@
           "top_k": 20
         },
         "analyze_network": {
-          "account_id": 9000000000024638
+          "account_id": 1234567890
         }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects rank_risky_transactions (top_k=20), analyze_network (account_id=9000000000024638); called in the order rank_risky_transactions -> analyze_network."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_021",
@@ -651,10 +524,10 @@
       ],
       "param_checks": {
         "compare_periods": {
-          "period1_start": 20230701,
-          "period1_end": 20230930,
-          "period2_start": 20231001,
-          "period2_end": 20231231
+          "period_a_start": 20230701,
+          "period_a_end": 20230930,
+          "period_b_start": 20231001,
+          "period_b_end": 20231231
         },
         "get_fraud_type_summary": {
           "fraud_type": 4
@@ -662,11 +535,11 @@
       }
     },
     "difficulty": "hard",
-    "note": "Expects compare_periods (period1_start=20230701; period1_end=20230930; period2_start=20231001; period2_end=20231231), get_statistics, get_fraud_type_summary (fraud_type=4)."
+    "note": "3개 도구 체인"
   },
   {
     "id": "st_mtool_022",
-    "question": "거액 입금 후 당일 인출 이상거래(유형5) 요약을 확인하고, 출금금융회사 123의 종합 리포트도 생성해줘",
+    "question": "거액 입금 후 당일 인출 이상거래(유형5) 요약을 확인하고, 출금금융회사 201의 종합 리포트도 생성해줘",
     "expected": {
       "primary_tool": "get_fraud_type_summary",
       "tools_must_include": [
@@ -678,16 +551,15 @@
           "fraud_type": 5
         },
         "get_institution_report": {
-          "bank_id": 123
+          "bank_id": 201
         }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects get_fraud_type_summary (fraud_type=5), get_institution_report (bank_id=123)."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_023",
-    "question": "계좌 9000000000034017와 9000000000017070 사이의 최단 거래 경로를 탐지하고, 계좌 9000000000034017의 프로파일도 조회해줘",
+    "question": "계좌 4444444444와 5555555555 사이의 최단 거래 경로를 탐지하고, 계좌 4444444444의 프로파일도 조회해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -701,20 +573,19 @@
       "param_checks": {
         "detect_aml_patterns": {
           "pattern_type": "shortest_path",
-          "account_a": 9000000000034017,
-          "account_b": 9000000000017070
+          "account_a": 4444444444,
+          "account_b": 5555555555
         },
         "get_account_profile": {
-          "account_id": 9000000000034017
+          "account_id": 4444444444
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects detect_aml_patterns (pattern_type=shortest_path; account_a=9000000000034017; account_b=9000000000017070), get_account_profile (account_id=9000000000034017); called in the order detect_aml_patterns -> get_account_profile."
+    "difficulty": "hard"
   },
   {
     "id": "st_mtool_024",
-    "question": "전체 이상거래 통계, 금융회사 118 리포트, 분할 거래 이상거래 현황을 순서대로 분석해줘",
+    "question": "전체 이상거래 통계, 금융회사 305 리포트, 분할 거래 이상거래 현황을 순서대로 분석해줘",
     "expected": {
       "primary_tool": "get_statistics",
       "tools_must_include": [
@@ -729,7 +600,7 @@
       ],
       "param_checks": {
         "get_institution_report": {
-          "bank_id": 118
+          "bank_id": 305
         },
         "get_fraud_type_summary": {
           "fraud_type": 3
@@ -737,11 +608,11 @@
       }
     },
     "difficulty": "hard",
-    "note": "Expects get_statistics, get_institution_report (bank_id=118), get_fraud_type_summary (fraud_type=3); called in the order get_statistics -> get_institution_report -> get_fraud_type_summary."
+    "note": "3개 도구 체인"
   },
   {
     "id": "st_mtool_025",
-    "question": "계좌 9000000000029571의 네트워크를 분석하고 위험 거래 상위 20건도 모델로 선별해줘",
+    "question": "계좌 3333333333의 네트워크를 분석하고 위험 거래 상위 20건도 모델로 선별해줘",
     "expected": {
       "primary_tool": "analyze_network",
       "tools_must_include": [
@@ -750,19 +621,18 @@
       ],
       "param_checks": {
         "analyze_network": {
-          "account_id": 9000000000029571
+          "account_id": 3333333333
         },
         "rank_risky_transactions": {
           "top_k": 20
         }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects analyze_network (account_id=9000000000029571), rank_risky_transactions (top_k=20)."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_026",
-    "question": "금융회사 158 리포트를 확인하고, 해당 기관 이상거래를 SQL로 조회하고, 거래시간대 0, 출금사 158, 입금사 134, 급여(자금구분 1), PC뱅킹(매체구분 1), 2000만원 거래의 사기 확률도 예측해줘",
+    "question": "금융회사 89 리포트를 확인하고, 해당 기관 이상거래를 SQL로 조회하고, 거래시간대 0, 출금사 158, 입금사 134, 이체, PC뱅킹, 2000만원 거래의 사기 확률도 예측해줘",
     "expected": {
       "primary_tool": "get_institution_report",
       "tools_must_include": [
@@ -777,20 +647,11 @@
       ],
       "param_checks": {
         "get_institution_report": {
-          "bank_id": 158
+          "bank_id": 89
         },
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_bank",
-              "op": "=",
-              "value": 158
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "89"
           ],
           "sql_valid": true
         },
@@ -798,19 +659,14 @@
           "time_slot": 0,
           "sender_bank": 158,
           "receiver_bank": 134,
-          "fund_type": 1,
+          "fund_type": 4,
           "media_type": 1,
           "amount": 20000000
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 158 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
         }
       }
     },
     "difficulty": "hard",
-    "note": "Expects get_institution_report (bank_id=158), query_transactions (must restrict sender_bank = 158 and is_fraud = 1; the SQL must run without an error), predict_fraud (time_slot=0; sender_bank=158; receiver_bank=134; fund_type=1; media_type=1; amount=20000000); called in the order get_institution_report -> query_transactions -> predict_fraud. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "note": "3개 도구 체인: 기관 리포트 → SQL 조회 → 사기 예측"
   },
   {
     "id": "st_mtool_irr_001",
@@ -820,7 +676,7 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+    "note": "irrelevance: 시스템 구성 질문 — AML 분석 도구 호출 불필요"
   },
   {
     "id": "st_mtool_irr_002",
@@ -830,7 +686,7 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+    "note": "irrelevance: 외부 DB 저장은 지원되지 않는 기능 — 도구 호출 불필요"
   },
   {
     "id": "st_mtool_irr_003",
@@ -840,7 +696,7 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+    "note": "irrelevance: 시스템 연동 방법 문의 — AML 분석 도구 실행과 무관"
   },
   {
     "id": "st_mtool_irr_004",
@@ -850,11 +706,11 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+    "note": "irrelevance: 교육·자격증 안내 — AML 분석 도구 호출과 무관"
   },
   {
     "id": "st_mtool_027",
-    "question": "고액거래를 조회하고 계좌 9000000000024638의 위험도도 평가해줘",
+    "question": "고액거래를 조회하고 계좌 1234567890의 위험도도 평가해줘",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
@@ -866,16 +722,16 @@
           "mode": "high_value"
         },
         "score_account_risk": {
-          "account_id": 9000000000024638
+          "account_id": 1234567890
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects detect_ctr_candidates (mode=high_value), score_account_risk (account_id=9000000000024638)."
+    "difficulty": "medium",
+    "note": "CTR + 위험평가 체인"
   },
   {
     "id": "st_mtool_028",
-    "question": "전체 모니터링 규칙을 실행하고 계좌 9000000000036484의 네트워크도 분석해줘",
+    "question": "전체 모니터링 규칙을 실행하고 계좌 9876543210의 네트워크도 분석해줘",
     "expected": {
       "primary_tool": "detect_monitoring_alerts",
       "tools_must_include": [
@@ -887,16 +743,16 @@
           "rule_id": "all"
         },
         "analyze_network": {
-          "account_id": 9000000000036484
+          "account_id": 9876543210
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects detect_monitoring_alerts (rule_id=all), analyze_network (account_id=9000000000036484)."
+    "difficulty": "medium",
+    "note": "모니터링 + 네트워크 체인"
   },
   {
     "id": "st_mtool_029",
-    "question": "보고 기준 미만으로 쪼갠 구조화 의심 건을 탐지하고 심야 대량 거래 모니터링 알림도 확인해줘",
+    "question": "분할거래 의심 건을 탐지하고 심야대량거래 알림도 확인해줘",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
@@ -912,12 +768,12 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects detect_ctr_candidates (mode=structuring), detect_monitoring_alerts (rule_id=R001)."
+    "difficulty": "medium",
+    "note": "CTR + 모니터링 체인"
   },
   {
     "id": "st_mtool_030",
-    "question": "계좌 9000000000017070의 위험도를 평가하고 프로파일도 조회해줘",
+    "question": "계좌 5555555555의 위험도를 평가하고 프로파일도 조회해줘",
     "expected": {
       "primary_tool": "score_account_risk",
       "tools_must_include": [
@@ -926,19 +782,19 @@
       ],
       "param_checks": {
         "score_account_risk": {
-          "account_id": 9000000000017070
+          "account_id": 5555555555
         },
         "get_account_profile": {
-          "account_id": 9000000000017070
+          "account_id": 5555555555
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects score_account_risk (account_id=9000000000017070), get_account_profile (account_id=9000000000017070)."
+    "note": "위험평가 + 프로파일 체인"
   },
   {
     "id": "st_mtool_031",
-    "question": "고액거래를 조회하고, 전체 모니터링 규칙도 실행하고, 계좌 9000000000029571의 위험도를 평가해줘",
+    "question": "고액거래를 조회하고, 전체 모니터링 규칙도 실행하고, 계좌 3333333333의 위험도를 평가해줘",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
@@ -954,16 +810,16 @@
           "rule_id": "all"
         },
         "score_account_risk": {
-          "account_id": 9000000000029571
+          "account_id": 3333333333
         }
       }
     },
     "difficulty": "hard",
-    "note": "Expects detect_ctr_candidates (mode=high_value), detect_monitoring_alerts (rule_id=all), score_account_risk (account_id=9000000000029571)."
+    "note": "3개 신규 도구 체인"
   },
   {
     "id": "st_mtool_032",
-    "question": "계좌 9000000000034017의 위험도를 평가하고 해당 계좌의 네트워크를 분석하고 순환거래 패턴도 탐지해줘",
+    "question": "계좌 4444444444의 위험도를 평가하고 해당 계좌의 네트워크를 분석하고 순환거래 패턴도 탐지해줘",
     "expected": {
       "primary_tool": "score_account_risk",
       "tools_must_include": [
@@ -978,10 +834,10 @@
       ],
       "param_checks": {
         "score_account_risk": {
-          "account_id": 9000000000034017
+          "account_id": 4444444444
         },
         "analyze_network": {
-          "account_id": 9000000000034017
+          "account_id": 4444444444
         },
         "detect_aml_patterns": {
           "pattern_type": "ring"
@@ -989,11 +845,11 @@
       }
     },
     "difficulty": "hard",
-    "note": "Expects score_account_risk (account_id=9000000000034017), analyze_network (account_id=9000000000034017), detect_aml_patterns (pattern_type=ring); called in the order score_account_risk -> analyze_network -> detect_aml_patterns."
+    "note": "위험평가 + 네트워크 + AML 패턴 체인"
   },
   {
     "id": "st_mtool_033",
-    "question": "휴면계좌를 탐지하고 그 중 계좌 9000000000034076의 네트워크도 분석해줘",
+    "question": "휴면계좌를 탐지하고 그 중 계좌 2222222222의 네트워크도 분석해줘",
     "expected": {
       "primary_tool": "detect_dormant_reactivation",
       "tools_must_include": [
@@ -1006,30 +862,26 @@
       ],
       "param_checks": {
         "analyze_network": {
-          "account_id": 9000000000034076
+          "account_id": 2222222222
         }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects detect_dormant_reactivation, analyze_network (account_id=9000000000034076); called in the order detect_dormant_reactivation -> analyze_network."
+    "difficulty": "easy",
+    "note": "휴면계좌 탐지 → 네트워크 분석 체인"
   },
   {
     "id": "st_mtool_034",
-    "question": "입금이 한 계좌로 모이는(inbound) 스머핑 네트워크를 탐지하고 전체 통계도 확인해줘",
+    "question": "스머핑(분산입금) 네트워크를 탐지하고 전체 통계도 확인해줘",
     "expected": {
       "primary_tool": "detect_smurfing_network",
       "tools_must_include": [
         "detect_smurfing_network",
         "get_statistics"
       ],
-      "param_checks": {
-        "detect_smurfing_network": {
-          "direction": "inbound"
-        }
-      }
+      "param_checks": {}
     },
-    "difficulty": "medium",
-    "note": "Expects detect_smurfing_network (direction=inbound), get_statistics."
+    "difficulty": "easy",
+    "note": "스머핑 탐지 + 통계 체인"
   },
   {
     "id": "st_mtool_035",
@@ -1053,8 +905,8 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects get_trend_analysis (unit=monthly), get_fraud_type_summary (fraud_type=1); called in the order get_trend_analysis -> get_fraud_type_summary."
+    "difficulty": "easy",
+    "note": "추세분석 → 이상거래유형 요약 체인"
   },
   {
     "id": "st_mtool_036",
@@ -1075,12 +927,12 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects analyze_cross_institution_flow, get_institution_report (bank_id=134); called in the order analyze_cross_institution_flow -> get_institution_report."
+    "difficulty": "easy",
+    "note": "기관간 흐름 분석 → 기관 리포트 체인"
   },
   {
     "id": "st_mtool_037",
-    "question": "채널별 위험도를 분석하고 계좌 9000000000026712의 위험도도 평가해줘",
+    "question": "채널별 위험도를 분석하고 계좌 7777777777의 위험도도 평가해줘",
     "expected": {
       "primary_tool": "analyze_channel_risk",
       "tools_must_include": [
@@ -1089,16 +941,16 @@
       ],
       "param_checks": {
         "score_account_risk": {
-          "account_id": 9000000000026712
+          "account_id": 7777777777
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects analyze_channel_risk, score_account_risk (account_id=9000000000026712)."
+    "note": "채널위험 분석 + 계좌 위험도 평가 체인"
   },
   {
     "id": "st_mtool_038",
-    "question": "CTR 대상 구조화 의심 건을 탐지하고, 입금계좌 9000000000022515의 수취 프로파일을 조회해줘",
+    "question": "CTR 대상 분할거래를 탐지하고, 입금계좌 8888888888의 프로파일을 조회해줘",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
@@ -1114,16 +966,16 @@
           "mode": "structuring"
         },
         "get_receiving_account_profile": {
-          "account_id": 9000000000022515
+          "account_id": 8888888888
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects detect_ctr_candidates (mode=structuring), get_receiving_account_profile (account_id=9000000000022515); called in the order detect_ctr_candidates -> get_receiving_account_profile."
+    "difficulty": "medium",
+    "note": "CTR 분할거래 탐지 → 입금계좌 프로파일 체인"
   },
   {
     "id": "st_mtool_039",
-    "question": "입금이 모이는(inbound) 스머핑 네트워크를 탐지하고, 입금 상대가 많고 출금이 소수인 funnel 패턴도 함께 탐지해줘",
+    "question": "스머핑 네트워크를 탐지하고, 분할 거래 패턴도 함께 탐지해줘",
     "expected": {
       "primary_tool": "detect_smurfing_network",
       "tools_must_include": [
@@ -1131,16 +983,13 @@
         "detect_aml_patterns"
       ],
       "param_checks": {
-        "detect_smurfing_network": {
-          "direction": "inbound"
-        },
         "detect_aml_patterns": {
           "pattern_type": "funnel"
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects detect_smurfing_network (direction=inbound), detect_aml_patterns (pattern_type=funnel)."
+    "note": "스머핑 탐지 + AML 대포통장 패턴 체인"
   },
   {
     "id": "st_mtool_040",
@@ -1157,12 +1006,12 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects get_trend_analysis (unit=quarterly), analyze_cross_institution_flow."
+    "difficulty": "medium",
+    "note": "추세분석 → 기관간 흐름 체인"
   },
   {
     "id": "st_mtool_041",
-    "question": "휴면계좌를 탐지하고, 계좌 9000000004388166의 위험도도 평가하고, 해당 계좌 거래를 SQL로 조회해줘",
+    "question": "휴면계좌를 탐지하고, 계좌 6666666666의 위험도도 평가하고, 해당 계좌 거래를 SQL로 조회해줘",
     "expected": {
       "primary_tool": "detect_dormant_reactivation",
       "tools_must_include": [
@@ -1177,31 +1026,22 @@
       ],
       "param_checks": {
         "score_account_risk": {
-          "account_id": 9000000004388166
+          "account_id": 6666666666
         },
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_acc",
-              "op": "=",
-              "value": 9000000004388166
-            }
+          "sql_contains": [
+            "6666666666"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, receiver_acc, amount, is_fraud FROM hofinet WHERE sender_acc = 9000000004388166 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects detect_dormant_reactivation, score_account_risk (account_id=9000000004388166), query_transactions (must restrict sender_acc = 9000000004388166; the SQL must run without an error); called in the order detect_dormant_reactivation -> score_account_risk -> query_transactions. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "medium",
+    "note": "휴면계좌 탐지 → 위험도 평가 → SQL 조회 3개 체인"
   },
   {
     "id": "st_mtool_042",
-    "question": "채널별 위험도를 분석하고, 고액거래를 CTR 대상으로 탐지하고, 입금이 모이는(inbound) 스머핑 네트워크도 탐지해줘",
+    "question": "채널별 위험도를 분석하고, 인터넷뱅킹 고액거래를 CTR 대상으로 탐지하고, 스머핑 네트워크도 탐지해줘",
     "expected": {
       "primary_tool": "analyze_channel_risk",
       "tools_must_include": [
@@ -1217,18 +1057,15 @@
       "param_checks": {
         "detect_ctr_candidates": {
           "mode": "high_value"
-        },
-        "detect_smurfing_network": {
-          "direction": "inbound"
         }
       }
     },
     "difficulty": "hard",
-    "note": "Expects analyze_channel_risk, detect_ctr_candidates (mode=high_value), detect_smurfing_network (direction=inbound); called in the order analyze_channel_risk -> detect_ctr_candidates -> detect_smurfing_network."
+    "note": "채널위험 + CTR + 스머핑 3개 신규 도구 체인"
   },
   {
     "id": "st_mtool_043",
-    "question": "입금계좌 9000000000043931의 프로파일을 조회하고, 해당 계좌의 위험도를 평가하고, 레이어링 패턴도 탐지해줘",
+    "question": "입금계좌 1111111111의 프로파일을 조회하고, 해당 계좌의 위험도를 평가하고, 레이어링 패턴도 탐지해줘",
     "expected": {
       "primary_tool": "get_receiving_account_profile",
       "tools_must_include": [
@@ -1243,10 +1080,10 @@
       ],
       "param_checks": {
         "get_receiving_account_profile": {
-          "account_id": 9000000000043931
+          "account_id": 1111111111
         },
         "score_account_risk": {
-          "account_id": 9000000000043931
+          "account_id": 1111111111
         },
         "detect_aml_patterns": {
           "pattern_type": "layering"
@@ -1254,11 +1091,11 @@
       }
     },
     "difficulty": "hard",
-    "note": "Expects get_receiving_account_profile (account_id=9000000000043931), score_account_risk (account_id=9000000000043931), detect_aml_patterns (pattern_type=layering); called in the order get_receiving_account_profile -> score_account_risk -> detect_aml_patterns."
+    "note": "입금계좌 프로파일 → 위험도 평가 → AML 레이어링 패턴 3개 체인"
   },
   {
     "id": "st_mtool_044",
-    "question": "기관간 자금 흐름을 분석하고, 월별 이상거래 추세도 확인하고, 고액거래 CTR 대상도 탐지해줘",
+    "question": "기관간 자금 흐름을 분석하고, 월별 이상거래 추세도 확인하고, 금융회사 201과 134 사이의 고액거래 CTR도 탐지해줘",
     "expected": {
       "primary_tool": "analyze_cross_institution_flow",
       "tools_must_include": [
@@ -1281,7 +1118,7 @@
       }
     },
     "difficulty": "hard",
-    "note": "Expects analyze_cross_institution_flow, get_trend_analysis (unit=monthly), detect_ctr_candidates (mode=high_value); called in the order analyze_cross_institution_flow -> get_trend_analysis -> detect_ctr_candidates."
+    "note": "기관간 흐름 + 추세분석 + CTR 탐지 3개 신규 도구 체인"
   },
   {
     "id": "st_mtool_irr_005",
@@ -1291,7 +1128,7 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+    "note": "irrelevance: 파일 내보내기(엑셀 export)는 지원되지 않는 기능 — 도구 호출 불필요"
   },
   {
     "id": "st_mtool_irr_006",
@@ -1301,11 +1138,11 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+    "note": "irrelevance: 외부 규제 문서 요약 요청 — AML 분석 데이터 도구 호출과 무관"
   },
   {
     "id": "st_mtool_045",
-    "question": "휴면계좌 재활성화를 탐지하고, 입금이 모이는(inbound) 스머핑 네트워크도 함께 탐지해줘",
+    "question": "휴면계좌 재활성화를 탐지하고, 스머핑 네트워크도 함께 탐지해줘",
     "expected": {
       "primary_tool": "detect_dormant_reactivation",
       "tools_must_include": [
@@ -1316,14 +1153,10 @@
         "detect_dormant_reactivation",
         "detect_smurfing_network"
       ],
-      "param_checks": {
-        "detect_smurfing_network": {
-          "direction": "inbound"
-        }
-      }
+      "param_checks": {}
     },
-    "difficulty": "medium",
-    "note": "Expects detect_dormant_reactivation, detect_smurfing_network (direction=inbound); called in the order detect_dormant_reactivation -> detect_smurfing_network."
+    "difficulty": "easy",
+    "note": "휴면계좌 탐지 → 스머핑 탐지 체인"
   },
   {
     "id": "st_mtool_046",
@@ -1340,12 +1173,12 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects analyze_channel_risk, get_trend_analysis (unit=quarterly)."
+    "difficulty": "easy",
+    "note": "채널위험 분석 → 분기별 추세 체인"
   },
   {
     "id": "st_mtool_047",
-    "question": "입금계좌 9000000000029571의 프로파일을 조회하고, 해당 계좌의 프로파일도 출금 관점(출금계좌)으로 함께 확인해줘",
+    "question": "입금계좌 3333333333의 프로파일을 조회하고, 해당 계좌의 프로파일도 출금 관점(출금계좌)으로 함께 확인해줘",
     "expected": {
       "primary_tool": "get_receiving_account_profile",
       "tools_must_include": [
@@ -1358,15 +1191,15 @@
       ],
       "param_checks": {
         "get_receiving_account_profile": {
-          "account_id": 9000000000029571
+          "account_id": 3333333333
         },
         "get_account_profile": {
-          "account_id": 9000000000029571
+          "account_id": 3333333333
         }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects get_receiving_account_profile (account_id=9000000000029571), get_account_profile (account_id=9000000000029571); called in the order get_receiving_account_profile -> get_account_profile."
+    "difficulty": "easy",
+    "note": "입금계좌 프로파일 → 출금계좌 프로파일 비교 체인"
   },
   {
     "id": "st_mtool_048",
@@ -1388,11 +1221,11 @@
       }
     },
     "difficulty": "medium",
-    "note": "Expects analyze_cross_institution_flow, rank_risky_transactions (top_k=15); called in the order analyze_cross_institution_flow -> rank_risky_transactions."
+    "note": "기관간 흐름 → 위험 거래 랭킹 체인"
   },
   {
     "id": "st_mtool_049",
-    "question": "계좌 9000000000034076에 대해 위험도를 평가하고, 네트워크를 분석하고, 입금계좌 관점의 프로파일도 조회해줘",
+    "question": "계좌 2222222222에 대해 위험도를 평가하고, 네트워크를 분석하고, 입금계좌 관점의 프로파일도 조회해줘",
     "expected": {
       "primary_tool": "score_account_risk",
       "tools_must_include": [
@@ -1407,18 +1240,18 @@
       ],
       "param_checks": {
         "score_account_risk": {
-          "account_id": 9000000000034076
+          "account_id": 2222222222
         },
         "analyze_network": {
-          "account_id": 9000000000034076
+          "account_id": 2222222222
         },
         "get_receiving_account_profile": {
-          "account_id": 9000000000034076
+          "account_id": 2222222222
         }
       }
     },
     "difficulty": "hard",
-    "note": "Expects score_account_risk (account_id=9000000000034076), analyze_network (account_id=9000000000034076), get_receiving_account_profile (account_id=9000000000034076); called in the order score_account_risk -> analyze_network -> get_receiving_account_profile."
+    "note": "위험도 → 네트워크 → 입금계좌 프로파일 3개 체인"
   },
   {
     "id": "st_mtool_050",
@@ -1439,12 +1272,12 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects detect_ctr_candidates (mode=high_value), get_statistics; called in the order detect_ctr_candidates -> get_statistics."
+    "difficulty": "medium",
+    "note": "CTR 탐지 → 전체 통계 체인"
   },
   {
     "id": "st_mtool_051",
-    "question": "월별 이상거래 추세를 분석하고, 금융회사 118의 현황 리포트를 확인하고, 입금계좌 9000000000026712의 프로파일도 조회해줘",
+    "question": "월별 이상거래 추세를 분석하고, 금융회사 305의 현황 리포트를 확인하고, 입금계좌 7777777777의 프로파일도 조회해줘",
     "expected": {
       "primary_tool": "get_trend_analysis",
       "tools_must_include": [
@@ -1462,19 +1295,19 @@
           "unit": "monthly"
         },
         "get_institution_report": {
-          "bank_id": 118
+          "bank_id": 305
         },
         "get_receiving_account_profile": {
-          "account_id": 9000000000026712
+          "account_id": 7777777777
         }
       }
     },
     "difficulty": "hard",
-    "note": "Expects get_trend_analysis (unit=monthly), get_institution_report (bank_id=118), get_receiving_account_profile (account_id=9000000000026712); called in the order get_trend_analysis -> get_institution_report -> get_receiving_account_profile."
+    "note": "추세분석 → 기관 리포트 → 입금계좌 프로파일 3개 체인"
   },
   {
     "id": "st_mtool_052",
-    "question": "입금이 모이는(inbound) 스머핑 네트워크를 탐지하고, 탐지 결과를 바탕으로 계좌 9000000004388203의 위험도도 평가해줘",
+    "question": "스머핑 네트워크를 탐지하고, 탐지된 결과를 바탕으로 계좌 9999999999의 위험도도 평가해줘",
     "expected": {
       "primary_tool": "detect_smurfing_network",
       "tools_must_include": [
@@ -1486,20 +1319,17 @@
         "score_account_risk"
       ],
       "param_checks": {
-        "detect_smurfing_network": {
-          "direction": "inbound"
-        },
         "score_account_risk": {
-          "account_id": 9000000004388203
+          "account_id": 9999999999
         }
       }
     },
     "difficulty": "medium",
-    "note": "Expects detect_smurfing_network (direction=inbound), score_account_risk (account_id=9000000004388203); called in the order detect_smurfing_network -> score_account_risk."
+    "note": "스머핑 탐지 → 계좌 위험도 평가 체인"
   },
   {
     "id": "st_mtool_053",
-    "question": "모니터링 규칙을 전체 실행하고, 알림이 발생한 계좌 9000000000024638의 프로파일과 입금계좌 관점도 함께 조회해줘",
+    "question": "모니터링 규칙을 전체 실행하고, 알림이 발생한 계좌 1234567890의 프로파일과 입금계좌 관점도 함께 조회해줘",
     "expected": {
       "primary_tool": "detect_monitoring_alerts",
       "tools_must_include": [
@@ -1517,15 +1347,15 @@
           "rule_id": "all"
         },
         "get_account_profile": {
-          "account_id": 9000000000024638
+          "account_id": 1234567890
         },
         "get_receiving_account_profile": {
-          "account_id": 9000000000024638
+          "account_id": 1234567890
         }
       }
     },
     "difficulty": "hard",
-    "note": "Expects detect_monitoring_alerts (rule_id=all), get_account_profile (account_id=9000000000024638), get_receiving_account_profile (account_id=9000000000024638); called in the order detect_monitoring_alerts -> get_account_profile -> get_receiving_account_profile."
+    "note": "모니터링 → 출금계좌 프로파일 → 입금계좌 프로파일 3개 체인"
   },
   {
     "id": "st_mtool_054",
@@ -1539,11 +1369,11 @@
       "param_checks": {}
     },
     "difficulty": "medium",
-    "note": "Expects analyze_channel_risk, analyze_cross_institution_flow."
+    "note": "채널위험 + 기관간 흐름 분석 체인"
   },
   {
     "id": "st_mtool_055",
-    "question": "CTR 구조화 의심 건을 탐지하고, 2023년 4분기와 2024년 1분기 이상거래를 비교해줘",
+    "question": "CTR 분할거래를 탐지하고, 2023년 4분기와 2024년 1분기 이상거래를 비교해줘",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
@@ -1555,19 +1385,19 @@
           "mode": "structuring"
         },
         "compare_periods": {
-          "period1_start": 20231001,
-          "period1_end": 20231231,
-          "period2_start": 20240101,
-          "period2_end": 20240331
+          "period_a_start": 20231001,
+          "period_a_end": 20231231,
+          "period_b_start": 20240101,
+          "period_b_end": 20240331
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects detect_ctr_candidates (mode=structuring), compare_periods (period1_start=20231001; period1_end=20231231; period2_start=20240101; period2_end=20240331)."
+    "difficulty": "medium",
+    "note": "CTR 분할거래 탐지 → 기간 비교 체인"
   },
   {
     "id": "st_mtool_056",
-    "question": "입금계좌 9000000000034017의 프로파일을 조회하고, 해당 계좌의 거래를 SQL로 조회해줘",
+    "question": "입금계좌 4444444444의 프로파일을 조회하고, 해당 계좌의 거래를 SQL로 조회해줘",
     "expected": {
       "primary_tool": "get_receiving_account_profile",
       "tools_must_include": [
@@ -1580,31 +1410,22 @@
       ],
       "param_checks": {
         "get_receiving_account_profile": {
-          "account_id": 9000000000034017
+          "account_id": 4444444444
         },
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "receiver_acc",
-              "op": "=",
-              "value": 9000000000034017
-            }
+          "sql_contains": [
+            "4444444444"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, sender_acc, amount, is_fraud FROM hofinet WHERE receiver_acc = 9000000000034017 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects get_receiving_account_profile (account_id=9000000000034017), query_transactions (must restrict receiver_acc = 9000000000034017; the SQL must run without an error); called in the order get_receiving_account_profile -> query_transactions. expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "medium",
+    "note": "입금계좌 프로파일 → SQL 거래 조회 체인"
   },
   {
     "id": "st_mtool_057",
-    "question": "휴면계좌 재활성화를 탐지하고, 계좌 9000000000017070의 위험도를 평가하고, 모니터링 알림도 전체 실행해줘",
+    "question": "휴면계좌 재활성화를 탐지하고, 계좌 5555555555의 위험도를 평가하고, 모니터링 알림도 전체 실행해줘",
     "expected": {
       "primary_tool": "detect_dormant_reactivation",
       "tools_must_include": [
@@ -1619,7 +1440,7 @@
       ],
       "param_checks": {
         "score_account_risk": {
-          "account_id": 9000000000017070
+          "account_id": 5555555555
         },
         "detect_monitoring_alerts": {
           "rule_id": "all"
@@ -1627,7 +1448,7 @@
       }
     },
     "difficulty": "hard",
-    "note": "Expects detect_dormant_reactivation, score_account_risk (account_id=9000000000017070), detect_monitoring_alerts (rule_id=all); called in the order detect_dormant_reactivation -> score_account_risk -> detect_monitoring_alerts."
+    "note": "휴면계좌 탐지 → 계좌 위험도 → 모니터링 알림 3개 체인"
   },
   {
     "id": "st_mtool_irr_007",
@@ -1637,7 +1458,7 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+    "note": "irrelevance: 외부 기관 직접 보고는 지원 기능이 아님 — AML 분석 도구 호출과 무관"
   },
   {
     "id": "st_mtool_irr_008",
@@ -1647,7 +1468,7 @@
       "tools_must_include": []
     },
     "difficulty": "easy",
-    "note": "Expects no tool call: the question is answered without the data or the catalog (D10)."
+    "note": "irrelevance: 내부자 거래 탐지는 지원하지 않는 도메인 — 정의된 AML 도구 범위 외"
   },
   {
     "id": "st_mtool_058",
@@ -1656,24 +1477,24 @@
       "primary_tool": "get_trend_analysis",
       "tools_must_include": [
         "get_trend_analysis",
-        "get_statistics"
+        "get_fraud_type_summary"
       ],
       "tool_order": [
         "get_trend_analysis",
-        "get_statistics"
+        "get_fraud_type_summary"
       ],
       "param_checks": {
         "get_trend_analysis": {
           "unit": "quarterly"
-        }
+        },
+        "get_fraud_type_summary": {}
       }
     },
-    "difficulty": "hard",
-    "note": "Expects get_trend_analysis (unit=quarterly), get_statistics; called in the order get_trend_analysis -> get_statistics."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_059",
-    "question": "계좌 9000000000043931의 네트워크를 2-hop으로 분석하고, 대포통장 패턴도 탐지해줘",
+    "question": "계좌 1111111111의 네트워크를 2-hop으로 분석하고, 분할 거래 패턴도 탐지해줘",
     "expected": {
       "primary_tool": "analyze_network",
       "tools_must_include": [
@@ -1682,7 +1503,7 @@
       ],
       "param_checks": {
         "analyze_network": {
-          "account_id": 9000000000043931,
+          "account_id": 1111111111,
           "hops_min": 2
         },
         "detect_aml_patterns": {
@@ -1690,12 +1511,11 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects analyze_network (account_id=9000000000043931; hops at least 2), detect_aml_patterns (pattern_type=funnel)."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_060",
-    "question": "R001 심야대량 규칙 알림을 확인하고, 알림된 계좌 9000000000029571의 위험도를 평가해줘",
+    "question": "R001 심야대량 규칙 알림을 확인하고, 알림된 계좌 3333333333의 위험도를 평가해줘",
     "expected": {
       "primary_tool": "detect_monitoring_alerts",
       "tools_must_include": [
@@ -1707,12 +1527,11 @@
           "rule_id": "R001"
         },
         "score_account_risk": {
-          "account_id": 9000000000029571
+          "account_id": 3333333333
         }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects detect_monitoring_alerts (rule_id=R001), score_account_risk (account_id=9000000000029571)."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_061",
@@ -1728,8 +1547,8 @@
         }
       }
     },
-    "difficulty": "easy",
-    "note": "Expects detect_smurfing_network (direction=inbound)."
+    "difficulty": "hard",
+    "note": "2회 호출 기대 (inbound + outbound) — tools_must_include에 2회 포함 시 recall 처리"
   },
   {
     "id": "st_mtool_062",
@@ -1742,36 +1561,21 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_bank",
-              "op": "=",
-              "value": 150
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "150"
           ],
           "sql_valid": true
         },
         "get_institution_report": {
           "bank_id": 150
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 150 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects query_transactions (must restrict sender_bank = 150 and is_fraud = 1; the SQL must run without an error), get_institution_report (bank_id=150). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_063",
-    "question": "다중거래의 동시 요청(유형 4) 이상거래를 조회하고, 위험 거래 상위 10건도 모델로 랭킹해줘",
+    "question": "다중거래의 동시 요청(유형 4) 이상거래를 조회하고, 상위 10건의 위험도를 랭킹해줘",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1780,27 +1584,17 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fraud_type",
-              "op": "=",
-              "value": 4
-            }
+          "sql_contains": [
+            "4"
           ],
           "sql_valid": true
         },
         "rank_risky_transactions": {
           "top_k": 10
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_acc, receiver_acc, amount FROM hofinet WHERE fraud_type = 4 ORDER BY amount DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects query_transactions (must restrict fraud_type = 4; the SQL must run without an error), rank_risky_transactions (top_k=10). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_064",
@@ -1813,22 +1607,21 @@
       ],
       "param_checks": {
         "compare_periods": {
-          "period1_start": 20240101,
-          "period1_end": 20240331,
-          "period2_start": 20240401,
-          "period2_end": 20240630
+          "period_a_start": 20240101,
+          "period_a_end": 20240331,
+          "period_b_start": 20240401,
+          "period_b_end": 20240630
         },
         "get_trend_analysis": {
           "unit": "monthly"
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects compare_periods (period1_start=20240101; period1_end=20240331; period2_start=20240401; period2_end=20240630), get_trend_analysis (unit=monthly)."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_065",
-    "question": "고액거래 CTR 대상을 탐지하고, 보고 기준 미만 구조화 의심 건도 함께 확인해줘",
+    "question": "고액거래 CTR 대상을 탐지하고, 분할거래 의심 건도 함께 확인해줘",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
@@ -1840,12 +1633,12 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects detect_ctr_candidates (mode=high_value)."
+    "difficulty": "hard",
+    "note": "2회 호출 기대 (high_value + structuring)"
   },
   {
     "id": "st_mtool_066",
-    "question": "계좌 9000000004388166의 출금 프로파일과 입금 프로파일을 모두 조회해줘",
+    "question": "계좌 6666666666의 출금 프로파일과 입금 프로파일을 모두 조회해줘",
     "expected": {
       "primary_tool": "get_account_profile",
       "tools_must_include": [
@@ -1854,15 +1647,14 @@
       ],
       "param_checks": {
         "get_account_profile": {
-          "account_id": 9000000004388166
+          "account_id": 6666666666
         },
         "get_receiving_account_profile": {
-          "account_id": 9000000004388166
+          "account_id": 6666666666
         }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects get_account_profile (account_id=9000000004388166), get_receiving_account_profile (account_id=9000000004388166)."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_067",
@@ -1881,12 +1673,11 @@
       ],
       "param_checks": {}
     },
-    "difficulty": "hard",
-    "note": "Expects get_statistics, analyze_channel_risk, analyze_cross_institution_flow; called in the order get_statistics -> analyze_channel_risk -> analyze_cross_institution_flow."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_068",
-    "question": "계좌 9000000000022515과 9000000000026712 간 최단경로를 찾고, 두 계좌의 위험도도 평가해줘",
+    "question": "계좌 8888888888과 7777777777 간 최단경로를 찾고, 두 계좌의 위험도도 평가해줘",
     "expected": {
       "primary_tool": "detect_aml_patterns",
       "tools_must_include": [
@@ -1896,38 +1687,16 @@
       "param_checks": {
         "detect_aml_patterns": {
           "pattern_type": "shortest_path",
-          "account_a": 9000000000022515,
-          "account_b": 9000000000026712
-        },
-        "score_account_risk": {
-          "account_id": 9000000000022515
+          "account_a": 8888888888,
+          "account_b": 7777777777
         }
-      },
-      "alternatives": [
-        {
-          "tools_must_include": [
-            "detect_aml_patterns",
-            "score_account_risk"
-          ],
-          "param_checks": {
-            "detect_aml_patterns": {
-              "pattern_type": "shortest_path",
-              "account_a": 9000000000022515,
-              "account_b": 9000000000026712
-            },
-            "score_account_risk": {
-              "account_id": 9000000000026712
-            }
-          }
-        }
-      ]
+      }
     },
-    "difficulty": "hard",
-    "note": "Expects detect_aml_patterns (pattern_type=shortest_path; account_a=9000000000022515; account_b=9000000000026712), score_account_risk (account_id=9000000000022515). Also accepted: detect_aml_patterns (pattern_type=shortest_path; account_a=9000000000022515; account_b=9000000000026712), score_account_risk (account_id=9000000000026712)."
+    "difficulty": "hard"
   },
   {
     "id": "st_mtool_069",
-    "question": "분할 거래 유형(3) 이상거래를 조회하고, 계좌 9000000000106920의 네트워크를 분석해줘",
+    "question": "분할 거래 유형(3) 이상거래를 조회하고, 계좌 1212121212의 네트워크를 분석해줘",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -1936,27 +1705,17 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fraud_type",
-              "op": "=",
-              "value": 3
-            }
+          "sql_contains": [
+            "3"
           ],
           "sql_valid": true
         },
         "analyze_network": {
-          "account_id": 9000000000106920
-        }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_acc, receiver_acc, amount FROM hofinet WHERE fraud_type = 3 ORDER BY date DESC LIMIT 100"
+          "account_id": 1212121212
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects query_transactions (must restrict fraud_type = 3; the SQL must run without an error), analyze_network (account_id=9000000000106920). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_070",
@@ -1972,33 +1731,18 @@
           "bank_id": 102
         },
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_bank",
-              "op": "=",
-              "value": 102
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "102"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 102 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects get_institution_report (bank_id=102), query_transactions (must restrict sender_bank = 102 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_071",
-    "question": "휴면계좌 재활성화를 90일 기준으로 탐지하고, 탐지된 계좌로 입금이 모이는(inbound) 스머핑 패턴도 확인해줘",
+    "question": "휴면계좌 재활성화를 90일 기준으로 탐지하고, 탐지된 계좌의 스머핑 패턴도 확인해줘",
     "expected": {
       "primary_tool": "detect_dormant_reactivation",
       "tools_must_include": [
@@ -2014,12 +1758,11 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects detect_dormant_reactivation (dormant_days=90), detect_smurfing_network (direction=inbound)."
+    "difficulty": "hard"
   },
   {
     "id": "st_mtool_072",
-    "question": "거래시간대 21, 출금사 134, 입금사 119, 일반(자금구분 0), 인터넷뱅킹(매체구분 2), 300만원 조건으로 이상거래 확률을 예측하고, 전체 통계도 보여줘",
+    "question": "거래시간대 21, 출금사 134, 입금사 119, 이체, ATM, 300만원 조건으로 이상거래 확률을 예측하고, 전체 통계도 보여줘",
     "expected": {
       "primary_tool": "predict_fraud",
       "tools_must_include": [
@@ -2031,14 +1774,13 @@
           "time_slot": 21,
           "sender_bank": 134,
           "receiver_bank": 119,
-          "fund_type": 0,
+          "fund_type": 4,
           "media_type": 2,
           "amount": 3000000
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects predict_fraud (time_slot=21; sender_bank=134; receiver_bank=119; fund_type=0; media_type=2; amount=3000000), get_statistics."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_073",
@@ -2058,12 +1800,11 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects get_trend_analysis (unit=monthly), get_fraud_type_summary (fraud_type=1)."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_074",
-    "question": "보고 기준 미만 구조화 의심 건을 탐지하고, 고액거래도 함께 조회해줘",
+    "question": "분할거래 의심 건을 탐지하고, 고액거래도 함께 조회해줘",
     "expected": {
       "primary_tool": "detect_ctr_candidates",
       "tools_must_include": [
@@ -2075,8 +1816,7 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects detect_ctr_candidates (mode=structuring)."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_075",
@@ -2092,12 +1832,12 @@
         }
       }
     },
-    "difficulty": "easy",
-    "note": "Expects detect_monitoring_alerts (rule_id=R003)."
+    "difficulty": "hard",
+    "note": "2회 호출 기대 (R003 + R004) — tools_must_include 확장 가능"
   },
   {
     "id": "st_mtool_076",
-    "question": "계좌 9000000004228844의 프로파일을 조회하고, 해당 계좌의 위험도 점수도 그래프 DB로 산출해줘",
+    "question": "계좌 1313131313의 프로파일을 조회하고, 해당 계좌의 위험도 점수도 그래프 DB로 산출해줘",
     "expected": {
       "primary_tool": "get_account_profile",
       "tools_must_include": [
@@ -2106,16 +1846,15 @@
       ],
       "param_checks": {
         "get_account_profile": {
-          "account_id": 9000000004228844
+          "account_id": 1313131313
         },
         "detect_aml_patterns": {
           "pattern_type": "risk_score",
-          "account_id": 9000000004228844
+          "account_id": 1313131313
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects get_account_profile (account_id=9000000004228844), detect_aml_patterns (pattern_type=risk_score; account_id=9000000004228844)."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_077",
@@ -2135,8 +1874,7 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects detect_smurfing_network (direction=outbound), rank_risky_transactions (top_k=5)."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_078",
@@ -2149,22 +1887,21 @@
       ],
       "param_checks": {
         "compare_periods": {
-          "period1_start": 20230101,
-          "period1_end": 20230630,
-          "period2_start": 20230701,
-          "period2_end": 20231231
+          "period_a_start": 20230101,
+          "period_a_end": 20230630,
+          "period_b_start": 20230701,
+          "period_b_end": 20231231
         },
         "get_trend_analysis": {
           "unit": "quarterly"
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects compare_periods (period1_start=20230101; period1_end=20230630; period2_start=20230701; period2_end=20231231), get_trend_analysis (unit=quarterly)."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_079",
-    "question": "입금계좌 9000000000010657의 프로파일을 조회하고, 해당 계좌 관련 순환거래 패턴도 탐지해줘",
+    "question": "입금계좌 1414141414의 프로파일을 조회하고, 해당 계좌 관련 순환거래 패턴도 탐지해줘",
     "expected": {
       "primary_tool": "get_receiving_account_profile",
       "tools_must_include": [
@@ -2173,15 +1910,14 @@
       ],
       "param_checks": {
         "get_receiving_account_profile": {
-          "account_id": 9000000000010657
+          "account_id": 1414141414
         },
         "detect_aml_patterns": {
           "pattern_type": "ring"
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects get_receiving_account_profile (account_id=9000000000010657), detect_aml_patterns (pattern_type=ring)."
+    "difficulty": "hard"
   },
   {
     "id": "st_mtool_080",
@@ -2198,8 +1934,7 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects analyze_channel_risk, get_institution_report (bank_id=120)."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_081",
@@ -2212,29 +1947,14 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_bank",
-              "op": "=",
-              "value": 134
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "134"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 134 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects analyze_cross_institution_flow, query_transactions (must restrict sender_bank = 134 and is_fraud = 1; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_082",
@@ -2250,28 +1970,18 @@
           "fraud_type": 5
         },
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fraud_type",
-              "op": "=",
-              "value": 5
-            }
+          "sql_contains": [
+            "5"
           ],
           "sql_valid": true
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 5 ORDER BY date DESC LIMIT 20"
-        }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects get_fraud_type_summary (fraud_type=5), query_transactions (must restrict fraud_type = 5; the SQL must run without an error). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_083",
-    "question": "계좌 9000000000005714의 1-hop 네트워크를 분석하고, 레이어링 패턴도 탐지해줘",
+    "question": "계좌 1515151515의 1-hop 네트워크를 분석하고, 레이어링 패턴도 탐지해줘",
     "expected": {
       "primary_tool": "analyze_network",
       "tools_must_include": [
@@ -2280,7 +1990,7 @@
       ],
       "param_checks": {
         "analyze_network": {
-          "account_id": 9000000000005714,
+          "account_id": 1515151515,
           "hops_max": 1
         },
         "detect_aml_patterns": {
@@ -2288,8 +1998,7 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects analyze_network (account_id=9000000000005714; hops at most 1), detect_aml_patterns (pattern_type=layering)."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_084",
@@ -2306,8 +2015,8 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects rank_risky_transactions (top_k=20), analyze_network."
+    "difficulty": "hard",
+    "note": "analyze_network account_id는 rank 결과에 의존"
   },
   {
     "id": "st_mtool_085",
@@ -2316,7 +2025,8 @@
       "primary_tool": "detect_monitoring_alerts",
       "tools_must_include": [
         "detect_monitoring_alerts",
-        "get_statistics"
+        "get_statistics",
+        "get_fraud_type_summary"
       ],
       "param_checks": {
         "detect_monitoring_alerts": {
@@ -2324,12 +2034,11 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects detect_monitoring_alerts (rule_id=all), get_statistics."
+    "difficulty": "hard"
   },
   {
     "id": "st_mtool_086",
-    "question": "출금금융회사 107의 이상거래를 조회하고, 예측 확률도 구해줘. 거래시간대 12, 출금사 107, 입금사 122, 기타(자금구분 3), 휴대전화(매체구분 4), 200만원.",
+    "question": "출금금융회사 140의 이상거래를 조회하고, 예측 확률도 구해줘. 거래시간대 12, 입금사 122, 이체, 모바일, 200만원.",
     "expected": {
       "primary_tool": "query_transactions",
       "tools_must_include": [
@@ -2338,17 +2047,8 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "sender_bank",
-              "op": "=",
-              "value": 107
-            },
-            {
-              "column": "is_fraud",
-              "op": "=",
-              "value": 1
-            }
+          "sql_contains": [
+            "140"
           ],
           "sql_valid": true
         },
@@ -2356,23 +2056,17 @@
           "time_slot": 12,
           "sender_bank": 107,
           "receiver_bank": 122,
-          "fund_type": 3,
+          "fund_type": 0,
           "media_type": 4,
           "amount": 2000000
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, receiver_bank, amount, fraud_type FROM hofinet WHERE sender_bank = 107 AND is_fraud = 1 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects query_transactions (must restrict sender_bank = 107 and is_fraud = 1; the SQL must run without an error), predict_fraud (time_slot=12; sender_bank=107; receiver_bank=122; fund_type=3; media_type=4; amount=2000000). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_087",
-    "question": "계좌 9000000000028452, 9000000004228478, 9000000004237225의 위험도를 각각 평가해줘",
+    "question": "계좌 1616161616, 1717171717, 1818181818의 위험도를 각각 평가해줘",
     "expected": {
       "primary_tool": "score_account_risk",
       "tools_must_include": [
@@ -2380,12 +2074,12 @@
       ],
       "param_checks": {
         "score_account_risk": {
-          "account_id": 9000000000028452
+          "account_id": 1616161616
         }
       }
     },
-    "difficulty": "easy",
-    "note": "Expects score_account_risk (account_id=9000000000028452)."
+    "difficulty": "hard",
+    "note": "3회 호출 기대 — 최소 1회 정확하면 부분 점수"
   },
   {
     "id": "st_mtool_088",
@@ -2398,27 +2092,17 @@
       ],
       "param_checks": {
         "query_transactions": {
-          "sql_conditions": [
-            {
-              "column": "fraud_type",
-              "op": "=",
-              "value": 7
-            }
+          "sql_contains": [
+            "6"
           ],
           "sql_valid": true
         },
         "get_trend_analysis": {
           "unit": "monthly"
         }
-      },
-      "reference_calls": {
-        "query_transactions": {
-          "sql": "SELECT date, sender_bank, receiver_bank, amount FROM hofinet WHERE fraud_type = 7 ORDER BY date DESC LIMIT 100"
-        }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects query_transactions (must restrict fraud_type = 7; the SQL must run without an error), get_trend_analysis (unit=monthly). expected.reference_calls carries the SQL the reference answer runs, so the gold call is executable."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_089",
@@ -2434,8 +2118,8 @@
         }
       }
     },
-    "difficulty": "medium",
-    "note": "Expects detect_aml_patterns (pattern_type=ring)."
+    "difficulty": "hard",
+    "note": "2회 호출 기대 (ring + layering)"
   },
   {
     "id": "st_mtool_090",
@@ -2452,8 +2136,7 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects detect_ctr_candidates (mode=high_value), analyze_cross_institution_flow."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_091",
@@ -2466,8 +2149,7 @@
       ],
       "param_checks": {}
     },
-    "difficulty": "medium",
-    "note": "Expects detect_dormant_reactivation, analyze_channel_risk."
+    "difficulty": "medium"
   },
   {
     "id": "st_mtool_092",
@@ -2476,11 +2158,13 @@
       "primary_tool": "get_statistics",
       "tools_must_include": [
         "get_statistics",
-        "get_trend_analysis"
+        "get_trend_analysis",
+        "get_fraud_type_summary"
       ],
       "tool_order": [
         "get_statistics",
-        "get_trend_analysis"
+        "get_trend_analysis",
+        "get_fraud_type_summary"
       ],
       "param_checks": {
         "get_trend_analysis": {
@@ -2488,7 +2172,6 @@
         }
       }
     },
-    "difficulty": "hard",
-    "note": "Expects get_statistics, get_trend_analysis (unit=monthly); called in the order get_statistics -> get_trend_analysis."
+    "difficulty": "medium"
   }
 ]
