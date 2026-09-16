@@ -22,11 +22,26 @@ _ROOT = _HERE.parents[1]
 
 _PIN = re.compile(r"^\s*([A-Za-z0-9_.\-]+)\s*==\s*([^\s#]+)")
 
+# The stack name on the command line is not the file name. It used to be spelled
+# into `requirements-{name}.txt`, which read `requirements-evaluation.txt`: a file
+# that does not exist, so every evaluation pin went unchecked and the run still
+# said "12 of 12 match".
+PIN_FILES = {"evaluation": "requirements-eval.txt",
+             "serving": "requirements-serving.txt"}
+
+
+class MissingPinFile(FileNotFoundError):
+    """A stack was asked for and its pin file is not in the repository."""
+
+
+def pin_path(name: str) -> Path:
+    return _HERE / PIN_FILES[name]
+
 
 def read_pins(path: Path) -> dict[str, str]:
     pins: dict[str, str] = {}
     if not path.exists():
-        return pins
+        raise MissingPinFile(f"{path} does not exist, so nothing would be checked")
     for line in path.read_text(encoding="utf-8").splitlines():
         match = _PIN.match(line)
         if match:
@@ -44,7 +59,10 @@ def platform_tools_pins() -> tuple[Path | None, dict[str, str]]:
     if root is None:
         return None, {}
     path = Path(root) / "requirements-tools.txt"
-    return path, read_pins(path)
+    try:
+        return path, read_pins(path)
+    except MissingPinFile:
+        return path, {}
 
 
 def installed(name: str) -> str | None:
@@ -62,8 +80,17 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     name = "serving" if args.serving else "evaluation"
-    pins = read_pins(_HERE / f"requirements-{name}.txt")
+    path = pin_path(name)
+    try:
+        pins = read_pins(path)
+    except MissingPinFile as exc:
+        print(f"  missing pin file: {exc}", file=sys.stderr)
+        return 2
     problems: list[str] = []
+    if not pins:
+        print(f"  {path} pins nothing, so this check would pass on any environment",
+              file=sys.stderr)
+        return 2
 
     if not args.serving:
         tools_path, tools_pins = platform_tools_pins()
@@ -85,7 +112,7 @@ def main(argv: list[str] | None = None) -> int:
             wrong.append(f"{package}: installed {have}, pinned {version}")
 
     if not args.quiet:
-        print(f"{name} stack: {len(pins)} pinned package(s), "
+        print(f"{name} stack ({path.name}): {len(pins)} pinned package(s), "
               f"{len(pins) - len(missing) - len(wrong)} match")
     for line in problems + wrong:
         print(f"  conflict: {line}", file=sys.stderr)
