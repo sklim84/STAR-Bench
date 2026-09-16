@@ -1,0 +1,336 @@
+[
+ {
+  "id": "D01",
+  "title": "h의 추가 호출 정책",
+  "chosen_option": 1,
+  "chosen_label": "h를 그대로 두고 정의만 정확히 쓴다",
+  "blocking": false,
+  "note": "h 하나로 간결하게, F1은 부록",
+  "issues": [
+   "L4-005",
+   "L4-022",
+   "L6-057"
+  ]
+ },
+ {
+  "id": "D02",
+  "title": "c·o·a·p 정의",
+  "chosen_option": 3,
+  "chosen_label": "주 표에서 o·p를 빼고 h, a(검사 있는 케이스), c(h=1)만 싣는다",
+  "blocking": false,
+  "note": "주 표는 h·a·c",
+  "issues": [
+   "L6-029",
+   "L4-001",
+   "L4-004",
+   "L1-021",
+   "L4-028"
+  ]
+ },
+ {
+  "id": "D03",
+  "title": "E2E 정답 기준과 없는 계좌(K6)",
+  "chosen_option": 1,
+  "chosen_label": "전면 재구성: 단일턴 계좌 268건을 역할 맞는 실제 계좌로, 멀티턴 45개 시나리오를 실제 계좌·기관·금액 조합으로 다시 쓰고 정답 호출 실행 결과를 주입",
+  "blocking": true,
+  "note": "전면 재구성",
+  "issues": [
+   "L3-018",
+   "L3-004",
+   "L2-004",
+   "L2-005",
+   "L3-007",
+   "L4-007",
+   "R1-R1",
+   "L3-001"
+  ]
+ },
+ {
+  "id": "D04",
+  "title": "STR 품질 지표와 언어",
+  "chosen_option": 1,
+  "chosen_label": "채점기 재설계: 타입별 슬롯 정확 일치, 정답 요약으로 먼저 검증해 천장 보고, Halluc는 작성 초안 기준, field·term은 D13에서 허용한 언어로 탐지",
+  "blocking": false,
+  "note": "채점기 재설계",
+  "issues": [
+   "L6-025",
+   "L4-002",
+   "L4-003",
+   "L6-010",
+   "L6-050",
+   "R1-N5",
+   "L6-033"
+  ]
+ },
+ {
+  "id": "D05",
+  "title": "thinking 모드와 토큰 상한",
+  "chosen_option": 2,
+  "chosen_label": "모델마다 한 모드(제조사 기본)만 돌려 행에 표시하고, T/NT 짝은 Qwen3.5와 gpt-oss(effort high/low로 명시)만 추론 효과 비교로 유지",
+  "blocking": true,
+  "note": "모델당 한 모드, T/NT는 Qwen3.5·gpt-oss",
+  "issues": [
+   "C2-012",
+   "L5-006",
+   "L5-008",
+   "L5-009",
+   "C2-004",
+   "L5-022"
+  ]
+ },
+ {
+  "id": "D06",
+  "title": "Memgraph 기반 도구",
+  "chosen_option": 2,
+  "chosen_label": "DuckDB/NetworkX 결정적 대체 구현을 넣고 벤치마크는 이것으로 실행",
+  "blocking": true,
+  "note": "결정적 대체 구현",
+  "issues": [
+   "L3-005"
+  ]
+ },
+ {
+  "id": "D07",
+  "title": "단일 서빙 스택(28설정과 2×2)",
+  "chosen_option": 1,
+  "chosen_label": "모두 로컬 vLLM 한 버전·같은 문맥(32k 이상)·동시성 1·고정 컨테이너로 실행",
+  "blocking": true,
+  "note": "로컬 vLLM 하나(총괄만 OpenRouter)",
+  "issues": [
+   "R1-R3",
+   "L5-012",
+   "L5-014",
+   "L5-002",
+   "L5-023",
+   "R1-R4",
+   "L3-003"
+  ]
+ },
+ {
+  "id": "D08",
+  "title": "평가 시스템 프롬프트",
+  "chosen_option": 2,
+  "chosen_label": "사실 오류를 고치고 15단계 흐름을 뺀 중립 프롬프트로 확정, 도구 나열 ablation은 추적 코드로 다시 돌려 부록에 보고",
+  "blocking": true,
+  "note": "중립 프롬프트, ablation은 부록",
+  "issues": [
+   "R1-N4",
+   "R2C-004",
+   "L4-005"
+  ]
+ },
+ {
+  "id": "D09",
+  "title": "중복 케이스(*_ex)",
+  "chosen_option": 1,
+  "chosen_label": "삭제해 1,115건으로 보고",
+  "blocking": true,
+  "note": "복제 삭제 후 신규 143건 작성",
+  "issues": [
+   "L1-023",
+   "L6-037",
+   "L6-016"
+  ]
+ },
+ {
+  "id": "D10",
+  "title": "관련없음과 용어집·FIU 범위",
+  "chosen_option": 2,
+  "chosen_label": "일반 개념 설명은 무호출, 용어집·FIU 질문은 '용어집 기준', 'FIU 참고유형 번호'처럼 카탈로그 내용이 필요한 요청으로 다시 씀",
+  "blocking": true,
+  "note": "카탈로그 필요 문장으로 재작성",
+  "issues": [
+   "L1-001",
+   "L6-009",
+   "L3-011",
+   "C1-006",
+   "L3-006",
+   "L1-019",
+   "C2-006"
+  ]
+ },
+ {
+  "id": "D11",
+  "title": "모호한 도구 경계",
+  "chosen_option": 1,
+  "chosen_label": "질문마다 판별 단서를 넣고 도구 설명을 고쳐 정답을 하나로 유지",
+  "blocking": true,
+  "note": "질문에 단서, 정답 하나",
+  "issues": [
+   "L1-002",
+   "L1-003",
+   "L1-004",
+   "L1-005",
+   "L1-006",
+   "L1-007",
+   "L1-008",
+   "L1-009",
+   "L1-010",
+   "L1-011",
+   "L1-028",
+   "L6-004"
+  ]
+ },
+ {
+  "id": "D12",
+  "title": "사기 모델, 라벨 사용 출력, predict_fraud 정답 입력",
+  "chosen_option": 1,
+  "chosen_label": "모델은 유지하고 출력을 '위험 점수'로 부르며 금액 기준·표본 내 학습을 공시, `rank_risky`의 `is_fraud_actual`은 빼고 `score_account_risk` 라벨 이력은 공시, 정답 입력은 868fd28 R3·R7 매핑(48개 금액, 자금구분 4 재분배)으로 되돌림",
+  "blocking": true,
+  "note": "위험 점수로 명명, 입력 재매핑",
+  "issues": [
+   "C1-003",
+   "R1-N2",
+   "C1-002",
+   "L3-017",
+   "L2-004"
+  ]
+ },
+ {
+  "id": "D13",
+  "title": "스키마 팔별 응답 언어 지시",
+  "chosen_option": 1,
+  "chosen_label": "질문 언어로 답하게 통일(한국어 질문은 한국어, 영어 질문은 영어)",
+  "blocking": true,
+  "note": "질문 언어로 응답",
+  "issues": [
+   "R1-N5",
+   "L4-002"
+  ]
+ },
+ {
+  "id": "D14",
+  "title": "BFCL 비교",
+  "chosen_option": 1,
+  "chosen_label": "비교를 원고에서 뺌",
+  "blocking": false,
+  "note": "BFCL 삭제",
+  "issues": [
+   "L6-007",
+   "R2C-002",
+   "L6-045"
+  ]
+ },
+ {
+  "id": "D15",
+  "title": "이중맹검 저장소 링크 익명성",
+  "chosen_option": 1,
+  "chosen_label": "git 이력 없는 익명 미러(식별 정보·장비 경로 제거)를 만들어 각주를 익명 URL로 교체",
+  "blocking": false,
+  "note": "익명 미러",
+  "issues": [
+   "R2C-001",
+   "L5-021"
+  ]
+ },
+ {
+  "id": "D16",
+  "title": "tools_en 팔 유지 여부",
+  "chosen_option": 3,
+  "chosen_label": "`tools_en.py`를 없애고 플랫폼 영어 스키마(`agent.TOOLS`)를 영어 팔로, v3 `tools_kr.py`를 구조가 같은 한국어 팔로 사용",
+  "blocking": true,
+  "note": "tools_en 폐기",
+  "issues": [
+   "C2-005",
+   "L5-015",
+   "L5-004",
+   "L1-025"
+  ]
+ },
+ {
+  "id": "D17",
+  "title": "주 표 도구 정의 언어",
+  "chosen_option": 1,
+  "chosen_label": "모든 열을 v3 한국어 스키마·한국어 프롬프트로 실행",
+  "blocking": true,
+  "note": "전 열 한국어 스키마",
+  "issues": [
+   "L6-032",
+   "C2-012",
+   "L5-012",
+   "K3"
+  ]
+ },
+ {
+  "id": "D18",
+  "title": "모니터링 규칙 정의",
+  "chosen_option": 1,
+  "chosen_label": "규칙을 HOFINET 값 구조에 맞게 다시 정의(R001은 유형 7이 나오는 시간대 21 또는 시간대 0·3의 상위 금액 구간, R003은 같은 금액 반복 횟수 등)하고 영향받는 정답·주입 결과 갱신",
+  "blocking": true,
+  "note": "규칙 재정의",
+  "issues": [
+   "L3-012",
+   "L1-008"
+  ]
+ },
+ {
+  "id": "D19",
+  "title": "되묻기 정의와 Abstain 채점",
+  "chosen_option": 1,
+  "chosen_label": "되묻기는 스키마 필수 인자(또는 필수 인자를 가리키는 미해결 지시어)가 빠진 경우로 한정하고, 성공은 무호출이면서 비어 있지 않은 응답(파싱 불가 호출 JSON은 parse_fail)으로 판정",
+  "blocking": true,
+  "note": "필수 인자 누락으로 한정",
+  "issues": [
+   "L1-014",
+   "L1-015",
+   "L1-016",
+   "L4-009",
+   "L2-015",
+   "C2-010"
+  ]
+ },
+ {
+  "id": "D20",
+  "title": "규제보고 소분류 가중과 확충",
+  "chosen_option": 2,
+  "chosen_label": "케이스는 그대로 두고 케이스 가중 평균·도구별 n·부트스트랩 CI를 주 보고로, 도구 가중은 민감도로",
+  "blocking": true,
+  "note": "케이스 가중 보고",
+  "issues": [
+   "R1-S3",
+   "L6-016",
+   "L6-023",
+   "L6-006"
+  ]
+ },
+ {
+  "id": "D21",
+  "title": "모델별 템플릿·형식과 병렬 호출 처리",
+  "chosen_option": 2,
+  "chosen_label": "제조사 권장 서빙 형식(Mistral 형식, Kanana 자체 템플릿)을 쓰고, 템플릿이 고장 난 경우 vLLM 유지 템플릿이나 최소 수정 템플릿을 써서 수정 내용을 공개",
+  "blocking": true,
+  "note": "제조사 형식·템플릿 수리",
+  "issues": [
+   "L5-005",
+   "C2-007",
+   "C2-018",
+   "L5-025",
+   "L5-008",
+   "L5-010"
+  ]
+ },
+ {
+  "id": "D22",
+  "title": "전문가 평가 보고 방식",
+  "chosen_option": 3,
+  "chosen_label": "재실행 산출물로 채점기 점수를 보지 않는 독립 평가를 새로 받아 보고",
+  "blocking": false,
+  "note": "재실행 산출물로 새 독립 평가",
+  "issues": [
+   "L6-033",
+   "L4-003"
+  ]
+ },
+ {
+  "id": "D23",
+  "title": "난이도 라벨",
+  "chosen_option": 1,
+  "chosen_label": "명시 규칙(유사 도구 수, 필수 인자 도출 단계, 도구 수, 정보 누락)으로 자동 재라벨하고 단조성 검사를 보고",
+  "blocking": false,
+  "note": "규칙 재라벨",
+  "issues": [
+   "L1-022",
+   "L6-022"
+  ]
+ }
+]
