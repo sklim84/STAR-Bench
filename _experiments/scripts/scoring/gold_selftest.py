@@ -5,7 +5,10 @@ Whatever does not is a data defect, not a scoring defect, so the report lists
 those cases for the data owners. Runs against any benchmark directory:
 
     python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks \
-        --out _experiments/dataset_fix_20260915/impl/gold_selftest_single.json
+        --out /tmp/gold_selftest_benchmarks.json
+
+Pre-flight gate 4 runs the same self-test on all four directories and compares
+the counts with `_experiments/scripts/preflight/gold_selftest_expected.json`.
 """
 
 from __future__ import annotations

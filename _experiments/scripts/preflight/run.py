@@ -78,11 +78,15 @@ def main(argv: list[str] | None = None) -> int:
     gates.add_argument("--all", action="store_true", help="run every gate")
     gates.add_argument("--only", help="comma-separated gate keys: " + ", ".join(ORDER))
     gates.add_argument("--report", action="store_true",
-                       help=f"write {report.REPORT_PATH.name} next to the other stream reports")
+                       help=f"write {report.REPORT_PATH.parent.name}/{report.REPORT_PATH.name} "
+                            f"and .json, both tracked in this repository")
     gates.add_argument("--json", help="write the JSON report here "
                                       f"(default {report.JSON_PATH.name} with --report)")
     gates.add_argument("--update-allow-list", action="store_true",
                        help="rewrite allow_empty.json from this run, for review")
+    gates.add_argument("--update-gold-expected", action="store_true",
+                       help="rewrite gold_selftest_expected.json from this run, for review; "
+                            "commit it with the data change that moved the counts")
     _add_shared(gates)
 
     can = subparsers.add_parser("canary", help="gate 6: a fixed sample against a served model")
@@ -120,7 +124,8 @@ def _gates(args) -> int:
             results.append(GateResult(key, module.NUMBER, module.TITLE, [], 0.0, skipped=True))
             continue
         if key == gold.KEY:
-            result = module.run(ctx, update_allow_list=args.update_allow_list)
+            result = module.run(ctx, update_allow_list=args.update_allow_list,
+                                update_gold_expected=args.update_gold_expected)
         else:
             result = module.run(ctx)
         results.append(result)

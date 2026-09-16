@@ -22,7 +22,7 @@ from pathlib import Path
 
 __all__ = ["EnvironmentMismatch", "collect", "star_bench_commit", "sha256_file",
            "sha256_text", "expected_pin", "check_pin", "benchmark_digest",
-           "benchmark_file_hashes", "open_database"]
+           "benchmark_file_hashes", "open_database", "working_tree_status"]
 
 _ROOT = Path(__file__).resolve().parents[3]
 
@@ -68,6 +68,27 @@ def _git(root: Path, *args: str) -> str | None:
 def star_bench_commit() -> dict:
     return {"star_bench_commit": _git(_ROOT, "rev-parse", "HEAD"),
             "star_bench_dirty": bool(_git(_ROOT, "status", "--porcelain", "--untracked-files=no") or "")}
+
+
+def working_tree_status(root: Path | str | None = None) -> dict:
+    """Tracked modifications and untracked files, separately.
+
+    `star_bench_dirty` in a run record means "a tracked file differs from the
+    commit", which is what makes a run irreproducible, and it stays that. But the
+    same question read with `--untracked-files=no` also hid 215 scratch files
+    sitting inside the repository, so the gate says how many there are (V-10).
+    """
+    root = Path(root or _ROOT)
+    out = _git(root, "status", "--porcelain", "--untracked-files=all")
+    if out is None:
+        return {"readable": False, "modified": [], "untracked": []}
+    modified, untracked = [], []
+    for line in out.splitlines():
+        if not line.strip():
+            continue
+        code, _, name = line[:2], line[2:3], line[3:]
+        (untracked if code == "??" else modified).append(name.strip())
+    return {"readable": True, "modified": sorted(modified), "untracked": sorted(untracked)}
 
 
 def benchmark_digest(cases_dir: Path | str | None) -> dict:

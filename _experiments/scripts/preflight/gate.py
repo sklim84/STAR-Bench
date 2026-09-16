@@ -20,7 +20,11 @@ __all__ = ["Check", "CommandRun", "Context", "GateResult", "run_command", "forma
 
 STAR_BENCH_ROOT = Path(__file__).resolve().parents[3]
 PACKAGE_DIR = Path(__file__).resolve().parent
-IMPL_DIR = STAR_BENCH_ROOT / "_experiments" / "dataset_fix_20260915" / "impl"
+# Everything a gate reads or writes is tracked inside this package, so a clean
+# clone of the branch runs every gate. The reports used to be written into the
+# private notes directory; untracking that directory took gate 4's reference
+# data with it and the branch head failed its own gate (V-02).
+REPORT_DIR = PACKAGE_DIR / "reports"
 
 SINGLE_TURN_DIRS = ("benchmarks", "benchmarks_en")
 MULTI_TURN_DIRS = ("benchmarks_multiturn", "benchmarks_multiturn_en")

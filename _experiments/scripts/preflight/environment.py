@@ -123,14 +123,7 @@ def _provenance_checks(info: dict, command: str) -> list[Check]:
         + (", working tree has uncommitted changes" if dirty else ", clean"),
         command, {"platform_commit": commit, "platform_dirty": dirty}))
 
-    sb_commit = info.get("star_bench_commit")
-    sb_dirty = info.get("star_bench_dirty")
-    checks.append(Check(
-        "STAR-Bench commit is recorded and the tree is clean",
-        bool(sb_commit) and not sb_dirty,
-        f"{(sb_commit or 'unknown')[:12]}"
-        + (", working tree has uncommitted changes" if sb_dirty else ", clean"),
-        command, {"star_bench_commit": sb_commit, "star_bench_dirty": sb_dirty}))
+    checks.append(_star_bench_tree(info, command))
 
     hashes = {key: platform.get(key) for key in
               ("data_sha256", "db_sha256", "model_file_sha256",
@@ -161,6 +154,50 @@ def _provenance_checks(info: dict, command: str) -> list[Check]:
         command, {"streamlit_stubbed": stubbed}))
 
     return checks
+
+
+# The two files this command itself writes with `--report`. A run that
+# regenerates the report leaves them modified, which is not the kind of dirty
+# tree this check is about; it still says so.
+REPORT_FILES = ("_experiments/scripts/preflight/reports/preflight_report.md",
+                "_experiments/scripts/preflight/reports/preflight_report.json")
+
+
+def _star_bench_tree(info: dict, command: str) -> Check:
+    """The commit, the tracked modifications, and how many untracked files there are.
+
+    Untracked files never made it into this check, because the underlying
+    `git status` ran with `--untracked-files=no`: 215 scratch files sat inside
+    the repository and the gate called the tree clean (V-10). They are a warning,
+    not a failure - they cannot change what a tracked script does - but the count
+    and the first few names are in the detail and the full list is in the data.
+    """
+    commit = info.get("star_bench_commit")
+    status = info.get("star_bench_status") or {}
+    modified = [m for m in status.get("modified") or [] if m not in REPORT_FILES]
+    report_only = [m for m in status.get("modified") or [] if m in REPORT_FILES]
+    untracked = status.get("untracked") or []
+    if not status.get("readable"):
+        # No git status to read: fall back to what the record itself carries.
+        modified = ["(unreadable)"] if info.get("star_bench_dirty") else []
+    ok = bool(commit) and not modified
+    detail = (commit or "unknown")[:12]
+    if modified:
+        detail += (f", {len(modified)} tracked file(s) modified: "
+                   + ", ".join(modified[:4]))
+    else:
+        detail += ", no tracked file modified"
+    if report_only:
+        detail += (f"; the pre-flight report itself is regenerated and uncommitted "
+                   f"({len(report_only)} file(s))")
+    if untracked:
+        detail += (f"; warning: {len(untracked)} untracked file(s) inside the repository "
+                   f"({', '.join(untracked[:3])}"
+                   + (", ..." if len(untracked) > 3 else "") + ")")
+    return Check("STAR-Bench commit is recorded and the tree is clean", ok, detail, command,
+                 {"star_bench_commit": commit, "star_bench_dirty": bool(modified),
+                  "modified": modified, "report_files_modified": report_only,
+                  "untracked_count": len(untracked), "untracked": untracked[:50]})
 
 
 def _revisions(ctx: Context) -> Check:

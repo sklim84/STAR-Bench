@@ -1,7 +1,8 @@
 # Audit fixes: scoring (WS-B)
 
 Branch `audit-fixes`. Scope: register step 7 plus the scoring parts of D01, D02, D19 and D21, and
-contracts 1 to 3 as defined in `_experiments/dataset_fix_20260915/impl/IMPLEMENTATION_SPEC.md`.
+contracts 1 to 3 as defined in the implementation spec (`IMPLEMENTATION_SPEC.md`, which lives
+with the round's working notes outside this repository).
 
 Files owned by this stream: `_experiments/scripts/evaluator.py`,
 `_experiments/scripts/scoring/`, `_experiments/scripts/tests/`.
@@ -64,10 +65,10 @@ into the paper).
 
 ## Gold self-test on the current data
 
-Run against the four benchmark directories; reports in
-`_experiments/dataset_fix_20260915/impl/gold_selftest_*.json`, regenerated 2026-09-16 on the
-rebuilt data. Pre-flight gate 4 runs the same self-test and fails when a committed report and a
-fresh run disagree, so these numbers cannot go stale unnoticed again.
+Run against the four benchmark directories. Pre-flight gate 4 runs the same self-test on every
+run and compares it with `_experiments/scripts/preflight/gold_selftest_expected.json`, which is
+tracked and carries the benchmark sha256 each count was produced from, so these numbers cannot go
+stale unnoticed and the check needs nothing outside the repository.
 
 | benchmark | perfect | defects | advisories |
 |---|---|---|---|
@@ -90,8 +91,9 @@ requirements they came from are listed under "What the other streams must provid
 The same command re-runs against the data in the tree:
 
 ```
-python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks \
-    --out _experiments/dataset_fix_20260915/impl/gold_selftest_benchmarks.json
+python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks --out /tmp/gst.json
+# and, when a data change moves the counts, in the same commit as that change:
+python -m _experiments.scripts.preflight.run --only gold --update-gold-expected
 ```
 
 ## What the other streams must provide

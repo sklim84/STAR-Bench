@@ -24,6 +24,7 @@ def main() -> int:
     try:
         from _experiments.scripts.runner import provenance
         out.update(provenance.star_bench_commit())
+        out["star_bench_status"] = provenance.working_tree_status()
         out["hofinet_columns_expected"] = list(provenance.HOFINET_COLUMNS)
     except Exception as exc:
         out["star_bench_error"] = f"{type(exc).__name__}: {exc}"

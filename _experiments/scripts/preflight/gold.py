@@ -13,10 +13,17 @@ An error fails the gate. An empty or unexecutable call fails it too unless
 `allow_empty.json` names that case and says why, so the ring and layering scans
 that HOFINET cannot answer stay visible instead of being rounded away (D06).
 
-The self-test reports committed under `impl/` are compared with the fresh run.
-They were 1176/1258 with 82 defects while the data was 1258/1258 with none, and
-`AUDIT_FIXES_scoring.md` quoted them as current, so a stale report read as a
-measurement of data that no longer existed.
+`gold_selftest_expected.json`, tracked next to this module, holds the counts a
+fresh self-test must produce and the benchmark sha256 they were produced from.
+The gate regenerates the self-test and compares. The reference used to be the
+four reports under the private notes directory, which were once 1176/1258 with
+82 defects while the data was 1258/1258 with none, so a stale report read as a
+measurement of data that no longer existed; untracking that directory then took
+the reference away altogether and the branch head failed this gate (V-02).
+
+Refresh it in the same commit as the data change that moves it:
+
+    python -m _experiments.scripts.preflight.run --only gold --update-gold-expected
 """
 
 from __future__ import annotations
@@ -25,25 +32,32 @@ import json
 import os
 import tempfile
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 
-from .gate import BENCHMARK_DIRS, Check, Context, GateResult, IMPL_DIR, run_command
+from .gate import BENCHMARK_DIRS, Check, Context, GateResult, run_command
 
 NUMBER = 4
 KEY = "gold"
 TITLE = "gold answers"
 
 ALLOW_PATH = Path(__file__).resolve().parent / "allow_empty.json"
+EXPECTED_PATH = Path(__file__).resolve().parent / "gold_selftest_expected.json"
+REFRESH_COMMAND = ("python -m _experiments.scripts.preflight.run --only gold "
+                   "--update-gold-expected")
 
 
-def run(ctx: Context, *, update_allow_list: bool = False) -> GateResult:
+def run(ctx: Context, *, update_allow_list: bool = False,
+        update_gold_expected: bool = False) -> GateResult:
     started = time.time()
     checks, fresh = [], {}
     for name in BENCHMARK_DIRS:
         check, report = _selftest(ctx, name)
         checks.append(check)
         fresh[name] = report
-    checks.append(_committed_reports_match(fresh))
+    if update_gold_expected:
+        write_expected(fresh)
+    checks.append(_expected_matches(fresh))
     checks.extend(_gold_calls(ctx, update_allow_list=update_allow_list))
     return GateResult(KEY, NUMBER, TITLE, checks, time.time() - started)
 
@@ -59,36 +73,65 @@ def headline(report: dict) -> dict:
     return out
 
 
-def _committed_reports_match(fresh: dict[str, dict]) -> Check:
-    """`impl/gold_selftest_*.json` is what the stream reports quote; it must be current."""
-    problems, compared = [], []
+def load_expected() -> dict:
+    """The tracked self-test summary: per benchmark, the headline and the hash."""
+    doc = json.loads(EXPECTED_PATH.read_text(encoding="utf-8"))
+    return doc.get("reports") or {}
+
+
+def write_expected(fresh: dict[str, dict]) -> Path:
+    """Rewrites the tracked summary from this run, for review and commit."""
+    doc = {}
+    if EXPECTED_PATH.is_file():
+        doc = json.loads(EXPECTED_PATH.read_text(encoding="utf-8"))
+    reports = dict(doc.get("reports") or {})
     for name, report in fresh.items():
-        path = IMPL_DIR / f"gold_selftest_{name}.json"
-        if not path.is_file():
-            problems.append(f"{path.name} is missing")
+        if report:
+            reports[name] = headline(report)
+    doc["_why"] = (
+        "What `scoring.gold_selftest` must produce on each benchmark directory, and the "
+        "benchmark sha256 it was produced from. Gate 4 regenerates the self-test and compares, "
+        "so a data change that moves these counts fails the gate until this file is refreshed "
+        f"in the same commit. Refresh: {REFRESH_COMMAND}")
+    doc["refresh_command"] = REFRESH_COMMAND
+    doc["updated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    doc["reports"] = reports
+    EXPECTED_PATH.write_text(json.dumps(doc, ensure_ascii=False, indent=1) + "\n",
+                             encoding="utf-8")
+    return EXPECTED_PATH
+
+
+def _expected_matches(fresh: dict[str, dict]) -> Check:
+    """A fresh self-test must produce the tracked counts, on the tracked hash."""
+    problems, compared = [], []
+    try:
+        expected = load_expected()
+    except (OSError, ValueError) as exc:
+        return Check("a fresh gold self-test matches the tracked summary", False,
+                     f"{EXPECTED_PATH.name} is missing or not readable: {exc}", REFRESH_COMMAND,
+                     {"problems": [str(exc)]})
+    for name, report in fresh.items():
+        want = expected.get(name)
+        if want is None:
+            problems.append(f"{EXPECTED_PATH.name} has no entry for {name}")
             continue
         if not report:
             problems.append(f"{name}: the fresh self-test produced no report to compare with")
             continue
-        try:
-            committed = json.loads(path.read_text(encoding="utf-8"))
-        except ValueError as exc:
-            problems.append(f"{path.name} is not readable: {exc}")
-            continue
-        want, have = headline(report), headline(committed)
-        if want != have:
-            problems.append(f"{path.name} says {have}, a fresh run says {want}")
+        have = headline(report)
+        if have != want:
+            problems.append(f"{name}: a fresh run says {have}, {EXPECTED_PATH.name} says {want}")
         else:
             compared.append(name)
-    return Check("the committed gold self-test reports match a fresh run", not problems,
+    for name in sorted(set(expected) - set(fresh)):
+        problems.append(f"{EXPECTED_PATH.name} carries {name}, which this gate does not run")
+    return Check("a fresh gold self-test matches the tracked summary", not problems,
                  "; ".join(problems[:3]) if problems
-                 else f"{len(compared)} report(s) current: " + ", ".join(
+                 else f"{len(compared)} directory(ies) current: " + ", ".join(
                      f"{n} {fresh[n].get('single', fresh[n].get('oracle', {})).get('n_perfect')}"
                      f"/{fresh[n].get('single', fresh[n].get('oracle', {})).get('n')}"
                      for n in compared),
-                 "python -m _experiments.scripts.scoring.gold_selftest --benchmark <dir> "
-                 "--out _experiments/dataset_fix_20260915/impl/gold_selftest_<dir>.json",
-                 {"problems": problems})
+                 REFRESH_COMMAND, {"problems": problems})
 
 
 def _selftest(ctx: Context, benchmark: str) -> tuple[Check, dict]:

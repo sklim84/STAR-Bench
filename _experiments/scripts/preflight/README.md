@@ -27,8 +27,9 @@ that fails names the file and the id, and the stream that owns it fixes it.
 --configs qwen35-4b-nt,phi-4-mini    check the revision pins of these configurations only
 --serving-stack                      also check the serving dependency pins (on the serving host)
 --platform-python /path/to/python    when the platform stack has its own interpreter
---report                             write impl/preflight_report.md and .json
+--report                             write reports/preflight_report.md and .json
 --update-allow-list                  rewrite allow_empty.json from this run, for review
+--update-gold-expected               rewrite gold_selftest_expected.json from this run
 ```
 
 ## The canary
@@ -55,9 +56,23 @@ sample by its documented rule.
 | `report.py` | the markdown and JSON reports |
 | `_probe.py`, `_gold_driver.py`, `_budget_driver.py` | the three things that run in their own process, so a platform import error is a failed check rather than a traceback |
 | `expected_counts.json` | the case counts the write-up reports; a stream that adds cases updates it |
+| `gold_selftest_expected.json` | what a fresh gold self-test must produce per directory, with the benchmark sha256 it was produced from; gate 4 regenerates and compares |
+| `reports/` | the last `--report` run: `preflight_report.md` and `.json`, tracked |
 | `allow_empty.json` | the gold calls that answer nothing, case by case with the reason |
 | `run_plan.json` | the configurations and columns the rerun covers, and the hosts it has |
 | `thresholds.json` | the canary's anomaly thresholds, each with the measurement it came from |
 | `canary_sample.json` | the fixed sample |
+
+Everything a gate reads is inside this package, so `--all` runs in a clean clone
+of the branch. A data change that moves the gold self-test counts refreshes
+`gold_selftest_expected.json` in the same commit:
+
+```bash
+python -m _experiments.scripts.preflight.run --only gold --update-gold-expected
+```
+
+Regenerating the report with `--report` modifies two tracked files; commit or
+discard them, because gate 1 reads a modified tracked file as a dirty tree (it
+says when the only modified files are the report itself).
 
 Tests: `_experiments/scripts/tests_preflight`.

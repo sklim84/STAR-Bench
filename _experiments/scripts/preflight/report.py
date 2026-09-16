@@ -1,9 +1,14 @@
 """The written report: every gate, every version and hash, every command.
 
-`--report` writes `_experiments/dataset_fix_20260915/impl/preflight_report.md`.
-It exists so that a co-author whose run is blocked can paste one file and the
-person reading it can see which gate failed, on which checkout, and which command
-to run to see it again.
+`--report` writes `_experiments/scripts/preflight/reports/preflight_report.md`
+and `.json`, both tracked, so the report a co-author reads is the one in the
+checkout they cloned. It exists so that a co-author whose run is blocked can
+paste one file and the person reading it can see which gate failed, on which
+checkout, and which command to run to see it again.
+
+The report is regenerated, never edited. Regenerating it modifies two tracked
+files, so commit them (or discard them) before the next run: gate 1 reads a
+modified tracked file as a dirty tree.
 """
 
 from __future__ import annotations
@@ -12,10 +17,10 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .gate import GateResult, IMPL_DIR
+from .gate import GateResult, REPORT_DIR
 
-REPORT_PATH = IMPL_DIR / "preflight_report.md"
-JSON_PATH = IMPL_DIR / "preflight_report.json"
+REPORT_PATH = REPORT_DIR / "preflight_report.md"
+JSON_PATH = REPORT_DIR / "preflight_report.json"
 
 
 def as_json(results: list[GateResult], *, command: str, versions: dict) -> dict:

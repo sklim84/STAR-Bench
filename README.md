@@ -179,7 +179,7 @@ error rate, a `finish_reason: length` share, a fallback-parser share, an empty
 tool-result share, a prompt headroom or a latency band outside what
 `_experiments/scripts/preflight/thresholds.json` allows. `--mock` runs the same
 path against the mock server, without a GPU. `--report` writes the full report to
-`_experiments/dataset_fix_20260915/impl/preflight_report.md`.
+`_experiments/scripts/preflight/reports/preflight_report.md` and `.json`.
 
 ## Headline findings
 

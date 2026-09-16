@@ -145,3 +145,100 @@ def test_a_suite_with_only_allowed_skips_passes_the_check(monkeypatch):
     monkeypatch.setattr(code_tests, "run_command", fake_run_command)
     check = code_tests._pytest(gate.Context(), "platform test suite", ["-q"])
     assert check.ok
+
+
+# ---------------------------------------------------------------------------
+# Gate 4 reads its own tracked summary, not the private notes directory (V-02)
+# ---------------------------------------------------------------------------
+
+from _experiments.scripts.preflight.gate import BENCHMARK_DIRS  # noqa: E402
+
+_FRESH = {
+    "benchmarks": {"benchmark_sha256": "aaa", "single": {"n": 3, "n_perfect": 3, "defects": []}},
+    "benchmarks_en": {"benchmark_sha256": "bbb", "single": {"n": 3, "n_perfect": 3, "defects": []}},
+}
+
+
+def _expected_file(tmp_path, reports, monkeypatch):
+    path = tmp_path / "gold_selftest_expected.json"
+    path.write_text(json.dumps({"reports": reports}, ensure_ascii=False), encoding="utf-8")
+    monkeypatch.setattr(gold, "EXPECTED_PATH", path)
+    return path
+
+
+def test_the_tracked_summary_covers_every_benchmark_directory_with_its_hash():
+    reports = gold.load_expected()
+    assert sorted(reports) == sorted(BENCHMARK_DIRS)
+    for name, block in reports.items():
+        assert len(block["benchmark_sha256"]) == 64, name
+        blocks = [k for k in ("single", "oracle", "e2e") if k in block]
+        assert blocks, name
+        for key in blocks:
+            assert block[key]["n"] == block[key]["n_perfect"], f"{name}.{key}"
+            assert block[key]["defects"] == 0, f"{name}.{key}"
+
+
+def test_the_tracked_summary_hash_is_the_hash_of_the_benchmark_on_disk():
+    """The file says which data it was produced from, so a data change fails the gate."""
+    from _experiments.scripts.scoring.gold import load_benchmark
+
+    for name, block in gold.load_expected().items():
+        assert load_benchmark(name).sha256 == block["benchmark_sha256"], name
+
+
+def test_a_fresh_run_that_matches_the_tracked_summary_passes(tmp_path, monkeypatch):
+    _expected_file(tmp_path, {k: gold.headline(v) for k, v in _FRESH.items()}, monkeypatch)
+    check = gold._expected_matches(_FRESH)
+    assert check.ok, check.detail
+    assert "benchmarks 3/3" in check.detail
+
+
+def test_a_count_that_moved_fails_the_gate(tmp_path, monkeypatch):
+    stale = {k: gold.headline(v) for k, v in _FRESH.items()}
+    stale["benchmarks"]["single"]["n_perfect"] = 1256
+    _expected_file(tmp_path, stale, monkeypatch)
+    check = gold._expected_matches(_FRESH)
+    assert not check.ok
+    assert "benchmarks:" in check.detail and "1256" in check.detail
+    assert "--update-gold-expected" in check.command
+
+
+def test_a_benchmark_hash_that_moved_fails_the_gate_even_at_the_same_counts(tmp_path, monkeypatch):
+    stale = {k: gold.headline(v) for k, v in _FRESH.items()}
+    stale["benchmarks"]["benchmark_sha256"] = "0" * 64
+    _expected_file(tmp_path, stale, monkeypatch)
+    check = gold._expected_matches(_FRESH)
+    assert not check.ok
+    assert "benchmark_sha256" in check.detail
+
+
+def test_a_directory_the_summary_does_not_carry_fails_the_gate(tmp_path, monkeypatch):
+    _expected_file(tmp_path, {"benchmarks": gold.headline(_FRESH["benchmarks"])}, monkeypatch)
+    check = gold._expected_matches(_FRESH)
+    assert not check.ok
+    assert "no entry for benchmarks_en" in check.detail
+
+
+def test_a_missing_summary_file_fails_the_gate_instead_of_raising(tmp_path, monkeypatch):
+    monkeypatch.setattr(gold, "EXPECTED_PATH", tmp_path / "absent.json")
+    check = gold._expected_matches(_FRESH)
+    assert not check.ok
+    assert "missing" in check.detail
+
+
+def test_the_refresh_flag_rewrites_the_summary_from_the_run(tmp_path, monkeypatch):
+    path = _expected_file(tmp_path, {"benchmarks": {"benchmark_sha256": "old"}}, monkeypatch)
+    gold.write_expected(_FRESH)
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    assert doc["reports"]["benchmarks"]["benchmark_sha256"] == "aaa"
+    assert doc["refresh_command"] == gold.REFRESH_COMMAND
+    assert gold._expected_matches(_FRESH).ok
+
+
+def test_no_gate_reads_the_private_notes_directory():
+    """The notes live outside the repository; a clean clone must still run every gate."""
+    from pathlib import Path
+
+    package = Path(gold.__file__).resolve().parent
+    for path in sorted(package.glob("*.py")):
+        assert "dataset_fix_20260915" not in path.read_text(encoding="utf-8"), path.name
