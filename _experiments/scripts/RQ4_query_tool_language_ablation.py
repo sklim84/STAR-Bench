@@ -1,54 +1,124 @@
 #!/usr/bin/env python3
-"""RQ4 (a) 4-way 쿼리 언어 × 도구 정의 언어 ablation.
+"""RQ4 (a) 4-way 쿼리 언어 x 도구 정의 언어 ablation.
 
-4 셀: KR-KR (results_kr) / EN-KR (results_en) / KR-EN (results_kr_tools_en) / EN-EN (results_en_tools_en).
+2x2 의 두 축은 질의 언어(KR/EN)와 **도구 정의 언어**(KR/EN)다. 2026-09 이전 판은
+`results_kr` / `results_en` 을 KR 도구 칸으로 읽었는데, 그 실행들은 사실 영어
+플랫폼 스키마로 돌린 것이었다(둘째 축이 영어 두 벌). 그래서 표는
+`results_or_kr_tools_kr` 에서 가져오고 스크립트는 `results_kr` 을 읽는 불일치가
+있었다(R2C-005). 기본 셀은 이렇게 정리한다:
 
-Full 4-way 커버 모델:
-  EXAONE-32B, Qwen3.5-27B (NT/T), Qwen3.6-27B, Gemma-4-31B, Llama-3.3-70B (6 모델)
-A.X-4.0은 KR-EN 미실시 (3-way: KR-KR/EN-KR/EN-EN).
+  KR-KR  results_or_kr_tools_kr/eval   한국어 질의 x 한국어 도구 (tools_kr.py)
+  EN-KR  results_or_en_tools_kr/eval   영어 질의   x 한국어 도구
+  KR-EN  results_kr/eval               한국어 질의 x 영어 도구 (플랫폼 agent.TOOLS)
+  EN-EN  results_en/eval               영어 질의   x 영어 도구
+
+은퇴한 `results_kr_tools_en` / `results_en_tools_en` 는 더 이상 읽지 않는다.
+`tools_en.py` 로 돌린 두 번째 영어 사본이라 KR-EN / EN-EN 과 같은 팔이다(D16).
+
+재실행 뒤에는 네 칸을 인자로 지정한다:
+
+    python -m _experiments.scripts.RQ4_query_tool_language_ablation \
+        --kr-kr <dir>/single_krq_krt --en-kr <dir>/single_enq_krt \
+        --kr-en <dir>/single_krq_ent --en-en <dir>/single_enq_ent \
+        --out _experiments/results_RQ4
 
 산출:
-  - results_RQ4/four_way_ablation.csv (per-model x cell h, h_param)
-  - results_RQ4/four_way_ablation_summary.json
-  - results_RQ4/fig_four_way_h_heatmap.{pdf,png}
-  - results_RQ4/fig_four_way_delta_decomposition.{pdf,png}
+  - <out>/four_way_ablation.csv (per-model x cell h, h_param)
+  - <out>/four_way_ablation_summary.json
+  - <out>/fig_four_way_h_heatmap.{pdf,png}
+  - <out>/fig_four_way_delta_decomposition.{pdf,png}
 """
-import json, csv, sys
+import argparse, json, csv, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _plot_style import (plt, COL_NOTHINK, COL_THINK, COL_BAD, FS_TICK, FS_LABEL,
                           FS_TITLE, FS_LEGEND, style_axes)
 
-CELLS = {
-    'KR-KR': Path('_experiments/results_kr/eval'),
-    'EN-KR': Path('_experiments/results_en/eval'),
-    'KR-EN': Path('_experiments/results_kr_tools_en/eval'),
-    'EN-EN': Path('_experiments/results_en_tools_en/eval'),
+_SB = Path(__file__).resolve().parents[2]
+
+# (cell, default results directory). The eval files are read from <dir>/eval when
+# that subdirectory exists, so both the old layout and a rerun output directory
+# can be named.
+DEFAULT_CELLS = {
+    'KR-KR': '_experiments/results_or_kr_tools_kr',
+    'EN-KR': '_experiments/results_or_en_tools_kr',
+    'KR-EN': '_experiments/results_kr',
+    'EN-EN': '_experiments/results_en',
 }
-OUT_DIR = Path('_experiments/results_RQ4')
-OUT_DIR.mkdir(parents=True, exist_ok=True)
+RETIRED = ('results_kr_tools_en', 'results_en_tools_en')
+
+CELLS: dict = {}
+OUT_DIR = _SB / '_experiments' / 'results_RQ4'
+
+
+def _eval_dir(path: Path) -> Path:
+    return path / 'eval' if (path / 'eval').is_dir() else path
+
+
+def configure(argv=None) -> argparse.Namespace:
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    for cell in DEFAULT_CELLS:
+        ap.add_argument(f'--{cell.lower()}', dest=cell.replace('-', '_'),
+                        help=f'results directory for the {cell} cell '
+                             f'(default {DEFAULT_CELLS[cell]})')
+    ap.add_argument('--results-root', help='parent directory holding the four cells')
+    ap.add_argument('--out', help=f'output directory (default _experiments/results_RQ4)')
+    args = ap.parse_args(argv)
+
+    global CELLS, OUT_DIR
+    for cell, default in DEFAULT_CELLS.items():
+        given = getattr(args, cell.replace('-', '_'))
+        if given:
+            path = Path(given)
+        elif args.results_root:
+            path = Path(args.results_root) / Path(default).name
+        else:
+            path = _SB / default
+        if not path.is_absolute():
+            path = _SB / path
+        if any(name in str(path) for name in RETIRED):
+            raise SystemExit(f'{cell}: {path} is a retired tools_en arm; it is the same arm as '
+                             f'the platform English schema (D16). Name the rerun directory.')
+        CELLS[cell] = _eval_dir(path)
+    OUT_DIR = Path(args.out) if args.out else (_SB / '_experiments' / 'results_RQ4')
+    if not OUT_DIR.is_absolute():
+        OUT_DIR = _SB / OUT_DIR
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    return args
+
 
 TARGETS = [
-    ('LGAI-EXAONE/EXAONE-4.0-32B', 'EXAONE-32B'),
+    ('google/gemma-4-31B-it', 'Gemma-4-31B'),
+    ('meta-llama/Llama-3.3-70B-Instruct', 'Llama-3.3-70B'),
+    ('openai/gpt-oss-20b__nothink', 'gpt-oss-20B (NT)'),
+    ('openai/gpt-oss-20b__think', 'gpt-oss-20B (T)'),
+    ('openai/gpt-oss-120b__nothink', 'gpt-oss-120B (NT)'),
+    ('openai/gpt-oss-120b__think', 'gpt-oss-120B (T)'),
     ('Qwen/Qwen3.5-27B__nothink', 'Qwen3.5-27B (NT)'),
     ('Qwen/Qwen3.5-27B__think', 'Qwen3.5-27B (T)'),
     ('Qwen/Qwen3.6-27B', 'Qwen3.6-27B'),
-    ('google/gemma-4-31B-it', 'Gemma-4-31B'),
-    ('meta-llama/Llama-3.3-70B-Instruct', 'Llama-3.3-70B'),
+    ('Qwen/Qwen3.6-35B-A3B', 'Qwen3.6-35B-A3B'),
+    ('LGAI-EXAONE/EXAONE-4.0-32B', 'EXAONE-32B'),
     ('skt/A.X-4.0', 'A.X-4.0'),
 ]
-# Gemma-4-31B-it는 2026-05-02 parser hermes→gemma4 fix로 정상화 (h=0.940) → outlier 해제
 OUTLIERS = set()
 
-# 파일 저장 시 sanitize (`/`→`_`, `.`→`_`)된 model 필드를 canonical(슬래시)로 역매핑.
-# 동일 모델이 슬래시·언더스코어 두 키로 중복 등록되어 latest 선택이 빗나가는 것 방지.
-_SAFE_TO_CANONICAL = {
-    mid.replace('/', '_').replace('.', '_'): mid for mid, _ in TARGETS
-}
+# The cells come from different runners: the KR-tool arms were run through the
+# OpenRouter gateway, which lower-cases model slugs, and the EN-tool arms
+# locally. Model ids are matched on a normalised key so the same model is one
+# row rather than two half-empty ones.
+
+
+def _key(model_id: str) -> str:
+    return model_id.lower().replace('/', '_').replace('.', '_').replace('-', '_')
+
+
+_BY_KEY = {_key(mid): mid for mid, _ in TARGETS}
 
 
 def _canonicalize(m: str) -> str:
-    return _SAFE_TO_CANONICAL.get(m, m)
+    return _BY_KEY.get(_key(m), m)
 
 
 def load_cell(cell_dir):
@@ -74,10 +144,15 @@ def load_cell(cell_dir):
     return by_model
 
 
-def main():
-    cells = {name: load_cell(p) for name, p in CELLS.items()}
-    for name, c in cells.items():
-        print(f'  {name}: {len(c)} models loaded')
+def main(argv=None):
+    configure(argv)
+    cells = {name: load_cell(path) for name, path in CELLS.items()}
+    for name, path in CELLS.items():
+        print(f'  {name}: {len(cells[name])} models loaded from {path}')
+    missing = [n for n, c in cells.items() if not c]
+    if missing:
+        print(f'  WARNING: no eval files for {", ".join(missing)}; '
+              f'those cells stay empty in the table')
 
     rows = []
     for mid, display in TARGETS:
@@ -107,6 +182,7 @@ def main():
         return round(sum(v) / len(v), 4) if v else None
 
     summary = {
+        'cells': {name: str(path) for name, path in CELLS.items()},
         'n_targets': len(rows),
         'n_full_4way': len(full4),
         'n_full_4way_ex_outlier': len(full4_clean),
@@ -118,9 +194,10 @@ def main():
         'mean_delta_tool_only_ex_outlier': mean_or_none([r['delta_tool_query_kr'] for r in full4_clean]),
         'mean_delta_both_ex_outlier': mean_or_none([r['delta_both'] for r in full4_clean]),
         'rows': rows,
-        'note': ('h = primary_tool_hit_rate. Delta=cell-KR-KR. '
-                 'Gemma-4-31B는 KR-tool 셀 평가 이상치(h≈0.126)로 평균 제외. '
-                 'A.X-4.0 KR-EN 미실시.')
+        'note': ('h = primary_tool_hit_rate. Delta = cell - KR-KR. '
+                 'KR 도구 칸은 tools_kr.py 로 돌린 실행(results_or_*_tools_kr), '
+                 'EN 도구 칸은 플랫폼 agent.TOOLS 로 돌린 실행이다. '
+                 '네 칸이 모두 있는 모델만 평균에 들어간다.')
     }
     with (OUT_DIR / 'four_way_ablation_summary.json').open('w') as f:
         json.dump(summary, f, ensure_ascii=False, indent=2)
