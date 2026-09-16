@@ -49,6 +49,8 @@ Files owned by this stream: `_experiments/scripts/benchmark.py`, `benchmark_mult
 | L5-014 | the OpenRouter path pins the provider (`allow_fallbacks: false`, `require_parameters: true`, order and quantizations) and records the provider, the served model and the usage per round | `benchmark_openrouter.py`, `runner/cli.py` (`_provider`), `runner/records.py` | code review; the provider block is built only when pinned and the record carries `provider` / `served_model` |
 | L5-020, C1-004, C2-016, R2C-003 | the run refuses to start unless the platform tool layer imports, the `hofinet` columns are the released ones, the Streamlit cache is stubbed and the pinned hashes match; every value is recorded. Model revisions are pinned in `model_revisions.json` and passed as `--revision`/`--tokenizer-revision`; a configuration without one refuses to serve. Both runners reach the database through the platform's single entry point | `runner/provenance.py`, `runner/cli.py`, `model_revisions.json`, `runner/registry.py` | `test_guards.py`, 7 tests; `test_serving.py::test_an_unpinned_revision_refuses_to_serve` |
 | R1-R4 | the serving stack and the evaluation stack are pinned in separate files, which resolves the numpy conflict (serving follows vLLM and torch, evaluation follows the tool layer's numpy 2); `check_env` compares the two files with each other and with what is installed; container recipes for both | `_experiments/env/` , `requirements.txt` | `python -m _experiments.env.check_env` names every difference; run in the scratch venv it reported four |
+| D07 (concurrency), rerun schedule | `--concurrency N` on both runners, default 8 from the registry: N cases in flight for single-turn, N scenarios for multi-turn with the turns inside a scenario sequential. Each worker thread builds its own client, nothing mutable is shared between cases, results are written from the calling thread and the file is sorted into benchmark order at the end, so the output of a parallel run is the file a serial run produces. `--concurrency 1` runs inline, on the same code path as before. The value used is in `config.concurrency` of every record, in the manifest and in the preflight line | `runner/parallel.py`, `runner/cli.py`, `runner/registry.py`, both runners, `runner/records.py` (`sort_by`) | `test_concurrency.py`, 13 tests incl. `::test_four_workers_produce_the_same_records_as_one`, `::test_the_scorer_gives_the_same_result_for_one_worker_and_four`, `::test_a_failing_request_in_one_worker_does_not_corrupt_another_record` |
+| L1-008 (Korean mirror) | the Korean `detect_monitoring_alerts` labels mirror `monitoring.RULE_NAMES` one for one, so the label the model reads is the one the tool returns in `rule_name` and the one the rebuilt questions use: R003 is `동일 금액 반복 송금`, not `정액거래패턴` | `tools_kr_text.json`, `tools_kr.py` (regenerated) | `test_schema_arms.py::test_the_korean_rule_labels_mirror_the_platform_rule_names`, `::test_the_platform_rule_names_are_the_ones_the_korean_arm_mirrors` (reads `RULE_NAMES` rather than hard-coding it) |
 | C2-001 (preflight) | before every run the system prompt, the tool schema and the longest question are rendered and the headroom asserted; with the serving tokenizer when it can be loaded offline, otherwise a calibrated byte estimate | `runner/preflight.py`, `runner/cli.py` | `test_serving.py::test_the_preflight_refuses_the_context_that_was_registered_for_phi_4_mini`, `::test_every_configuration_clears_the_preflight_on_the_korean_arm` |
 
 ### Not fixed here, and why
@@ -64,7 +66,8 @@ Files owned by this stream: `_experiments/scripts/benchmark.py`, `benchmark_mult
 ## Configuration registry
 
 Produced by `python -m _experiments.scripts.runner.plan --format markdown`. Every row also carries
-temperature 0, seed 20260925, concurrency 1, and `--enable-auto-tool-choice`.
+temperature 0, seed 20260925, `--enable-auto-tool-choice`, and the default concurrency of 8 cases in
+flight, which a run may override and always records.
 
 | Configuration | Model | Mode | Tool parser | Reasoning parser | Template | Template sha | TP 48G | TP 80G | Context | Context E2E | Output |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -134,7 +137,7 @@ Nothing here has touched a GPU. Before the rerun, one round-trip per item:
 
 ## Verification run without a GPU
 
-`python -m pytest _experiments/scripts/tests_runner -q` : **102 passed**.
+`python -m pytest _experiments/scripts/tests_runner -q` : **116 passed**.
 
 The suite runs both runners end to end through the real `openai` client against a mock
 OpenAI-compatible HTTP server (`tests_runner/mock_server.py`), and covers the Contract 2 record
@@ -147,6 +150,37 @@ real multi-turn scenarios were run against the mock server and then scored with
 `python -m _experiments.scripts.scoring.score_runs`, with no adapter. Coverage came back complete in
 all three settings, and the eval file carried the runner's `config` and `provenance` blocks
 unchanged.
+
+The same 48 cases were then run twice against a deterministic mock, once at concurrency 1 and once
+at concurrency 8. The two runs produced byte-identical per-case records, the same file order and the
+same eval file (h 1.000, a 0.949 over 39 cases with checks, per-case h, a and `error_type` equal case
+by case), with `config.concurrency` recording 1 and 8 respectively.
+
+## Concurrency and the determinism claim
+
+The rerun runs 8 cases in flight per configuration, because one request at a time does not fit the
+deadline. The tool layer is thread-safe now (per-call DuckDB cursors, threading gate on the platform
+branch), so the cross-talk that forced serial execution is gone, and the runner adds no shared state
+of its own: the tests above show a parallel run and a serial run producing the same records and the
+same scores against a deterministic server.
+
+What that does **not** show is that a real server produces the same tokens under batching. Even at
+temperature 0 a vLLM server can return slightly different output for the same prompt depending on the
+batch it was scheduled in, because the reduction order in the kernels changes with the batch shape.
+The 2026 runs already showed 80 of 1,400 identical one-turn requests (5.7%) differing between runs at
+concurrency 1 (R1-R4), so batching is not the only source, but it can add to it.
+
+The run plan therefore includes, before the headline numbers are quoted:
+
+1. one small configuration (`qwen35-4b-nt`, the cheapest single-card entry) run twice on the full
+   single-turn benchmark at concurrency 8, and
+2. the same configuration run once at concurrency 1,
+
+and reports the agreement rate between them: the share of cases with the same tool-call sequence, and
+the difference in h and a. That number goes in the appendix next to the bootstrap CIs, and the paper
+says the decoding is temperature 0 with a fixed seed at a stated concurrency rather than claiming
+deterministic output. If the agreement rate is low enough to move a ranking, the affected
+configurations fall back to `--concurrency 1`, which is one flag and no code change.
 
 ## What the other streams need to know
 
@@ -161,6 +195,14 @@ unchanged.
   `run_id` is in every line.
 - **Scoring**: tool names are recorded exactly as the server returned them, serving artefacts
   included, as the scorer asked.
+- **The rerun**: `--concurrency` defaults to 8 and is recorded; a configuration that turns out to be
+  sensitive to batching can be rerun with `--concurrency 1` without any other change.
+- **WS-A**: the Korean arm is generated from `agent.TOOLS`, so items 8 and 9 of
+  `impl/WS-D_tool_description_requests.md` (the D10 glossary sentence in the system prompt and the
+  `detect_aml_patterns` funnel wording) need one more
+  `python -m _experiments.scripts.gen_tools_kr` after they land. `gen_tools_kr.py --check` fails
+  while the generated arm is stale, and the parity test fails if a description is added on one side
+  only, so neither can be forgotten.
 - **The rerun**: one column is one command
   (`bash _experiments/scripts/run_benchmark.sh --config <id> --gpu <devices> --mode single|oracle|e2e
   --tools-lang kr --out-root <fresh root>`), and the output directory is named for the column, so two
