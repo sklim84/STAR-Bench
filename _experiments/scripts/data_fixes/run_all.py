@@ -23,10 +23,18 @@ if __package__ in (None, ""):
 
 from .common import EN, KR, REPO
 
+# `p11_difficulty` and `p12_notes` derive their values from the question and the gold,
+# so they run last, after every pass that changes either. In the first round they ran
+# before `p13_lint_fixes`, which left eight notes naming a value their gold no longer
+# carried; the order below is what fixes that.
 PASSES = [
     "p01_apply_v3", "p02_dedupe", "p03_followups", "p04_accounts", "p05_predict_fraud",
     "p06_relevance", "p07_boundaries", "p08_clarification", "p09_contract1",
-    "p10_executable_gold", "p11_difficulty", "p12_notes", "p13_lint_fixes",
+    "p10_executable_gold",
+    # closeout round (2026-09-16)
+    "p14_risk_score", "p15_tool_cues", "p16_executable_gold2", "p17_boundary_parity",
+    "p18_str_drafts", "p19_sweep_fixes",
+    "p13_lint_fixes", "p11_difficulty", "p12_notes",
 ]
 
 

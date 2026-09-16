@@ -247,8 +247,8 @@ def build(grounding: dict) -> list[dict]:
          "a shorter dormancy window than any existing case"),
         ("st_dorm_046", "cases_detect_dormant_reactivation.json", "detect_dormant_reactivation",
          {"dormant_days": 450},
-         "450일 넘게 휴면이던 계좌의 재활성화 거래를 찾아줘",
-         "Please find the reactivation transactions of accounts dormant for more than 450 days.",
+         "450일 이상 휴면이던 계좌의 재활성화 거래를 찾아줘",
+         "Please find the reactivation transactions of accounts dormant for 450 days or more.",
          "a dormancy window between the 365-day and 730-day cases"),
         ("st_dorm_047", "cases_detect_dormant_reactivation.json", "detect_dormant_reactivation",
          {"dormant_days": 240, "min_reactivation_amount": 100000000},
@@ -294,8 +294,8 @@ def build(grounding: dict) -> list[dict]:
          "the highest outbound counterparty threshold in the benchmark"),
         ("st_smurf_049", "cases_detect_smurfing_network.json", "detect_smurfing_network",
          {"account_id": smurf_in[2], "direction": "inbound", "min_counterparts": 50},
-         f"계좌 {smurf_in[2]}로 50곳이 넘는 상대방이 송금했는지 유입 방향으로 분석해줘",
-         f"Please analyze in the inbound direction whether more than 50 counterparties sent "
+         f"계좌 {smurf_in[2]}로 50곳 이상의 상대방이 송금했는지 유입 방향으로 분석해줘",
+         f"Please analyze in the inbound direction whether 50 or more counterparties sent "
          f"money to account {smurf_in[2]}.",
          "the direction has to be read from 'inbound side'; the account has 60 senders"),
     ]

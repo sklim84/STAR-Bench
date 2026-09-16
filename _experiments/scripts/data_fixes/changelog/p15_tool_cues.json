@@ -1,0 +1,158 @@
+{
+  "pass": "p15_tool_cues",
+  "description": "One discriminating cue per question, so exactly one gold tool fits (L1-003, L1-010, D11).",
+  "n_changes": 16,
+  "n_cases": 8,
+  "by_issue": {
+    "L1-003/L1-010/D11": 16
+  },
+  "notes": [
+    "5 cases lose 대포통장 / 'mule account'; 3 cases separate CTR structuring from the HOFINET split-transaction label."
+  ],
+  "changes": [
+    {
+      "case_id": "st_mtool_013",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003/L1-010/D11",
+      "why": "detect_aml_patterns(funnel) is the only tool that returns accounts with many incoming and few outgoing counterparties; 대포통장 / 'mule account' named that tool, the receiving-account profile and an abstention at the same time (L1-003, D11).",
+      "before": "금융회사 156의 현황 리포트를 확인하고, 대포통장 패턴도 탐지해줘",
+      "after": "금융회사 156의 현황 리포트를 확인하고, 입금 상대는 많고 출금 상대는 소수인 funnel 계좌 패턴도 탐지해줘"
+    },
+    {
+      "case_id": "st_mtool_019",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003/L1-010/D11",
+      "why": "detect_aml_patterns(funnel) is the only tool that returns accounts with many incoming and few outgoing counterparties; 대포통장 / 'mule account' named that tool, the receiving-account profile and an abstention at the same time (L1-003, D11).",
+      "before": "대포통장 패턴을 탐지하고, 계좌 9000000000036484의 프로파일을 조회하고, 해당 계좌의 네트워크도 분석해줘",
+      "after": "입금 상대는 많고 출금 상대는 소수인 funnel 계좌 패턴을 탐지하고, 계좌 9000000000036484의 프로파일을 조회하고, 해당 계좌의 네트워크도 분석해줘"
+    },
+    {
+      "case_id": "st_mtool_059",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003/L1-010/D11",
+      "why": "detect_aml_patterns(funnel) is the only tool that returns accounts with many incoming and few outgoing counterparties; 대포통장 / 'mule account' named that tool, the receiving-account profile and an abstention at the same time (L1-003, D11).",
+      "before": "계좌 9000000000043931의 네트워크를 2-hop으로 분석하고, 대포통장 패턴도 탐지해줘",
+      "after": "계좌 9000000000043931의 네트워크를 2-hop으로 분석하고, 입금 상대는 많고 출금 상대는 소수인 funnel 계좌 패턴도 탐지해줘"
+    },
+    {
+      "case_id": "st_grap_039",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003/L1-010/D11",
+      "why": "get_receiving_account_profile is the only tool that returns the inbound count, the number of distinct senders and sending banks and the inbound fraud ratio of one account (L1-003, D11).",
+      "before": "입금계좌 9000000000017070의 수취 패턴을 종합 분석하여 대포통장 여부를 판단해줘",
+      "after": "입금계좌 9000000000017070로 들어온 거래 건수와 송금 계좌·송금 기관 수, 이상거래 비율을 수취 프로파일로 조회해줘"
+    },
+    {
+      "case_id": "st_grap_irr_002",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003/L1-010/D11",
+      "why": "the question asks for investigative criteria rather than for data, so no tool answers it; the crime name that pointed at two tools is gone (L1-003, D10).",
+      "before": "입금계좌번호 없이 대포통장을 탐지하는 방법을 알려줘",
+      "after": "입금계좌 정보를 확보하기 전에 수취 계좌가 자금세탁에 이용됐는지 판단하는 일반적인 기준을 설명해줘"
+    },
+    {
+      "case_id": "st_ctr_029",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003/L1-010/D11",
+      "why": "detect_ctr_candidates(mode=structuring) is defined by the reporting threshold: single transactions below it that sum to it or above on one day. The question now names the threshold, so it no longer reads as a fraud-type filter (L1-010, D11).",
+      "before": "거래 분할 패턴을 탐지해줘",
+      "after": "CTR 보고 기준 미만으로 나눈 거래 분할 패턴을 탐지해줘"
+    },
+    {
+      "case_id": "st_ctr_033",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003/L1-010/D11",
+      "why": "detect_ctr_candidates(mode=structuring) is defined by the reporting threshold: single transactions below it that sum to it or above on one day. The question now names the threshold, so it no longer reads as a fraud-type filter (L1-010, D11).",
+      "before": "대금을 여러 번에 나눠서 입금하는 거래를 찾아줘",
+      "after": "대금을 CTR 보고 기준 미만으로 여러 번에 나눠서 입금하는 거래를 찾아줘"
+    },
+    {
+      "case_id": "st_gfs_041",
+      "lang": "kr",
+      "field": "question",
+      "issue": "L1-003/L1-010/D11",
+      "why": "get_fraud_type_summary(fraud_type=3) summarises a HOFINET label, so the question names the label rather than describing CTR structuring (L1-010, D11).",
+      "before": "금액을 여러 번으로 쪼개 보낸 것으로 의심되는 이상거래 현황을 요약해줘",
+      "after": "이상거래 유형 가운데 분할 거래(유형3)로 분류된 건의 건수와 금액 요약을 보여줘"
+    },
+    {
+      "case_id": "st_mtool_013",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003/L1-010/D11",
+      "why": "detect_aml_patterns(funnel) is the only tool that returns accounts with many incoming and few outgoing counterparties; 대포통장 / 'mule account' named that tool, the receiving-account profile and an abstention at the same time (L1-003, D11).",
+      "before": "Please check the status report for financial institution 156 and also detect any mule account patterns.",
+      "after": "Please check the status report for financial institution 156 and also detect funnel account patterns: many incoming counterparties and only a few outgoing ones."
+    },
+    {
+      "case_id": "st_mtool_019",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003/L1-010/D11",
+      "why": "detect_aml_patterns(funnel) is the only tool that returns accounts with many incoming and few outgoing counterparties; 대포통장 / 'mule account' named that tool, the receiving-account profile and an abstention at the same time (L1-003, D11).",
+      "before": "Detect mule account patterns, query the profile of account 9000000000036484, and analyze the network associated with that account.",
+      "after": "Detect funnel account patterns with many incoming and few outgoing counterparties, query the profile of account 9000000000036484, and analyze the network associated with that account."
+    },
+    {
+      "case_id": "st_mtool_059",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003/L1-010/D11",
+      "why": "detect_aml_patterns(funnel) is the only tool that returns accounts with many incoming and few outgoing counterparties; 대포통장 / 'mule account' named that tool, the receiving-account profile and an abstention at the same time (L1-003, D11).",
+      "before": "Analyze the network of account 9000000000043931 with a 2-hop analysis and detect any mule account patterns.",
+      "after": "Analyze the network of account 9000000000043931 with a 2-hop analysis and detect funnel account patterns with many incoming and few outgoing counterparties."
+    },
+    {
+      "case_id": "st_grap_039",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003/L1-010/D11",
+      "why": "get_receiving_account_profile is the only tool that returns the inbound count, the number of distinct senders and sending banks and the inbound fraud ratio of one account (L1-003, D11).",
+      "before": "Please conduct a comprehensive analysis of the deposit account 9000000000017070's receipt patterns to determine if it is a mule account.",
+      "after": "Please retrieve the receiving profile of deposit account 9000000000017070: its inbound transaction count, the number of distinct sending accounts and sending banks, and the inbound suspicious-transaction ratio."
+    },
+    {
+      "case_id": "st_grap_irr_002",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003/L1-010/D11",
+      "why": "the question asks for investigative criteria rather than for data, so no tool answers it; the crime name that pointed at two tools is gone (L1-003, D10).",
+      "before": "Please provide a method for detecting mule accounts without the deposit account number.",
+      "after": "Please explain the general criteria for judging whether a receiving account has been used for money laundering, before the deposit account information is obtained."
+    },
+    {
+      "case_id": "st_ctr_029",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003/L1-010/D11",
+      "why": "detect_ctr_candidates(mode=structuring) is defined by the reporting threshold: single transactions below it that sum to it or above on one day. The question now names the threshold, so it no longer reads as a fraud-type filter (L1-010, D11).",
+      "before": "Please detect transaction splitting patterns.",
+      "after": "Please detect transaction splitting patterns that stay below the CTR reporting threshold."
+    },
+    {
+      "case_id": "st_ctr_033",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003/L1-010/D11",
+      "why": "detect_ctr_candidates(mode=structuring) is defined by the reporting threshold: single transactions below it that sum to it or above on one day. The question now names the threshold, so it no longer reads as a fraud-type filter (L1-010, D11).",
+      "before": "Please find transactions where one payment is split into several deposits.",
+      "after": "Please find transactions where one payment is split into several deposits, each of them below the CTR reporting threshold."
+    },
+    {
+      "case_id": "st_gfs_041",
+      "lang": "en",
+      "field": "question",
+      "issue": "L1-003/L1-010/D11",
+      "why": "get_fraud_type_summary(fraud_type=3) summarises a HOFINET label, so the question names the label rather than describing CTR structuring (L1-010, D11).",
+      "before": "Please summarize the status of suspicious transactions in which an amount appears to have been split into several transfers.",
+      "after": "Among the suspicious transaction types, please show the count and the amount summary of the ones labelled split transaction (type 3)."
+    }
+  ]
+}

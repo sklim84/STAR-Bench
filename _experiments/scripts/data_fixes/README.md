@@ -20,6 +20,10 @@ cites those entries.
 
 ## The passes, in order
 
+`p11_difficulty` and `p12_notes` derive their values from the question and the gold, so
+`run_all.py` puts them last. In the first round they ran before `p13_lint_fixes`, which
+left eight notes naming a value their own gold no longer carried.
+
 | pass | register issue | what it does |
 |---|---|---|
 | `p01_apply_v3` | K4 | Applies the approved fix table v3 (`dataset_fix_20260915/fix_table_data.json`): 170 KR questions, 220 EN questions, 105 gold blocks. Refuses to run if an as-is value no longer matches the table. |
@@ -32,9 +36,15 @@ cites those entries.
 | `p08_clarification` | L1-014, L1-015, L1-016, L1-018, D19 | One rule for what a clarification case is; STR drafts; required enum values; parameters the question left open. |
 | `p09_contract1` | C1-011, L4-015 | `sql_contains` becomes `sql_conditions`, and every case that expects `query_transactions` gains an executable `expected.reference_calls.query_transactions.sql`. |
 | `p10_executable_gold` | L1-016, D19 | Pins the required arguments eight gold calls still omitted, so they can be executed. |
+| `p14_risk_score` | C1-003, D12 | 49 questions that asked for a fraud probability now ask for the risk score the tools return. |
+| `p15_tool_cues` | L1-003, L1-010, D11 | The last eight questions whose wording fitted two gold tools. |
+| `p16_executable_gold2` | L1-016, D19 | `st_mtool_084`, the one gold call that could not be executed. |
+| `p17_boundary_parity` | L1-025 | Comparison words that mean the threshold the gold checks, in both languages. |
+| `p18_str_drafts` | L1-014 | The three pre-existing STR drafts rebuilt from real HOFINET aggregates. |
+| `p19_sweep_fixes` | L1-009, L1-013 | The three questions the closeout case sweep found. |
+| `p13_lint_fixes` | C1-011 | Whatever the linter reported after all the other passes had run. |
 | `p11_difficulty` | L1-022, D23 | Relabels difficulty by an explicit rule. Writes `changelog/p11_difficulty_scores.json` with the points per case. |
 | `p12_notes` | L1-026 | Regenerates every note from the final gold. |
-| `p13_lint_fixes` | C1-011 | Whatever the linter reported after all the other passes had run. |
 
 ## Tools that are not passes
 
