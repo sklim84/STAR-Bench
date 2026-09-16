@@ -84,7 +84,10 @@ def multiturn_records(row: dict, *, run_id: str) -> list[dict]:
                           "arguments_raw": json.dumps(args, ensure_ascii=False, default=str),
                           "source": "fallback" if str(tc.get("_id", "")).startswith("parsed_") else "native",
                           "valid_json": isinstance(args, dict)})
-            if i < len(results):
+            if i < len(results) and results[i].get("result") is not None:
+                # A checkpoint row with no result is not an executed call: an
+                # entry with result None and error None used to read as a query
+                # that ran and returned nothing wrong.
                 executed.append({"tool_call_id": call_id, "name": results[i].get("name"),
                                  "arguments": results[i].get("arguments"),
                                  "result": results[i].get("result"), "error": None})

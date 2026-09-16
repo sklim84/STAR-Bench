@@ -423,3 +423,52 @@ def test_malformed_gold_row_bound_does_not_crash(ctx):
     c = case("query_transactions", checks={"query_transactions": {"result_row_count_min": "many"}}, case_id="badrows")
     r = score_case(c, record([call("query_transactions", {"sql": "SELECT 1"}, result=[{"1": 1}])]), ctx)
     assert r["a"] == 0.0
+
+
+# ---------------------------------------------------------------------------
+# sql_valid needs evidence that the query ran
+# ---------------------------------------------------------------------------
+
+def _with_empty_executed(rec: dict) -> dict:
+    """An executed entry with result=None and error=None, the shape legacy.py made."""
+    round_0 = rec["rounds"][0]
+    tc = round_0["tool_calls"][0]
+    round_0["executed"] = [{"tool_call_id": tc["id"], "name": tc["name"],
+                            "arguments": tc["arguments"], "result": None, "error": None}]
+    return rec
+
+
+def test_sql_valid_does_not_pass_on_an_executed_entry_with_no_result(ctx_no_exec):
+    sql = "SELECT COUNT(*) AS n FROM hofinet WHERE fraud_type = 4"
+    rec = _with_empty_executed(record([call("query_transactions", {"sql": sql})]))
+    r = score_case(QT, rec, ctx_no_exec)
+    valid = [c for c in r["checks"][0]["results"] if c["check"] == "sql_valid"][0]
+    assert not valid["passed"], "result=None with error=None is not evidence that the SQL ran"
+    assert valid["evidence"] == "unavailable"
+
+
+def test_sql_valid_still_passes_on_a_recorded_result(ctx):
+    sql = "SELECT COUNT(*) AS n FROM hofinet WHERE fraud_type = 4"
+    r = score_case(QT, record([call("query_transactions", {"sql": sql}, result=[{"n": 3}])]), ctx)
+    valid = [c for c in r["checks"][0]["results"] if c["check"] == "sql_valid"][0]
+    assert valid["passed"] and valid["evidence"] == "recorded"
+
+
+def test_sql_valid_fails_on_a_recorded_error(ctx_no_exec):
+    sql = "SELECT * FROM missing"
+    rec = record([call("query_transactions", {"sql": sql},
+                       error={"type": "CatalogException", "message": "no such table"})])
+    valid = [c for c in score_case(QT, rec, ctx_no_exec)["checks"][0]["results"]
+             if c["check"] == "sql_valid"][0]
+    assert not valid["passed"] and valid["evidence"] == "recorded"
+
+
+def test_the_legacy_adapter_does_not_invent_an_executed_call_without_a_result():
+    from _experiments.scripts.scoring import legacy
+
+    row = {"id": "mt_001", "model": "m", "setting": "real", "turns": [
+        {"turn": 1, "actual_tool_calls": [{"name": "query_transactions",
+                                           "arguments": {"sql": "SELECT 1"}, "_id": "a"}],
+         "executed_results": [{"name": "query_transactions", "arguments": {}, "result": None}]}]}
+    executed = legacy.multiturn_records(row, run_id="r")[0]["rounds"][0]["executed"]
+    assert executed == []

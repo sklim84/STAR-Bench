@@ -165,12 +165,21 @@ def fill_defaults(args: dict, schema: ToolSchema | None) -> dict:
 
 
 def _executed_result(call: Call, ctx: ScoringContext, sql: str | None) -> tuple[str | None, str]:
+    """The result of the call, and where it came from.
+
+    An executed entry carrying neither a result nor an error is no evidence that
+    anything ran: `legacy.py` builds that shape from checkpoints that never
+    stored the result, and `sql_valid` read the resulting "null" as a query that
+    executed without error.
+    """
     ex = call.executed
-    if ex is not None and ("result" in ex or ex.get("error") is not None):
+    if ex is not None:
         if ex.get("error") is not None:
             return json.dumps({"error": ex["error"]}, ensure_ascii=False, default=str), "recorded"
         result = ex.get("result")
-        return (result if isinstance(result, str) else json.dumps(result, ensure_ascii=False, default=str)), "recorded"
+        if result is not None:
+            return (result if isinstance(result, str)
+                    else json.dumps(result, ensure_ascii=False, default=str)), "recorded"
     if call.name == "query_transactions" and isinstance(sql, str) and ctx.executor is not None:
         return ctx.executor.run(sql), "executed_by_scorer"
     return None, "unavailable"
@@ -212,7 +221,8 @@ def _check(key: str, expected: Any, call: Call, args: dict, schema: ToolSchema |
             return done(False, "sql argument missing or not a string")
         result, how = _executed_result(call, ctx, sql)
         if result is None:
-            return done(False, "SQL was not executed and no executor is available", evidence=how)
+            return done(False, "the SQL was not executed and no executor is available, so there "
+                               "is no evidence it runs", evidence=how)
         is_error = result_is_error(result)
         return done(is_error != bool(expected), f"expected valid={bool(expected)}, error={is_error}", evidence=how)
     if key in RANGE_CHECKS:
