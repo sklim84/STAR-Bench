@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 import re
+import tempfile
 import time
 from collections import defaultdict
 from pathlib import Path
@@ -40,8 +41,7 @@ def run(ctx: Context) -> GateResult:
              ["-m", "_experiments.scripts.data_fixes.lint_benchmarks"]),
         _cli(ctx, "multi-turn rebuild verification",
              ["-m", "_experiments.scripts.data_fixes.multiturn.verify"]),
-        _cli(ctx, "2026-09 expansion cases",
-             ["-m", "_experiments.scripts.data_fixes.new_cases.verify", "--gate"]),
+        _new_cases(ctx),
     ]
     checks.append(_parity(ctx))
     checks.append(_counts(ctx))
@@ -51,10 +51,27 @@ def run(ctx: Context) -> GateResult:
 
 def _cli(ctx: Context, name: str, args: list[str]) -> Check:
     done = run_command([ctx.python, *args], cwd=ctx.root, env=ctx.env, timeout=ctx.timeout_s)
-    lines = [line for line in done.stdout.strip().splitlines() if line.strip()]
-    # These tools print a distribution first and their verdict last.
-    detail = done.tail(6) if not done.ok else (lines[-1] if lines else "")
-    return Check(name, done.ok, detail, done.command)
+    return Check(name, done.ok, done.tail(6) if not done.ok else _verdict(done.stdout),
+                 done.command)
+
+
+def _verdict(output: str) -> str:
+    """The line a verifier ends on, ignoring the detail it indents underneath."""
+    lines = [line for line in output.splitlines()
+             if line.strip() and not line.startswith((" ", "\t"))]
+    return lines[-1] if lines else ""
+
+
+def _new_cases(ctx: Context) -> Check:
+    """WS-G's verifier writes a review sheet, so it is pointed at a scratch file."""
+    with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as handle:
+        sheet = Path(handle.name)
+    try:
+        return _cli(ctx, "2026-09 expansion cases",
+                    ["-m", "_experiments.scripts.data_fixes.new_cases.verify", "--gate",
+                     "--out", str(sheet)])
+    finally:
+        sheet.unlink(missing_ok=True)
 
 
 def load_cases(directory: Path) -> tuple[list[dict], dict[str, str]]:

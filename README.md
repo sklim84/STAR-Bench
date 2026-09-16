@@ -151,6 +151,36 @@ bash _experiments/scripts/run_master.sh --server 1 --modes kr,en,mt
 tool-call parsers (with a custom plugin for Kanana); thinking models are split into
 `think` / `nothink` entries.
 
+### Before a run: the pre-flight gates
+
+```bash
+python -m _experiments.scripts.preflight.run --all --report
+```
+
+Six gates, one pass/fail line each, non-zero exit on any failure: the environment
+(platform commit, parquet and database hashes, `hofinet` columns, Streamlit stub,
+model revision pins), the four test suites and the schema-arm parity check, the
+benchmark data (linters, KR/EN parity, case counts, duplicate questions), the gold
+answers (self-test on all four directories and every gold call executed on the
+platform), serving readiness (registry against the run plan, template hashes,
+tensor-parallel size against the hosts, prompt budget per configuration), and a
+canary run.
+
+The canary needs a served model and is its own subcommand:
+
+```bash
+python -m _experiments.scripts.preflight.run canary --config <id> \
+  --base-url http://127.0.0.1:11434/v1
+```
+
+It sends a fixed sample of 40 single-turn cases covering all 23 tools plus three
+multi-turn scenarios through the runners, then trips on a no-tool-call rate, an
+error rate, a `finish_reason: length` share, a fallback-parser share, an empty
+tool-result share, a prompt headroom or a latency band outside what
+`_experiments/scripts/preflight/thresholds.json` allows. `--mock` runs the same
+path against the mock server, without a GPU. `--report` writes the full report to
+`_experiments/dataset_fix_20260915/impl/preflight_report.md`.
+
 ## Headline findings
 
 Full per-model tables, metrics, and statistics are in the paper and under

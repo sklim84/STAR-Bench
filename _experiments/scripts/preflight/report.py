@@ -58,6 +58,19 @@ def collect_versions(ctx) -> dict:
     }
 
 
+def _readable(command: str, versions: dict) -> str:
+    """The command with the interpreter path replaced, so the report is pasteable.
+
+    Which interpreter it was is in the versions table; the command itself reads
+    the way a co-author would type it.
+    """
+    for key in ("platform_python", "python"):
+        path = versions.get(key)
+        if path and path != "python":
+            command = command.replace(path, "python")
+    return command
+
+
 def _per_tool_tables(result: GateResult) -> list[str]:
     """The gold gate's per-tool counts, which is what a data owner reads first."""
     lines: list[str] = []
@@ -125,7 +138,7 @@ def write_markdown(results: list[GateResult], *, command: str, versions: dict,
             if check.command:
                 lines.append("")
                 lines.append("```")
-                lines.append(check.command)
+                lines.append(_readable(check.command, versions))
                 lines.append("```")
             lines.append("")
 
@@ -154,7 +167,7 @@ def write_markdown(results: list[GateResult], *, command: str, versions: dict,
             lines.append("Commands:")
             lines.append("")
             lines.append("```bash")
-            for item in dict.fromkeys(commands):
+            for item in dict.fromkeys(_readable(c, versions) for c in commands):
                 lines.append(item)
             lines.append("```")
             lines.append("")
