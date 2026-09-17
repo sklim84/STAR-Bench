@@ -56,8 +56,9 @@ def load_scenarios(cases_dir: Path) -> list[dict]:
 def main(argv: list[str] | None = None, *, executor=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--cases-dir", type=Path, default=_PROJECT_ROOT / "benchmarks_multiturn",
-                    help="benchmarks_multiturn or benchmarks_multiturn_en")
+    ap.add_argument("--cases-dir", type=Path, default=None,
+                    help="default follows --query-lang (benchmarks_multiturn or "
+                         "benchmarks_multiturn_en)")
     ap.add_argument("--setting", choices=("oracle", "e2e"), default="oracle")
     ap.add_argument("-v", "--verbose", action="store_true")
     cli.add_common_arguments(ap)
@@ -65,9 +66,17 @@ def main(argv: list[str] | None = None, *, executor=None) -> int:
     logging.basicConfig(level=logging.INFO if args.verbose else logging.WARNING,
                         format="%(asctime)s %(levelname)s %(message)s")
 
+    # --query-lang picks the data, not just the label: it used to name the arm while the
+    # cases came from the default directory, so an "EN query" run read Korean scenarios.
+    if args.cases_dir is None:
+        args.cases_dir = _PROJECT_ROOT / ("benchmarks_multiturn_en" if args.query_lang == "en"
+                                          else "benchmarks_multiturn")
+    query_lang = "en" if args.cases_dir.name.endswith("_en") else "kr"
+    if args.query_lang and args.query_lang != query_lang:
+        raise SystemExit(f"--query-lang {args.query_lang} contradicts --cases-dir "
+                         f"{args.cases_dir.name} ({query_lang} questions)")
     benchmark = load_scenarios(args.cases_dir)
     scenarios = cli.apply_limit(benchmark, args)
-    query_lang = "en" if args.cases_dir.name.endswith("_en") else "kr"
     # A scenario's questions are what the model reads; the flat `question` field the
     # preflight uses is the longest turn of the scenario.
     flat = [{"id": s["id"], "question": max((t["content"] for t in s.get("turns", [])),

@@ -249,9 +249,14 @@ def test_resume_refuses_another_model(server, single_benchmark, tmp_path, fake_t
         benchmark.main(argv, executor=fake_tools)
 
 
-def test_resume_refuses_another_query_language(server, single_benchmark, tmp_path, fake_tools):
+def test_a_query_language_that_contradicts_the_cases_is_refused(server, single_benchmark,
+                                                                tmp_path, fake_tools):
+    """--query-lang picks the data; naming one arm while reading the other is refused.
+
+    It used to be a label only, so an "EN query" run scored Korean questions.
+    """
     out = _first_run(server, single_benchmark, tmp_path / "r", fake_tools)
-    with pytest.raises(records.ResumeRefused, match="query_lang"):
+    with pytest.raises(SystemExit, match="contradicts"):
         benchmark.main(_argv(server, single_benchmark, out, ["--resume", "--query-lang", "en"]),
                        executor=fake_tools)
 

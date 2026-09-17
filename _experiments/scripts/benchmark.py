@@ -62,17 +62,28 @@ def load_cases(cases_dir: Path) -> list[dict]:
 def main(argv: list[str] | None = None, *, executor=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--cases-dir", type=Path, default=_PROJECT_ROOT / "benchmarks",
-                    help="benchmark directory (benchmarks or benchmarks_en)")
+    ap.add_argument("--cases-dir", type=Path, default=None,
+                    help="benchmark directory; default follows --query-lang "
+                         "(benchmarks or benchmarks_en)")
     ap.add_argument("-v", "--verbose", action="store_true")
     cli.add_common_arguments(ap)
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO if args.verbose else logging.WARNING,
                         format="%(asctime)s %(levelname)s %(message)s")
 
+    # --query-lang used to be a label only: it named the arm while the cases still came
+    # from the default directory, so an "EN query" run scored Korean questions (V-04 caught
+    # it on the 2x2 arms). The flag now picks the data, and a contradiction is refused.
+    if args.cases_dir is None:
+        args.cases_dir = _PROJECT_ROOT / ("benchmarks_en" if args.query_lang == "en"
+                                          else "benchmarks")
+    dir_lang = "en" if args.cases_dir.name.endswith("_en") else "kr"
+    if args.query_lang and args.query_lang != dir_lang:
+        raise SystemExit(f"--query-lang {args.query_lang} contradicts --cases-dir "
+                         f"{args.cases_dir.name} ({dir_lang} questions)")
     benchmark = load_cases(args.cases_dir)
     cases = cli.apply_limit(benchmark, args)
-    query_lang = "en" if args.cases_dir.name.endswith("_en") else "kr"
+    query_lang = dir_lang
     setup = cli.resolve(args, cases=cases, setting="single", query_lang_default=query_lang,
                         cases_dir=args.cases_dir)
 

@@ -219,7 +219,12 @@ def test_an_english_run_never_puts_a_korean_reply_in_the_history(
     from _experiments.scripts.runner.loop import CLARIFICATION_REPLIES
 
     server.always(text(""))
-    _run(server, multiturn_benchmark, tmp_path / "en", fake_tools,
+    # --query-lang now has to agree with the cases directory, so the English arm reads
+    # a directory named for it; the fixture scenarios are copied under that name.
+    import shutil
+    en_bench = tmp_path / "scenarios_en"
+    shutil.copytree(multiturn_benchmark, en_bench)
+    _run(server, en_bench, tmp_path / "en", fake_tools,
          extra=["--query-lang", "en", "--setting", "e2e"])
     injected = [m["content"] for r in server.requests for m in r["messages"]
                 if m["role"] == "assistant" and not m.get("tool_calls")]
