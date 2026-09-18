@@ -1,0 +1,120 @@
+{
+  "cohort": {
+    "column": "single",
+    "n_configs": 18,
+    "n_registry": 28,
+    "config_ids": [
+      "ax-4.0",
+      "dragon-qwen-fin",
+      "gemma-4-31b",
+      "gpt-oss-120b-nt",
+      "gpt-oss-120b-t",
+      "gpt-oss-20b-nt",
+      "gpt-oss-20b-t",
+      "kanana-2-inst",
+      "kanana-2-think",
+      "llama-3.3-70b",
+      "ministral-3b",
+      "mistral-small",
+      "qwen35-27b-nt",
+      "qwen35-27b-t",
+      "qwen35-4b-t",
+      "qwen36-27b",
+      "qwen36-35b-a3b",
+      "xlam-70b"
+    ],
+    "missing_config_ids": [
+      "ax-light",
+      "exaone-1.2b",
+      "exaone-32b",
+      "dragon-llama-fin",
+      "llama-3.2-3b",
+      "hermes-3-8b",
+      "phi-4-mini",
+      "qwen35-4b-nt",
+      "xlam-3b",
+      "gemma-4-e4b"
+    ]
+  },
+  "correct_definition": "h == 1 (primary tool hit); the pre-audit score >= 0.9 is gone (D02)",
+  "test": "McNemar, continuity corrected, chi-square with df = 1",
+  "n_registry_pairs": 4,
+  "n_pairs_tested": 3,
+  "pairs_without_both_arms": [
+    {
+      "model": "Qwen/Qwen3.5-4B",
+      "label": "Qwen3.5-4B",
+      "nothink_config_id": "qwen35-4b-nt",
+      "think_config_id": "qwen35-4b-t",
+      "nothink_label": "Qwen3.5-4B (NT)",
+      "think_label": "Qwen3.5-4B (T)",
+      "nothink_reasoning_mode": "nothink",
+      "think_reasoning_mode": "think",
+      "missing_arm": [
+        "qwen35-4b-nt"
+      ]
+    }
+  ],
+  "pairs": [
+    {
+      "model": "Qwen/Qwen3.5-27B",
+      "label": "Qwen3.5-27B",
+      "nothink_config_id": "qwen35-27b-nt",
+      "think_config_id": "qwen35-27b-t",
+      "nothink_reasoning_mode": "nothink",
+      "think_reasoning_mode": "think",
+      "n_cases": 1258,
+      "nothink_h": 0.9475,
+      "think_h": 0.942,
+      "delta_pp": -0.56,
+      "both_wrong": 43,
+      "flip_to_correct": 23,
+      "flip_to_wrong": 30,
+      "both_correct": 1162,
+      "mcnemar_chi2": 0.679,
+      "p_value": "0.4098",
+      "significant_05": false,
+      "significant_001": false
+    },
+    {
+      "model": "openai/gpt-oss-120b",
+      "label": "gpt-oss-120B",
+      "nothink_config_id": "gpt-oss-120b-nt",
+      "think_config_id": "gpt-oss-120b-t",
+      "nothink_reasoning_mode": "effort_low",
+      "think_reasoning_mode": "effort_high",
+      "n_cases": 1258,
+      "nothink_h": 0.9038,
+      "think_h": 0.8482,
+      "delta_pp": -5.56,
+      "both_wrong": 63,
+      "flip_to_correct": 58,
+      "flip_to_wrong": 128,
+      "both_correct": 1009,
+      "mcnemar_chi2": 25.597,
+      "p_value": "4.207e-07",
+      "significant_05": true,
+      "significant_001": true
+    },
+    {
+      "model": "openai/gpt-oss-20b",
+      "label": "gpt-oss-20B",
+      "nothink_config_id": "gpt-oss-20b-nt",
+      "think_config_id": "gpt-oss-20b-t",
+      "nothink_reasoning_mode": "effort_low",
+      "think_reasoning_mode": "effort_high",
+      "n_cases": 1258,
+      "nothink_h": 0.876,
+      "think_h": 0.8172,
+      "delta_pp": -5.88,
+      "both_wrong": 75,
+      "flip_to_correct": 81,
+      "flip_to_wrong": 155,
+      "both_correct": 947,
+      "mcnemar_chi2": 22.581,
+      "p_value": "2.015e-06",
+      "significant_05": true,
+      "significant_001": true
+    }
+  ]
+}

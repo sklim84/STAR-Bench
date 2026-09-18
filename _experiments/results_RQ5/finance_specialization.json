@@ -1,284 +1,602 @@
 {
+  "n_configs": 18,
+  "configs_missing_from_28": [
+    "ax-light",
+    "dragon-llama-fin",
+    "exaone-1.2b",
+    "exaone-32b",
+    "gemma-4-e4b",
+    "hermes-3-8b",
+    "llama-3.2-3b",
+    "phi-4-mini",
+    "qwen35-4b-nt",
+    "xlam-3b"
+  ],
+  "cohort_note": "18 of 28 configurations scored; 10 not scored yet",
+  "metric": "h, primary tool hit (0/1). The pre-audit primary_tool_hit_rate under the scorer's own name; the weighted score is gone (D02).",
   "sub_domains": [
     "Transaction Inquiry & Statistics",
     "Suspicious Activity Detection",
     "Money Flow & Network Analysis",
     "Regulatory Reporting"
   ],
-  "group_definitions": {
-    "finance": [
-      "DragonLLM/Llama-Open-Finance-8B",
-      "DragonLLM/Qwen-Open-Finance-R-8B"
+  "sub_domain_tools": {
+    "Transaction Inquiry & Statistics": [
+      "get_statistics",
+      "query_transactions",
+      "get_account_profile",
+      "compare_periods",
+      "get_institution_report",
+      "get_fraud_type_summary",
+      "get_receiving_account_profile"
     ],
-    "base_8b": [
-      "meta-llama/Llama-3.1-8B-Instruct",
-      "Qwen/Qwen3-8B"
+    "Suspicious Activity Detection": [
+      "predict_fraud",
+      "rank_risky_transactions",
+      "score_account_risk",
+      "detect_monitoring_alerts"
     ],
-    "small_general": [
-      "meta-llama/Llama-3.2-3B-Instruct",
-      "mistralai/Ministral-3-3B-Instruct-2512",
-      "microsoft/Phi-4-mini-instruct"
+    "Money Flow & Network Analysis": [
+      "analyze_network",
+      "detect_aml_patterns",
+      "detect_smurfing_network",
+      "detect_dormant_reactivation",
+      "analyze_cross_institution_flow",
+      "get_trend_analysis",
+      "analyze_channel_risk"
     ],
-    "specialized_kr": [
-      "LGAI-EXAONE/EXAONE-4.0-1.2B",
-      "skt/A.X-4.0-Light"
+    "Regulatory Reporting": [
+      "detect_ctr_candidates",
+      "lookup_fiu_reference_types",
+      "validate_str_fields",
+      "get_aml_glossary",
+      "generate_str"
     ]
   },
-  "per_model_subdomain_h": {
-    "DragonLLM/Llama-Open-Finance-8B": {
-      "Transaction Inquiry & Statistics": 0.679,
-      "Suspicious Activity Detection": 0.8589,
-      "Money Flow & Network Analysis": 0.8448,
-      "Regulatory Reporting": 0.6315
-    },
-    "DragonLLM/Qwen-Open-Finance-R-8B": {
-      "Transaction Inquiry & Statistics": 0.7885,
-      "Suspicious Activity Detection": 0.9098,
-      "Money Flow & Network Analysis": 0.9163,
-      "Regulatory Reporting": 0.5445
-    },
-    "LGAI-EXAONE/EXAONE-4.0-1.2B": {
-      "Transaction Inquiry & Statistics": 0.8048,
-      "Suspicious Activity Detection": 0.8065,
-      "Money Flow & Network Analysis": 0.8301,
-      "Regulatory Reporting": 0.4652
-    },
-    "LGAI-EXAONE/EXAONE-4.0-32B": {
-      "Transaction Inquiry & Statistics": 0.9252,
-      "Suspicious Activity Detection": 0.8973,
-      "Money Flow & Network Analysis": 0.8966,
-      "Regulatory Reporting": 0.6843
-    },
-    "NousResearch/Hermes-3-Llama-3.1-8B": {
-      "Transaction Inquiry & Statistics": 0.553,
-      "Suspicious Activity Detection": 0.6259,
-      "Money Flow & Network Analysis": 0.7414,
-      "Regulatory Reporting": 0.3517
-    },
-    "Qwen/Qwen3-30B-A3B-Instruct-2507": {
-      "Transaction Inquiry & Statistics": 0.8755,
-      "Suspicious Activity Detection": 0.7476,
-      "Money Flow & Network Analysis": 0.8178,
-      "Regulatory Reporting": 0.8815
-    },
-    "Qwen/Qwen3-4B-Instruct-2507": {
-      "Transaction Inquiry & Statistics": 0.8814,
-      "Suspicious Activity Detection": 0.8158,
-      "Money Flow & Network Analysis": 0.9089,
-      "Regulatory Reporting": 0.6462
-    },
-    "Qwen/Qwen3-8B": {
-      "Transaction Inquiry & Statistics": 0.8864,
-      "Suspicious Activity Detection": 0.8669,
-      "Money Flow & Network Analysis": 0.9409,
-      "Regulatory Reporting": 0.6922
-    },
-    "Qwen/Qwen3.5-27B__nothink": {
-      "Transaction Inquiry & Statistics": 0.9419,
-      "Suspicious Activity Detection": 0.8927,
-      "Money Flow & Network Analysis": 0.9162,
-      "Regulatory Reporting": 0.6713
-    },
-    "Qwen/Qwen3.5-27B__think": {
-      "Transaction Inquiry & Statistics": 0.9251,
-      "Suspicious Activity Detection": 0.9101,
-      "Money Flow & Network Analysis": 0.9236,
-      "Regulatory Reporting": 0.6886
-    },
-    "Qwen/Qwen3.5-4B__nothink": {
-      "Transaction Inquiry & Statistics": 0.8838,
-      "Suspicious Activity Detection": 0.859,
-      "Money Flow & Network Analysis": 0.8744,
-      "Regulatory Reporting": 0.417
-    },
-    "Qwen/Qwen3.5-4B__think": {
-      "Transaction Inquiry & Statistics": 0.8886,
-      "Suspicious Activity Detection": 0.9019,
-      "Money Flow & Network Analysis": 0.9015,
-      "Regulatory Reporting": 0.653
-    },
-    "Qwen/Qwen3.5-9B__nothink": {
-      "Transaction Inquiry & Statistics": 0.9247,
-      "Suspicious Activity Detection": 0.9272,
-      "Money Flow & Network Analysis": 0.9138,
-      "Regulatory Reporting": 0.5011
-    },
-    "Qwen/Qwen3.5-9B__think": {
-      "Transaction Inquiry & Statistics": 0.911,
-      "Suspicious Activity Detection": 0.9402,
-      "Money Flow & Network Analysis": 0.9113,
-      "Regulatory Reporting": 0.6261
-    },
-    "Qwen/Qwen3.6-27B": {
-      "Transaction Inquiry & Statistics": 0.9132,
-      "Suspicious Activity Detection": 0.9017,
-      "Money Flow & Network Analysis": 0.9458,
-      "Regulatory Reporting": 0.6756
-    },
-    "Qwen/Qwen3.6-35B-A3B": {
-      "Transaction Inquiry & Statistics": 0.908,
-      "Suspicious Activity Detection": 0.9184,
-      "Money Flow & Network Analysis": 0.936,
-      "Regulatory Reporting": 0.6433
-    },
-    "Salesforce/Llama-xLAM-2-70b-fc-r": {
-      "Transaction Inquiry & Statistics": 0.8946,
-      "Suspicious Activity Detection": 0.8624,
-      "Money Flow & Network Analysis": 0.803,
-      "Regulatory Reporting": 0.5632
-    },
-    "Salesforce/Llama-xLAM-2-8b-fc-r": {
-      "Transaction Inquiry & Statistics": 0.8201,
-      "Suspicious Activity Detection": 0.8842,
-      "Money Flow & Network Analysis": 0.7956,
-      "Regulatory Reporting": 0.6753
-    },
-    "Salesforce/xLAM-2-1b-fc-r": {
-      "Transaction Inquiry & Statistics": 0.286,
-      "Suspicious Activity Detection": 0.347,
-      "Money Flow & Network Analysis": 0.1995,
-      "Regulatory Reporting": 0.0474
-    },
-    "Salesforce/xLAM-2-32b-fc-r": {
-      "Transaction Inquiry & Statistics": 0.8722,
-      "Suspicious Activity Detection": 0.8754,
-      "Money Flow & Network Analysis": 0.8793,
-      "Regulatory Reporting": 0.8736
-    },
-    "Salesforce/xLAM-2-3b-fc-r": {
-      "Transaction Inquiry & Statistics": 0.6337,
-      "Suspicious Activity Detection": 0.7738,
-      "Money Flow & Network Analysis": 0.5813,
-      "Regulatory Reporting": 0.3082
-    },
-    "google/gemma-4-31B-it": {
-      "Transaction Inquiry & Statistics": 0.9663,
-      "Suspicious Activity Detection": 0.9573,
-      "Money Flow & Network Analysis": 0.9434,
-      "Regulatory Reporting": 0.5765
-    },
-    "google/gemma-4-E4B-it": {
-      "Transaction Inquiry & Statistics": 0.8026,
-      "Suspicious Activity Detection": 0.8194,
-      "Money Flow & Network Analysis": 0.7832,
-      "Regulatory Reporting": 0.5938
-    },
-    "kakaocorp/kanana-2-30b-a3b-instruct": {
-      "Transaction Inquiry & Statistics": 0.6673,
-      "Suspicious Activity Detection": 0.794,
-      "Money Flow & Network Analysis": 0.8719,
-      "Regulatory Reporting": 0.597
-    },
-    "kakaocorp/kanana-2-30b-a3b-thinking-2601": {
-      "Transaction Inquiry & Statistics": 0.562,
-      "Suspicious Activity Detection": 0.7274,
-      "Money Flow & Network Analysis": 0.8399,
-      "Regulatory Reporting": 0.8771
-    },
-    "meta-llama/Llama-3.1-8B-Instruct": {
-      "Transaction Inquiry & Statistics": 0.6517,
-      "Suspicious Activity Detection": 0.7989,
-      "Money Flow & Network Analysis": 0.7537,
-      "Regulatory Reporting": 0.6735
-    },
-    "meta-llama/Llama-3.2-3B-Instruct": {
-      "Transaction Inquiry & Statistics": 0.4623,
-      "Suspicious Activity Detection": 0.6617,
-      "Money Flow & Network Analysis": 0.6921,
-      "Regulatory Reporting": 0.4256
-    },
-    "meta-llama/Llama-3.3-70B-Instruct": {
-      "Transaction Inquiry & Statistics": 0.7301,
-      "Suspicious Activity Detection": 0.8805,
-      "Money Flow & Network Analysis": 0.8695,
-      "Regulatory Reporting": 0.917
-    },
-    "microsoft/Phi-4-mini-instruct": {
-      "Transaction Inquiry & Statistics": 0.5177,
-      "Suspicious Activity Detection": 0.696,
-      "Money Flow & Network Analysis": 0.6921,
-      "Regulatory Reporting": 0.398
-    },
-    "mistralai/Ministral-3-3B-Instruct-2512": {
-      "Transaction Inquiry & Statistics": 0.8641,
-      "Suspicious Activity Detection": 0.8757,
-      "Money Flow & Network Analysis": 0.899,
-      "Regulatory Reporting": 0.4968
-    },
-    "mistralai/Mistral-Small-3.2-24B-Instruct-2506": {
-      "Transaction Inquiry & Statistics": 0.885,
-      "Suspicious Activity Detection": 0.9014,
-      "Money Flow & Network Analysis": 0.9089,
-      "Regulatory Reporting": 0.5855
-    },
-    "openai/gpt-oss-120b__nothink": {
-      "Transaction Inquiry & Statistics": 0.8158,
-      "Suspicious Activity Detection": 0.8839,
-      "Money Flow & Network Analysis": 0.8966,
-      "Regulatory Reporting": 0.7349
-    },
-    "openai/gpt-oss-120b__think": {
-      "Transaction Inquiry & Statistics": 0.7108,
-      "Suspicious Activity Detection": 0.8194,
-      "Money Flow & Network Analysis": 0.8251,
-      "Regulatory Reporting": 0.4451
-    },
-    "openai/gpt-oss-20b__nothink": {
-      "Transaction Inquiry & Statistics": 0.8467,
-      "Suspicious Activity Detection": 0.8628,
-      "Money Flow & Network Analysis": 0.8867,
-      "Regulatory Reporting": 0.4407
-    },
-    "openai/gpt-oss-20b__think": {
-      "Transaction Inquiry & Statistics": 0.7754,
-      "Suspicious Activity Detection": 0.7208,
-      "Money Flow & Network Analysis": 0.7685,
-      "Regulatory Reporting": 0.2899
-    },
-    "skt/A.X-4.0-Light": {
-      "Transaction Inquiry & Statistics": 0.4464,
-      "Suspicious Activity Detection": 0.5901,
-      "Money Flow & Network Analysis": 0.6576,
-      "Regulatory Reporting": 0.2855
-    },
-    "skt/A.X-4.0": {
-      "Transaction Inquiry & Statistics": 0.8483,
-      "Suspicious Activity Detection": 0.9095,
-      "Money Flow & Network Analysis": 0.9064,
-      "Regulatory Reporting": 0.68
-    }
+  "sub_domain_tools_used": {
+    "Transaction Inquiry & Statistics": [
+      "get_statistics",
+      "query_transactions",
+      "get_account_profile",
+      "compare_periods",
+      "get_institution_report",
+      "get_fraud_type_summary",
+      "get_receiving_account_profile"
+    ],
+    "Suspicious Activity Detection": [
+      "predict_fraud",
+      "rank_risky_transactions",
+      "score_account_risk",
+      "detect_monitoring_alerts"
+    ],
+    "Money Flow & Network Analysis": [
+      "analyze_network",
+      "detect_aml_patterns",
+      "detect_smurfing_network",
+      "detect_dormant_reactivation",
+      "analyze_cross_institution_flow",
+      "get_trend_analysis",
+      "analyze_channel_risk"
+    ],
+    "Regulatory Reporting": [
+      "detect_ctr_candidates",
+      "lookup_fiu_reference_types",
+      "validate_str_fields",
+      "get_aml_glossary"
+    ]
+  },
+  "sub_domain_tools_missing": {
+    "Regulatory Reporting": [
+      "generate_str"
+    ]
+  },
+  "group_order": [
+    "Finance-Specialized",
+    "General-Purpose",
+    "Korean-Specialized"
+  ],
+  "group_labels": {
+    "Finance-Specialized": "Finance-Specialized (n=1)",
+    "General-Purpose": "General-Purpose (n=14)",
+    "Korean-Specialized": "Korean-Specialized (n=3)"
+  },
+  "group_members": {
+    "Finance-Specialized": [
+      "dragon-qwen-fin"
+    ],
+    "General-Purpose": [
+      "gemma-4-31b",
+      "gpt-oss-120b-nt",
+      "gpt-oss-120b-t",
+      "gpt-oss-20b-nt",
+      "gpt-oss-20b-t",
+      "llama-3.3-70b",
+      "ministral-3b",
+      "mistral-small",
+      "qwen35-27b-nt",
+      "qwen35-27b-t",
+      "qwen35-4b-t",
+      "qwen36-27b",
+      "qwen36-35b-a3b",
+      "xlam-70b"
+    ],
+    "Korean-Specialized": [
+      "ax-4.0",
+      "kanana-2-inst",
+      "kanana-2-think"
+    ]
+  },
+  "group_n_configs": {
+    "Finance-Specialized": 1,
+    "General-Purpose": 14,
+    "Korean-Specialized": 3
   },
   "group_means": {
-    "finance": {
-      "Transaction Inquiry & Statistics": 0.7338,
-      "Suspicious Activity Detection": 0.8843,
-      "Money Flow & Network Analysis": 0.8805,
-      "Regulatory Reporting": 0.588
+    "Finance-Specialized": {
+      "Transaction Inquiry & Statistics": 0.7872,
+      "Suspicious Activity Detection": 0.9045,
+      "Money Flow & Network Analysis": 0.9083,
+      "Regulatory Reporting": 0.812
     },
-    "base_8b": {
-      "Transaction Inquiry & Statistics": 0.7691,
-      "Suspicious Activity Detection": 0.8329,
-      "Money Flow & Network Analysis": 0.8473,
-      "Regulatory Reporting": 0.6828
+    "General-Purpose": {
+      "Transaction Inquiry & Statistics": 0.8729,
+      "Suspicious Activity Detection": 0.9431,
+      "Money Flow & Network Analysis": 0.8857,
+      "Regulatory Reporting": 0.8951
     },
-    "small_general": {
-      "Transaction Inquiry & Statistics": 0.6147,
-      "Suspicious Activity Detection": 0.7445,
-      "Money Flow & Network Analysis": 0.7611,
-      "Regulatory Reporting": 0.4401
-    },
-    "specialized_kr": {
-      "Transaction Inquiry & Statistics": 0.6256,
-      "Suspicious Activity Detection": 0.6983,
-      "Money Flow & Network Analysis": 0.7438,
-      "Regulatory Reporting": 0.3753
+    "Korean-Specialized": {
+      "Transaction Inquiry & Statistics": 0.8547,
+      "Suspicious Activity Detection": 0.9453,
+      "Money Flow & Network Analysis": 0.8768,
+      "Regulatory Reporting": 0.9132
     }
   },
-  "finance_vs_base_8b_diff": {
-    "Transaction Inquiry & Statistics": -0.0353,
-    "Suspicious Activity Detection": 0.0514,
-    "Money Flow & Network Analysis": 0.0332,
-    "Regulatory Reporting": -0.0948
+  "group_n_cases": {
+    "Finance-Specialized": {
+      "Transaction Inquiry & Statistics": 378,
+      "Suspicious Activity Detection": 215,
+      "Money Flow & Network Analysis": 365,
+      "Regulatory Reporting": 131
+    },
+    "General-Purpose": {
+      "Transaction Inquiry & Statistics": 5292,
+      "Suspicious Activity Detection": 3010,
+      "Money Flow & Network Analysis": 5110,
+      "Regulatory Reporting": 1834
+    },
+    "Korean-Specialized": {
+      "Transaction Inquiry & Statistics": 1134,
+      "Suspicious Activity Detection": 645,
+      "Money Flow & Network Analysis": 1095,
+      "Regulatory Reporting": 393
+    }
   },
-  "note": "base 대비 비교: DragonLLM Finance 2종 vs 각자의 base(Llama-3.1-8B-Instruct, Qwen3-8B). positive diff = 금융 SFT가 base보다 높음, negative = base가 높음."
+  "per_config_subdomain_h": {
+    "ax-4.0": {
+      "label": "A.X-4.0 (72B)",
+      "group": "Korean-Specialized",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.8925,
+        "Suspicious Activity Detection": 0.9682,
+        "Money Flow & Network Analysis": 0.9247,
+        "Regulatory Reporting": 0.9732
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    },
+    "dragon-qwen-fin": {
+      "label": "Qwen-Open-Finance-R-8B",
+      "group": "Finance-Specialized",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.7872,
+        "Suspicious Activity Detection": 0.9045,
+        "Money Flow & Network Analysis": 0.9083,
+        "Regulatory Reporting": 0.812
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    },
+    "gemma-4-31b": {
+      "label": "Gemma-4-31B",
+      "group": "General-Purpose",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.985,
+        "Suspicious Activity Detection": 0.9855,
+        "Money Flow & Network Analysis": 0.9683,
+        "Regulatory Reporting": 0.9777
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    },
+    "gpt-oss-120b-nt": {
+      "label": "gpt-oss-120B (NT)",
+      "group": "General-Purpose",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.9161,
+        "Suspicious Activity Detection": 0.9714,
+        "Money Flow & Network Analysis": 0.8927,
+        "Regulatory Reporting": 0.9632
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    },
+    "gpt-oss-120b-t": {
+      "label": "gpt-oss-120B (T)",
+      "group": "General-Purpose",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.7953,
+        "Suspicious Activity Detection": 0.9677,
+        "Money Flow & Network Analysis": 0.8995,
+        "Regulatory Reporting": 0.9398
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    },
+    "gpt-oss-20b-nt": {
+      "label": "gpt-oss-20B (NT)",
+      "group": "General-Purpose",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.885,
+        "Suspicious Activity Detection": 0.9436,
+        "Money Flow & Network Analysis": 0.8919,
+        "Regulatory Reporting": 0.9343
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    },
+    "gpt-oss-20b-t": {
+      "label": "gpt-oss-20B (T)",
+      "group": "General-Purpose",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.8382,
+        "Suspicious Activity Detection": 0.9359,
+        "Money Flow & Network Analysis": 0.8031,
+        "Regulatory Reporting": 0.712
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    },
+    "kanana-2-inst": {
+      "label": "Kanana-2-Instruct",
+      "group": "Korean-Specialized",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.8103,
+        "Suspicious Activity Detection": 0.9091,
+        "Money Flow & Network Analysis": 0.814,
+        "Regulatory Reporting": 0.7843
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    },
+    "kanana-2-think": {
+      "label": "Kanana-2-Think",
+      "group": "Korean-Specialized",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.8612,
+        "Suspicious Activity Detection": 0.9586,
+        "Money Flow & Network Analysis": 0.8917,
+        "Regulatory Reporting": 0.9821
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    },
+    "llama-3.3-70b": {
+      "label": "Llama-3.3-70B",
+      "group": "General-Purpose",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.6839,
+        "Suspicious Activity Detection": 0.9036,
+        "Money Flow & Network Analysis": 0.8455,
+        "Regulatory Reporting": 0.9086
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    },
+    "ministral-3b": {
+      "label": "Ministral-3-3B",
+      "group": "General-Purpose",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.7804,
+        "Suspicious Activity Detection": 0.9586,
+        "Money Flow & Network Analysis": 0.8818,
+        "Regulatory Reporting": 0.922
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    },
+    "mistral-small": {
+      "label": "Mistral-Small-24B",
+      "group": "General-Purpose",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.7537,
+        "Suspicious Activity Detection": 0.8445,
+        "Money Flow & Network Analysis": 0.8694,
+        "Regulatory Reporting": 0.6864
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    },
+    "qwen35-27b-nt": {
+      "label": "Qwen3.5-27B (NT)",
+      "group": "General-Purpose",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.949,
+        "Suspicious Activity Detection": 0.995,
+        "Money Flow & Network Analysis": 0.9595,
+        "Regulatory Reporting": 0.9732
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    },
+    "qwen35-27b-t": {
+      "label": "Qwen3.5-27B (T)",
+      "group": "General-Purpose",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.9637,
+        "Suspicious Activity Detection": 0.9818,
+        "Money Flow & Network Analysis": 0.9649,
+        "Regulatory Reporting": 0.9643
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    },
+    "qwen35-4b-t": {
+      "label": "Qwen3.5-4B (T)",
+      "group": "General-Purpose",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.9293,
+        "Suspicious Activity Detection": 0.9818,
+        "Money Flow & Network Analysis": 0.9408,
+        "Regulatory Reporting": 0.9598
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    },
+    "qwen36-27b": {
+      "label": "Qwen3.6-27B",
+      "group": "General-Purpose",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.9655,
+        "Suspicious Activity Detection": 0.9905,
+        "Money Flow & Network Analysis": 0.9675,
+        "Regulatory Reporting": 0.9777
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    },
+    "qwen36-35b-a3b": {
+      "label": "Qwen3.6-35B-A3B",
+      "group": "General-Purpose",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.9509,
+        "Suspicious Activity Detection": 0.9864,
+        "Money Flow & Network Analysis": 0.9335,
+        "Regulatory Reporting": 0.9777
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    },
+    "xlam-70b": {
+      "label": "xLAM-2-70B",
+      "group": "General-Purpose",
+      "h": {
+        "Transaction Inquiry & Statistics": 0.8248,
+        "Suspicious Activity Detection": 0.7573,
+        "Money Flow & Network Analysis": 0.5818,
+        "Regulatory Reporting": 0.635
+      },
+      "n_cases": {
+        "Transaction Inquiry & Statistics": 378,
+        "Suspicious Activity Detection": 215,
+        "Money Flow & Network Analysis": 365,
+        "Regulatory Reporting": 131
+      },
+      "n_tools": {
+        "Transaction Inquiry & Statistics": 7,
+        "Suspicious Activity Detection": 4,
+        "Money Flow & Network Analysis": 7,
+        "Regulatory Reporting": 4
+      }
+    }
+  },
+  "finance_vs_general_purpose_diff": {
+    "Transaction Inquiry & Statistics": -0.0857,
+    "Suspicious Activity Detection": -0.0386,
+    "Money Flow & Network Analysis": 0.0226,
+    "Regulatory Reporting": -0.0831
+  },
+  "base_comparison": {
+    "available": false,
+    "intended_pairs": {
+      "dragon-llama-fin": "meta-llama/Llama-3.1-8B-Instruct",
+      "dragon-qwen-fin": "Qwen/Qwen3-8B"
+    },
+    "missing_bases": [
+      "Qwen/Qwen3-8B",
+      "meta-llama/Llama-3.1-8B-Instruct"
+    ],
+    "reason": "Neither base model is a configuration in the serving registry, so neither was run or scored in the rerun. The pre-audit step reached outside the 28-configuration cohort for them. No stand-in is substituted: with a different 8B model in the base slot the result becomes a property of that model (Hermes-3-8B, used earlier, sat at regulatory h .3517 against .58-.70 for the other 8B models and inflated the benefit of finance SFT).",
+    "finance_configs_in_registry": [
+      "dragon-llama-fin",
+      "dragon-qwen-fin"
+    ],
+    "finance_configs_scored": [
+      "dragon-qwen-fin"
+    ],
+    "finance_configs_not_scored": [
+      "dragon-llama-fin"
+    ],
+    "substitute_used": null
+  },
+  "note": "A sub-domain value is the unweighted mean over its tools' category means, and a group value the unweighted mean over its configurations. positive diff = the Finance-Specialized group above the General-Purpose group. The base-vs-SFT comparison is not available; see base_comparison."
 }

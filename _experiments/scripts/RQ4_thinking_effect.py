@@ -1,134 +1,261 @@
 #!/usr/bin/env python3
-"""RQ4 cont. (Effect of Thinking Mode): 새 5쌍 thinking pair 데이터로 figure 재생성.
+"""RQ4 cont. (Effect of Thinking Mode): per-pair single-turn and multi-turn deltas.
 
-5 thinking pair: Qwen3.5-4B, Qwen3.5-27B, gpt-oss-20b, gpt-oss-120b, kanana-2-30b-a3b-thinking-2601.
+For every model the registry serves twice, once reasoning and once not, this
+step reports the single-turn delta in h and the oracle multi-turn delta in the
+per-scenario mean tool hit, so the manuscript can cite both:
+- single Delta h and multi Delta h_bar per pair
+- the non-monotone effect of the thinking mode (it differs by family)
 
-본문 인용 포인트:
-- single Δh, multi Δh_bar per pair
-- thinking 모드의 비단조 효과 (계열별 상이)
+Porting note (PORTING.md rule 1). This step read the pre-audit aggregates
+(`overall.primary_tool_hit_rate`, `overall.avg_tool_hit`) rather than
+thresholding the weighted `score` itself, but it belongs to the same family of
+steps and follows the same substitution: **`score >= 0.9` became `h == 1`**
+across this analysis, because that score has no definition in the paper (D02)
+and is gone. Single-turn h is now the mean of the per-case `h`, and the
+multi-turn h_bar is the mean of the per-scenario `h_mean`, which is what
+`avg_tool_hit` became. Every number carries its n (rule 2).
+
+Pairing (rule 3). The `THINKING_PAIRS` list of four base ids with literal
+`__think` / `__nothink` suffixes is deleted. In the serving registry the two
+arms are separate `config_id`s, so the pairs come from `load.configs()`: two
+configurations that share a `model` and differ in `reasoning_mode`, with the
+mode saying which arm reasons. The `OUTLIERS` set, which was empty and drove
+`_ex_outlier` keys in the output, is deleted with it; no row is dropped from a
+mean without the output saying which and why. A registry pair with only one arm
+scored is reported as such rather than dropped in silence (rule 4).
+
+Output (unchanged names, under `_experiments/results_RQ4`):
+  - thinking_effect_per_pair.csv
+  - thinking_effect_summary.json
+  - fig_thinking_delta_single.{pdf,png}
+  - fig_thinking_delta_multi.{pdf,png}
 """
-import json, csv, sys
+import csv
+import json
+import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _plot_style import (plt, COL_NOTHINK, COL_THINK, COL_BAD, FS_TICK, FS_LABEL,
-                          FS_TITLE, FS_LEGEND, style_axes, short_name)
+from _plot_style import (plt, COL_NOTHINK, COL_THINK, FS_TICK, FS_LABEL,
+                         FS_LEGEND, style_axes)
 
-EVAL_DIR = Path('_experiments/results_kr/eval')
-MT_DIR = Path('_experiments/results_mt_oracle/eval')
-OUT_DIR = Path('_experiments/results_RQ4')
-OUT_DIR.mkdir(parents=True, exist_ok=True)
+_SB = Path(__file__).resolve().parents[2]  # repository root
+if str(_SB) not in sys.path:
+    sys.path.insert(0, str(_SB))
 
-THINKING_PAIRS = [
-    # 동일 모델 enable_thinking 토글 4쌍.
-    # Kanana-2-Think (thinking-2601)는 always-thinking 특성으로 토글 미지원이라 제외.
-    # Kanana sibling-variant pair (Inst-2601 ↔ Think-2601) 비교는 본문에서 별도 보고.
-    ('Qwen/Qwen3.5-4B', 'Qwen3.5-4B'),
-    ('Qwen/Qwen3.5-27B', 'Qwen3.5-27B'),
-    ('openai/gpt-oss-20b', 'gpt-oss-20B'),
-    ('openai/gpt-oss-120b', 'gpt-oss-120B'),
-]
+from _experiments.scripts.analysis import load  # noqa: E402
 
-OUTLIERS = set()
+OUT_DIR = _SB / '_experiments' / 'results_RQ4'
+COLUMN = 'single'      # the main-table arm: Korean tool schema, Korean questions
+SETTING = 'oracle'     # the multi-turn setting the manuscript reports beside it
 
-def load_kr():
+# The registry's `reasoning_mode` vocabulary, split into the two arms of a
+# toggle. `none` and `always_on` are not a toggle and are not in the map, so a
+# model served under either one has no pair here.
+THINKING_ARM = {'nothink': 'nothink', 'effort_low': 'nothink',
+                'think': 'think', 'effort_high': 'think'}
+
+
+def registry_pairs() -> list[dict]:
+    """Configurations that share a model and differ in reasoning mode."""
+    cfgs = load.configs()
+    pairs = []
+    for model, group in cfgs.groupby('model', sort=False):
+        arms: dict[str, list] = {}
+        for row in group.itertuples(index=False):
+            arm = THINKING_ARM.get(row.reasoning_mode)
+            if arm:
+                arms.setdefault(arm, []).append(row)
+        if len(arms.get('think', [])) != 1 or len(arms.get('nothink', [])) != 1:
+            continue
+        think, nothink = arms['think'][0], arms['nothink'][0]
+        pairs.append({
+            'model': model,
+            'display': think.label.replace(' (T)', '').strip(),
+            'nothink_config_id': nothink.config_id, 'think_config_id': think.config_id,
+            'nothink_reasoning_mode': nothink.reasoning_mode,
+            'think_reasoning_mode': think.reasoning_mode,
+        })
+    return pairs
+
+
+def single_hits() -> dict:
+    """config_id -> {h, n} over the single-turn cases."""
+    cases = load.single(column=COLUMN)
+    return {cid: {'h': float(g['h'].mean()), 'n': int(len(g))}
+            for cid, g in cases.groupby('config_id')}
+
+
+def multiturn_hits() -> dict:
+    """config_id -> {h_bar, n} over the oracle scenarios.
+
+    `h_bar` is the mean of the per-scenario `h_mean`, which is what the pre-audit
+    `avg_tool_hit` became.
+    """
+    try:
+        scenarios, _ = load.multiturn(SETTING)
+    except FileNotFoundError:
+        return {}
     out = {}
-    for f in sorted(EVAL_DIR.glob('eval_*.json')):
-        d = json.load(f.open())
-        out[d['model']] = d.get('overall', {})
+    for cid, g in scenarios.groupby('config_id'):
+        h = g['h_mean'].dropna()
+        out[cid] = {'h_bar': float(h.mean()) if len(h) else None, 'n': int(len(h))}
     return out
 
-def load_mt():
-    out = {}
-    for f in MT_DIR.glob('multiturn_*.json'):
-        d = json.load(f.open())
-        out[d.get('model_id') or d['model']] = d.get('overall', {})
-    return out
 
 def main():
-    kr = load_kr()
-    mt = load_mt()
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    table = load.missing()
+    n_registry = len(table)
+    scored_single = set(table.loc[table[COLUMN], 'config_id'])
+    scored_multi = set(table.loc[table[SETTING], 'config_id'])
+
+    pairs = registry_pairs()
+    complete = [p for p in pairs
+                if p['nothink_config_id'] in scored_single
+                and p['think_config_id'] in scored_single]
+    incomplete = [
+        {**p, 'missing_arm': [cid for cid in (p['nothink_config_id'], p['think_config_id'])
+                              if cid not in scored_single]}
+        for p in pairs if p not in complete
+    ]
+
+    print(f'Registry holds {len(pairs)} think/nothink pair(s); '
+          f'{len(complete)} have both arms scored single-turn.')
+    for p in complete:
+        print(f"  {p['display']}: {p['nothink_config_id']} ({p['nothink_reasoning_mode']}) "
+              f"vs {p['think_config_id']} ({p['think_reasoning_mode']})")
+    for p in incomplete:
+        print(f"  SKIPPED {p['display']}: not scored yet: {', '.join(p['missing_arm'])}")
+
+    single = single_hits()
+    multi = multiturn_hits()
 
     rows = []
-    for base, display in THINKING_PAIRS:
-        nt_id = f'{base}__nothink'
-        t_id = f'{base}__think'
-        nt = kr.get(nt_id, {})
-        t = kr.get(t_id, {})
-        nt_mt = mt.get(nt_id, {})
-        t_mt = mt.get(t_id, {})
-        h_nt = nt.get('primary_tool_hit_rate')
-        h_t = t.get('primary_tool_hit_rate')
-        hb_nt = nt_mt.get('avg_tool_hit')
-        hb_t = t_mt.get('avg_tool_hit')
+    for pair in complete:
+        nt, t = pair['nothink_config_id'], pair['think_config_id']
+        s_nt, s_t = single.get(nt, {}), single.get(t, {})
+        m_nt, m_t = multi.get(nt, {}), multi.get(t, {})
+        h_nt, h_t = s_nt.get('h'), s_t.get('h')
+        hb_nt, hb_t = m_nt.get('h_bar'), m_t.get('h_bar')
         rows.append({
-            'model': display, 'base_id': base,
+            'model': pair['display'],
+            'model_id': pair['model'],
+            'nothink_config_id': nt,
+            'think_config_id': t,
+            'nothink_reasoning_mode': pair['nothink_reasoning_mode'],
+            'think_reasoning_mode': pair['think_reasoning_mode'],
             'h_nothink': h_nt, 'h_think': h_t,
+            'n_cases_nothink': s_nt.get('n'), 'n_cases_think': s_t.get('n'),
             'delta_h_single': (h_t - h_nt) if (h_nt is not None and h_t is not None) else None,
             'h_bar_nothink': hb_nt, 'h_bar_think': hb_t,
+            'n_scenarios_nothink': m_nt.get('n'), 'n_scenarios_think': m_t.get('n'),
             'delta_h_multi': (hb_t - hb_nt) if (hb_nt is not None and hb_t is not None) else None,
-            'is_outlier': base in OUTLIERS,
         })
 
-    with (OUT_DIR / 'thinking_effect_per_pair.csv').open('w', newline='') as f:
-        w = csv.DictWriter(f, fieldnames=rows[0].keys())
-        w.writeheader(); w.writerows(rows)
+    if not rows:
+        raise SystemExit('no thinking pair has both arms scored; nothing to report')
 
+    with (OUT_DIR / 'thinking_effect_per_pair.csv').open('w', newline='',
+                                                        encoding='utf-8') as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+        w.writeheader()
+        w.writerows(rows)
+
+    def mean_with_n(key):
+        vals = [r[key] for r in rows if r[key] is not None]
+        return (round(sum(vals) / len(vals), 4) if vals else None), len(vals)
+
+    mean_single, n_single = mean_with_n('delta_h_single')
+    mean_multi, n_multi = mean_with_n('delta_h_multi')
+
+    cohort_note = (f'{len(rows)} of {len(pairs)} registry thinking pairs have both arms '
+                   f'scored; {len(scored_single)} of {n_registry} configurations are '
+                   f'scored single-turn')
     summary = {
+        'cohort': {
+            'n_registry': n_registry,
+            'n_configs': len(scored_single),
+            'n_configs_multiturn': len(scored_multi),
+            'config_ids': sorted(scored_single),
+            'missing_config_ids': table.loc[~table[COLUMN], 'config_id'].tolist(),
+            'note': cohort_note,
+        },
+        'n_registry_pairs': len(pairs),
         'n_thinking_pairs': len(rows),
+        'pairs_without_both_arms': incomplete,
         'pairs': rows,
-        'mean_delta_single': round(sum(r['delta_h_single'] for r in rows if r['delta_h_single'] is not None and not r['is_outlier']) / max(sum(1 for r in rows if r['delta_h_single'] is not None and not r['is_outlier']), 1), 4),
-        'mean_delta_multi': round(sum(r['delta_h_multi'] for r in rows if r['delta_h_multi'] is not None and not r['is_outlier']) / max(sum(1 for r in rows if r['delta_h_multi'] is not None and not r['is_outlier']), 1), 4),
-        'note': 'Δh = h(T) - h(NT). Kanana-Think는 평가 이상치(h≈0.126)로 평균에서 제외.',
+        'mean_delta_single': mean_single,
+        'n_pairs_delta_single': n_single,
+        'mean_delta_multi': mean_multi,
+        'n_pairs_delta_multi': n_multi,
+        'note': ('Delta h = h(T) - h(NT) over the single-turn cases; '
+                 'Delta h_bar = h_bar(T) - h_bar(NT) over the oracle scenarios, where '
+                 'h_bar is the mean per-scenario h_mean (the old avg_tool_hit). '
+                 'No pair is excluded from the means: every pair with both arms scored '
+                 'is in them. ' + cohort_note),
     }
-    json.dump(summary, (OUT_DIR / 'thinking_effect_summary.json').open('w'),
-              ensure_ascii=False, indent=2)
+    with (OUT_DIR / 'thinking_effect_summary.json').open('w', encoding='utf-8') as f:
+        json.dump(summary, f, ensure_ascii=False, indent=2)
 
     try:
-        import numpy as np
-        # Plot A: per-pair Δh single
-        fig, ax = plt.subplots(figsize=(5, 3.2))
-        labels = [r['model'] for r in rows]
-        deltas_s = [r['delta_h_single'] if r['delta_h_single'] is not None else 0 for r in rows]
-        colors = [COL_BAD if r['is_outlier'] else (COL_THINK if d > 0 else COL_NOTHINK) for r, d in zip(rows, deltas_s)]
-        bars = ax.bar(range(len(labels)), deltas_s, color=colors, alpha=0.85, width=0.65)
-        ax.axhline(0, color='black', linewidth=0.5)
-        ax.set_xticks(range(len(labels)))
-        ax.set_xticklabels(labels, fontsize=FS_TICK, rotation=20, ha='right')
-        ax.set_ylabel(r'$\Delta h$ (think $-$ nothink, single)', fontsize=FS_LABEL)
-        for i, (d, r) in enumerate(zip(deltas_s, rows)):
-            tag = '*' if r['is_outlier'] else ''
-            ax.text(i, d + (0.002 if d >= 0 else -0.005), f'{d:+.3f}{tag}',
-                    ha='center', fontsize=FS_LEGEND - 1)
-        style_axes(ax)
-        plt.tight_layout()
-        plt.savefig(OUT_DIR / 'fig_thinking_delta_single.pdf', dpi=300, bbox_inches='tight')
-        plt.savefig(OUT_DIR / 'fig_thinking_delta_single.png', dpi=300, bbox_inches='tight')
-        plt.close()
+        def bar_figure(key, ylabel, filename):
+            present = [r for r in rows if r[key] is not None]
+            if not present:
+                print(f'  {filename}: no pair has {key}; figure skipped')
+                return
+            fig, ax = plt.subplots(figsize=(5, 3.2))
+            deltas = [r[key] for r in present]
+            names = [r['model'] for r in present]
+            colors = [COL_THINK if d > 0 else COL_NOTHINK for d in deltas]
+            ax.bar(range(len(names)), deltas, color=colors, alpha=0.85, width=0.65)
+            ax.axhline(0, color='black', linewidth=0.5)
+            ax.set_xticks(range(len(names)))
+            ax.set_xticklabels(names, fontsize=FS_TICK, rotation=20, ha='right')
+            ax.set_ylabel(ylabel, fontsize=FS_LABEL)
+            ax.set_title(cohort_note, fontsize=FS_LEGEND - 2)
+            # The pre-audit offsets were absolute and tuned for the old scale, which
+            # put every label of an all-negative panel outside the axes. They follow
+            # the range of the bars instead, and the limits leave room for them.
+            span = max(abs(d) for d in deltas) or 1.0
+            pad = 0.06 * span
+            for i, d in enumerate(deltas):
+                ax.text(i, d + (pad if d >= 0 else -pad), f'{d:+.3f}',
+                        ha='center', va='bottom' if d >= 0 else 'top',
+                        fontsize=FS_LEGEND - 1)
+            lo, hi = min(deltas + [0.0]), max(deltas + [0.0])
+            ax.set_ylim(lo - 3 * pad, hi + 3 * pad)
+            style_axes(ax)
+            plt.tight_layout()
+            plt.savefig(OUT_DIR / f'{filename}.pdf', dpi=300, bbox_inches='tight')
+            plt.savefig(OUT_DIR / f'{filename}.png', dpi=300, bbox_inches='tight')
+            plt.close()
 
-        # Plot B: per-pair Δh_bar multi
-        fig, ax = plt.subplots(figsize=(5, 3.2))
-        deltas_m = [r['delta_h_multi'] if r['delta_h_multi'] is not None else 0 for r in rows]
-        colors = [COL_BAD if r['is_outlier'] else (COL_THINK if d > 0 else COL_NOTHINK) for r, d in zip(rows, deltas_m)]
-        ax.bar(range(len(labels)), deltas_m, color=colors, alpha=0.85, width=0.65)
-        ax.axhline(0, color='black', linewidth=0.5)
-        ax.set_xticks(range(len(labels)))
-        ax.set_xticklabels(labels, fontsize=FS_TICK, rotation=20, ha='right')
-        ax.set_ylabel(r'$\Delta \bar{h}$ (think $-$ nothink, multi)', fontsize=FS_LABEL)
-        for i, (d, r) in enumerate(zip(deltas_m, rows)):
-            tag = '*' if r['is_outlier'] else ''
-            ax.text(i, d + (0.002 if d >= 0 else -0.005), f'{d:+.3f}{tag}',
-                    ha='center', fontsize=FS_LEGEND - 1)
-        style_axes(ax)
-        plt.tight_layout()
-        plt.savefig(OUT_DIR / 'fig_thinking_delta_multi.pdf', dpi=300, bbox_inches='tight')
-        plt.savefig(OUT_DIR / 'fig_thinking_delta_multi.png', dpi=300, bbox_inches='tight')
-        plt.close()
+        bar_figure('delta_h_single', r'$\Delta h$ (think $-$ nothink, single)',
+                   'fig_thinking_delta_single')
+        bar_figure('delta_h_multi', r'$\Delta \bar{h}$ (think $-$ nothink, multi)',
+                   'fig_thinking_delta_multi')
     except Exception as e:
         print(f'plot failed: {e}')
 
-    print(f'[RQ4-thinking] completed: {len(rows)} pairs')
-    print(f'  mean Δh (single, ex. outlier): {summary["mean_delta_single"]}')
-    print(f'  mean Δh̄ (multi, ex. outlier): {summary["mean_delta_multi"]}')
+    print()
+    print(f'[RQ4-thinking] {cohort_note}')
+    def _num(value):
+        return 'n/a' if value is None else f'{value:.4f}'
+
+    def _delta(value):
+        return 'n/a' if value is None else f'{value:+.4f}'
+
+    for r in rows:
+        print(f"  {r['model']:<16} "
+              f"single {_num(r['h_nothink'])} -> {_num(r['h_think'])} "
+              f"(d {_delta(r['delta_h_single'])}, n={r['n_cases_nothink']})   "
+              f"multi {_num(r['h_bar_nothink'])} -> {_num(r['h_bar_think'])} "
+              f"(d {_delta(r['delta_h_multi'])}, n={r['n_scenarios_nothink']})")
+    print(f'  mean dh (single): {mean_single} over {n_single} pair(s)')
+    print(f'  mean dh_bar (multi): {mean_multi} over {n_multi} pair(s)')
+
 
 if __name__ == '__main__':
     main()

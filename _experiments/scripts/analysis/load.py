@@ -63,7 +63,10 @@ CASE_FIELDS = ("h", "r", "p", "a", "o", "f1_tools", "abstain_ok", "clarification
                "error_type", "error_flag", "stop_reason", "matched",
                "n_calls", "n_gold_calls", "n_checks", "hallucinated_param_count",
                "parser_artifacts", "malformed_arg_calls", "fallback_parsed_calls",
-               "final_text_ok", "round_errors")
+               "final_text_ok", "round_errors",
+               # what the gold asked of each argument and what the model passed; the
+               # keyword analyses need the expected half and not only the actual one
+               "checks")
 LIST_FIELDS = ("called_tools", "gold_tools", "extra_tools")
 TURN_FIELDS = ("h", "r", "p", "a", "f1_tools", "context_hit", "clarification_ok",
                "matched", "n_calls", "n_gold_calls", "n_checks")

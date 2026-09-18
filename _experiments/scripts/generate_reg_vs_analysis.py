@@ -1,135 +1,135 @@
-"""Regulatory vs. analysis tool-hit dumbbell plot for RQ2 (single-column).
+"""fig:reg_vs_anal - the regulatory vs. analysis tool-hit dumbbell (single column).
 
-Per-model vertical dumbbell: analysis-mean h (green) and regulatory-mean h (red)
-connected by a thin segment, models sorted by analysis h. Avoids the
-false-continuity of connecting a line across categorical models.
+One vertical dumbbell per configuration: the analysis-tool mean h and the
+regulatory-tool mean h joined by a thin segment, configurations sorted by the
+analysis mean. A dumbbell rather than two lines, because a line across
+categorical models invents a continuity that is not there.
+
+The metric is `h`, the primary tool hit (0/1). The pre-audit figure read
+`by_category[t].aggregated.primary_tool_hit_rate`, a key that is gone with the
+weighted score it sat beside (D02); `h` is the same quantity under the scorer's
+own name (PORTING rule 1).
+
+Regulatory Reporting is four single-turn tools: STR-field validation,
+CTR-candidate detection, FIU reference-type lookup and AML glossary lookup.
+`generate_str` is in the subdomain but is multi-turn only, so no single-turn
+category carries it. `multi_tool` and `missing_parameters` are case groups, not
+tools, and sit on neither side. Each side is the unweighted mean over its
+category means, the definition the manuscript states.
+
+The cohort is the serving registry through `load.single()`; the `EXCLUDE` and
+`NAME` literals are gone (rule 3) and the display name is the registry `label`.
+The figure states how many of the 28 configurations it draws, and the run prints
+the ids that are missing, so the caption cannot claim 28 while the plot shows
+fewer (rule 4).
+
+Figures are written inside this repository only; copying into the manuscript is
+one explicit step (_figure_out, R2C-007).
+
+Outputs
+    _experiments/figures/fig_regulatory_vs_analysis_v2.{png,pdf}
 """
-import json, glob
+import sys
 from pathlib import Path
+
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-# Figures are written inside this repository only; the manuscript copy is one
-# explicit step (_figure_out, R2C-007).
-import sys as _sys
-from pathlib import Path as _P
-_sys.path.insert(0, str(_P(__file__).resolve().parent))
-from _figure_out import install as _install_figure_out
-_SB = _P(__file__).resolve().parents[2]
+_SB = Path(__file__).resolve().parents[2]   # repository root
+for _p in (str(Path(__file__).resolve().parent), str(_SB)):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
+from _figure_out import install as _install_figure_out  # noqa: E402
+from _experiments.scripts.analysis import load  # noqa: E402
+
 SB_FIG = _install_figure_out()
-
-
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-EVAL = _SB / "_experiments" / "results_kr" / "eval"
-OUT = Path(__file__).resolve().parent
+OUT = Path(__file__).resolve().parent   # _figure_out redirects savefig by file name
 
 # Regulatory Reporting subdomain (single-turn tools; generate_str is multi-turn only)
-REG = {"detect_ctr_candidates", "lookup_fiu_reference_types", "validate_str_fields", "get_aml_glossary"}
+REG = {"detect_ctr_candidates", "lookup_fiu_reference_types",
+       "validate_str_fields", "get_aml_glossary"}
+# Not tools: synthetic case groups, on neither side.
 SPECIAL = {"multi_tool", "missing_parameters"}
-EXCLUDE = {
-    "Qwen_Qwen3-30B-A3B-Instruct-2507", "Qwen_Qwen3-4B-Instruct-2507",
-    "Qwen_Qwen3-8B", "Qwen_Qwen3_5-9B__nothink", "Qwen_Qwen3_5-9B__think",
-    "Salesforce_Llama-xLAM-2-8b-fc-r", "Salesforce_xLAM-2-1b-fc-r",
-    "Salesforce_xLAM-2-32b-fc-r",
-    "kakaocorp/kanana-2-30b-a3b-instruct-2601",  # drop redundant Kanana release (keep orig + Think)
-    "meta-llama/Llama-3.1-8B-Instruct",  # RQ5 금융특화 base 비교용으로만 추가(2026-09-09). 본문 28설정 코호트 밖
-}
-NAME = {
-    "DragonLLM_Llama-Open-Finance-8B": "Llama-Fin-8B",
-    "DragonLLM_Qwen-Open-Finance-R-8B": "Qwen-Fin-8B",
-    "LGAI-EXAONE_EXAONE-4_0-1_2B": "EXAONE-1.2B",
-    "LGAI-EXAONE_EXAONE-4_0-32B": "EXAONE-32B",
-    "NousResearch_Hermes-3-Llama-3_1-8B": "Hermes-3-8B",
-    "Qwen_Qwen3_5-27B__nothink": "Qwen3.5-27B(NT)",
-    "Qwen_Qwen3_5-27B__think": "Qwen3.5-27B(T)",
-    "Qwen_Qwen3_5-4B__nothink": "Qwen3.5-4B(NT)",
-    "Qwen_Qwen3_5-4B__think": "Qwen3.5-4B(T)",
-    "Qwen_Qwen3_6-27B": "Qwen3.6-27B",
-    "Qwen_Qwen3_6-35B-A3B": "Qwen3.6-35B-A3B",
-    "Salesforce_Llama-xLAM-2-70b-fc-r": "xLAM-2-70B",
-    "Salesforce_xLAM-2-3b-fc-r": "xLAM-2-3B",
-    "google_gemma-4-31B-it": "Gemma-4-31B",
-    "google_gemma-4-E4B-it": "Gemma-4-E4B",
-    "kakaocorp/kanana-2-30b-a3b-instruct-2601": "Kanana-2-Inst-2601",
-    "kakaocorp/kanana-2-30b-a3b-thinking-2601": "Kanana-2-Think",
-    "kakaocorp_kanana-2-30b-a3b-instruct": "Kanana-2-Inst",
-    "meta-llama_Llama-3_2-3B-Instruct": "Llama-3.2-3B",
-    "meta-llama_Llama-3_3-70B-Instruct": "Llama-3.3-70B",
-    "microsoft_Phi-4-mini-instruct": "Phi-4-mini",
-    "mistralai_Ministral-3-3B-Instruct-2512": "Ministral-3-3B",
-    "mistralai_Mistral-Small-3_2-24B-Instruct-2506": "Mistral-Small-24B",
-    "openai/gpt-oss-120b__nothink": "gpt-oss-120B(NT)",
-    "openai/gpt-oss-120b__think": "gpt-oss-120B(T)",
-    "openai/gpt-oss-20b__nothink": "gpt-oss-20B(NT)",
-    "openai/gpt-oss-20b__think": "gpt-oss-20B(T)",
-    "skt_A_X-4_0": "A.X-4.0",
-    "skt_A_X-4_0-Light": "A.X-4.0-Light",
-}
 
-import matplotlib as _mpl  # 색감 통일: viridis 2색 (analysis=blue, regulatory=green)
+import matplotlib as _mpl  # 색감 통일: viridis 2색 (analysis=blue, regulatory=green)  # noqa: E402
 _VIR = _mpl.colormaps["viridis"]
 C_ANA, C_REG = _VIR(0.25), _VIR(0.72)
 
-# eval 의 model 필드는 원래 이름(openai/gpt-oss-20b__think)과 sanitize 이름
-# (Qwen_Qwen3_5-27B__nothink)이 섞여 있고, EXCLUDE 와 NAME 도 두 형식이 섞여 있다. 원시
-# 문자열로 비교하면 eval 형식이 바뀔 때마다 코호트 밖 모델이 새고 표시명이 빠진다(2026-09-15).
-# 읽는 순간 한 형식으로 맞추고, 조회 테이블도 같은 형식으로 만든다.
-def _norm(name):
-    return name.replace("/", "_").replace(".", "_")
+
+def cohort_note():
+    """(n_configs, missing ids, one line saying so) for the scored cohort."""
+    todo = load.missing()
+    missing = sorted(todo.loc[~todo["single"], "config_id"])
+    n_total = len(todo)
+    return n_total - len(missing), missing, n_total
 
 
-_EXCLUDE_N = {_norm(e) for e in EXCLUDE}
-_NAME_N = {_norm(k): v for k, v in NAME.items()}
+def main():
+    n_configs, missing, n_total = cohort_note()
 
-rows = []
-for f in sorted(glob.glob(str(EVAL / "eval_*.json"))):
-    d = json.load(open(f))
-    mid = _norm(d.get("model", "?"))
-    if mid in _EXCLUDE_N:
-        continue
-    cats = d.get("by_category", {})
-    reg = [cats[t]["aggregated"]["primary_tool_hit_rate"] for t in REG if t in cats]
-    ana = [cats[t]["aggregated"]["primary_tool_hit_rate"]
-           for t in cats if t not in REG and t not in SPECIAL]
-    if not reg or not ana:
-        continue
-    rows.append((_NAME_N.get(mid, mid), sum(reg) / len(reg), sum(ana) / len(ana)))
+    cases = load.single()
+    per_cat = (cases.groupby(["config_id", "label", "category"])
+                    .agg(h_mean=("h", "mean"), n_cases=("h", "size")).reset_index())
+    per_cat = per_cat[~per_cat["category"].isin(SPECIAL)]
 
-rows.sort(key=lambda r: r[2])  # sort by analysis h ascending
-labels = [r[0] for r in rows]
-ana = np.array([r[2] for r in rows])
-reg = np.array([r[1] for r in rows])
-x = np.arange(len(rows))
+    rows = []
+    for (_config_id, label), block in per_cat.groupby(["config_id", "label"], sort=False):
+        reg_block = block[block["category"].isin(REG)]
+        ana_block = block[~block["category"].isin(REG)]
+        if reg_block.empty or ana_block.empty:
+            continue
+        rows.append((label, float(reg_block["h_mean"].mean()), float(ana_block["h_mean"].mean()),
+                     int(reg_block["n_cases"].sum()), int(ana_block["n_cases"].sum())))
 
-# 부록 전폭(5.5in)에 1:1로 들어가도록 그린다. tight bbox 후 폭이 약 5.5in이므로
-# LaTeX에서 확대·축소 없이 눈금·범례 글자가 설정한 크기(6~8pt)로 찍힌다.
-fig, ax = plt.subplots(figsize=(5.6, 2.4))
-ax.vlines(x, reg, ana, color="#BBBBBB", lw=0.9, zorder=1)
-ax.scatter(x, ana, s=16, color=C_ANA, zorder=3, label="Analysis tools")
-ax.scatter(x, reg, s=16, color=C_REG, marker="s", zorder=3, label="Regulatory tools")
+    rows.sort(key=lambda r: r[2])  # sort by analysis h ascending
+    labels = [r[0] for r in rows]
+    reg = np.array([r[1] for r in rows])
+    ana = np.array([r[2] for r in rows])
+    n_reg_cases = sum(r[3] for r in rows)
+    n_ana_cases = sum(r[4] for r in rows)
+    x = np.arange(len(rows))
 
-ax.set_xticks(x)
-ax.set_xticklabels(labels, rotation=90, ha="center", fontsize=6.5)
-ax.tick_params(axis="y", labelsize=8)
-ax.set_ylabel("Mean tool hit $h$", fontsize=8)
-# The limits follow the data: a fixed 0.95 top clipped the highest marker
-# (Gemma-4-31B analysis h = .955) in half (L6-048).
-low = min(reg.min(), ana.min())
-high = max(reg.max(), ana.max())
-pad = max(0.02, (high - low) * 0.08)
-ax.set_ylim(max(0.0, low - pad), min(1.0, high + pad))
-ax.set_xlim(-0.7, len(rows) - 0.3)
-ax.spines["top"].set_visible(False)
-ax.spines["right"].set_visible(False)
-ax.legend(fontsize=6, loc="lower right", frameon=True, framealpha=0.9,
-          markerscale=0.9, handletextpad=0.3, borderpad=0.3)
+    # 부록 전폭(5.5in)에 1:1로 들어가도록 그린다. tight bbox 후 폭이 약 5.5in이므로
+    # LaTeX에서 확대·축소 없이 눈금·범례 글자가 설정한 크기(6~8pt)로 찍힌다.
+    fig, ax = plt.subplots(figsize=(5.6, 2.4))
+    ax.vlines(x, reg, ana, color="#BBBBBB", lw=0.9, zorder=1)
+    ax.scatter(x, ana, s=16, color=C_ANA, zorder=3, label="Analysis tools")
+    ax.scatter(x, reg, s=16, color=C_REG, marker="s", zorder=3, label="Regulatory tools")
 
-plt.tight_layout()
-plt.savefig(OUT / "fig_regulatory_vs_analysis_v2.png", dpi=300, bbox_inches="tight")
-plt.savefig(OUT / "fig_regulatory_vs_analysis_v2.pdf", bbox_inches="tight")
-plt.close()
-print("Saved fig_regulatory_vs_analysis_v2.{png,pdf}")
-print(f"n={len(rows)} reg={reg.mean():.3f} ana={ana.mean():.3f} "
-      f"gap={(ana.mean()-reg.mean())*100:.1f}pp")
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels, rotation=90, ha="center", fontsize=6.5)
+    ax.tick_params(axis="y", labelsize=8)
+    ax.set_ylabel("Mean tool hit $h$", fontsize=8)
+    # Rule 4: the cohort is on the figure, so a caption cannot claim 28 rows while
+    # the plot draws fewer.
+    ax.set_title(f"{len(rows)} of {n_total} configurations scored", fontsize=6.5,
+                 loc="left", color="#555555", pad=3)
+    # The limits follow the data: a fixed 0.95 top clipped the highest marker
+    # (Gemma-4-31B analysis h = .955) in half (L6-048).
+    low = min(reg.min(), ana.min())
+    high = max(reg.max(), ana.max())
+    pad = max(0.02, (high - low) * 0.08)
+    ax.set_ylim(max(0.0, low - pad), min(1.0, high + pad))
+    ax.set_xlim(-0.7, len(rows) - 0.3)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.legend(fontsize=6, loc="lower right", frameon=True, framealpha=0.9,
+              markerscale=0.9, handletextpad=0.3, borderpad=0.3)
+
+    plt.tight_layout()
+    plt.savefig(OUT / "fig_regulatory_vs_analysis_v2.png", dpi=300, bbox_inches="tight")
+    plt.savefig(OUT / "fig_regulatory_vs_analysis_v2.pdf", bbox_inches="tight")
+    plt.close()
+    print(f"Saved fig_regulatory_vs_analysis_v2.{{png,pdf}} -> {SB_FIG}")
+    print(f"n_configs={len(rows)} of {n_total}; "
+          f"missing: {', '.join(missing) if missing else 'none'}")
+    print(f"reg={reg.mean():.3f} (n={n_reg_cases} cases) ana={ana.mean():.3f} "
+          f"(n={n_ana_cases} cases) gap={(ana.mean() - reg.mean()) * 100:.1f}pp; "
+          f"worse on regulatory: {int((ana > reg).sum())}/{len(rows)}")
+
+
+if __name__ == "__main__":
+    main()

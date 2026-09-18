@@ -1,66 +1,61 @@
 #!/usr/bin/env python3
 """RQ3: context-accuracy vs scenario-completion partial correlation.
 
-Three design choices make this analysis match the paper's stated method (an earlier
-glob-based version did not, which produced a stale/contradictory partial value):
+Ported to the scored rerun; the inputs are `analysis/load.py` and nothing else
+(see `analysis/PORTING.md`). Three design choices decide what the number means:
 
-1. COHORT. We pin the canonical 28-model cohort explicitly (identical to Table VI):
-   it includes `kanana-2-30b-a3b-thinking-2601` (= Kanana-2-Think, the multi-turn
-   completion leader) and excludes the redundant `kanana-2-30b-a3b-instruct-2601`
-   (dropped in every other analysis: reg_vs_analysis, fig4 scatter, Fig 5 turnwise).
-   A plain multiturn_*.json glob would mis-include the redundant sibling.
+1. COHORT. The cohort is the serving registry, not a list in this file. The
+   pinned 28-model `COHORT` literal is gone (PORTING rule 3): a row is any
+   configuration scored in BOTH the oracle multi-turn setting and the
+   single-turn Korean arm, and `load.missing()` names the ones that are not in
+   yet. The output carries `n_configs` and those ids, because a correlation over
+   part of the cohort is not the correlation the caption claims (rule 4).
 
-2. CONTROL VARIABLE. We control for single-turn h (results_kr
-   overall.primary_tool_hit_rate, the Table VI h column), as the paper states, and
-   also report the multi-turn h-bar (avg_tool_hit) control for transparency.
+2. CONTROL VARIABLE. The control is single-turn h, `aggregate["h"]["mean"]` of
+   the single-turn arm, which is the h column of tab:overall. The multi-turn
+   h-bar control (oracle `aggregate["h"]["mean"]`) is reported next to it.
 
 3. PARTIAL METHOD. Proper rank-based partial Spearman: rank all three variables,
    then take the first-order partial Pearson on the ranks. Significance is the
-   standard partial-correlation t-test, t = r*sqrt((n-3)/(1-r^2)), df = n-3, two-sided.
+   standard partial-correlation t-test, t = r*sqrt((n-3)/(1-r^2)), df = n-3,
+   two-sided. Unchanged from the pre-audit version (PORTING: keep the statistics).
 
-Join keys: multiturn uses norm(model_id) (keeps __think/__nothink); single-turn uses
-norm(model); norm(s) = s.replace('/','_').replace('.','_').
+Every aggregate is the one the scorer wrote, and each carries its n (rule 2):
+context accuracy over turns where context was expected, completion over
+scenarios, single-turn h over cases, multi-turn h-bar over turns.
 
-Output: _experiments/results_RQ3/context_accuracy_correlation.json (+ per-model CSV).
-Supersedes the previous globbing version (which silently used a non-canonical cohort).
+Output: _experiments/results_RQ3/context_accuracy_correlation.json
+        _experiments/results_RQ3/context_accuracy_per_model.csv
 
 Usage: PYTHONPATH=. python _experiments/scripts/RQ3_context_accuracy_analysis.py
+       python -m _experiments.scripts.RQ3_context_accuracy_analysis
 """
-import json
+from __future__ import annotations
+
 import csv
-import glob
+import json
+import sys
 from pathlib import Path
 
 import numpy as np
-from scipy.stats import spearmanr, rankdata
+from scipy.stats import rankdata, spearmanr
+from scipy.stats import t as tdist
 
-SB = Path(__file__).resolve().parents[2]
-MT_DIR = SB / "_experiments" / "results_mt_oracle" / "eval"
-KR_DIR = SB / "_experiments" / "results_kr" / "eval"
-OUT_DIR = SB / "_experiments" / "results_RQ3"
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-# Canonical 28-model cohort (identical to Table VI). Toggle models are two entries.
-COHORT = [
-    "skt/A.X-4.0-Light", "skt/A.X-4.0",
-    "LGAI-EXAONE/EXAONE-4.0-1.2B", "LGAI-EXAONE/EXAONE-4.0-32B",
-    "kakaocorp/kanana-2-30b-a3b-instruct", "kakaocorp/kanana-2-30b-a3b-thinking-2601",
-    "DragonLLM/Llama-Open-Finance-8B", "DragonLLM/Qwen-Open-Finance-R-8B",
-    "openai/gpt-oss-20b__nothink", "openai/gpt-oss-20b__think",
-    "openai/gpt-oss-120b__nothink", "openai/gpt-oss-120b__think",
-    "meta-llama/Llama-3.2-3B-Instruct", "meta-llama/Llama-3.3-70B-Instruct",
-    "NousResearch/Hermes-3-Llama-3.1-8B",
-    "mistralai/Ministral-3-3B-Instruct-2512",
-    "mistralai/Mistral-Small-3.2-24B-Instruct-2506", "microsoft/Phi-4-mini-instruct",
-    "Qwen/Qwen3.5-4B__nothink", "Qwen/Qwen3.5-4B__think",
-    "Qwen/Qwen3.5-27B__nothink", "Qwen/Qwen3.5-27B__think",
-    "Qwen/Qwen3.6-27B", "Qwen/Qwen3.6-35B-A3B",
-    "Salesforce/xLAM-2-3b-fc-r", "Salesforce/Llama-xLAM-2-70b-fc-r",
-    "google/gemma-4-E4B-it", "google/gemma-4-31B-it",
-]
+from _experiments.scripts.analysis import load  # noqa: E402
+
+OUT_DIR = ROOT / "_experiments" / "results_RQ3"
 
 
-def norm(s):
-    return (s or "").replace("/", "_").replace(".", "_")
+def cohort(*settings: str) -> tuple[list[str], list[str], int]:
+    """(scored, not scored, cohort size) for the columns this step reads."""
+    todo = load.missing()
+    have = todo[list(settings)].all(axis=1)
+    return (todo.loc[have, "config_id"].tolist(),
+            todo.loc[~have, "config_id"].tolist(), len(todo))
 
 
 def partial_spearman(x, y, z):
@@ -76,48 +71,50 @@ def partial_spearman(x, y, z):
     pr = (r_xy - r_xz * r_yz) / (np.sqrt(1 - r_xz**2) * np.sqrt(1 - r_yz**2))
     n = len(x)
     # partial-correlation t-test, df = n - 3 (one controlled variable)
-    from scipy.stats import t as tdist
     tstat = pr * np.sqrt((n - 3) / (1 - pr**2))
     p = 2 * tdist.sf(abs(tstat), df=n - 3)
     return float(pr), float(p), r_xy
 
 
-def main():
-    # index multiturn by norm(model_id); single-turn h by norm(model)
-    mt = {}
-    for f in glob.glob(str(MT_DIR / "multiturn_*.json")):
-        d = json.load(open(f))
-        mt[norm(d.get("model_id") or d.get("model"))] = d
-    kr_h = {}
-    for f in glob.glob(str(KR_DIR / "eval_*.json")):
-        d = json.load(open(f))
-        ov = d.get("overall", {})
-        h = ov.get("primary_tool_hit_rate")
-        if h is None:
-            cats = d.get("by_category", {})
-            hs = [c["aggregated"]["primary_tool_hit_rate"] for c in cats.values() if "aggregated" in c]
-            h = sum(hs) / len(hs) if hs else None
-        kr_h[norm(d.get("model"))] = h
+def _stat(aggregate: dict, key: str) -> tuple[float | None, int]:
+    """(mean, n) of one of the scorer's aggregates; a missing metric is None, not 0."""
+    block = (aggregate or {}).get(key) or {}
+    return block.get("mean"), int(block.get("n") or 0)
 
-    rows, missing = [], []
-    for m in COHORT:
-        k = norm(m)
-        md = mt.get(k)
-        h = kr_h.get(k)
-        if md is None or h is None:
-            missing.append((m, md is None, h is None))
+
+def main() -> int:
+    scored, absent, n_cohort = cohort("oracle", "single")
+    oracle = load.aggregates("oracle")
+    single = load.aggregates("single")
+
+    rows, skipped = [], []
+    labels = load.configs()
+    for config_id in scored:
+        agg_o, agg_s = oracle.get(config_id), single.get(config_id)
+        ctx, n_ctx = _stat(agg_o, "context_accuracy")
+        comp, n_scen = _stat(agg_o, "c")
+        hbar, n_turns = _stat(agg_o, "h")
+        single_h, n_cases = _stat(agg_s, "h")
+        if ctx is None or comp is None or single_h is None:
+            skipped.append({"config_id": config_id, "context_accuracy": ctx,
+                            "completion": comp, "single_h": single_h})
             continue
-        ov = md.get("overall", {})
-        ctx = ov.get("context_accuracy")
-        comp = ov.get("scenario_complete_rate")
-        hbar = ov.get("avg_tool_hit")
-        if ctx is None or comp is None:
-            missing.append((m, "no ctx/comp", False))
-            continue
-        rows.append({"model": m, "ctx_acc": ctx, "completion": comp,
-                     "single_h": h, "multi_hbar": hbar})
+        rows.append({
+            "config_id": config_id,
+            "label": labels.loc[config_id, "label"] if config_id in labels.index else config_id,
+            "group": labels.loc[config_id, "group"] if config_id in labels.index else "",
+            "ctx_acc": ctx, "n_context_turns": n_ctx,
+            "completion": comp, "n_scenarios": n_scen,
+            "single_h": single_h, "n_cases": n_cases,
+            "multi_hbar": hbar, "n_turns": n_turns,
+        })
 
     n = len(rows)
+    if n < 4:
+        print(f"[RQ3-ctx] {n} configurations have both settings scored; "
+              f"a partial correlation needs at least 4")
+        return 1
+
     ctx = [r["ctx_acc"] for r in rows]
     comp = [r["completion"] for r in rows]
     sh = [r["single_h"] for r in rows]
@@ -125,39 +122,58 @@ def main():
 
     rho_cc, p_cc = spearmanr(ctx, comp)
     rho_ch, p_ch = spearmanr(ctx, sh)          # ctx vs single-turn h
-    pr_sh, pp_sh, _ = partial_spearman(ctx, comp, sh)   # control single-turn h (paper's stated control)
-    pr_hb, pp_hb, _ = partial_spearman(ctx, comp, hb)   # control multi-turn h-bar (old file's control)
+    pr_sh, pp_sh, _ = partial_spearman(ctx, comp, sh)   # control single-turn h (the stated control)
+    pr_hb, pp_hb, _ = partial_spearman(ctx, comp, hb)   # control multi-turn h-bar
 
     summary = {
-        "cohort": "canonical 28 (Table VI): incl. kanana-thinking-2601, excl. kanana-instruct-2601",
+        "cohort": ("every configuration scored in both the oracle multi-turn setting and the "
+                   "single-turn Korean arm, taken from the serving registry"),
+        "n_configs": n_cohort,
         "n_models": n,
-        "spearman_ctx_vs_completion": {"rho": round(rho_cc, 4), "p": round(float(p_cc), 4)},
-        "spearman_ctx_vs_single_turn_h": {"rho": round(rho_ch, 4), "p": round(float(p_ch), 4)},
+        "config_ids": [r["config_id"] for r in rows],
+        "missing_config_ids": absent,
+        "skipped_scored_configs": skipped,
+        "spearman_ctx_vs_completion": {"rho": round(rho_cc, 4), "p": round(float(p_cc), 4), "n": n},
+        "spearman_ctx_vs_single_turn_h": {"rho": round(rho_ch, 4), "p": round(float(p_ch), 4),
+                                          "n": n},
         "partial_spearman_ctx_completion_given_SINGLE_turn_h": {
-            "rho": round(pr_sh, 4), "p": round(pp_sh, 4),
-            "note": "paper-stated control variable (single-turn tool hit h, Table VI column)"},
+            "rho": round(pr_sh, 4), "p": round(pp_sh, 4), "n": n,
+            "note": "stated control variable (single-turn tool hit h, the tab:overall h column)"},
         "partial_spearman_ctx_completion_given_MULTI_turn_hbar": {
-            "rho": round(pr_hb, 4), "p": round(pp_hb, 4),
-            "note": "control = multi-turn avg_tool_hit (reported for comparison; not the paper control)"},
-        "missing": missing,
+            "rho": round(pr_hb, 4), "p": round(pp_hb, 4), "n": n,
+            "note": "control = oracle multi-turn h-bar (reported for comparison)"},
+        "variables": {
+            "ctx_acc": "oracle aggregate context_accuracy, over turns where context was expected",
+            "completion": "oracle aggregate c, over scenarios",
+            "single_h": "single-turn aggregate h, over cases",
+            "multi_hbar": "oracle aggregate h, over turns",
+        },
     }
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    json.dump(summary, open(OUT_DIR / "context_accuracy_correlation.json", "w"),
-              ensure_ascii=False, indent=2)
-    with open(OUT_DIR / "context_accuracy_per_model.csv", "w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=["model", "ctx_acc", "completion", "single_h", "multi_hbar"])
-        w.writeheader()
-        w.writerows(rows)
+    with open(OUT_DIR / "context_accuracy_correlation.json", "w", encoding="utf-8") as fh:
+        json.dump(summary, fh, ensure_ascii=False, indent=2)
+    fields = ["config_id", "label", "group", "ctx_acc", "n_context_turns", "completion",
+              "n_scenarios", "single_h", "n_cases", "multi_hbar", "n_turns"]
+    with open(OUT_DIR / "context_accuracy_per_model.csv", "w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(rows)
 
-    print(f"[RQ3-ctx] canonical cohort n={n} (missing {len(missing)})")
-    for m in missing:
-        print("   missing:", m)
-    print(f"  Spearman ctx~completion           = {rho_cc:.4f} (p={p_cc:.4f})")
-    print(f"  Spearman ctx~single_turn_h        = {rho_ch:.4f} (p={p_ch:.4f})")
-    print(f"  PARTIAL ctx~completion | single_h = {pr_sh:.4f} (p={pp_sh:.4f})   <- paper control; paper text says 0.197, p=0.304")
-    print(f"  PARTIAL ctx~completion | multi_hbar = {pr_hb:.4f} (p={pp_hb:.4f}) <- old file control; old json says 0.408, p=0.031")
+    print(f"[RQ3-ctx] n={n} of {n_cohort} configurations "
+          f"({len(absent)} not scored in both settings)")
+    if absent:
+        print(f"  missing: {', '.join(absent)}")
+    for row in skipped:
+        print(f"  skipped (scored but no metric): {row}")
+    print(f"  Spearman ctx~completion            = {rho_cc:.4f} (p={p_cc:.4f}, n={n})")
+    print(f"  Spearman ctx~single_turn_h         = {rho_ch:.4f} (p={p_ch:.4f}, n={n})")
+    print(f"  PARTIAL ctx~completion | single_h  = {pr_sh:.4f} (p={pp_sh:.4f}, n={n})")
+    print(f"  PARTIAL ctx~completion | multi_hbar = {pr_hb:.4f} (p={pp_hb:.4f}, n={n})")
+    print(f"  written: {OUT_DIR / 'context_accuracy_correlation.json'}, "
+          f"{OUT_DIR / 'context_accuracy_per_model.csv'}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

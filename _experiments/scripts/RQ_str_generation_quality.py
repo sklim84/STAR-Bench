@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""STR generation quality analysis — three diagnostic dimensions (per model).
+"""STR generation quality — three diagnostic dimensions, per configuration.
 
-Motivation (advisor direction): the benchmark's value is diagnostic — showing *where*
-and *why* models break down when producing the STR, not a performance leaderboard.
-The multi-turn task culminates in ``generate_str``; this script characterizes the
-quality of the STR the model actually writes, along three axes:
+The benchmark's value is diagnostic: it shows where and why a model breaks down
+while writing the STR, not which model wins. The multi-turn task culminates in
+``generate_str``; this step characterises the report the model actually wrote,
+along three axes:
 
   D1  Field coverage   — how well the model's STR narrative covers the seven Korean
                          FIU STR (Article VII) sub-sections, using the SAME keyword
@@ -16,43 +16,51 @@ quality of the STR the model actually writes, along three axes:
   D3  Grounding        — fraction of those entities that ARE traceable to the injected
                          prior-turn ``tool_result`` facts (the complement view of D2).
 
-Because the benchmark INJECTS ground-truth ``tool_result`` at every turn, the set of
-facts the STR should be grounded on is known exactly, making D2/D3 measurable without
-an external judge (entity level). Qualitative-claim faithfulness would need an
-LLM-judge and is left as an optional extension.
+Because the oracle setting INJECTS the ground-truth ``tool_result`` at every turn,
+the set of facts the STR should be grounded on is known exactly, making D2/D3
+measurable without an external judge (entity level). Qualitative-claim
+faithfulness would need an LLM judge and is left as an optional extension.
 
-DATA REQUIREMENT
-----------------
-Reads multi-turn eval JSONs that contain per-turn ``actual_tool_calls`` (the model's
-generated arguments, incl. the ``generate_str`` ``summary``). These are produced only
-by ``benchmark_multiturn.py`` AFTER the logging update; older eval files store scores
-only. If no captured summaries are found, the script says so and exits (re-run needed).
+WHERE THE TEXT COMES FROM
+-------------------------
+The eval files hold scores, not what the model wrote, so the summary comes from
+the Contract 2 run records through ``load.calls("oracle")``: one row per tool
+call with its arguments. A scenario counts as produced when the model called
+``generate_str`` at the turn the gold case puts it at. A call whose arguments
+never parsed into an object has no ``summary`` field; it counts as produced with
+an empty narrative, which scores 0 on every axis, and the count is reported as
+``n_unparsed_arguments``.
 
-Per model, statistics are computed only over scenarios where the model actually called
-``generate_str``; the ``str_production_rate`` (how often an STR was produced at all) is
-itself reported, since "did not produce an STR" is a primary failure mode.
+Ported to the scored rerun (see `analysis/PORTING.md`): the `EXCLUDE` list is
+gone and the cohort is the serving registry (rule 3); the output carries
+`n_configs` and the ids that are not scored (rule 4); every rate carries the n
+it was taken over (rule 2). The JSON is an object rather than a bare list so it
+can hold that cohort block, with the per-configuration rows under `rows`.
+
+Per configuration, statistics run over the scenarios whose GOLD case has a
+``generate_str`` turn; ``str_production_rate`` (how often an STR was produced at
+all) is itself reported, since "did not produce an STR" is a primary failure mode.
 
 Usage:  PYTHONPATH=. python _experiments/scripts/RQ_str_generation_quality.py
+        python -m _experiments.scripts.RQ_str_generation_quality
 Output: _experiments/results_RQ3/str_generation_quality.{json,csv}
 """
+from __future__ import annotations
+
+import csv
 import json
 import re
-import csv
-import glob
+import sys
 from pathlib import Path
 
-SB = Path(__file__).resolve().parents[2]
-EVAL_DIR = SB / "_experiments" / "results_mt_oracle" / "eval"
-CASES = SB / "benchmarks_multiturn" / "cases_str_workflow.json"
-OUT_DIR = SB / "_experiments" / "results_RQ3"
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-# Canonical 28-model cohort filter (drop non-cohort variants + redundant Instruct-2601).
-EXCLUDE = {
-    "Qwen_Qwen3-30B-A3B-Instruct-2507", "Qwen_Qwen3-4B-Instruct-2507", "Qwen_Qwen3-8B",
-    "Qwen_Qwen3_5-9B__nothink", "Qwen_Qwen3_5-9B__think",
-    "Salesforce_Llama-xLAM-2-8b-fc-r", "Salesforce_xLAM-2-1b-fc-r", "Salesforce_xLAM-2-32b-fc-r",
-    "kakaocorp_kanana-2-30b-a3b-instruct-2601",
-}
+from _experiments.scripts.analysis import load  # noqa: E402
+
+CASES = ROOT / "benchmarks_multiturn" / "cases_str_workflow.json"
+OUT_DIR = ROOT / "_experiments" / "results_RQ3"
 
 # ── §VII section keyword patterns (identical to the ground-truth Appendix B analysis) ──
 SECTION_PATTERNS = {
@@ -87,6 +95,14 @@ TERM_PATTERNS = {
     "typology": [r"구조화|분할\s*거래|스머핑|structuring|smurfing|차명|대포통장|자금\s*흐름"],
     "risk": [r"위험\s*기반|risk[-\s]*based|고위험|위험도|이상\s*거래|모니터링"],
 }
+
+
+def cohort(*settings: str) -> tuple[list[str], list[str], int]:
+    """(scored, not scored, cohort size) for the settings this step reads."""
+    todo = load.missing()
+    have = todo[list(settings)].all(axis=1)
+    return (todo.loc[have, "config_id"].tolist(),
+            todo.loc[~have, "config_id"].tolist(), len(todo))
 
 
 def terminology_score(summary):
@@ -128,55 +144,82 @@ def extract_entities(text):
     return ents
 
 
-def main():
-    cases = {c["id"]: c for c in json.load(open(CASES, encoding="utf-8"))}
+def gold_str_turns(cases: list[dict]) -> dict[str, int]:
+    """case id -> the turn whose gold call is generate_str, for the cases that have one."""
+    turns = {}
+    for case in cases:
+        turn = next((t["turn"] for t in case["turns"]
+                     if any(tc["name"] == "generate_str" for tc in (t.get("tool_calls") or ()))),
+                    None)
+        if turn is not None:
+            turns[case["id"]] = turn
+    return turns
+
+
+def written_summaries() -> tuple[dict[tuple[str, str, int], str], int]:
+    """(config, case, turn) -> the summary the model passed to generate_str."""
+    calls = load.calls("oracle")
+    calls = calls[calls["tool"] == "generate_str"]
+    summaries, unparsed = {}, 0
+    for call in calls.itertuples():
+        key = (call.config_id, call.case_id, call.turn)
+        if key in summaries:
+            continue        # the first generate_str of the turn is the report
+        arguments = call.arguments
+        if isinstance(arguments, str):
+            try:
+                arguments = json.loads(arguments)
+            except (json.JSONDecodeError, ValueError):
+                arguments = None
+        if not isinstance(arguments, dict):
+            unparsed += 1
+            summaries[key] = ""
+            continue
+        summaries[key] = str(arguments.get("summary") or "")
+    return summaries, unparsed
+
+
+def main() -> int:
+    gold = {case["id"]: case for case in json.loads(CASES.read_text(encoding="utf-8"))}
+    str_turn = gold_str_turns(list(gold.values()))
+    scenarios, _turns = load.multiturn("oracle")
+    summaries, n_unparsed = written_summaries()
+    scored, absent, n_configs = cohort("oracle")
+    labels = load.configs()
 
     rows = []
-    no_capture = True
-    for f in sorted(EVAL_DIR.glob("multiturn_*.json")):
-        stem = f.stem.replace("multiturn_", "")
-        if stem in EXCLUDE:
-            continue
-        d = json.load(open(f, encoding="utf-8"))
-        model = d.get("model", stem)
-        n_with_str_turn = 0      # scenarios whose GT has a generate_str turn
-        n_produced = 0           # of those, model actually called generate_str
+    for config_id, frame in scenarios.groupby("config_id", sort=True):
+        label = labels.loc[config_id, "label"] if config_id in labels.index else config_id
+        n_with_str_turn = 0      # scenarios whose GOLD case has a generate_str turn
+        n_produced = 0           # of those, the model actually called generate_str
+        n_empty_summary = 0
         d1_list, halluc_list, ground_list, term_list = [], [], [], []
         sec_acc = {}
-        for sc in d.get("scenarios", []):
-            gt = cases.get(sc["id"])
-            if not gt:
-                continue
-            gt_turns = gt["turns"]
-            gs_turn_no = next((t["turn"] for t in gt_turns
-                               if any(tc["name"] == "generate_str" for tc in (t.get("tool_calls") or []))), None)
-            if gs_turn_no is None:
+        for scenario_id in sorted(frame["scenario_id"]):
+            case = gold.get(scenario_id)
+            gs_turn_no = str_turn.get(scenario_id)
+            if case is None or gs_turn_no is None:
                 continue
             n_with_str_turn += 1
 
-            # model's actual generate_str call at that turn (needs captured actual_tool_calls)
-            mturn = next((t for t in sc.get("turns", []) if t.get("turn") == gs_turn_no), None)
-            calls = (mturn or {}).get("actual_tool_calls")
-            if calls is None:
-                continue  # no capture in this eval file
-            no_capture = False
-            gs_call = next((c for c in calls if c.get("name") == "generate_str"), None)
-            if not gs_call:
-                continue  # model did not produce an STR
+            summary = summaries.get((config_id, scenario_id, gs_turn_no))
+            if summary is None:
+                continue     # the model did not produce an STR at that turn
             n_produced += 1
-            summary = str(gs_call.get("arguments", {}).get("summary", "")) or ""
+            if not summary:
+                n_empty_summary += 1
 
             # D1: field coverage
             cov = section_coverage(summary)
             d1_list.append(cov["overall"])
-            for k, v in cov.items():
-                sec_acc.setdefault(k, []).append(v)
+            for key, value in cov.items():
+                sec_acc.setdefault(key, []).append(value)
 
             # D4: regulatory terminology register
             term_list.append(terminology_score(summary))
 
             # source facts = injected prior-turn tool_results (turns before generate_str)
-            facts = json.dumps([t.get("tool_result") for t in gt_turns
+            facts = json.dumps([t.get("tool_result") for t in case["turns"]
                                 if t["turn"] < gs_turn_no and t.get("tool_result") is not None],
                                ensure_ascii=False)
             fact_digits = set(re.sub(r"[^\d]", "", x) for x in re.findall(r"\d[\d,]*", facts))
@@ -186,11 +229,16 @@ def main():
                 ground_list.append(grounded / len(ents))
                 halluc_list.append(1 - grounded / len(ents))
 
+        base = {"config_id": config_id, "label": label,
+                "group": labels.loc[config_id, "group"] if config_id in labels.index else "",
+                "n_str_turn": n_with_str_turn, "n_produced": n_produced,
+                "n_empty_summary": n_empty_summary, "n_entity_scored": len(ground_list)}
         if n_produced == 0:
-            rows.append({"model": model, "n_str_turn": n_with_str_turn, "n_produced": 0,
-                         "str_production_rate": 0.0, "field_coverage": None,
-                         "grounding": None, "terminology": None,
-                         "hallucination": None, "str_overall": None})
+            rows.append(base | {"str_production_rate": 0.0, "field_coverage": None,
+                                "grounding": None, "terminology": None,
+                                "hallucination": None, "str_overall": None,
+                                "field_cond": None, "grounding_cond": None,
+                                "terminology_cond": None, "hallucination_cond": None})
             continue
 
         # PENALIZED scoring (default): a scenario where the model failed to call
@@ -199,8 +247,8 @@ def main():
         # Term are therefore summed over produced STRs but divided by ALL n_with_str_turn
         # STR-expected scenarios (non-produced contribute 0). Hallucination is the
         # complement of grounding under this convention (penalized fidelity).
-        def pen(x):
-            return round(sum(x) / n_with_str_turn, 4) if n_with_str_turn else None
+        def pen(values):
+            return round(sum(values) / n_with_str_turn, 4) if n_with_str_turn else None
         field_cov = pen(d1_list)
         grounding = pen(ground_list)
         term = pen(term_list)
@@ -215,13 +263,11 @@ def main():
         # weight grounding twice. Hallucination stays in the row as a diagnostic column.
         comps = [c for c in (field_cov, grounding, term) if c is not None]
         str_overall = round(sum(comps) / len(comps), 4) if comps else None
+
         # conditional (produced-only) quality kept for reference / sensitivity analysis
-        def cavg(x):
-            return round(sum(x) / len(x), 4) if x else None
-        row = {
-            "model": model,
-            "n_str_turn": n_with_str_turn,
-            "n_produced": n_produced,
+        def cavg(values):
+            return round(sum(values) / len(values), 4) if values else None
+        row = base | {
             "str_production_rate": round(n_produced / n_with_str_turn, 4) if n_with_str_turn else 0.0,
             "field_coverage": field_cov,
             "grounding": grounding,
@@ -234,35 +280,59 @@ def main():
             "terminology_cond": cavg(term_list),
             "hallucination_cond": cavg(halluc_list),
         }
-        for k, v in sec_acc.items():
-            row[f"cov::{k}"] = round(sum(v) / len(v), 4)
+        for key, values in sec_acc.items():
+            row[f"cov::{key}"] = round(sum(values) / len(values), 4)
         rows.append(row)
 
-    if no_capture:
-        print("NO CAPTURED SUMMARIES: eval files lack per-turn 'actual_tool_calls'.")
-        print("Re-run benchmark_multiturn.py (with the logging update) to capture model")
-        print("generate_str outputs, then re-run this analysis.")
-        return
+    if not any(r["n_produced"] for r in rows):
+        print("NO STR CALLS: no configuration called generate_str at the gold turn in the "
+              "oracle run records. Check that the records under "
+              f"{load.DEFAULT_RUN_ROOT / 'mt_oracle'} belong to the scored runs.")
+        return 1
+
+    payload = {
+        "n_configs": n_configs,
+        "n_scored": len(rows),
+        "missing_config_ids": absent,
+        "n_str_scenarios": len(str_turn),
+        "n_scenarios": int(scenarios["scenario_id"].nunique()),
+        "n_unparsed_arguments": n_unparsed,
+        "note": ("field_coverage, grounding and terminology are penalized: summed over the "
+                 "STRs the model produced and divided by every scenario whose gold case has a "
+                 "generate_str turn (n_str_turn). *_cond are the produced-only means over "
+                 "n_produced. hallucination = 1 - penalized fidelity."),
+        "rows": rows,
+    }
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    json.dump(rows, open(OUT_DIR / "str_generation_quality.json", "w"),
-              ensure_ascii=False, indent=2)
-    base_cols = ["model", "n_str_turn", "n_produced", "str_production_rate",
-                 "field_coverage", "grounding", "terminology", "hallucination", "str_overall"]
+    with open(OUT_DIR / "str_generation_quality.json", "w", encoding="utf-8") as fh:
+        json.dump(payload, fh, ensure_ascii=False, indent=2)
+    base_cols = ["config_id", "label", "group", "n_str_turn", "n_produced", "n_empty_summary",
+                 "n_entity_scored", "str_production_rate", "field_coverage", "grounding",
+                 "terminology", "hallucination", "str_overall"]
     sec_cols = sorted({k for r in rows for k in r if k.startswith("cov::")})
-    with open(OUT_DIR / "str_generation_quality.csv", "w", newline="") as fh:
-        w = csv.DictWriter(fh, fieldnames=base_cols + sec_cols)
-        w.writeheader()
-        for r in rows:
-            w.writerow({k: r.get(k) for k in base_cols + sec_cols})
+    with open(OUT_DIR / "str_generation_quality.csv", "w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=base_cols + sec_cols)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({k: row.get(k) for k in base_cols + sec_cols})
 
-    print(f"[STR-quality] {len(rows)} models analyzed")
-    for r in sorted(rows, key=lambda x: -(x["str_production_rate"] or 0)):
-        print(f"  {r['model'][:34]:34s} produced {r['n_produced']:>2}/{r['n_str_turn']:<2} "
-              f"({r['str_production_rate']:.2f})  field={r['field_coverage']} "
-              f"ground={r['grounding']} term={r.get('terminology')} "
-              f"halluc={r['hallucination']} overall={r.get('str_overall')}")
+    print(f"[STR-quality] {len(rows)} of {n_configs} configurations, "
+          f"{len(str_turn)} of {payload['n_scenarios']} scenarios end in generate_str")
+    if absent:
+        print(f"  not scored: {', '.join(absent)}")
+    if n_unparsed:
+        print(f"  {n_unparsed} generate_str call(s) had arguments that never parsed into an "
+              f"object; they count as produced with an empty narrative")
+    for row in sorted(rows, key=lambda r: -(r["str_production_rate"] or 0)):
+        print(f"  {row['label'][:26]:26s} produced {row['n_produced']:>2}/{row['n_str_turn']:<2} "
+              f"({row['str_production_rate']:.2f})  field={row['field_coverage']} "
+              f"ground={row['grounding']} term={row['terminology']} "
+              f"halluc={row['hallucination']} overall={row['str_overall']}")
+    print(f"  written: {OUT_DIR / 'str_generation_quality.json'}, "
+          f"{OUT_DIR / 'str_generation_quality.csv'}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

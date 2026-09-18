@@ -1,24 +1,48 @@
-"""Per-tool and per-difficulty Wilson score 95% CIs for AML-Bench.
+"""Per-tool and per-difficulty Wilson score 95% CIs for STAR-Bench.
 
-For each of the 23 tools and each difficulty level,
-reports:
-- Sample size N
-- Mean score (averaged over 3 rounds across all 44 configs) — domain-level view
-- Wilson 95% CI width — flags small categories (n < 10)
-- Top model accuracy with Wilson CI for small categories
+For each tool (the case `category`) and each difficulty level, reports:
+- the number of distinct cases in the bucket and the number of
+  (configuration, case) trials behind it
+- the hit rate and its Wilson score 95% interval, whose width flags the small
+  categories (n < 10, n < 20)
+- the same interval per configuration inside the bucket, so a narrow bucket says
+  which configuration is unstable rather than only that the bucket is small
 
-This directly addresses reviewer concerns about category-level reliability
-(Reviewer w7S5 / yR5N of KFinEval pattern).
+Porting note (PORTING.md rule 1). The pre-audit version read
+`results_kr/checkpoint/checkpoint_*.jsonl` and called a case correct when the
+weighted `score` was `>= 0.9`. That score has no definition in the paper (D02)
+and is gone, so **`score >= 0.9` becomes `h == 1`**: the binary primary tool hit
+the paper actually reports. A Wilson interval is an interval for a binomial
+proportion and needs a binary outcome, so `h` is what the step wanted all along
+and not a compromise. One consequence: the old `mean_score` (a mean over the
+weighted score) and `prop_correct_0_9` (the thresholded rate) are the same
+number now, and the output carries it once, as `h_mean`.
+
+The cohort is the registry, not the set of files on disk (rule 3): the old
+version globbed all 37 checkpoints with no filter. The output names how many
+configurations are scored and which ids are missing (rule 4).
+
+Output: `_experiments/results_RQ1/per_tool_wilson_ci_round1.json`
+(the pre-audit version wrote it to `_experiments/results/`, outside the
+directory `regenerate_analysis.py` advertises for this step).
 """
 from __future__ import annotations
 
 import json
-from pathlib import Path
+import sys
 from collections import defaultdict
+from pathlib import Path
+
 import numpy as np
 
-_SB = Path(__file__).resolve().parents[2]  # star-bench root
-ROUND1_CKPT = _SB / "_experiments" / "results_kr" / "checkpoint"
+_SB = Path(__file__).resolve().parents[2]  # repository root
+if str(_SB) not in sys.path:
+    sys.path.insert(0, str(_SB))
+
+from _experiments.scripts.analysis import load  # noqa: E402
+
+OUT_DIR = _SB / "_experiments" / "results_RQ1"
+COLUMN = "single"  # the main-table arm: Korean tool schema, Korean questions
 
 
 def wilson_ci(successes: int, n: int, z: float = 1.96) -> tuple[float, float]:
@@ -33,27 +57,21 @@ def wilson_ci(successes: int, n: int, z: float = 1.96) -> tuple[float, float]:
 
 
 def load_all_cases() -> dict:
-    """Merge all 44 model checkpoints into per-case records."""
-    files = sorted(ROUND1_CKPT.glob("checkpoint_*.jsonl"))
+    """Bucket every (configuration, case) row of the scored cohort by tool and difficulty."""
+    cases = load.single(column=COLUMN)
     per_tool: dict[str, list[dict]] = defaultdict(list)
     per_difficulty: dict[str, list[dict]] = defaultdict(list)
-    per_tool_difficulty: dict[tuple[str, str], list[dict]] = defaultdict(list)
     case_meta: dict[str, dict] = {}
 
-    for fp in files:
-        model = fp.stem.replace("checkpoint_", "")
-        with fp.open() as f:
-            for line in f:
-                rec = json.loads(line)
-                cid = rec["id"]
-                tool = rec.get("category", "unknown")
-                diff = rec.get("difficulty", "unknown")
-                case_meta.setdefault(cid, {"tool": tool, "difficulty": diff})
-                per_tool[tool].append({"model": model, "id": cid, "score": rec["score"]})
-                per_difficulty[diff].append({"model": model, "id": cid, "score": rec["score"]})
-                per_tool_difficulty[(tool, diff)].append({"model": model, "id": cid, "score": rec["score"]})
+    for row in cases.itertuples(index=False):
+        tool = row.category if row.category is not None else "unknown"
+        diff = row.difficulty if row.difficulty is not None else "unknown"
+        case_meta.setdefault(row.case_id, {"tool": tool, "difficulty": diff})
+        record = {"config_id": row.config_id, "label": row.label,
+                  "case_id": row.case_id, "h": int(row.h)}
+        per_tool[tool].append(record)
+        per_difficulty[diff].append(record)
 
-    # Per-case unique count
     tool_case_count: dict[str, int] = defaultdict(int)
     diff_case_count: dict[str, int] = defaultdict(int)
     for meta in case_meta.values():
@@ -63,70 +81,81 @@ def load_all_cases() -> dict:
     return {
         "per_tool": per_tool,
         "per_difficulty": per_difficulty,
-        "per_tool_difficulty": per_tool_difficulty,
         "tool_case_count": dict(tool_case_count),
         "diff_case_count": dict(diff_case_count),
-        "n_configs": len(files),
+        "config_ids": sorted(cases["config_id"].unique()),
     }
 
 
+def cohort() -> dict:
+    """How much of the 28-configuration registry this run covers (rule 4)."""
+    table = load.missing()
+    scored = table.loc[table[COLUMN], "config_id"].tolist()
+    absent = table.loc[~table[COLUMN], "config_id"].tolist()
+    return {"column": COLUMN, "n_configs": len(scored), "n_registry": len(table),
+            "config_ids": scored, "missing_config_ids": absent}
+
+
 def summarize(records: list[dict], n_cases: int) -> dict:
-    """records = list of {model, id, score} across all models/cases in this bucket."""
+    """records = the (configuration, case) rows in one bucket."""
     if not records:
-        return {"n_cases": 0, "mean_score": None, "ci_width": None}
-    scores = np.array([r["score"] for r in records], dtype=np.float32)
-
-    mean_score = float(np.mean(scores))
-    # Correct count: score >= 0.9 threshold (aligned with evaluator primary_tool_hit approximation)
-    correct_count = int(np.sum(scores >= 0.9))
-    total = len(scores)
-    ci_low, ci_high = wilson_ci(correct_count, total)
-
+        return {"n_cases": 0, "h_mean": None, "wilson_ci_width": None}
+    h = np.array([r["h"] for r in records], dtype=np.int64)
+    correct = int(h.sum())
+    total = int(h.size)
+    ci_low, ci_high = wilson_ci(correct, total)
     return {
         "n_cases": n_cases,
         "n_model_case_pairs": total,
-        "mean_score": round(mean_score, 4),
-        "prop_correct_0_9": round(correct_count / total, 4),
+        "n_correct": correct,
+        "h_mean": round(correct / total, 4),
         "wilson_ci_low": round(ci_low, 4),
         "wilson_ci_high": round(ci_high, 4),
         "wilson_ci_width": round(ci_high - ci_low, 4),
     }
 
 
-def summarize_per_model_per_bucket(bucket_records: list[dict]) -> dict:
-    """Per-model Wilson CI inside a single bucket (for identifying which models
-    are unstable when N is small)."""
-    by_model: dict[str, list[float]] = defaultdict(list)
+def summarize_per_config_per_bucket(bucket_records: list[dict]) -> list[dict]:
+    """Per-configuration Wilson CI inside a single bucket, to see which
+    configuration is unstable when the bucket is small."""
+    by_config: dict[str, dict] = {}
     for r in bucket_records:
-        by_model[r["model"]].append(r["score"])
+        entry = by_config.setdefault(r["config_id"], {"label": r["label"], "h": []})
+        entry["h"].append(r["h"])
 
     result = []
-    for model, scores in by_model.items():
-        arr = np.array(scores, dtype=np.float32)
-        correct = int(np.sum(arr >= 0.9))
-        n = len(arr)
+    for config_id, entry in by_config.items():
+        arr = np.array(entry["h"], dtype=np.int64)
+        correct = int(arr.sum())
+        n = int(arr.size)
         ci_lo, ci_hi = wilson_ci(correct, n)
         result.append({
-            "model": model,
+            "config_id": config_id,
+            "label": entry["label"],
             "n": n,
-            "mean_score": round(float(np.mean(arr)), 4),
-            "prop_correct": round(correct / n, 4),
+            "n_correct": correct,
+            "h_mean": round(correct / n, 4),
             "wilson_ci_low": round(ci_lo, 4),
             "wilson_ci_high": round(ci_hi, 4),
             "wilson_ci_width": round(ci_hi - ci_lo, 4),
         })
-    result.sort(key=lambda d: -d["mean_score"])
+    result.sort(key=lambda d: -d["h_mean"])
     return result
 
 
 def main() -> None:
-    print("[1/2] Loading all per-case records across 44 configs...")
+    covered = cohort()
+    print(f"[1/2] Loading per-case rows for {covered['n_configs']} of "
+          f"{covered['n_registry']} configurations...")
     data = load_all_cases()
-    print(f"  configs: {data['n_configs']}")
+    print(f"  configurations: {covered['n_configs']}")
+    if covered["missing_config_ids"]:
+        print(f"  not scored yet ({len(covered['missing_config_ids'])}): "
+              f"{', '.join(covered['missing_config_ids'])}")
     print(f"  unique tools: {len(data['tool_case_count'])}")
     print(f"  unique difficulties: {len(data['diff_case_count'])}")
 
-    print("[2/2] Computing per-tool, per-difficulty stats...")
+    print("[2/2] Computing per-tool, per-difficulty Wilson intervals on h == 1...")
 
     per_tool_summary = {}
     for tool, n_cases in sorted(data["tool_case_count"].items(), key=lambda x: -x[1]):
@@ -136,19 +165,22 @@ def main() -> None:
     for diff, n_cases in sorted(data["diff_case_count"].items(), key=lambda x: -x[1]):
         per_difficulty_summary[diff] = summarize(data["per_difficulty"][diff], n_cases)
 
-    # For top-5 models, per-tool Wilson CI width (flags which tools are "noisy")
-    top_models_per_tool: dict[str, list[dict]] = {}
-    for tool, records in data["per_tool"].items():
-        stats = summarize_per_model_per_bucket(records)
-        top_models_per_tool[tool] = stats[:5]
+    top_configs_per_tool = {
+        tool: summarize_per_config_per_bucket(records)[:5]
+        for tool, records in data["per_tool"].items()
+    }
 
     out = {
+        "cohort": covered,
+        "correct_definition": "h == 1 (primary tool hit); the pre-audit score >= 0.9 is gone (D02)",
         "per_tool": per_tool_summary,
         "per_difficulty": per_difficulty_summary,
-        "top5_per_tool_ci": top_models_per_tool,
+        "top5_per_tool_ci": top_configs_per_tool,
         "summary": {
             "total_cases": sum(data["tool_case_count"].values()),
             "n_tools": len(data["tool_case_count"]),
+            "n_configs": covered["n_configs"],
+            "missing_config_ids": covered["missing_config_ids"],
             "small_tools_n_lt_10": sorted(
                 [(t, n) for t, n in data["tool_case_count"].items() if n < 10],
                 key=lambda x: x[1],
@@ -160,27 +192,29 @@ def main() -> None:
         },
     }
 
-    out_path = _SB / "_experiments" / "results" / "per_tool_wilson_ci_round1.json"
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    with out_path.open("w") as f:
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    out_path = OUT_DIR / "per_tool_wilson_ci_round1.json"
+    with out_path.open("w", encoding="utf-8") as f:
         json.dump(out, f, indent=2, ensure_ascii=False)
     print(f"  Saved: {out_path}")
 
     print()
     print("=" * 80)
-    print("PER-TOOL SUMMARY (sorted by N):")
+    print(f"PER-TOOL SUMMARY (sorted by N), {covered['n_configs']} of "
+          f"{covered['n_registry']} configurations:")
     print("=" * 80)
-    print(f"{'Tool':<32} {'N':>4} {'Mean':>7} {'Wilson Width':>14}")
+    print(f"{'Tool':<32} {'N':>4} {'h':>7} {'Wilson Width':>14}")
     print("-" * 80)
     for tool, s in per_tool_summary.items():
-        print(f"{tool:<32} {s['n_cases']:>4} {s['mean_score']:>7.4f} {s['wilson_ci_width']:>14.4f}")
+        print(f"{tool:<32} {s['n_cases']:>4} {s['h_mean']:>7.4f} {s['wilson_ci_width']:>14.4f}")
 
     print()
     print("=" * 80)
     print("PER-DIFFICULTY SUMMARY:")
     print("=" * 80)
     for diff, s in per_difficulty_summary.items():
-        print(f"  {diff:<16} N={s['n_cases']:<4} mean={s['mean_score']:.4f} wilson_width={s['wilson_ci_width']:.4f}")
+        print(f"  {diff:<16} N={s['n_cases']:<4} h={s['h_mean']:.4f} "
+              f"wilson_width={s['wilson_ci_width']:.4f}")
 
     print()
     print(f"Tools with N < 10: {len(out['summary']['small_tools_n_lt_10'])}")

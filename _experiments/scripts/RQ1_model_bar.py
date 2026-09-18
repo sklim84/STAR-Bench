@@ -1,150 +1,173 @@
-"""RQ1 신규 figure: 28개 유효 모델 전체 h bar chart (계열별 색상, h+a 병렬).
+#!/usr/bin/env python3
+"""RQ1 figure: tool hit h and parameter accuracy a, one pair of bars per configuration.
 
-출력: _experiments/results_RQ1/fig_model_bar.{pdf,png}
+Reads `_experiments/scripts/analysis/load.py` and nothing else from the results
+trees. The arm is `load.single()`, the Korean tool schema with Korean questions.
+
+What changed. The old version had no cohort filter at all. It listed every
+`*.json` under `_experiments/results_kr/eval`, which held 37 files, drew a bar
+for each one and titled the result "28 valid models". Nine of those files are
+models the registry does not carry at all: Qwen3-8B, Qwen3-4B-Instruct-2507 and
+Qwen3-30B-A3B-Instruct-2507, Qwen3.5-9B in both thinking modes, xLAM-2 at 1b, 8b
+and 32b, and Llama-3.1-8B-Instruct. The figure and its own title therefore
+disagreed about which models the reader was looking at, and the nine sat in the
+sort alongside the cohort. The cohort is now the serving registry through
+`load.configs()`, the bar count and the title come from the same number, and
+`load.missing()` names the configurations that are not scored yet in a note under
+the axes (PORTING.md rule 4). The `OUTLIERS` set and the hand written
+`display_name` substitution table are gone with it: the display name is the
+registry `label`, which is the name tab:overall prints.
+
+`h` is a mean over every case. `a` is a mean over the cases that have parameter
+checks, because `a` is null where there is nothing to check and the pre-audit key
+wrote 1.0 there, which lifted the `a` bar of a model that called tools with no
+checkable arguments (D02). The per-configuration counts are printed to stdout
+next to each bar's value, so a short `a` bar can be read against the number of
+cases it covers.
+
+The bars are sorted by `h` because this figure is about the ranking; the tables
+keep the registry order.
+
+Output: _experiments/results_RQ1/fig_model_bar.{pdf,png}
 """
-import json
-import os
+from __future__ import annotations
+
 import sys
+import textwrap
+from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-import numpy as np
+import matplotlib.patches as mpatches  # noqa: E402
+import matplotlib.pyplot as plt  # noqa: E402
+import numpy as np  # noqa: E402
 
-# _plot_style import
-sys.path.insert(0, os.path.dirname(__file__))
-from _plot_style import (
-    PALETTE, FS_TICK, FS_LABEL, FS_TITLE, FS_LEGEND, FS_ANNOT,
-    get_color, style_axes, short_name,
+_ROOT = Path(__file__).resolve().parents[2]
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from _plot_style import (  # noqa: E402
+    FS_ANNOT, FS_LABEL, FS_LEGEND, FS_TICK, FS_TITLE, get_color, style_axes,
 )
 
-EVAL_DIR = os.path.join(os.path.dirname(__file__), "../../_experiments/results_kr/eval/")
-OUT_DIR  = os.path.join(os.path.dirname(__file__), "../../_experiments/results_RQ1/")
-os.makedirs(OUT_DIR, exist_ok=True)
+from _experiments.scripts.analysis import load  # noqa: E402
 
-OUTLIERS = {
+OUT_DIR = _ROOT / "_experiments" / "results_RQ1"
+
+# The family a colour stands for, keyed by the vendor prefix of the registry
+# `model`. It is a legend caption, not a cohort: a vendor that is not listed
+# falls through to its own prefix.
+FAMILY = {
+    "Qwen": "Qwen", "LGAI-EXAONE": "EXAONE", "skt": "A.X",
+    "mistralai": "Mistral", "meta-llama": "Llama",
+    "Salesforce": "xLAM", "DragonLLM": "Finance SFT",
+    "NousResearch": "Hermes", "microsoft": "Phi",
+    "google": "Gemma", "openai": "gpt-oss",
+    "kakaocorp": "Kanana",
 }
 
-# ── 데이터 로드 ──────────────────────────────────────────────────────────────
-rows = []
-for fn in sorted(os.listdir(EVAL_DIR)):
-    if not fn.endswith(".json"):
-        continue
-    with open(os.path.join(EVAL_DIR, fn)) as f:
-        d = json.load(f)
-    if d["model"] in OUTLIERS:
-        continue
-    h = d["overall"]["primary_tool_hit_rate"]
-    a = d["overall"]["avg_param_accuracy"]
-    rows.append({"model": d["model"], "h": h, "a": a})
 
-rows.sort(key=lambda x: x["h"])  # ascending for horizontal bar
+def collect() -> tuple[list[dict], list[str], int]:
+    """One entry per scored configuration, sorted by h, plus the missing ids."""
+    cases = load.single()
+    registry = load.configs()
+    rows = []
+    for config_id in registry["config_id"]:
+        subset = cases[cases["config_id"] == config_id]
+        if subset.empty:
+            continue
+        a_defined = subset["a"].dropna()
+        rows.append({
+            "config_id": config_id,
+            "label": registry.loc[config_id, "label"],
+            "model": registry.loc[config_id, "model"],
+            "h": float(subset["h"].mean()), "n_h": int(subset["h"].notna().sum()),
+            "a": float(a_defined.mean()) if len(a_defined) else float("nan"),
+            "n_a": int(len(a_defined)),
+        })
+    rows.sort(key=lambda row: row["h"])          # ascending, for a horizontal bar
+    todo = load.missing()
+    absent = todo.loc[~todo["single"], "config_id"].tolist()
+    return rows, absent, int(len(registry))
 
-# ── 표시 이름 단축 ────────────────────────────────────────────────────────────
-def display_name(model_id: str) -> str:
-    s = model_id.split("/")[-1]
-    # think/nothink suffix
-    s = s.replace("__nothink", " (NT)").replace("__think", " (T)")
-    # common replacements
-    replacements = [
-        ("kanana-2-30b-a3b-thinking-2601", "Kanana-2-Think"),
-        ("kanana-2-30b-a3b-instruct", "Kanana-2-30B"),
-        ("Llama-Open-Finance-8B", "Llama-Finance-8B"),
-        ("Qwen-Open-Finance-R-8B", "Qwen-Finance-R-8B"),
-        ("Hermes-3-Llama-3.1-8B", "Hermes-3-8B"),
-        ("Mistral-Small-3.2-24B-Instruct-2506", "Mistral-Small-24B"),
-        ("Ministral-3-3B-Instruct-2512", "Ministral-3-3B"),
-        ("Qwen3-30B-A3B-Instruct-2507", "Qwen3-30B-A3B"),
-        ("Llama-xLAM-2-70b-fc-r", "xLAM-2-70B"),
-        ("Llama-xLAM-2-8b-fc-r", "xLAM-2-8B"),
-        ("xLAM-2-3b-fc-r", "xLAM-2-3B"),
-        ("xLAM-2-1b-fc-r", "xLAM-2-1B"),
-        ("Llama-3.2-3B-Instruct", "Llama-3.2-3B"),
-        ("Llama-3.3-70B-Instruct", "Llama-3.3-70B"),
-        ("Phi-4-mini-instruct", "Phi-4-mini"),
-        ("EXAONE-4.0-1.2B", "EXAONE-4.0-1.2B"),
-        ("EXAONE-4.0-32B", "EXAONE-4.0-32B"),
-        ("gemma-4-E4B-it", "Gemma-4-E4B"),
-        ("A.X-4.0-Light", "A.X-4.0-Light"),
+
+def main() -> int:
+    rows, absent, total = collect()
+    n = len(rows)
+
+    labels = [row["label"] for row in rows]
+    h_vals = [row["h"] for row in rows]
+    a_vals = [row["a"] for row in rows]
+    colors = [get_color(row["model"]) for row in rows]
+
+    y = np.arange(n)
+    bar_h = 0.38
+
+    fig, ax = plt.subplots(figsize=(7.5, 6.8))
+    bars_h = ax.barh(y + bar_h / 2, h_vals, bar_h, color=colors, alpha=0.92,
+                     label="$h$ (tool hit)")
+    ax.barh(y - bar_h / 2, a_vals, bar_h, color=colors, alpha=0.45,
+            label="$a$ (param acc.)", hatch="///")
+
+    for bar, value in zip(bars_h, h_vals):
+        ax.text(value + 0.005, bar.get_y() + bar.get_height() / 2,
+                f"{value:.3f}", va="center", ha="left", fontsize=FS_ANNOT - 1)
+
+    ax.axvline(0.5, color="#999999", linewidth=0.8, linestyle="--", alpha=0.6)
+    ax.set_yticks(y)
+    ax.set_yticklabels(labels, fontsize=FS_TICK)
+    ax.set_xlabel("Score", fontsize=FS_LABEL)
+    ax.set_xlim(0, 1.08)
+    style_axes(ax)
+
+    seen = set()
+    handles = []
+    for row in rows:
+        family = FAMILY.get(row["model"].split("/")[0], row["model"].split("/")[0])
+        if family not in seen:
+            seen.add(family)
+            handles.append(mpatches.Patch(color=get_color(row["model"]), label=family))
+    handles += [
+        mpatches.Patch(facecolor="#AAAAAA", alpha=0.92, label="$h$ (tool hit)"),
+        mpatches.Patch(facecolor="#AAAAAA", alpha=0.45, hatch="///", label="$a$ (param acc.)"),
     ]
-    for old, new in replacements:
-        s = s.replace(old, new)
-    # trim if still long
-    return s if len(s) <= 24 else s[:23] + "…"
+    # Below the axes rather than inside them. Every bar starts at zero, so the
+    # only clear space inside is past the shortest bars, and that is where their
+    # value annotations sit: an inset legend hid the three lowest scores.
+    ax.legend(handles=handles, fontsize=FS_LEGEND, loc="upper center",
+              bbox_to_anchor=(0.5, -0.085), ncol=5, frameon=False,
+              columnspacing=0.8, handlelength=1.2)
 
-labels = [display_name(r["model"]) for r in rows]
-h_vals = [r["h"] for r in rows]
-a_vals = [r["a"] for r in rows]
-colors = [get_color(r["model"]) for r in rows]
+    ax.set_title(
+        f"Tool hit $h$ and parameter accuracy $a$, {n} of {total} configurations\n"
+        "(Korean tool schema, Korean questions; sorted by $h$)",
+        fontsize=FS_TITLE, pad=6,
+    )
 
-n = len(rows)
-y = np.arange(n)
-bar_h = 0.38
+    fig.tight_layout()
 
-# ── 플롯 ─────────────────────────────────────────────────────────────────────
-fig, ax = plt.subplots(figsize=(7.5, 6.8))
+    if absent:
+        note = ("Not scored yet, so not drawn (" + str(len(absent)) + " of "
+                + str(total) + "): " + ", ".join(absent))
+        fig.text(0.01, -0.055, "\n".join(textwrap.wrap(note, 110)),
+                 fontsize=FS_ANNOT - 1, color="#555555", va="top", ha="left")
 
-bars_h = ax.barh(y + bar_h / 2, h_vals, bar_h, color=colors, alpha=0.92, label="$h$ (tool hit)")
-bars_a = ax.barh(y - bar_h / 2, a_vals, bar_h, color=colors, alpha=0.45, label="$a$ (param acc.)", hatch="///")
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    out_pdf = OUT_DIR / "fig_model_bar.pdf"
+    out_png = OUT_DIR / "fig_model_bar.png"
+    fig.savefig(out_pdf, dpi=300, bbox_inches="tight")
+    fig.savefig(out_png, dpi=300, bbox_inches="tight")
 
-# 수치 주석 (h만, 우측에)
-for i, (bar, val) in enumerate(zip(bars_h, h_vals)):
-    ax.text(val + 0.005, bar.get_y() + bar.get_height() / 2,
-            f"{val:.3f}", va="center", ha="left", fontsize=FS_ANNOT - 1)
+    print(f"n_configs={n} of {total}, arm=single (Korean tool schema, Korean questions)")
+    print("not scored yet: " + (", ".join(absent) or "none"))
+    for row in rows:
+        print(f"  {row['config_id']:<18s} h={row['h']:.4f} (n={row['n_h']})  "
+              f"a={row['a']:.4f} (n={row['n_a']})")
+    print(f"Saved: {out_pdf}")
+    print(f"Saved: {out_png}")
+    return 0
 
-ax.axvline(0.5, color="#999999", linewidth=0.8, linestyle="--", alpha=0.6)
-ax.set_yticks(y)
-ax.set_yticklabels(labels, fontsize=FS_TICK)
-ax.set_xlabel("Score", fontsize=FS_LABEL)
-ax.set_xlim(0, 1.08)
-style_axes(ax)
 
-# legend: family colors
-seen = set()
-handles = []
-for r in rows:
-    c = get_color(r["model"])
-    fam = r["model"].split("/")[0]
-    # use short family name
-    fam_label = {
-        "Qwen": "Qwen", "LGAI-EXAONE": "EXAONE", "skt": "A.X",
-        "mistralai": "Mistral", "meta-llama": "Llama",
-        "Salesforce": "xLAM", "DragonLLM": "Finance SFT",
-        "NousResearch": "Hermes", "microsoft": "Phi",
-        "google": "Gemma", "openai": "gpt-oss",
-        "kakaocorp": "Kanana",
-    }.get(fam, fam)
-    if fam_label not in seen:
-        seen.add(fam_label)
-        handles.append(mpatches.Patch(color=c, label=fam_label))
-
-metric_handles = [
-    mpatches.Patch(facecolor="#AAAAAA", alpha=0.92, label="$h$ (tool hit)"),
-    mpatches.Patch(facecolor="#AAAAAA", alpha=0.45, hatch="///", label="$a$ (param acc.)"),
-]
-ax.legend(
-    handles=handles + metric_handles,
-    fontsize=FS_LEGEND,
-    loc="lower right",
-    ncol=2,
-    framealpha=0.85,
-    columnspacing=0.8,
-    handlelength=1.2,
-)
-
-ax.set_title(
-    f"Tool hit $h$ and parameter accuracy $a$ across {n} valid models\n"
-    "(Korean prompts, thinking off; sorted by $h$)",
-    fontsize=FS_TITLE,
-    pad=6,
-)
-
-fig.tight_layout()
-
-out_pdf = os.path.join(OUT_DIR, "fig_model_bar.pdf")
-out_png = os.path.join(OUT_DIR, "fig_model_bar.png")
-fig.savefig(out_pdf, dpi=300, bbox_inches="tight")
-fig.savefig(out_png, dpi=300, bbox_inches="tight")
-print(f"Saved: {out_pdf}")
-print(f"Saved: {out_png}")
+if __name__ == "__main__":
+    raise SystemExit(main())

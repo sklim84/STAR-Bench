@@ -1,38 +1,141 @@
 {
-  "n_models": 28,
+  "n_configs": 18,
+  "configs_missing_from_28": [
+    "ax-light",
+    "dragon-llama-fin",
+    "exaone-1.2b",
+    "exaone-32b",
+    "gemma-4-e4b",
+    "hermes-3-8b",
+    "llama-3.2-3b",
+    "phi-4-mini",
+    "qwen35-4b-nt",
+    "xlam-3b"
+  ],
+  "cohort_note": "18 of 28 configurations scored; 10 not scored yet",
+  "metric": "h, primary tool hit (0/1). The pre-audit primary_tool_hit_rate under the scorer's own name; the weighted score is gone (D02).",
   "regulatory_categories": [
     "detect_ctr_candidates",
     "get_aml_glossary",
     "lookup_fiu_reference_types",
     "validate_str_fields"
   ],
+  "analysis_categories": [
+    "analyze_channel_risk",
+    "analyze_cross_institution_flow",
+    "analyze_network",
+    "compare_periods",
+    "detect_aml_patterns",
+    "detect_dormant_reactivation",
+    "detect_monitoring_alerts",
+    "detect_smurfing_network",
+    "get_account_profile",
+    "get_fraud_type_summary",
+    "get_institution_report",
+    "get_receiving_account_profile",
+    "get_statistics",
+    "get_trend_analysis",
+    "predict_fraud",
+    "query_transactions",
+    "rank_risky_transactions",
+    "score_account_risk"
+  ],
   "analysis_categories_count": 18,
-  "regulatory_h_mean_overall": 0.5586,
-  "analysis_h_mean_overall": 0.8119,
-  "gap_mean_overall": 0.2533,
-  "gap_max": 0.4707,
-  "gap_min": -0.1703,
-  "top_5_largest_gap": [
+  "excluded_categories": [
+    "missing_parameters",
+    "multi_tool"
+  ],
+  "regulatory_h_mean_overall": 0.8935,
+  "analysis_h_mean_overall": 0.89,
+  "gap_mean_overall": -0.0035,
+  "gap_mean_overall_pp": -0.4,
+  "gap_max": 0.1343,
+  "gap_min": -0.113,
+  "n_configs_worse_on_regulatory": 7,
+  "n_configs_better_on_regulatory": 11,
+  "configs_better_on_regulatory": [
     {
-      "model": "openai/gpt-oss-20b__think",
-      "gap": 0.4707
+      "config_id": "qwen36-27b",
+      "label": "Qwen3.6-27B",
+      "gap_pp": -0.6
     },
     {
-      "model": "Qwen/Qwen3.5-4B__nothink",
-      "gap": 0.4576
+      "config_id": "qwen35-27b-nt",
+      "label": "Qwen3.5-27B (NT)",
+      "gap_pp": -1.0
     },
     {
-      "model": "openai/gpt-oss-20b__nothink",
-      "gap": 0.4251
+      "config_id": "qwen35-4b-t",
+      "label": "Qwen3.5-4B (T)",
+      "gap_pp": -1.4
     },
     {
-      "model": "mistralai/Ministral-3-3B-Instruct-2512",
-      "gap": 0.3835
+      "config_id": "qwen36-35b-a3b",
+      "label": "Qwen3.6-35B-A3B",
+      "gap_pp": -2.6
     },
     {
-      "model": "google/gemma-4-31B-it",
-      "gap": 0.3789
+      "config_id": "gpt-oss-20b-nt",
+      "label": "gpt-oss-20B (NT)",
+      "gap_pp": -3.4
+    },
+    {
+      "config_id": "gpt-oss-120b-nt",
+      "label": "gpt-oss-120B (NT)",
+      "gap_pp": -4.4
+    },
+    {
+      "config_id": "ax-4.0",
+      "label": "A.X-4.0 (72B)",
+      "gap_pp": -5.1
+    },
+    {
+      "config_id": "ministral-3b",
+      "label": "Ministral-3-3B",
+      "gap_pp": -6.2
+    },
+    {
+      "config_id": "gpt-oss-120b-t",
+      "label": "gpt-oss-120B (T)",
+      "gap_pp": -6.6
+    },
+    {
+      "config_id": "kanana-2-think",
+      "label": "Kanana-2-Think",
+      "gap_pp": -8.7
+    },
+    {
+      "config_id": "llama-3.3-70b",
+      "label": "Llama-3.3-70B",
+      "gap_pp": -11.3
     }
   ],
-  "note": "gap = analysis_h - regulatory_h. positive gap = 규제 카테고리가 일반 분석 대비 낮은 적중률"
+  "top_5_largest_gap": [
+    {
+      "config_id": "gpt-oss-20b-t",
+      "label": "gpt-oss-20B (T)",
+      "gap": 0.1343
+    },
+    {
+      "config_id": "mistral-small",
+      "label": "Mistral-Small-24B",
+      "gap": 0.1325
+    },
+    {
+      "config_id": "xlam-70b",
+      "label": "xLAM-2-70B",
+      "gap": 0.0803
+    },
+    {
+      "config_id": "kanana-2-inst",
+      "label": "Kanana-2-Instruct",
+      "gap": 0.0494
+    },
+    {
+      "config_id": "dragon-qwen-fin",
+      "label": "Qwen-Open-Finance-R-8B",
+      "gap": 0.0484
+    }
+  ],
+  "note": "gap = analysis_h - regulatory_h, each side the unweighted mean over its category means. A positive gap means the regulatory tools were harder. Averaged over 18 scored configurations, not over 28."
 }

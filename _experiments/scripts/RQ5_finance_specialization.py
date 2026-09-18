@@ -1,28 +1,62 @@
 #!/usr/bin/env python3
-"""RQ5: DragonLLM Finance vs 각 모델의 base sub-domain별 비교.
+"""RQ5: what finance-domain SFT changes, per AML sub-domain.
 
-DragonLLM 2종(Llama-Open-Finance-8B, Qwen-Open-Finance-R-8B)을 각자의 base
-모델과 비교한다. base 는 Llama-3.1-8B-Instruct 와 Qwen3-8B 이므로, 그룹 평균의
-차이가 곧 "금융 SFT 가 base 대비 무엇을 바꾸는가"가 된다.
+The metric is `h`, the primary tool hit (0/1). The pre-audit step read
+`by_category[t].aggregated.primary_tool_hit_rate`; that key is gone with the
+weighted score it sat beside (D02), and `h` is the same quantity under the
+scorer's own name (PORTING rule 1). A sub-domain's number is the unweighted mean
+over its tools' category means, and it carries the tool count and the case count
+behind it (rule 2).
 
-비교 대상을 임의의 동급 범용 모델로 두면 그 하나의 성질에 결론이 좌우된다.
-직전까지 쓰던 Hermes-3-8B 는 규제보고 h 가 .3517 로 다른 8B 모델(.58~.70)의
-절반 수준이라 금융 SFT 의 우위를 과대평가했다.
+The base comparison this step was written for is not available from the rerun
+cohort, and the step says so rather than quietly substituting something else.
+The two DragonLLM models were tuned from `meta-llama/Llama-3.1-8B-Instruct` and
+`Qwen/Qwen3-8B`. Neither base is a configuration in the serving registry, so
+neither was run or scored; the pre-audit step reached outside the 28-configuration
+cohort to get them, which is exactly the name-list-beside-the-registry that rule 3
+removes. Picking some other 8B model as a stand-in would make the conclusion a
+property of that one model: the step used to use Hermes-3-8B and its regulatory h
+of .3517 was half of the other 8B models', which inflated the apparent benefit of
+finance SFT. So `base_comparison` in the JSON reports `available: false` and names
+the two absent bases, and the comparison the cohort can actually support is
+emitted instead: the finance-specialised configurations against the other
+registry groups, sub-domain by sub-domain.
 
-본문 인용 포인트:
-- 금융 도메인 SFT가 AML FC에 우위인가, 또는 FC instruction tuning을 희생시키는가
+That comparison is between registry groups (`Finance-Specialized`,
+`Korean-Specialized`, `General-Purpose`), not between a list of model names
+(rule 3), and every output carries `n_configs` and the ids still unscored
+(rule 4). Note what that costs today: `dragon-llama-fin` is one of the ten not
+yet scored, so the Finance-Specialized group is one configuration, and the group
+sizes are in the JSON and on the figure.
+
+The sub-domain definitions below are the manuscript's tab:tool_suite mapping,
+not a cohort list, so they stay. `sub_domain_tools_missing` reports any member
+tool with no `category` in `load.single()`; `generate_str` is expected there,
+being multi-turn only.
+
+Manuscript: the finance-specialisation discussion in Section 5.
+
+Outputs
+    _experiments/results_RQ5/finance_vs_general_subdomain.csv
+    _experiments/results_RQ5/finance_specialization.json
+    _experiments/results_RQ5/fig_finance_specialization.{pdf,png}
 """
-import json, csv, sys
+import csv
+import json
+import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _plot_style import (plt, FS_TICK, FS_LABEL, FS_TITLE, FS_LEGEND, style_axes)
 
-_SB = Path(__file__).resolve().parents[2]   # star-bench root (fix stale _paper/ path)
-EVAL_DIR = _SB / '_experiments' / 'results_kr' / 'eval'
+_SB = Path(__file__).resolve().parents[2]   # repository root
+for _p in (str(Path(__file__).resolve().parent), str(_SB)):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
+from _plot_style import plt, FS_TICK, FS_LABEL, FS_LEGEND, style_axes  # noqa: E402
+from _experiments.scripts.analysis import load  # noqa: E402
+
 OUT_DIR = _SB / '_experiments' / 'results_RQ5'
-OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# main.tex tab:tool_suite 매핑 (5 sub-domain)
+# main.tex tab:tool_suite 매핑 (4 sub-domain). 코호트 목록이 아니라 도구 분류라서 남는다.
 SUB_DOMAINS = {
     'Transaction Inquiry & Statistics': [
         'get_statistics', 'query_transactions', 'get_account_profile',
@@ -44,124 +78,190 @@ SUB_DOMAINS = {
     ],
 }
 
-# 비교 대상 모델 (8B 클래스 + Finance specialization)
-TARGET_MODELS = {
-    'finance': [
-        'DragonLLM/Llama-Open-Finance-8B',
-        'DragonLLM/Qwen-Open-Finance-R-8B',
-    ],
-    # 각 finance 모델의 base. 짝: Llama-Open-Finance-8B <- Llama-3.1-8B-Instruct,
-    # Qwen-Open-Finance-R-8B <- Qwen3-8B.
-    'base_8b': [
-        'meta-llama/Llama-3.1-8B-Instruct',
-        'Qwen/Qwen3-8B',
-    ],
-    'small_general': [
-        'meta-llama/Llama-3.2-3B-Instruct',
-        'mistralai/Ministral-3-3B-Instruct-2512',
-        'microsoft/Phi-4-mini-instruct',
-    ],
-    'specialized_kr': [
-        'LGAI-EXAONE/EXAONE-4.0-1.2B',
-        'skt/A.X-4.0-Light',
-    ],
+# Provenance, not a cohort selection: which base each finance-specialised
+# configuration was tuned from. Used only to name what the cohort does not have,
+# never to pick rows. Neither base is in the serving registry.
+BASE_OF = {
+    'dragon-llama-fin': 'meta-llama/Llama-3.1-8B-Instruct',
+    'dragon-qwen-fin': 'Qwen/Qwen3-8B',
 }
+FINANCE_GROUP = 'Finance-Specialized'
+# The group the finance models are read against. General-Purpose is the registry's
+# own name for "not specialised", which is the contrast the RQ is about.
+CONTRAST_GROUP = 'General-Purpose'
 
-def per_subdomain_h(by_category):
-    out = {}
-    for sd, tools in SUB_DOMAINS.items():
-        hs = []
-        for t in tools:
-            if t in by_category:
-                agg = by_category[t].get('aggregated', {})
-                hs.append(agg.get('primary_tool_hit_rate', 0))
-        out[sd] = round(sum(hs) / len(hs), 4) if hs else None
-    return out
+
+def cohort_note():
+    """(n_configs, missing ids, one line saying so) for the scored cohort."""
+    todo = load.missing()
+    missing = sorted(todo.loc[~todo['single'], 'config_id'])
+    n_total = len(todo)
+    n_scored = n_total - len(missing)
+    line = f'{n_scored} of {n_total} configurations scored'
+    if missing:
+        line += f'; {len(missing)} not scored yet'
+    return n_scored, missing, n_total, line
+
 
 def main():
-    files = sorted(EVAL_DIR.glob('eval_*.json'))
-    # canonicalize: latest eval은 sanitized model name 사용
-    all_targets = {m for lst in TARGET_MODELS.values() for m in lst}
-    safe_to_canonical = {m.replace('/', '_').replace('.', '_'): m for m in all_targets}
-    by_model = {}
-    for f in files:
-        d = json.load(f.open())
-        m = d['model']
-        # drop the redundant Kanana-2-Instruct-2601 (excluded from the canonical cohort everywhere)
-        if 'kanana-2-30b-a3b-instruct-2601' in m:
-            continue
-        m = safe_to_canonical.get(m, m)
-        by_model[m] = per_subdomain_h(d.get('by_category', {}))
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    n_configs, missing, n_total, note = cohort_note()
 
+    cases = load.single()
+    per_cat = (cases.groupby(['config_id', 'label', 'group', 'category'])
+                    .agg(h_mean=('h', 'mean'), n_cases=('h', 'size')).reset_index())
+    present = set(per_cat['category'])
+    # Rule 4's sibling: a sub-domain that silently lost a tool is not reported as
+    # the same sub-domain. generate_str is multi-turn only and is expected here.
+    tools_missing = {sd: [t for t in tools if t not in present]
+                     for sd, tools in SUB_DOMAINS.items()}
+    tools_used = {sd: [t for t in tools if t in present] for sd, tools in SUB_DOMAINS.items()}
+
+    per_config = {}
     rows = []
-    flat_targets = []
-    for grp, lst in TARGET_MODELS.items():
-        for m in lst:
-            if m in by_model:
-                rows.append({'group': grp, 'model': m, **by_model[m]})
-                flat_targets.append(m)
+    for (config_id, label, group), block in per_cat.groupby(['config_id', 'label', 'group'],
+                                                            sort=False):
+        by_tool = dict(zip(block['category'], block['h_mean']))
+        by_tool_n = dict(zip(block['category'], block['n_cases']))
+        h_by_sd, n_by_sd, tools_by_sd = {}, {}, {}
+        for sd, tools in tools_used.items():
+            hits = [by_tool[t] for t in tools if t in by_tool]
+            h_by_sd[sd] = round(float(sum(hits) / len(hits)), 4) if hits else None
+            n_by_sd[sd] = int(sum(by_tool_n[t] for t in tools if t in by_tool_n))
+            tools_by_sd[sd] = len(hits)
+        per_config[config_id] = {'label': label, 'group': group, 'h': h_by_sd,
+                                 'n_cases': n_by_sd, 'n_tools': tools_by_sd}
+        rows.append({'config_id': config_id, 'label': label, 'group': group,
+                     **h_by_sd,
+                     **{f'n_cases_{sd}': n_by_sd[sd] for sd in SUB_DOMAINS},
+                     **{f'n_tools_{sd}': tools_by_sd[sd] for sd in SUB_DOMAINS},
+                     'n_configs': n_configs,
+                     'configs_missing_from_28': ';'.join(missing)})
 
-    with (OUT_DIR / 'finance_vs_general_subdomain.csv').open('w', newline='') as f:
-        if rows:
-            w = csv.DictWriter(f, fieldnames=rows[0].keys())
-            w.writeheader(); w.writerows(rows)
-
-    # 그룹별 sub-domain 평균
-    grp_means = {}
-    for grp in TARGET_MODELS:
-        models = [r for r in rows if r['group'] == grp]
-        sd_avg = {}
+    # Groups come from the registry, ordered with the RQ's subject first and the
+    # rest by name, so the order does not depend on a literal in this file.
+    groups_present = sorted({r['group'] for r in rows})
+    group_order = ([FINANCE_GROUP] if FINANCE_GROUP in groups_present else []) + \
+                  [g for g in groups_present if g != FINANCE_GROUP]
+    group_members = {g: sorted(cid for cid, v in per_config.items() if v['group'] == g)
+                     for g in group_order}
+    group_means, group_n_cases = {}, {}
+    for g in group_order:
+        members = [per_config[c] for c in group_members[g]]
+        group_means[g] = {}
+        group_n_cases[g] = {}
         for sd in SUB_DOMAINS:
-            vals = [r[sd] for r in models if r.get(sd) is not None]
-            sd_avg[sd] = round(sum(vals) / len(vals), 4) if vals else None
-        grp_means[grp] = sd_avg
+            vals = [m['h'][sd] for m in members if m['h'][sd] is not None]
+            group_means[g][sd] = round(sum(vals) / len(vals), 4) if vals else None
+            group_n_cases[g][sd] = int(sum(m['n_cases'][sd] for m in members))
+
+    rows.sort(key=lambda r: (group_order.index(r['group']), r['config_id']))
+    with (OUT_DIR / 'finance_vs_general_subdomain.csv').open('w', newline='') as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(rows)
+
+    finance_vs_contrast = {}
+    if FINANCE_GROUP in group_means and CONTRAST_GROUP in group_means:
+        for sd in SUB_DOMAINS:
+            a, b = group_means[FINANCE_GROUP][sd], group_means[CONTRAST_GROUP][sd]
+            if a is not None and b is not None:
+                finance_vs_contrast[sd] = round(a - b, 4)
+
+    # The comparison the step was written for, and why it is not here.
+    scored_finance = group_members.get(FINANCE_GROUP, [])
+    base_comparison = {
+        'available': False,
+        'intended_pairs': {cid: BASE_OF[cid] for cid in sorted(BASE_OF)},
+        'missing_bases': sorted(set(BASE_OF.values())),
+        'reason': 'Neither base model is a configuration in the serving registry, so neither '
+                  'was run or scored in the rerun. The pre-audit step reached outside the '
+                  '28-configuration cohort for them. No stand-in is substituted: with a '
+                  'different 8B model in the base slot the result becomes a property of that '
+                  'model (Hermes-3-8B, used earlier, sat at regulatory h .3517 against .58-.70 '
+                  'for the other 8B models and inflated the benefit of finance SFT).',
+        'finance_configs_in_registry': sorted(BASE_OF),
+        'finance_configs_scored': scored_finance,
+        'finance_configs_not_scored': [c for c in sorted(BASE_OF) if c not in scored_finance],
+        'substitute_used': None,
+    }
 
     summary = {
+        'n_configs': n_configs,
+        'configs_missing_from_28': missing,
+        'cohort_note': note,
+        'metric': 'h, primary tool hit (0/1). The pre-audit primary_tool_hit_rate under the '
+                  "scorer's own name; the weighted score is gone (D02).",
         'sub_domains': list(SUB_DOMAINS.keys()),
-        'group_definitions': {k: v for k, v in TARGET_MODELS.items()},
-        'per_model_subdomain_h': by_model,
-        'group_means': grp_means,
-        'finance_vs_base_8b_diff': {
-            sd: round((grp_means['finance'][sd] or 0) - (grp_means['base_8b'][sd] or 0), 4)
-            for sd in SUB_DOMAINS
-            if grp_means.get('finance', {}).get(sd) is not None
-            and grp_means.get('base_8b', {}).get(sd) is not None
-        },
-        'note': 'base 대비 비교: DragonLLM Finance 2종 vs 각자의 base(Llama-3.1-8B-Instruct, Qwen3-8B). '
-                'positive diff = 금융 SFT가 base보다 높음, negative = base가 높음.',
+        'sub_domain_tools': {sd: list(tools) for sd, tools in SUB_DOMAINS.items()},
+        'sub_domain_tools_used': tools_used,
+        'sub_domain_tools_missing': {sd: t for sd, t in tools_missing.items() if t},
+        'group_order': group_order,
+        'group_labels': {g: f'{g} (n={len(group_members[g])})' for g in group_order},
+        'group_members': group_members,
+        'group_n_configs': {g: len(group_members[g]) for g in group_order},
+        'group_means': group_means,
+        'group_n_cases': group_n_cases,
+        'per_config_subdomain_h': per_config,
+        f'finance_vs_{CONTRAST_GROUP.lower().replace("-", "_")}_diff': finance_vs_contrast,
+        'base_comparison': base_comparison,
+        'note': 'A sub-domain value is the unweighted mean over its tools\' category means, '
+                'and a group value the unweighted mean over its configurations. '
+                f'positive diff = the {FINANCE_GROUP} group above the {CONTRAST_GROUP} group. '
+                'The base-vs-SFT comparison is not available; see base_comparison.',
     }
-    json.dump(summary, (OUT_DIR / 'finance_specialization.json').open('w'),
-              ensure_ascii=False, indent=2)
+    with (OUT_DIR / 'finance_specialization.json').open('w') as handle:
+        json.dump(summary, handle, ensure_ascii=False, indent=2)
 
     try:
         import numpy as np
+        import matplotlib as _mpl
         sds = list(SUB_DOMAINS.keys())
         fig, ax = plt.subplots(figsize=(8, 3.6))
         x = np.arange(len(sds))
-        groups = ['finance', 'base_8b', 'small_general', 'specialized_kr']
-        # main.tex 팔레트 일관 (Finance SFT=빨강, base=파랑, 소형=회색, KR 특화=청록)
-        colors = ['#E15759', '#4E79A7', '#BAB0AC', '#76B7B2']
-        labels = ['Finance SFT (8B)', 'Base (8B)', 'Small general (1-4B)', 'KR-specialized small']
-        w = 0.2
-        for i, (g, c, lab) in enumerate(zip(groups, colors, labels)):
-            vals = [grp_means.get(g, {}).get(sd) or 0 for sd in sds]
-            ax.bar(x + (i - 1.5) * w, vals, w, label=lab, color=c, alpha=0.85)
+        # 색감 통일: 그룹 수가 레지스트리에서 정해지므로 팔레트도 그 수에 맞춰 viridis에서 뽑는다.
+        virid = _mpl.colormaps['viridis']
+        colors = [virid(v) for v in np.linspace(0.25, 0.9, len(group_order))]
+        width = 0.75 / len(group_order)
+        offsets = np.linspace(-(0.75 - width) / 2, (0.75 - width) / 2, len(group_order))
+        for g, color, off in zip(group_order, colors, offsets):
+            vals = [group_means[g][sd] if group_means[g][sd] is not None else 0 for sd in sds]
+            ax.bar(x + off, vals, width, label=summary['group_labels'][g],
+                   color=color, alpha=0.85)
+        import textwrap
         ax.set_xticks(x)
-        ax.set_xticklabels([s.replace(' & ', '\n& ').replace(', ', ',\n') for s in sds],
-                            fontsize=FS_TICK - 1)
+        # 두 줄로 접는다. 한 줄이면 이웃 라벨과 겹친다.
+        ax.set_xticklabels([textwrap.fill(s, 18) for s in sds], fontsize=FS_TICK - 1)
         ax.set_ylabel(r'Mean tool hit $h$', fontsize=FS_LABEL)
-        ax.legend(fontsize=FS_LEGEND, loc='lower left', ncol=2)
+        ax.set_ylim(0, 1.05)
+        # 범례는 축 위로 뺀다. 그룹 수가 줄면서 lower left 에 두면 막대를 가린다.
+        ax.legend(fontsize=FS_LEGEND, loc='lower center', bbox_to_anchor=(0.5, 1.0),
+                  ncol=len(group_order), frameon=False)
+        # Rule 4: the cohort travels with the figure.
+        ax.text(0.0, 1.14, note, transform=ax.transAxes, fontsize=8,
+                color='#555555', ha='left', va='bottom')
         style_axes(ax)
         plt.tight_layout()
         plt.savefig(OUT_DIR / 'fig_finance_specialization.pdf', dpi=300, bbox_inches='tight')
         plt.savefig(OUT_DIR / 'fig_finance_specialization.png', dpi=300, bbox_inches='tight')
         plt.close()
-    except Exception as e:
-        print(f'plot failed: {e}')
+    except Exception as exc:                                   # pragma: no cover - plotting only
+        print(f'plot failed: {exc}')
 
-    print(f'[RQ5-finance] completed: {len(flat_targets)} target models')
-    if 'finance_vs_base_8b_diff' in summary:
-        print(f'  finance vs base_8b diff: {summary["finance_vs_base_8b_diff"]}')
+    print(f'[RQ5-finance] {note}')
+    if missing:
+        print(f'[RQ5-finance] not scored: {", ".join(missing)}')
+    for g in group_order:
+        print(f'  {g:20s} n={len(group_members[g])}  ' + '  '.join(
+            f'{sd.split()[0]}={group_means[g][sd]}' for sd in SUB_DOMAINS))
+    print(f'  finance vs {CONTRAST_GROUP} diff: {finance_vs_contrast}')
+    print('  base comparison NOT available: '
+          f'{", ".join(sorted(set(BASE_OF.values())))} are not in the serving registry; '
+          f'not scored in the finance group: '
+          f'{", ".join(base_comparison["finance_configs_not_scored"]) or "none"}')
+    for sd, tools in summary['sub_domain_tools_missing'].items():
+        print(f'  sub-domain tool with no category: {sd}: {", ".join(tools)}')
+
 
 if __name__ == '__main__':
     main()

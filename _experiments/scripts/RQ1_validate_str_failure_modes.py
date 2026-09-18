@@ -1,174 +1,230 @@
 #!/usr/bin/env python3
-"""RQ1: validate_str_fields 실패 모드 분석.
+"""RQ1: the failure modes of `validate_str_fields`.
 
-29 KR baseline 모델 × 3 validate_str_fields 케이스 = 87 호출 단위에서
-(i) 도구 미호출 / (ii) 정답 호출 / (iii) 다른 도구 mis-call 분류.
+What it reads
+    `_experiments/scripts/analysis/load.py` and nothing else from the results
+    trees: `load.single()` gives one row per (configuration, case) for the
+    main-table arm (Korean schema, Korean questions), and this step keeps the
+    rows whose `category` is `validate_str_fields`. It no longer walks
+    `_experiments/results_kr/eval/*.json` and no longer carries an
+    `EXCLUDE_MODELS` / `_CANONICAL_NAMES` literal: the cohort is the serving
+    registry (PORTING rule 3), and every output names how many of the 28
+    configurations are scored and which are not (PORTING rule 4).
 
-본문 인용 포인트:
-- validate_str_fields의 h=0.195 저변에서 "도구 미호출"이 주된 실패 모드
-- mis-call시 어느 도구로 가는지 (예: generate_str 등 인접 도구)
+What changed in what it counts
+    The four call-unit modes are unchanged (`no_call`, `correct_only`,
+    `correct_with_extra`, `miscall_only`), and they are still one unit per
+    (configuration, case). What changed underneath them:
+
+    - `called_tools` is now a tuple of plain tool-name strings, so the branch
+      that accepted either a string or a `{"name": ...}` dict is gone.
+    - the per-case `score` is gone with its definition (PORTING rule 1), so the
+      csv carries `h`, which is the "did this case come out right" the old
+      threshold was reaching for, in place of `primary_tool_hit`/`score`.
+    - `a` is null for a case with no parameter checks, so it is never read as
+      zero: the summary reports its mean over the non-null rows together with
+      that count (PORTING rule 2).
+    - the unit count follows the data rather than a sentence: the arm now holds
+      25 `validate_str_fields` cases, not 3, so the note is computed.
+    - `error_type` values come from the new taxonomy (PORTING rule 5); the
+      distribution is written out so the modes can be read against it.
+    - the keys of `per_model_breakdown` are `config_id`s, not model names.
+      Thinking and non-thinking are separate configurations, and each entry
+      carries the registry `label` and `group`.
+
+Outputs: _experiments/results_RQ1/validate_str_failure_modes.{csv,json}
+         _experiments/results_RQ1/fig_validate_str_modes.{pdf,png}
+         _experiments/results_RQ1/fig_validate_str_miscalled.{pdf,png}
 """
-import json, csv, sys
-from pathlib import Path
-from collections import defaultdict
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _plot_style import (plt, COL_BAD, COL_GOOD, COL_ACCENT, COL_PURPLE,
-                          FS_TICK, FS_LABEL, FS_TITLE, FS_LEGEND, FS_ANNOT, style_axes)
 
-EVAL_DIR = Path('_experiments/results_kr/eval')
-OUT_DIR = Path('_experiments/results_RQ1')
+from __future__ import annotations
+
+import csv
+import json
+import sys
+from collections import defaultdict
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from _experiments.scripts._plot_style import (COL_ACCENT, COL_BAD, COL_GOOD,  # noqa: E402
+                                              COL_PURPLE, FS_ANNOT, FS_LABEL, FS_TICK,
+                                              plt, style_axes)
+from _experiments.scripts.analysis import load  # noqa: E402
+
+OUT_DIR = ROOT / "_experiments" / "results_RQ1"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# 28-모델 코호트: 구세대/중간크기 변형 8개 + 중복 Kanana 릴리스 제외.
-# 다른 분석 스크립트(generate_new_figures, bootstrap_ranking_stability, RQ3,
-# RQ_oracle_vs_real, RQ_str_generation_quality, generate_reg_vs_analysis,
-# generate_fig4_scatter_v2)와 동일하며, 본문의 "28 configurations"와 맞는다.
-EXCLUDE_MODELS = {
-    "Qwen_Qwen3-30B-A3B-Instruct-2507", "Qwen_Qwen3-4B-Instruct-2507",
-    "Qwen_Qwen3-8B", "Qwen_Qwen3_5-9B__nothink", "Qwen_Qwen3_5-9B__think",
-    "Salesforce_Llama-xLAM-2-8b-fc-r", "Salesforce_xLAM-2-1b-fc-r",
-    "Salesforce_xLAM-2-32b-fc-r",
-    "kakaocorp/kanana-2-30b-a3b-instruct-2601",
-    "meta-llama/Llama-3.1-8B-Instruct",  # RQ5 금융특화 base 비교용으로만 추가(2026-09-09). 본문 28설정 코호트 밖
-}
-
-# 표기 정규화 전용 (safe 파일명 -> 논문 표기). 코호트 선택에는 쓰지 않는다.
-_CANONICAL_NAMES = {
-    "skt/A.X-4.0-Light", "skt/A.X-4.0",
-    "LGAI-EXAONE/EXAONE-4.0-1.2B", "LGAI-EXAONE/EXAONE-4.0-32B",
-    "kakaocorp/kanana-2-30b-a3b-instruct",
-    "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink",
-    "kakaocorp/kanana-2-30b-a3b-thinking-2601__think",
-    "DragonLLM/Llama-Open-Finance-8B", "DragonLLM/Qwen-Open-Finance-R-8B",
-    "openai/gpt-oss-20b__nothink", "openai/gpt-oss-20b__think",
-    "openai/gpt-oss-120b__nothink", "openai/gpt-oss-120b__think",
-    "meta-llama/Llama-3.2-3B-Instruct", "meta-llama/Llama-3.3-70B-Instruct",
-    "mistralai/Ministral-3-3B-Instruct-2512",
-    "mistralai/Mistral-Small-3.2-24B-Instruct-2506",
-    "microsoft/Phi-4-mini-instruct",
-    "Qwen/Qwen3.5-4B__nothink", "Qwen/Qwen3.5-4B__think",
-    "Qwen/Qwen3.5-27B__nothink", "Qwen/Qwen3.5-27B__think",
-    "Qwen/Qwen3.6-27B", "Qwen/Qwen3.6-35B-A3B",
-    "Salesforce/xLAM-2-3b-fc-r", "Salesforce/Llama-xLAM-2-70b-fc-r",
-    "google/gemma-4-E4B-it", "google/gemma-4-31B-it",
-    "NousResearch/Hermes-3-Llama-3.1-8B",
-}
+TOOL = "validate_str_fields"   # a `category` value in load.single()
+MODES = ("no_call", "correct_only", "correct_with_extra", "miscall_only")
+MODE_LABELS = ("No call", "Correct only", "Correct+extra", "Miscall only")
 
 
-_SAFE_TO_CANONICAL = {m.replace('/', '_').replace('.', '_'): m for m in _CANONICAL_NAMES}
-# eval 의 model 필드는 원래 이름(Qwen/Qwen3-8B)과 sanitize 이름(Qwen_Qwen3-8B)이 섞여 있다.
-# EXCLUDE_MODELS 는 두 표기가 섞여 있어, 원시 문자열로 비교하면 원래 이름으로 된 eval 이
-# 제외되지 않고 코호트가 28 에서 37 로 늘어난다(2026-09-15). 한 표기로 맞춰 비교한다.
-_EXCLUDE_SAFE = {m.replace('/', '_').replace('.', '_') for m in EXCLUDE_MODELS}
-def _excluded(m): return m.replace('/', '_').replace('.', '_') in _EXCLUDE_SAFE
-def _canonicalize(m): return _SAFE_TO_CANONICAL.get(m, m)
-def extract_tool_names(called_tools):
-    names = []
-    for t in called_tools or []:
-        if isinstance(t, dict):
-            names.append(t.get('name', ''))
-        else:
-            names.append(str(t))
-    return [n for n in names if n]
-
-def classify_mode(tool_names):
+def classify_mode(tool_names: tuple[str, ...]) -> str:
     if not tool_names:
-        return 'no_call'
-    has_correct = 'validate_str_fields' in tool_names
+        return "no_call"
+    has_correct = TOOL in tool_names
     if has_correct and len(tool_names) == 1:
-        return 'correct_only'
+        return "correct_only"
     if has_correct:
-        return 'correct_with_extra'
-    return 'miscall_only'
+        return "correct_with_extra"
+    return "miscall_only"
 
-def main():
-    files = sorted(EVAL_DIR.glob('eval_*.json'))
+
+def cohort(column: str = "single") -> tuple[int, list[str]]:
+    """(configurations scored, the ids of the 28 that are not) for one arm."""
+    table = load.missing()
+    absent = sorted(table.loc[~table[column], "config_id"])
+    return int(table[column].sum()), absent
+
+
+def _mean_with_n(series) -> tuple[float | None, int]:
+    """Rule 2: the mean over the non-null rows, and how many rows that was."""
+    values = series.dropna()
+    return (round(float(values.mean()), 4) if len(values) else None), int(len(values))
+
+
+def main() -> int:
+    cases = load.single()
+    n_configs, absent = cohort()
+    n_registry = n_configs + len(absent)
+    missing_ids = "|".join(absent)
+
+    subset = cases[cases["category"] == TOOL].sort_values(["config_id", "case_id"])
+    if subset.empty:
+        raise SystemExit(f"no {TOOL} cases in the scored arm")
+
     rows = []
-    mode_count = defaultdict(int)
-    miscall_dist = defaultdict(int)
-    per_model = defaultdict(lambda: defaultdict(int))
+    mode_count: dict[str, int] = defaultdict(int)
+    miscall_dist: dict[str, int] = defaultdict(int)
+    per_config: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
 
-    for f in files:
-        d = json.load(f.open())
-        model = d['model']
-        if _excluded(model):
-            continue
-        cat = d.get('by_category', {}).get('validate_str_fields', {})
-        for c in cat.get('per_case', []):
-            names = extract_tool_names(c.get('called_tools'))
-            mode = classify_mode(names)
-            mode_count[mode] += 1
-            per_model[model][mode] += 1
-            per_model[model]['total'] += 1
-            if mode in ('miscall_only', 'correct_with_extra'):
-                for n in names:
-                    if n != 'validate_str_fields':
-                        miscall_dist[n] += 1
-            rows.append({
-                'model': model, 'case_id': c.get('id'), 'mode': mode,
-                'called_tools': '|'.join(names),
-                'primary_tool_hit': c.get('primary_tool_hit'),
-                'score': c.get('score'), 'error_type': c.get('error_type'),
-            })
+    for case in subset.itertuples():
+        names = tuple(case.called_tools)
+        mode = classify_mode(names)
+        mode_count[mode] += 1
+        per_config[case.config_id][mode] += 1
+        per_config[case.config_id]["total"] += 1
+        if mode in ("miscall_only", "correct_with_extra"):
+            for name in names:
+                if name != TOOL:
+                    miscall_dist[name] += 1
+        rows.append({
+            "config_id": case.config_id, "label": case.label, "group": case.group,
+            "case_id": case.case_id, "difficulty": case.difficulty, "mode": mode,
+            "called_tools": "|".join(names),
+            "h": case.h, "a": "" if case.a is None else case.a,
+            "n_checks": case.n_checks, "error_type": case.error_type,
+            "n_configs": n_configs, "n_configs_expected": n_registry,
+            "missing_config_ids": missing_ids,
+        })
 
-    with (OUT_DIR / 'validate_str_failure_modes.csv').open('w', newline='') as f:
-        w = csv.DictWriter(f, fieldnames=rows[0].keys())
-        w.writeheader(); w.writerows(rows)
+    with (OUT_DIR / "validate_str_failure_modes.csv").open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(rows)
+
+    total_units = sum(mode_count.values())
+    n_cases = int(subset["case_id"].nunique())
+    h_mean, h_n = _mean_with_n(subset["h"])
+    a_mean, a_n = _mean_with_n(subset["a"])
+    labels = load.configs()["label"].to_dict()
+    groups = load.configs()["group"].to_dict()
 
     summary = {
-        'total_call_units': sum(mode_count.values()),
-        'mode_distribution': dict(mode_count),
-        'mode_distribution_pct': {k: round(100 * v / sum(mode_count.values()), 1)
-                                   for k, v in mode_count.items()},
-        'miscalled_tools_distribution': dict(sorted(miscall_dist.items(), key=lambda x: -x[1])),
-        'per_model_breakdown': {k: dict(v) for k, v in per_model.items()},
-        'note': 'validate_str_fields = 3 cases × 28 models = 84 call units. '
-                'no_call: 모델이 어떤 도구도 호출하지 않음. '
-                'correct_only: validate_str_fields만 호출. '
-                'correct_with_extra: validate_str_fields + 추가 도구. '
-                'miscall_only: validate_str_fields 미호출, 다른 도구 호출.',
+        "tool": TOOL,
+        "n_configs": n_configs,
+        "n_configs_expected": n_registry,
+        "missing_config_ids": absent,
+        "n_cases": n_cases,
+        "total_call_units": total_units,
+        "h_mean": h_mean, "h_n": h_n,
+        "a_mean": a_mean, "a_n": a_n,
+        "mode_distribution": {m: mode_count.get(m, 0) for m in MODES},
+        "mode_distribution_pct": {m: round(100 * mode_count.get(m, 0) / total_units, 1)
+                                  for m in MODES},
+        "error_type_distribution": {k: int(v) for k, v in
+                                    subset["error_type"].value_counts().items()},
+        "miscalled_tools_distribution": dict(sorted(miscall_dist.items(), key=lambda x: -x[1])),
+        "per_model_breakdown": {
+            config_id: {"label": labels.get(config_id, config_id),
+                        "group": groups.get(config_id, ""), **dict(counts)}
+            for config_id, counts in sorted(per_config.items())
+        },
+        "note": (
+            f"{TOOL} = {n_cases} cases x {n_configs} configurations = {total_units} call units. "
+            f"{n_configs} of {n_registry} configurations are scored; the rest are listed in "
+            f"missing_config_ids and are absent from every number here. "
+            "no_call: the model called no tool. "
+            f"correct_only: {TOOL} alone. "
+            f"correct_with_extra: {TOOL} plus other tools. "
+            f"miscall_only: {TOOL} not called, other tools called. "
+            "Keys of per_model_breakdown are config_ids: thinking and non-thinking are "
+            "separate configurations. "
+            "h is the case outcome that the pre-audit weighted score was thresholded for "
+            "(PORTING rule 1); a_mean is taken over the a_n cases that have parameter "
+            "checks, never over nulls read as zero (PORTING rule 2)."
+        ),
     }
-    json.dump(summary, (OUT_DIR / 'validate_str_failure_modes.json').open('w'),
-              ensure_ascii=False, indent=2)
+    (OUT_DIR / "validate_str_failure_modes.json").write_text(
+        json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # Rule 4: the figures say how much of the cohort they draw, and which ids
+    # they do not, rather than letting a caption claim 28.
+    cohort_note = (f"{TOOL}: {n_cases} cases x {n_configs} of {n_registry} configurations "
+                   f"= {total_units} call units"
+                   + (f". Not scored: {', '.join(absent)}" if absent else ""))
 
     try:
-        # Plot A: 실패 모드 분포
-        modes = ['no_call', 'correct_only', 'correct_with_extra', 'miscall_only']
-        labels = ['No call', 'Correct only', 'Correct+extra', 'Miscall only']
-        counts = [mode_count.get(m, 0) for m in modes]
+        # Plot A: the distribution of failure modes
+        counts = [mode_count.get(m, 0) for m in MODES]
         colors = [COL_BAD, COL_GOOD, COL_ACCENT, COL_PURPLE]
         fig, ax = plt.subplots(figsize=(4.5, 3.2))
-        ax.bar(range(len(labels)), counts, color=colors, alpha=0.85, width=0.65)
-        ax.set_xticks(range(len(labels)))
-        ax.set_xticklabels(labels, fontsize=FS_TICK, rotation=20, ha='right')
-        ax.set_ylabel('Call units', fontsize=FS_LABEL)
-        for i, c in enumerate(counts):
-            ax.text(i, c + 1, str(c), ha='center', fontsize=FS_ANNOT)
+        ax.bar(range(len(MODE_LABELS)), counts, color=colors, alpha=0.85, width=0.65)
+        ax.set_xticks(range(len(MODE_LABELS)))
+        ax.set_xticklabels(MODE_LABELS, fontsize=FS_TICK, rotation=20, ha="right")
+        ax.set_ylabel("Call units", fontsize=FS_LABEL)
+        for i, count in enumerate(counts):
+            ax.text(i, count + 1, str(count), ha="center", fontsize=FS_ANNOT)
         style_axes(ax)
         plt.tight_layout()
-        plt.savefig(OUT_DIR / 'fig_validate_str_modes.pdf', dpi=300, bbox_inches='tight')
-        plt.savefig(OUT_DIR / 'fig_validate_str_modes.png', dpi=300, bbox_inches='tight')
+        plt.figtext(0.0, -0.02, cohort_note, fontsize=FS_ANNOT - 2.5, va="top",
+                    ha="left", color="#444444", wrap=True)
+        plt.savefig(OUT_DIR / "fig_validate_str_modes.pdf", dpi=300, bbox_inches="tight")
+        plt.savefig(OUT_DIR / "fig_validate_str_modes.png", dpi=300, bbox_inches="tight")
         plt.close()
 
-        # Plot B: mis-called tools
+        # Plot B: which tools were called instead
         if miscall_dist:
             sorted_mis = sorted(miscall_dist.items(), key=lambda x: -x[1])[:8]
-            fig, ax = plt.subplots(figsize=(4.5, 3.2))
-            ax.barh([t for t, _ in sorted_mis][::-1],
-                    [c for _, c in sorted_mis][::-1],
+            # The old arm miscalled eight different tools; this one miscalls far
+            # fewer, so the panel shrinks with the bar count instead of stretching
+            # one bar over 3.2 inches.
+            fig, ax = plt.subplots(figsize=(4.5, min(3.2, 0.42 * len(sorted_mis) + 0.95)))
+            ax.barh([t for t, _ in sorted_mis][::-1], [c for _, c in sorted_mis][::-1],
                     color=COL_PURPLE, alpha=0.85)
-            ax.set_xlabel('Count', fontsize=FS_LABEL)
+            ax.set_xlabel("Count", fontsize=FS_LABEL)
             style_axes(ax)
             plt.tight_layout()
-            plt.savefig(OUT_DIR / 'fig_validate_str_miscalled.pdf', dpi=300, bbox_inches='tight')
-            plt.savefig(OUT_DIR / 'fig_validate_str_miscalled.png', dpi=300, bbox_inches='tight')
+            plt.figtext(0.0, -0.02, cohort_note, fontsize=FS_ANNOT - 2.5, va="top",
+                        ha="left", color="#444444", wrap=True)
+            plt.savefig(OUT_DIR / "fig_validate_str_miscalled.pdf", dpi=300, bbox_inches="tight")
+            plt.savefig(OUT_DIR / "fig_validate_str_miscalled.png", dpi=300, bbox_inches="tight")
             plt.close()
-    except Exception as e:
-        print(f'plot failed: {e}')
+    except Exception as exc:                                  # noqa: BLE001
+        print(f"plot failed: {exc}")
 
-    print(f'[RQ1] completed: {len(rows)} call units')
-    print(f'  modes: {dict(mode_count)}')
-    print(f'  miscall: {dict(sorted(miscall_dist.items(), key=lambda x: -x[1])[:5])}')
+    print(f"[RQ1] completed: {len(rows)} call units "
+          f"({n_cases} cases x {n_configs} of {n_registry} configurations)")
+    print(f"  not scored: {', '.join(absent) if absent else '(none)'}")
+    print(f"  modes: {dict(summary['mode_distribution'])}")
+    print(f"  h mean {h_mean} (n={h_n}), a mean {a_mean} (n={a_n})")
+    print(f"  error types: {summary['error_type_distribution']}")
+    print(f"  miscall: {dict(list(summary['miscalled_tools_distribution'].items())[:5])}")
+    return 0
 
-if __name__ == '__main__':
-    main()
+
+if __name__ == "__main__":
+    raise SystemExit(main())

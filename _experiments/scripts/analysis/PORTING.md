@@ -21,7 +21,9 @@ cfgs               = load.configs()                   # the serving registry as 
 `load.single()` columns include `config_id label group model reasoning_mode
 is_reasoning case_id category difficulty h r p a o f1_tools abstain_ok
 clarification_ok error_type error_flag stop_reason matched n_calls n_gold_calls
-n_checks called_tools gold_tools extra_tools hallucinated_param_count`.
+n_checks checks called_tools gold_tools extra_tools hallucinated_param_count`.
+`checks` is the per-argument gold comparison, one entry per checked parameter
+with `expected`, `passed` and a `reason`.
 
 `load.multiturn()` gives scenarios with `c h_mean a_mean context_accuracy
 sub_category n_turns` and turns with `turn h a context_hit clarification_ok
@@ -65,8 +67,8 @@ called_tools gold_tools`.
    that says 28 is the failure this rule exists to prevent.
 5. **The error taxonomy changed.** Old `{correct, wrong_func, hallucinated_call,
    api_error, wrong_value, missing_param, other}` is now `{correct, no_call,
-   wrong_tool, missing_tool, over_call, param_error, order_error, length_stop,
-   system_error}`. There is no mapping; use the new names. `wrong_func` is
+   wrong_tool, missing_tool, over_call, param_error, order_error, parse_fail,
+   length_stop, system_error}`. There is no mapping; use the new names. `wrong_func` is
    `wrong_tool`.
 
 ## Keep

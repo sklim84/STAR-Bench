@@ -1,108 +1,145 @@
-"""fig4_kr_en_scatter.png 재생성 (v3, 2026-06-01).
+#!/usr/bin/env python3
+"""fig4_kr_en_scatter: per-configuration h with Korean questions against English questions.
 
-results_{kr,en}/eval 의 29-모델 overall h (KR-KR vs EN-KR) 산점도.
-가독성 확보: 짧은 이름 + 핵심 모델만 라벨링(겹침 방지), 단일 컬럼 크기.
+Reads `_experiments/scripts/analysis/load.py` and nothing else from the results
+trees. The two arms are `load.single()` and `load.single(column="krtools_enq")`.
+
+Why that pair. Both arms serve the Korean tool schema, so the only thing that
+differs between a point's x and its y is the language of the question, which is
+what the figure claims to measure. `load.single()` is also the arm tab:overall
+reports, so a point's x is the h the main table prints for that configuration.
+The old version read `results_kr` against `results_en`. Those two held the
+English platform schema on both axes (see the cell map in
+`RQ4_query_tool_language_ablation.py`), so the x axis was not the main table's h,
+and the eval files there recorded no `tools_lang` or `query_lang` at all, which
+left the directory name as the only record of which schema had been served. The
+rerun names each arm for what varies, so the pairing is checkable rather than
+remembered: `load.COLUMNS["krtools_enq"]` is ("kr", "en") against
+`load.COLUMNS["single"]` ("kr", "kr").
+
+What else changed. The `EXCLUDE` set of nine sanitised model names and the
+`LABELS` table of five substring keyed annotation offsets are gone, and with them
+the `_norm` that existed only to make those substring matches land on eval files
+that spelled the same model two ways. The cohort is the serving registry, so
+there is nothing to exclude, and every point is labelled from its registry
+`label` rather than a chosen few: six configurations have both arms scored today,
+which is few enough to name them all and removes the offset table that had to be
+retuned whenever a point moved. Label offsets alternate by rank so two adjacent
+points do not collide, and each label keeps its leader line.
+
+Only six of 28 configurations have both arms scored, so the figure states that
+count next to the axes and lists the configurations it could not draw
+(PORTING.md rule 4). Nothing about the marker sizes, colour scale, diagonal or
+figure size changed.
+
+Output: _experiments/figures/fig4_kr_en_scatter.png (via _figure_out, R2C-007)
 """
-import json
-import glob
-import numpy as np
+from __future__ import annotations
+
+import sys
+import textwrap
+from pathlib import Path
+
 import matplotlib
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors  # noqa: E402
+import matplotlib.pyplot as plt  # noqa: E402
+import numpy as np  # noqa: E402
+
+_ROOT = Path(__file__).resolve().parents[2]
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 # Figures are written inside this repository only; the manuscript copy is one
 # explicit step (_figure_out, R2C-007).
-import sys as _sys
-from pathlib import Path as _P
-_sys.path.insert(0, str(_P(__file__).resolve().parent))
-from _figure_out import install as _install_figure_out
-_SB = _P(__file__).resolve().parents[2]
+from _figure_out import install as _install_figure_out  # noqa: E402
+
+from _experiments.scripts.analysis import load  # noqa: E402
+
 SB_FIG = _install_figure_out()
+OUT = SB_FIG / "fig4_kr_en_scatter.png"
 
-from pathlib import Path
-
-PAPER_ROOT = Path(__file__).resolve().parent.parent
-STARBENCH = _SB
-KR_EVAL = STARBENCH / "_experiments" / "results_kr" / "eval"
-EN_EVAL = STARBENCH / "_experiments" / "results_en" / "eval"
-OUT = Path(__file__).resolve().parent / "fig4_kr_en_scatter.png"
-
-EXCLUDE = {
-    "Qwen_Qwen3-30B-A3B-Instruct-2507", "Qwen_Qwen3-4B-Instruct-2507",
-    "Qwen_Qwen3-8B", "Qwen_Qwen3_5-9B__nothink", "Qwen_Qwen3_5-9B__think",
-    "Salesforce_Llama-xLAM-2-8b-fc-r", "Salesforce_xLAM-2-1b-fc-r",
-    "Salesforce_xLAM-2-32b-fc-r",
-    "kakaocorp/kanana-2-30b-a3b-instruct-2601",  # drop redundant Kanana release (keep orig + Think)
-}
-
-# 라벨링할 핵심 모델 (substring -> (표시명, ha, va, dx, dy))
-# 모두 축 박스 안쪽으로 향하도록 배치(오른쪽 경계 침범 방지).
-# 강조 모델 2종: (1) 두 언어 모두 강함(top performers), (2) 의미 있는 언어 격차
-# 두 최상위(Gemma-4-31B,Qwen3.6-27B)는 거의 같은 위치 → 한 라벨로 합치고 리더선으로 연결
-LABELS = {
-    "google_gemma-4-31B-it":               ("Gemma-4-31B,\nQwen3.6-27B", "right", "bottom", 3, 6),
-    "Qwen_Qwen3_6-27B":                    ("", "center", "top", 0, 0),          # 마커만(라벨은 위에 합침)
-    "meta-llama_Llama-3_3-70B-Instruct":   ("Llama-3.3-70B", "center", "top", 14, -18),
-    "kakaocorp/kanana-2-30b-a3b-instruct": ("Kanana-2-Instruct", "right", "bottom", -8, 9),
-    "kakaocorp_kanana-2-30b-a3b-instruct": ("Kanana-2-Instruct", "right", "bottom", -8, 9),
-}
+KR_ARM = "single"          # Korean tool schema, Korean questions
+EN_ARM = "krtools_enq"     # Korean tool schema, English questions
 
 
-def _norm(name):
-    """eval 의 model 필드는 원래 이름(google/gemma-4-31B-it)과 sanitize 이름
-    (google_gemma-4-31B-it)이 섞여 있고, KR·EN 결과 디렉터리마다 비율도 다르다. 원시 문자열로
-    KR∩EN 을 구하면 형식이 어긋난 모델이 통째로 빠지고(2026-09-15 에 28개 중 5개만 남았다),
-    EXCLUDE 와 LABELS 의 부분문자열 매칭도 빗나간다. 읽는 순간 한 형식으로 맞춘다."""
-    return name.replace("/", "_").replace(".", "_")
+def collect() -> tuple[list[dict], list[str], int]:
+    """One point per configuration scored in both arms, in registry order."""
+    kr = load.single(column=KR_ARM).groupby("config_id")["h"].agg(["mean", "count"])
+    en = load.single(column=EN_ARM).groupby("config_id")["h"].agg(["mean", "count"])
+    registry = load.configs()
 
-
-_EXCLUDE_N = {_norm(e) for e in EXCLUDE}
-
-
-def load(evdir):
-    out = {}
-    for f in glob.glob(str(evdir / "eval_*.json")):
-        d = json.load(open(f))
-        m = _norm(d["model"])
-        if m in _EXCLUDE_N:
+    rows = []
+    for config_id in registry["config_id"]:
+        if config_id not in kr.index or config_id not in en.index:
             continue
-        out[m] = d.get("overall", {}).get("primary_tool_hit_rate")
-    return out
+        rows.append({"config_id": config_id,
+                     "label": str(registry.loc[config_id, "label"]),
+                     "kr": float(kr.loc[config_id, "mean"]),
+                     "en": float(en.loc[config_id, "mean"]),
+                     "n_kr": int(kr.loc[config_id, "count"]),
+                     "n_en": int(en.loc[config_id, "count"])})
+
+    todo = load.missing()
+    drawn = {row["config_id"] for row in rows}
+    absent = [c for c in todo["config_id"] if c not in drawn]
+    return rows, absent, int(len(registry))
 
 
-def label_for(mid):
-    # kanana plain instruct (EN-advantaged outlier): exclude 2601/thinking variants
-    if ("kanana-2-30b-a3b-instruct" in mid
-            and "2601" not in mid and "thinking" not in mid):
-        return LABELS["kakaocorp_kanana-2-30b-a3b-instruct"]
-    for key, v in LABELS.items():
-        if "kanana" in key:
-            continue
-        if key in mid:
-            return v
-    return None
+LABEL_FONT = 6.3
+LABEL_GAP_PT = 8.5      # a little over one line of LABEL_FONT
 
 
-def main():
-    kr, en = load(KR_EVAL), load(EN_EVAL)
-    common = sorted(set(kr) & set(en))
-    rows = [(m, kr[m], en[m]) for m in common if kr[m] is not None and en[m] is not None]
+def _label_points(fig, ax, rows, kr_v, en_v, lo, hi) -> None:
+    """Names every point, pushing labels apart instead of consulting a name table.
 
-    kr_v = np.array([r[1] for r in rows])
-    en_v = np.array([r[2] for r in rows])
-    mean_h = (kr_v + en_v) / 2.0           # 색 = 두 언어 평균 성능(우열)
-    import matplotlib as _mpl
-    norm = _mpl.colors.Normalize(vmin=mean_h.min(), vmax=mean_h.max())
-    cmap = "viridis"
+    The old version carried an offset per interesting model and left the rest
+    unlabelled, which is why it needed a substring keyed table that had to be
+    retuned whenever a point moved. Here a label goes inward, away from the axis
+    edge and the colour bar, and the labels are spread vertically until they
+    clear each other by one line. The spacing is read off the axes as they will
+    be drawn, so `tight_layout` has to have run already.
+    """
+    dpi = fig.dpi
+    pixels = ax.transData.transform(np.column_stack([kr_v, en_v]))
+    gap = LABEL_GAP_PT * dpi / 72.0
+
+    order = np.argsort(pixels[:, 1])
+    spread = pixels[order, 1].astype(float).copy()
+    for i in range(1, len(spread)):
+        spread[i] = max(spread[i], spread[i - 1] + gap)
+    # Re-centre, so pushing the crowded points apart does not drift the whole
+    # block off one end of the axes.
+    spread += ((pixels[order, 1].min() + pixels[order, 1].max())
+               - (spread.min() + spread.max())) / 2.0
+
+    middle = (lo + hi) / 2.0
+    for rank, index in enumerate(order):
+        inward_left = kr_v[index] > middle
+        dx = -9.0 if inward_left else 9.0
+        dy = (spread[rank] - pixels[index, 1]) * 72.0 / dpi
+        ax.annotate(rows[index]["label"], (kr_v[index], en_v[index]),
+                    fontsize=LABEL_FONT, color="#111", fontweight="bold",
+                    xytext=(dx, dy), textcoords="offset points",
+                    ha="right" if inward_left else "left", va="center", zorder=6,
+                    arrowprops=dict(arrowstyle="-", lw=0.5, color="#777",
+                                    shrinkA=1, shrinkB=3))
+
+
+def main() -> int:
+    rows, absent, total = collect()
+    if not rows:
+        raise SystemExit(f"no configuration is scored in both {KR_ARM!r} and {EN_ARM!r}")
+
+    kr_v = np.array([row["kr"] for row in rows])
+    en_v = np.array([row["en"] for row in rows])
+    mean_h = (kr_v + en_v) / 2.0           # colour = how well the pair does overall
+    norm = mcolors.Normalize(vmin=mean_h.min(), vmax=mean_h.max())
 
     fig, ax = plt.subplots(figsize=(3.8, 3.15))
-    # 강조 모델(두 언어 모두 강함 + 의미 있는 격차)은 크게, 면색=평균성능 유지(우열 보존)
-    _hi = [i for i, (m, _, _) in enumerate(rows) if label_for(m) is not None]
-    _pl = [i for i in range(len(rows)) if i not in _hi]
-    sc = ax.scatter(kr_v[_pl], en_v[_pl], c=mean_h[_pl], cmap=cmap, norm=norm,
-                    s=30, edgecolors="white", linewidths=0.25, zorder=3)
-    ax.scatter(kr_v[_hi], en_v[_hi], c=mean_h[_hi], cmap=cmap, norm=norm,
-               s=72, edgecolors="white", linewidths=0.9, zorder=5)
+    sc = ax.scatter(kr_v, en_v, c=mean_h, cmap="viridis", norm=norm,
+                    s=52, edgecolors="white", linewidths=0.6, zorder=4)
     cbar = fig.colorbar(sc, ax=ax, fraction=0.036, pad=0.015, shrink=0.7)
     cbar.set_label(r"mean $h$", fontsize=7)
     cbar.ax.tick_params(labelsize=6)
@@ -113,35 +150,41 @@ def main():
     ax.plot([lo, hi], [lo, hi], "--", color="gray", linewidth=0.9,
             label=r"$h_{\mathrm{KR}}{=}h_{\mathrm{EN}}$", zorder=1)
 
-    for m, k, e in rows:
-        lab = label_for(m)
-        if lab:
-            name, ha, va, dx, dy = lab
-            if not name:                      # 마커만(합친 라벨) → 텍스트 생략
-                continue
-            ax.annotate(name, (k, e), fontsize=6.3, color="#111", fontweight="bold",
-                        xytext=(dx, dy), textcoords="offset points",
-                        ha=ha, va=va, zorder=6,
-                        arrowprops=dict(arrowstyle="-", lw=0.5, color="#777",
-                                        shrinkA=1, shrinkB=3))
-
-    ax.set_xlabel(r"$h_{\mathrm{KR}}$ (Korean query)", fontsize=9)
-    ax.set_ylabel(r"$h_{\mathrm{EN}}$ (English query)", fontsize=9)
+    ax.set_xlabel(r"$h_{\mathrm{KR}}$ (Korean question)", fontsize=9)
+    ax.set_ylabel(r"$h_{\mathrm{EN}}$ (English question)", fontsize=9)
     ax.tick_params(axis="both", labelsize=8)
     ax.set_xlim(lo, hi)
     ax.set_ylim(lo, hi)
-
     ax.legend(fontsize=7.5, loc="lower right", frameon=False)
     ax.grid(True, alpha=0.22)
+
+    ax.set_title(f"{len(rows)} of {total} configurations, Korean tool schema on both axes",
+                 fontsize=7.5, pad=4)
+
     plt.tight_layout()
+    _label_points(fig, ax, rows, kr_v, en_v, lo, hi)
+
+    if absent:
+        note = "both arms not scored yet: " + ", ".join(absent)
+        fig.text(0.0, -0.02, "\n".join(textwrap.wrap(note, 78)),
+                 fontsize=4.2, color="#666666", va="top", ha="left")
+
     plt.savefig(OUT, dpi=300, bbox_inches="tight")
     plt.close()
+
+    delta = kr_v - en_v
     print(f"Saved {OUT}")
-    _d = kr_v - en_v
+    print(f"n_configs={len(rows)} of {total}; x={KR_ARM} (kr tools, kr questions), "
+          f"y={EN_ARM} (kr tools, en questions)")
+    print("both arms not scored yet: " + (", ".join(absent) or "none"))
     print(f"n={len(rows)} KR={kr_v.mean():.4f} EN={en_v.mean():.4f} "
-          f"gap={(kr_v.mean()-en_v.mean())*100:.1f}pp "
-          f"KRadv={int((_d>0).sum())} ENadv={int((_d<0).sum())}")
+          f"gap={(kr_v.mean() - en_v.mean()) * 100:.1f}pp "
+          f"KRadv={int((delta > 0).sum())} ENadv={int((delta < 0).sum())}")
+    for row in rows:
+        print(f"  {row['config_id']:<16s} kr={row['kr']:.4f} (n={row['n_kr']})  "
+              f"en={row['en']:.4f} (n={row['n_en']})")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

@@ -1,128 +1,164 @@
 #!/usr/bin/env python3
-"""main.tex tab:overall 의 단일턴 열(h, r, p, a, o) 생성.
+"""The single-turn columns of tab:overall in main.tex (h, r, p, a, o).
 
-results_kr/eval 에서 본문 28설정 코호트의 overall 지표를 읽어, 원고 표와 같은 순서·표기로
-행을 만든다. 열마다 1위는 \\textbf, 2위는 \\underline 으로 표시한다(원고 캡션 규칙).
+Reads `_experiments/scripts/analysis/load.py` and nothing else from the results
+trees. The arm is `load.single()`, the Korean tool schema with Korean questions,
+which is the arm tab:overall reports.
 
-멀티턴 열(h-bar, a-bar, c)은 여기서 만들지 않는다. 원고의 멀티턴 열은 results_mt_oracle 을
-재채점한 값이라(원고 커밋 9f9b448) 이 스크립트가 읽는 overall 과 다르다.
+What changed. The old version carried a 28 entry `ROWS` literal that paired an
+eval `model` string with a display name and a group, and it normalised that
+string by hand because the pre-audit eval files spelled the model two ways and
+kept `think` as a separate boolean. Rows now come from `load.single()` joined to
+`load.configs()`: the display name is the registry `label`, the group is the
+registry `group`, and a thinking pair is two `config_id`s with two labels instead
+of one model name with a suffix. No name list is left to drift from the registry.
 
-2026-09-15 개정: 금키 재실행(results_kr, 커밋 4bddc4c) 반영. 이전 판은 T 설정 4개가 빠진
-24행이었고, eval 의 model 필드 표기(원래 이름 / sanitize 이름)가 섞이면서 CSV 조회가
-어긋났다. 표기는 _norm 으로 맞춘다.
+The metrics are the fixed ones (D02), so a mean is taken over the cases where the
+metric is defined and is printed with that count in the CSV. `p` is null for a
+case where the model called no tool and `a` is null for a case with no parameter
+checks; the pre-audit keys wrote 1.0 into both, which inflated `p` for a model
+that abstained often and `a` for a model that called tools with no checkable
+arguments. `avg_tool_precision` therefore does not map onto a single new number:
+the per-case mean over the cases with calls is the honest counterpart, and it is
+what `load.single()["p"]` gives and what the scorer records as `p_case`.
 
-출력: _experiments/results_RQ1/main_table_single_turn.{tex,csv}
+The row order is the registry order, because tab:overall lists its rows in that
+order and a person transcribes this file into the table line by line. Every other
+ordering in the analysis comes from the metric.
+
+Ranks are computed over the scored rows only. 18 of the 28 configurations are
+scored today, so the bold and the underline say which of those 18 leads, not
+which of the 28 does; the header comment in the .tex says so and names the
+configurations that are missing (PORTING.md rule 4).
+
+Multi-turn columns (h-bar, a-bar, c) are not made here. tab:overall takes them
+from the oracle setting, and `generate_full_models_table.py` is the step that
+reads both settings at once.
+
+Output: _experiments/results_RQ1/main_table_single_turn.{tex,csv}
 """
+from __future__ import annotations
+
 import csv
-import json
+import math
+import sys
 from pathlib import Path
 
-_SB = Path(__file__).resolve().parents[2]
-EVAL_DIR = _SB / '_experiments' / 'results_kr' / 'eval'
-OUT_DIR = _SB / '_experiments' / 'results_RQ1'
+_ROOT = Path(__file__).resolve().parents[2]
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
 
-# (eval model id, 원고 표기, 원고 그룹) — 원고 table/tab-exp-oveall.tex 의 행 순서
-ROWS = [
-    ('skt/A.X-4.0-Light', 'A.X-4.0-Light (7B)', 'Korean-Specialized'),
-    ('skt/A.X-4.0', 'A.X-4.0 (72B)', 'Korean-Specialized'),
-    ('LGAI-EXAONE/EXAONE-4.0-1.2B', 'EXAONE-4.0-1.2B', 'Korean-Specialized'),
-    ('LGAI-EXAONE/EXAONE-4.0-32B', 'EXAONE-4.0-32B', 'Korean-Specialized'),
-    ('kakaocorp/kanana-2-30b-a3b-instruct', 'Kanana-2-Instruct', 'Korean-Specialized'),
-    ('kakaocorp/kanana-2-30b-a3b-thinking-2601', 'Kanana-2-Think', 'Korean-Specialized'),
-    ('DragonLLM/Llama-Open-Finance-8B', 'Llama-Open-Finance-8B', 'Finance-Specialized'),
-    ('DragonLLM/Qwen-Open-Finance-R-8B', 'Qwen-Open-Finance-R-8B', 'Finance-Specialized'),
-    ('openai/gpt-oss-20b__nothink', 'gpt-oss-20B (NT)', 'General-Purpose'),
-    ('openai/gpt-oss-20b__think', 'gpt-oss-20B (T)', 'General-Purpose'),
-    ('openai/gpt-oss-120b__nothink', 'gpt-oss-120B (NT)', 'General-Purpose'),
-    ('openai/gpt-oss-120b__think', 'gpt-oss-120B (T)', 'General-Purpose'),
-    ('meta-llama/Llama-3.2-3B-Instruct', 'Llama-3.2-3B', 'General-Purpose'),
-    ('meta-llama/Llama-3.3-70B-Instruct', 'Llama-3.3-70B', 'General-Purpose'),
-    ('NousResearch/Hermes-3-Llama-3.1-8B', 'Hermes-3-8B', 'General-Purpose'),
-    ('mistralai/Ministral-3-3B-Instruct-2512', 'Ministral-3-3B', 'General-Purpose'),
-    ('mistralai/Mistral-Small-3.2-24B-Instruct-2506', 'Mistral-Small-24B', 'General-Purpose'),
-    ('microsoft/Phi-4-mini-instruct', 'Phi-4-mini', 'General-Purpose'),
-    ('Qwen/Qwen3.5-4B__nothink', 'Qwen3.5-4B (NT)', 'General-Purpose'),
-    ('Qwen/Qwen3.5-4B__think', 'Qwen3.5-4B (T)', 'General-Purpose'),
-    ('Qwen/Qwen3.5-27B__nothink', 'Qwen3.5-27B (NT)', 'General-Purpose'),
-    ('Qwen/Qwen3.5-27B__think', 'Qwen3.5-27B (T)', 'General-Purpose'),
-    ('Qwen/Qwen3.6-27B', 'Qwen3.6-27B', 'General-Purpose'),
-    ('Qwen/Qwen3.6-35B-A3B', 'Qwen3.6-35B-A3B', 'General-Purpose'),
-    ('Salesforce/xLAM-2-3b-fc-r', 'xLAM-2-3B', 'General-Purpose'),
-    ('Salesforce/Llama-xLAM-2-70b-fc-r', 'xLAM-2-70B', 'General-Purpose'),
-    ('google/gemma-4-E4B-it', 'Gemma-4-E4B', 'General-Purpose'),
-    ('google/gemma-4-31B-it', 'Gemma-4-31B', 'General-Purpose'),
-]
+from _experiments.scripts.analysis import load  # noqa: E402
 
-COLS = [
-    ('h', 'primary_tool_hit_rate'),
-    ('r', 'avg_tool_recall'),
-    ('p', 'avg_tool_precision'),
-    ('a', 'avg_param_accuracy'),
-    ('o', 'avg_order_score'),
-]
+OUT_DIR = _ROOT / "_experiments" / "results_RQ1"
+
+# The table's five single-turn columns, in the order tab:overall prints them.
+COLS = ("h", "r", "p", "a", "o")
 
 
-def _norm(name):
-    """슬래시·마침표를 언더스코어로 정규화."""
-    return name.replace('/', '_').replace('.', '_')
+def fmt(value) -> str:
+    """The manuscript's notation: three decimals, no leading zero (.544)."""
+    if value is None or (isinstance(value, float) and math.isnan(value)):
+        return "--"
+    return f"{value:.3f}".lstrip("0")
 
 
-def load_kr():
-    """eval JSON 로드. think 플래그가 있는데 접미사가 없으면 붙인다."""
-    out = {}
-    for f in sorted(EVAL_DIR.glob('eval_*.json')):
-        d = json.load(f.open())
-        mid = d.get('model_id') or d.get('model')
-        think = d.get('think')
-        if think is True and not mid.endswith('__think'):
-            mid = f'{mid}__think'
-        elif think is False and not mid.endswith('__nothink'):
-            mid = f'{mid}__nothink'
-        out[_norm(mid)] = d.get('overall', {})
-    return out
+def rank_marks(values: list) -> list[str]:
+    """Column values -> printed cells. Best is bold, second is underlined.
 
-
-def fmt(v):
-    """원고 표기: 소수 셋째 자리, 앞자리 0 생략(.544)."""
-    return f'{v:.3f}'.lstrip('0') if v is not None else '--'
-
-
-def rank_marks(values):
-    """열 하나의 값 목록 -> 표시 목록. 반올림한 값이 1위와 같으면 모두 굵게, 2위 값은 밑줄."""
-    shown = sorted({fmt(v) for v in values}, reverse=True)
-    first, second = shown[0], (shown[1] if len(shown) > 1 else None)
+    The comparison is on the rounded string, so two models that print the same
+    three decimals are marked the same rather than separated by a difference the
+    table does not show.
+    """
+    shown = sorted({fmt(v) for v in values} - {"--"}, reverse=True)
+    first = shown[0] if shown else None
+    second = shown[1] if len(shown) > 1 else None
     marks = []
-    for v in values:
-        s = fmt(v)
-        marks.append(f'\\textbf{{{s}}}' if s == first else f'\\underline{{{s}}}' if s == second else s)
+    for value in values:
+        cell = fmt(value)
+        if cell == first:
+            marks.append(f"\\textbf{{{cell}}}")
+        elif cell == second:
+            marks.append(f"\\underline{{{cell}}}")
+        else:
+            marks.append(cell)
     return marks
 
 
-def main():
-    kr = load_kr()
-    missing = [mid for mid, _, _ in ROWS if _norm(mid) not in kr]
-    if missing:
-        raise SystemExit(f'results_kr/eval 에 없는 설정: {missing}')
+def collect() -> tuple[list[dict], list[str]]:
+    """One row per scored configuration, in registry order, plus the missing ids."""
+    cases = load.single()
+    registry = load.configs()
+    scored = set(cases["config_id"])
 
-    table = {key: [kr[_norm(mid)].get(key) for mid, _, _ in ROWS] for _, key in COLS}
-    marked = {key: rank_marks(vals) for key, vals in table.items()}
+    rows = []
+    for config_id in registry["config_id"]:
+        if config_id not in scored:
+            continue
+        subset = cases[cases["config_id"] == config_id]
+        row = {"config_id": config_id,
+               "model": registry.loc[config_id, "model"],
+               "label": registry.loc[config_id, "label"],
+               "group": registry.loc[config_id, "group"],
+               "n_cases": int(len(subset))}
+        for column in COLS:
+            defined = subset[column].dropna()
+            row[column] = float(defined.mean()) if len(defined) else None
+            row[f"n_{column}"] = int(len(defined))
+        rows.append(row)
+
+    todo = load.missing()
+    absent = todo.loc[~todo["single"], "config_id"].tolist()
+    return rows, absent
+
+
+def provenance(rows: list[dict], absent: list[str]) -> list[str]:
+    """The comment block every output carries (PORTING.md rule 4)."""
+    total = len(rows) + len(absent)
+    lines = [f"n_configs={len(rows)} of {total} in the serving registry, "
+             f"arm=single (Korean tool schema, Korean questions)"]
+    if absent:
+        lines.append("not scored yet: " + ", ".join(absent))
+        lines.append("bold and underline rank the scored rows only, so they can move "
+                     "when the rest arrive")
+    else:
+        lines.append("not scored yet: none")
+    return lines
+
+
+def main() -> int:
+    rows, absent = collect()
+    marked = {column: rank_marks([row[column] for row in rows]) for column in COLS}
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    lines = []
-    for i, (mid, name, group) in enumerate(ROWS):
-        cells = ' & '.join(marked[key][i] for _, key in COLS)
-        lines.append(f'{name:<24s} & {cells} \\\\')
-    (OUT_DIR / 'main_table_single_turn.tex').write_text('\n'.join(lines) + '\n')
+    note = provenance(rows, absent)
 
-    with (OUT_DIR / 'main_table_single_turn.csv').open('w', newline='') as f:
-        w = csv.writer(f)
-        w.writerow(['model_id', 'display_name', 'group'] + [c for c, _ in COLS])
-        for i, (mid, name, group) in enumerate(ROWS):
-            w.writerow([mid, name, group] + [round(table[key][i], 4) for _, key in COLS])
+    lines = [f"% {line}" for line in note]
+    for index, row in enumerate(rows):
+        cells = " & ".join(marked[column][index] for column in COLS)
+        lines.append(f"{row['label']:<24s} & {cells} \\\\")
+    tex_path = OUT_DIR / "main_table_single_turn.tex"
+    tex_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-    print('\n'.join(lines))
-    print(f'\n{len(ROWS)} rows -> {OUT_DIR / "main_table_single_turn.tex"}')
+    csv_path = OUT_DIR / "main_table_single_turn.csv"
+    with csv_path.open("w", newline="", encoding="utf-8") as handle:
+        for line in note:
+            handle.write(f"# {line}\n")
+        writer = csv.writer(handle)
+        # n_<metric> is the count the mean was taken over, which is not n_cases
+        # for p, a and o: those are null where the metric does not apply.
+        writer.writerow(["config_id", "model", "display_name", "group", *COLS,
+                         *(f"n_{c}" for c in COLS), "n_cases"])
+        for row in rows:
+            writer.writerow([row["config_id"], row["model"], row["label"], row["group"],
+                             *(("" if row[c] is None else round(row[c], 4)) for c in COLS),
+                             *(row[f"n_{c}"] for c in COLS), row["n_cases"]])
+
+    print("\n".join(lines))
+    print(f"\n{len(rows)} rows -> {tex_path}")
+    print(f"{len(rows)} rows -> {csv_path}")
+    return 0
 
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    raise SystemExit(main())

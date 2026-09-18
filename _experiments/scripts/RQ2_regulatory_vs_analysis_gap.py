@@ -1,138 +1,167 @@
 #!/usr/bin/env python3
-"""RQ2: 규제 출력 카테고리 vs 일반 분석 카테고리 평균 h 격차.
+"""RQ2: the Regulatory Reporting tools against every other tool, per configuration.
 
-규제 출력 그룹 (4): validate_str_fields, lookup_fiu_reference_types, detect_ctr_candidates,
-                     get_aml_glossary
-일반 분석 그룹: 그 외 모든 도구별 카테고리 (multi_tool/missing_parameters 제외)
+The metric is `h`, the primary tool hit (0/1): did the configuration reach for
+the right tool on this case. The pre-audit step read
+`by_category[t].aggregated.primary_tool_hit_rate`; that key is gone together with
+the weighted score it sat beside (D02), and `h` is the same quantity under the
+scorer's own name (PORTING rule 1). `load.single().groupby("category")["h"].mean()`
+and `load.aggregates("single")[cfg]["by_category"][t]["h"]["mean"]` agree.
 
-코호트는 본문과 같은 28-모델 세트다 (다른 분석 스크립트와 동일한 EXCLUDE_MODELS).
+Regulatory Reporting is four single-turn tools: STR-field validation
+(`validate_str_fields`), CTR-candidate detection (`detect_ctr_candidates`), FIU
+reference-type lookup (`lookup_fiu_reference_types`) and AML glossary lookup
+(`get_aml_glossary`). `generate_str` belongs to the subdomain in the manuscript's
+tool table but is multi-turn only, so no single-turn category carries it.
+Analysis is every other tool category. `multi_tool` and `missing_parameters` are
+case groups rather than tools and are on neither side.
 
-본문 인용 포인트:
-- 두 그룹 평균 h 격차의 정량적 크기
-- 도메인 특화 평가의 필요성 정량 근거
+Each side is the unweighted mean over its category means, the definition the
+manuscript states, and the gap is analysis minus regulatory: a positive gap means
+the regulatory tools were harder. Every row and the summary carry the number of
+categories and cases behind the mean (rule 2), and both outputs carry `n_configs`
+with the configuration ids still unscored (rule 4).
+
+The cohort is the serving registry through `load.single()`. The `EXCLUDE_MODELS`
+and `_CANONICAL_NAMES` literals this step used to carry are gone (rule 3):
+display names come from `label`, grouping from `group`.
+
+Manuscript: the numbers behind fig:reg_vs_anal and the "reporting tools are
+consistently harder than analysis tools" paragraph in Section 4.
+
+Outputs
+    _experiments/results_RQ2/regulatory_vs_analysis_gap.csv
+    _experiments/results_RQ2/regulatory_vs_analysis_gap.json
+    _experiments/results_RQ2/fig_regulatory_vs_analysis.{pdf,png}
+    _experiments/results_RQ2/fig_regulatory_gap_distribution.{pdf,png}
 """
-import json, csv, sys
+import csv
+import json
+import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _plot_style import (plt, COL_GOOD, COL_BAD, COL_PURPLE, FS_TICK, FS_LABEL,
-                          FS_TITLE, FS_LEGEND, style_axes, short_name)
 
-_SB = Path(__file__).resolve().parents[2]   # star-bench root (fix stale _paper/ path)
-EVAL_DIR = _SB / '_experiments' / 'results_kr' / 'eval'
+_SB = Path(__file__).resolve().parents[2]   # repository root
+for _p in (str(Path(__file__).resolve().parent), str(_SB)):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
+from _plot_style import (plt, COL_GOOD, COL_BAD, COL_PURPLE, FS_LABEL,  # noqa: E402
+                         FS_LEGEND, style_axes)
+from _experiments.scripts.analysis import load  # noqa: E402
+
 OUT_DIR = _SB / '_experiments' / 'results_RQ2'
-OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# Regulatory Reporting subdomain (single-turn tools; generate_str is multi-turn only)
-REGULATORY = {'detect_ctr_candidates', 'lookup_fiu_reference_types', 'validate_str_fields', 'get_aml_glossary'}
-# 카테고리 제외: 단일 도구가 아닌 합성 케이스군.
-# (이름이 비슷한 EXCLUDE_MODELS와 혼동하지 말 것 — 아래는 카테고리, 그쪽은 모델이다.)
+# Regulatory Reporting subdomain (single-turn tools; generate_str is multi-turn only).
+REGULATORY = {'detect_ctr_candidates', 'lookup_fiu_reference_types',
+              'validate_str_fields', 'get_aml_glossary'}
+# Not tools: synthetic case groups. Excluded from both sides, as before.
 EXCLUDE_CATEGORIES = {'multi_tool', 'missing_parameters'}
 
-# 28-모델 코호트: 구세대/중간크기 변형 8개 + 중복 Kanana 릴리스 제외.
-# generate_new_figures.py, bootstrap_ranking_stability.py, RQ3_error_propagation.py,
-# RQ_oracle_vs_real.py, RQ_str_generation_quality.py, generate_reg_vs_analysis.py,
-# generate_fig4_scatter_v2.py 와 동일한 집합이며, 본문의 "28 configurations"와 맞는다.
-EXCLUDE_MODELS = {
-    "Qwen_Qwen3-30B-A3B-Instruct-2507", "Qwen_Qwen3-4B-Instruct-2507",
-    "Qwen_Qwen3-8B", "Qwen_Qwen3_5-9B__nothink", "Qwen_Qwen3_5-9B__think",
-    "Salesforce_Llama-xLAM-2-8b-fc-r", "Salesforce_xLAM-2-1b-fc-r",
-    "Salesforce_xLAM-2-32b-fc-r",
-    "kakaocorp/kanana-2-30b-a3b-instruct-2601",
-    "meta-llama/Llama-3.1-8B-Instruct",  # RQ5 금융특화 base 비교용으로만 추가(2026-09-09). 본문 28설정 코호트 밖
-}
 
-# 표기 정규화 전용 (safe 파일명 -> 논문 표기). 코호트 선택에는 쓰지 않는다.
-_CANONICAL_NAMES = {
-    "skt/A.X-4.0-Light", "skt/A.X-4.0",
-    "LGAI-EXAONE/EXAONE-4.0-1.2B", "LGAI-EXAONE/EXAONE-4.0-32B",
-    "kakaocorp/kanana-2-30b-a3b-instruct",
-    "kakaocorp/kanana-2-30b-a3b-thinking-2601__nothink",
-    "kakaocorp/kanana-2-30b-a3b-thinking-2601__think",
-    "DragonLLM/Llama-Open-Finance-8B", "DragonLLM/Qwen-Open-Finance-R-8B",
-    "openai/gpt-oss-20b__nothink", "openai/gpt-oss-20b__think",
-    "openai/gpt-oss-120b__nothink", "openai/gpt-oss-120b__think",
-    "meta-llama/Llama-3.2-3B-Instruct", "meta-llama/Llama-3.3-70B-Instruct",
-    "mistralai/Ministral-3-3B-Instruct-2512",
-    "mistralai/Mistral-Small-3.2-24B-Instruct-2506",
-    "microsoft/Phi-4-mini-instruct",
-    "Qwen/Qwen3.5-4B__nothink", "Qwen/Qwen3.5-4B__think",
-    "Qwen/Qwen3.5-27B__nothink", "Qwen/Qwen3.5-27B__think",
-    "Qwen/Qwen3.6-27B", "Qwen/Qwen3.6-35B-A3B",
-    "Salesforce/xLAM-2-3b-fc-r", "Salesforce/Llama-xLAM-2-70b-fc-r",
-    "google/gemma-4-E4B-it", "google/gemma-4-31B-it",
-    "NousResearch/Hermes-3-Llama-3.1-8B",
-}
+def cohort_note():
+    """(n_configs, missing ids, one line saying so) for the scored cohort.
 
-_SAFE_TO_CANONICAL = {m.replace('/', '_').replace('.', '_'): m for m in _CANONICAL_NAMES}
-# eval 의 model 필드는 원래 이름(Qwen/Qwen3-8B)과 sanitize 이름(Qwen_Qwen3-8B)이 섞여 있다.
-# EXCLUDE_MODELS 는 두 표기가 섞여 있어, 원시 문자열로 비교하면 원래 이름으로 된 eval 이
-# 제외되지 않고 코호트가 28 에서 37 로 늘어난다(2026-09-15). 한 표기로 맞춰 비교한다.
-_EXCLUDE_SAFE = {m.replace('/', '_').replace('.', '_') for m in EXCLUDE_MODELS}
-def _excluded(m): return m.replace('/', '_').replace('.', '_') in _EXCLUDE_SAFE
+    Rule 4: a figure that draws 18 rows under a caption that says 28 is the
+    failure this exists to prevent, so the count travels with every output.
+    """
+    todo = load.missing()
+    missing = sorted(todo.loc[~todo['single'], 'config_id'])
+    n_total = len(todo)
+    n_scored = n_total - len(missing)
+    line = f'{n_scored} of {n_total} configurations scored'
+    if missing:
+        line += f'; {len(missing)} not scored yet'
+    return n_scored, missing, line
 
 
-def _canonicalize(m: str) -> str:
-    return _SAFE_TO_CANONICAL.get(m, m)
+def per_config_means():
+    """One row per configuration: the two side means, their n, and per-category h."""
+    cases = load.single()
+    per_cat = (cases.groupby(['config_id', 'label', 'group', 'category'])
+                    .agg(h_mean=('h', 'mean'), n_cases=('h', 'size')).reset_index())
+    per_cat = per_cat[~per_cat['category'].isin(EXCLUDE_CATEGORIES)]
+
+    rows = []
+    for (config_id, label, group), block in per_cat.groupby(['config_id', 'label', 'group'],
+                                                            sort=False):
+        reg = block[block['category'].isin(REGULATORY)]
+        ana = block[~block['category'].isin(REGULATORY)]
+        if reg.empty or ana.empty:
+            continue
+        rows.append({
+            'config_id': config_id,
+            'label': label,
+            'group': group,
+            'regulatory_h_mean': round(float(reg['h_mean'].mean()), 4),
+            'n_regulatory_categories': int(len(reg)),
+            'n_regulatory_cases': int(reg['n_cases'].sum()),
+            'analysis_h_mean': round(float(ana['h_mean'].mean()), 4),
+            'n_analysis_categories': int(len(ana)),
+            'n_analysis_cases': int(ana['n_cases'].sum()),
+            # positive gap = the regulatory tools were harder than the analysis tools
+            'gap': round(float(ana['h_mean'].mean() - reg['h_mean'].mean()), 4),
+            **{f'cat_{cat}': round(float(value), 4)
+               for cat, value in zip(block['category'], block['h_mean'])},
+        })
+    rows.sort(key=lambda r: -r['gap'])
+    return rows
 
 
 def main():
-    files = sorted(EVAL_DIR.glob('eval_*.json'))
-    rows = []
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    n_configs, missing, note = cohort_note()
+    rows = per_config_means()
+    if not rows:
+        raise SystemExit('no scored configuration carries both sides')
 
-    for f in files:
-        d = json.load(f.open())
-        raw = d['model']
-        if _excluded(raw):
-            continue
-        model = _canonicalize(raw)
-        reg_h = []; ana_h = []; per_cat = {}
-        for cat_name, cat in d.get('by_category', {}).items():
-            if cat_name in EXCLUDE_CATEGORIES:
-                continue
-            agg = cat.get('aggregated', {})
-            h = agg.get('primary_tool_hit_rate', 0.0)
-            per_cat[cat_name] = h
-            if cat_name in REGULATORY:
-                reg_h.append(h)
-            else:
-                ana_h.append(h)
-        rh = sum(reg_h) / len(reg_h) if reg_h else 0
-        ah = sum(ana_h) / len(ana_h) if ana_h else 0
-        rows.append({
-            'model': model,
-            'regulatory_h_mean': round(rh, 4),
-            'analysis_h_mean': round(ah, 4),
-            'gap': round(ah - rh, 4),  # 분석 평균이 규제보다 얼마나 높은가
-            **{f'cat_{k}': round(v, 4) for k, v in per_cat.items()},
-        })
+    missing_field = ';'.join(missing)
+    csv_rows = [{**r, 'n_configs': n_configs, 'configs_missing_from_28': missing_field}
+                for r in rows]
+    with (OUT_DIR / 'regulatory_vs_analysis_gap.csv').open('w', newline='') as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(csv_rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(csv_rows)
 
-    with (OUT_DIR / 'regulatory_vs_analysis_gap.csv').open('w', newline='') as f:
-        w = csv.DictWriter(f, fieldnames=rows[0].keys())
-        w.writeheader(); w.writerows(rows)
-
-    rh_all = [r['regulatory_h_mean'] for r in rows]
-    ah_all = [r['analysis_h_mean'] for r in rows]
+    gaps = [r['gap'] for r in rows]
+    reg_all = [r['regulatory_h_mean'] for r in rows]
+    ana_all = [r['analysis_h_mean'] for r in rows]
+    worse = [r for r in rows if r['gap'] > 0]
+    better = [r for r in rows if r['gap'] <= 0]
+    analysis_categories = sorted({k[4:] for r in rows for k in r if k.startswith('cat_')}
+                                 - REGULATORY)
     summary = {
-        'n_models': len(rows),
+        'n_configs': n_configs,
+        'configs_missing_from_28': missing,
+        'cohort_note': note,
+        'metric': 'h, primary tool hit (0/1). The pre-audit primary_tool_hit_rate under '
+                  'the scorer\'s own name; the weighted score is gone (D02).',
         'regulatory_categories': sorted(REGULATORY),
-        'analysis_categories_count': len([k for k in rows[0] if k.startswith('cat_')]) - len(REGULATORY),
-        'regulatory_h_mean_overall': round(sum(rh_all) / len(rh_all), 4),
-        'analysis_h_mean_overall': round(sum(ah_all) / len(ah_all), 4),
-        'gap_mean_overall': round(sum(r['gap'] for r in rows) / len(rows), 4),
-        'gap_max': round(max(r['gap'] for r in rows), 4),
-        'gap_min': round(min(r['gap'] for r in rows), 4),
-        'top_5_largest_gap': sorted(rows, key=lambda x: -x['gap'])[:5],
-        'note': 'gap = analysis_h - regulatory_h. positive gap = 규제 카테고리가 일반 분석 대비 낮은 적중률',
+        'analysis_categories': analysis_categories,
+        'analysis_categories_count': len(analysis_categories),
+        'excluded_categories': sorted(EXCLUDE_CATEGORIES),
+        'regulatory_h_mean_overall': round(sum(reg_all) / len(reg_all), 4),
+        'analysis_h_mean_overall': round(sum(ana_all) / len(ana_all), 4),
+        'gap_mean_overall': round(sum(gaps) / len(gaps), 4),
+        'gap_mean_overall_pp': round(100 * sum(gaps) / len(gaps), 1),
+        'gap_max': round(max(gaps), 4),
+        'gap_min': round(min(gaps), 4),
+        'n_configs_worse_on_regulatory': len(worse),
+        'n_configs_better_on_regulatory': len(better),
+        'configs_better_on_regulatory': [{'config_id': r['config_id'], 'label': r['label'],
+                                          'gap_pp': round(100 * r['gap'], 1)} for r in better],
+        'top_5_largest_gap': [{'config_id': r['config_id'], 'label': r['label'],
+                               'gap': r['gap']} for r in rows[:5]],
+        'note': 'gap = analysis_h - regulatory_h, each side the unweighted mean over its '
+                'category means. A positive gap means the regulatory tools were harder. '
+                f'Averaged over {n_configs} scored configurations, not over 28.',
     }
-    summary['top_5_largest_gap'] = [{'model': r['model'], 'gap': r['gap']}
-                                     for r in summary['top_5_largest_gap']]
-    json.dump(summary, (OUT_DIR / 'regulatory_vs_analysis_gap.json').open('w'),
-              ensure_ascii=False, indent=2)
+    with (OUT_DIR / 'regulatory_vs_analysis_gap.json').open('w') as handle:
+        json.dump(summary, handle, ensure_ascii=False, indent=2)
 
     try:
-        # Plot A: 모델별 정렬 line plot
+        # Plot A: per-configuration pair, sorted by the analysis mean
         sorted_rows = sorted(rows, key=lambda r: r['analysis_h_mean'])
-        names = [short_name(r['model'], 18) for r in sorted_rows]
+        names = [r['label'] for r in sorted_rows]
         x = range(len(sorted_rows))
         fig, ax = plt.subplots(figsize=(5.5, 4.2))
         ax.plot(x, [r['analysis_h_mean'] for r in sorted_rows], 'o-',
@@ -144,6 +173,7 @@ def main():
         ax.set_xticks(list(x))
         ax.set_xticklabels(names, rotation=90, fontsize=7)
         ax.set_ylabel(r'Mean tool hit $h$', fontsize=FS_LABEL)
+        ax.set_title(note, fontsize=7, loc='left', color='#555555')
         ax.legend(fontsize=FS_LEGEND, loc='lower right')
         style_axes(ax)
         plt.tight_layout()
@@ -151,26 +181,31 @@ def main():
         plt.savefig(OUT_DIR / 'fig_regulatory_vs_analysis.png', dpi=300, bbox_inches='tight')
         plt.close()
 
-        # Plot B: 격차 히스토그램
+        # Plot B: the distribution of the gap
         fig, ax = plt.subplots(figsize=(5, 3.2))
-        ax.hist([r['gap'] for r in rows], bins=15,
-                color=COL_PURPLE, alpha=0.85, edgecolor='white')
+        ax.hist(gaps, bins=15, color=COL_PURPLE, alpha=0.85, edgecolor='white')
         ax.axvline(summary['gap_mean_overall'], color=COL_BAD, linestyle='--',
                    linewidth=1.2, label=f"mean={summary['gap_mean_overall']:.3f}")
         ax.set_xlabel('Gap (analysis − regulatory)', fontsize=FS_LABEL)
-        ax.set_ylabel('Models', fontsize=FS_LABEL)
+        ax.set_ylabel('Configurations', fontsize=FS_LABEL)
+        ax.set_title(note, fontsize=7, loc='left', color='#555555')
         ax.legend(fontsize=FS_LEGEND)
         style_axes(ax)
         plt.tight_layout()
         plt.savefig(OUT_DIR / 'fig_regulatory_gap_distribution.pdf', dpi=300, bbox_inches='tight')
         plt.savefig(OUT_DIR / 'fig_regulatory_gap_distribution.png', dpi=300, bbox_inches='tight')
         plt.close()
-    except Exception as e:
-        print(f'plot failed: {e}')
+    except Exception as exc:                                   # pragma: no cover - plotting only
+        print(f'plot failed: {exc}')
 
-    print(f'[RQ2-gap] completed: regulatory={summary["regulatory_h_mean_overall"]}, '
-          f'analysis={summary["analysis_h_mean_overall"]}, '
-          f'mean gap={summary["gap_mean_overall"]}')
+    print(f'[RQ2-gap] {note}')
+    if missing:
+        print(f'[RQ2-gap] not scored: {", ".join(missing)}')
+    print(f'[RQ2-gap] regulatory={summary["regulatory_h_mean_overall"]} '
+          f'analysis={summary["analysis_h_mean_overall"]} '
+          f'mean gap={summary["gap_mean_overall_pp"]}pp '
+          f'(worse on regulatory: {len(worse)}/{n_configs})')
+
 
 if __name__ == '__main__':
     main()

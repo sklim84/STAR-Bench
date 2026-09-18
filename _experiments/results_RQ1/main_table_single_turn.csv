@@ -1,29 +1,22 @@
-model_id,display_name,group,h,r,p,a,o
-skt/A.X-4.0-Light,A.X-4.0-Light (7B),Korean-Specialized,0.5461,0.5453,0.9543,0.5705,0.9739
-skt/A.X-4.0,A.X-4.0 (72B),Korean-Specialized,0.8824,0.8979,0.6828,0.8002,0.9845
-LGAI-EXAONE/EXAONE-4.0-1.2B,EXAONE-4.0-1.2B,Korean-Specialized,0.7878,0.8286,0.4089,0.737,0.9959
-LGAI-EXAONE/EXAONE-4.0-32B,EXAONE-4.0-32B,Korean-Specialized,0.8983,0.9304,0.5912,0.8752,0.9971
-kakaocorp/kanana-2-30b-a3b-instruct,Kanana-2-Instruct,Korean-Specialized,0.7536,0.7933,0.6106,0.7066,0.9629
-kakaocorp/kanana-2-30b-a3b-thinking-2601,Kanana-2-Think,Korean-Specialized,0.7035,0.8302,0.3566,0.7559,0.9671
-DragonLLM/Llama-Open-Finance-8B,Llama-Open-Finance-8B,Finance-Specialized,0.7297,0.7597,0.769,0.6988,0.9202
-DragonLLM/Qwen-Open-Finance-R-8B,Qwen-Open-Finance-R-8B,Finance-Specialized,0.8466,0.8453,0.8805,0.8077,0.9812
-openai/gpt-oss-20b__nothink,gpt-oss-20B (NT),General-Purpose,0.8434,0.85,0.5606,0.8202,0.9853
-openai/gpt-oss-20b__think,gpt-oss-20B (T),General-Purpose,0.7313,0.7315,0.6838,0.7446,0.9764
-openai/gpt-oss-120b__nothink,gpt-oss-120B (NT),General-Purpose,0.841,0.8551,0.5358,0.8433,0.9848
-openai/gpt-oss-120b__think,gpt-oss-120B (T),General-Purpose,0.7742,0.7858,0.5015,0.8004,0.983
-meta-llama/Llama-3.2-3B-Instruct,Llama-3.2-3B,General-Purpose,0.5294,0.6257,0.4419,0.5421,0.836
-meta-llama/Llama-3.3-70B-Instruct,Llama-3.3-70B,General-Purpose,0.8076,0.9081,0.7962,0.8391,0.989
-NousResearch/Hermes-3-Llama-3.1-8B,Hermes-3-8B,General-Purpose,0.6431,0.6534,0.7792,0.6071,0.9893
-mistralai/Ministral-3-3B-Instruct-2512,Ministral-3-3B,General-Purpose,0.8672,0.8928,0.5343,0.8043,0.9864
-mistralai/Mistral-Small-3.2-24B-Instruct-2506,Mistral-Small-24B,General-Purpose,0.8824,0.9085,0.6361,0.8497,0.993
-microsoft/Phi-4-mini-instruct,Phi-4-mini,General-Purpose,0.62,0.6248,0.8217,0.5979,0.9789
-Qwen/Qwen3.5-4B__nothink,Qwen3.5-4B (NT),General-Purpose,0.8609,0.8835,0.5031,0.8587,0.9943
-Qwen/Qwen3.5-4B__think,Qwen3.5-4B (T),General-Purpose,0.8831,0.9306,0.6342,0.8816,0.9974
-Qwen/Qwen3.5-27B__nothink,Qwen3.5-27B (NT),General-Purpose,0.9062,0.9535,0.5074,0.9347,0.9972
-Qwen/Qwen3.5-27B__think,Qwen3.5-27B (T),General-Purpose,0.9086,0.9589,0.5266,0.9317,0.9983
-Qwen/Qwen3.6-27B,Qwen3.6-27B,General-Purpose,0.9094,0.9607,0.4847,0.9487,0.9972
-Qwen/Qwen3.6-35B-A3B,Qwen3.6-35B-A3B,General-Purpose,0.9102,0.9565,0.5015,0.9439,0.9991
-Salesforce/xLAM-2-3b-fc-r,xLAM-2-3B,General-Purpose,0.6288,0.6488,0.6813,0.6082,0.9844
-Salesforce/Llama-xLAM-2-70b-fc-r,xLAM-2-70B,General-Purpose,0.8275,0.8555,0.7397,0.8283,0.9948
-google/gemma-4-E4B-it,Gemma-4-E4B,General-Purpose,0.7933,0.8262,0.8841,0.7829,0.9963
-google/gemma-4-31B-it,Gemma-4-31B,General-Purpose,0.9396,0.9698,0.5176,0.9259,0.998
+# n_configs=18 of 28 in the serving registry, arm=single (Korean tool schema, Korean questions)
+# not scored yet: ax-light, exaone-1.2b, exaone-32b, dragon-llama-fin, llama-3.2-3b, hermes-3-8b, phi-4-mini, qwen35-4b-nt, xlam-3b, gemma-4-e4b
+# bold and underline rank the scored rows only, so they can move when the rest arrive
+config_id,model,display_name,group,h,r,p,a,o,n_h,n_r,n_p,n_a,n_o,n_cases
+ax-4.0,skt/A.X-4.0,A.X-4.0 (72B),Korean-Specialized,0.9054,0.9152,0.9309,0.8572,0.9429,1258,1102,1089,984,35,1258
+kanana-2-inst,kakaocorp/kanana-2-30b-a3b-instruct,Kanana-2-Instruct,Korean-Specialized,0.8092,0.8236,0.7384,0.7698,0.9118,1258,1099,1104,982,34,1258
+kanana-2-think,kakaocorp/kanana-2-30b-a3b-thinking-2601,Kanana-2-Think,Korean-Specialized,0.8967,0.9158,0.8971,0.87,1.0,1258,1105,1122,986,46,1258
+dragon-qwen-fin,DragonLLM/Qwen-Open-Finance-R-8B,Qwen-Open-Finance-R-8B,Finance-Specialized,0.8426,0.8462,0.9044,0.8188,1.0,1258,1102,1026,983,41,1258
+gpt-oss-20b-nt,openai/gpt-oss-20b,gpt-oss-20B (NT),General-Purpose,0.876,0.9056,0.8758,0.8542,0.9487,1258,1105,1138,986,39,1258
+gpt-oss-20b-t,openai/gpt-oss-20b,gpt-oss-20B (T),General-Purpose,0.8172,0.8267,0.8779,0.8112,0.9667,1258,1102,1023,985,30,1258
+gpt-oss-120b-nt,openai/gpt-oss-120b,gpt-oss-120B (NT),General-Purpose,0.9038,0.9269,0.9027,0.9009,1.0,1258,1104,1134,986,42,1258
+gpt-oss-120b-t,openai/gpt-oss-120b,gpt-oss-120B (T),General-Purpose,0.8482,0.8651,0.8261,0.8581,1.0,1258,1102,1114,985,33,1258
+llama-3.3-70b,meta-llama/Llama-3.3-70B-Instruct,Llama-3.3-70B,General-Purpose,0.779,0.8652,0.7883,0.8254,1.0,1258,1103,1215,985,40,1258
+ministral-3b,mistralai/Ministral-3-3B-Instruct-2512,Ministral-3-3B,General-Purpose,0.8339,0.8617,0.8306,0.7652,0.9677,1258,1105,1124,986,31,1258
+mistral-small,mistralai/Mistral-Small-3.2-24B-Instruct-2506,Mistral-Small-24B,General-Purpose,0.814,0.8012,0.8821,0.7912,1.0,1258,1100,952,982,45,1258
+qwen35-4b-t,Qwen/Qwen3.5-4B,Qwen3.5-4B (T),General-Purpose,0.9141,0.9537,0.8538,0.9073,1.0,1258,1105,1132,986,45,1258
+qwen35-27b-nt,Qwen/Qwen3.5-27B,Qwen3.5-27B (NT),General-Purpose,0.9475,0.9667,0.8925,0.9496,1.0,1258,1106,1128,987,48,1258
+qwen35-27b-t,Qwen/Qwen3.5-27B,Qwen3.5-27B (T),General-Purpose,0.942,0.9741,0.8998,0.9504,1.0,1258,1106,1142,987,47,1258
+qwen36-27b,Qwen/Qwen3.6-27B,Qwen3.6-27B,General-Purpose,0.9428,0.9795,0.8809,0.9599,1.0,1258,1106,1146,987,48,1258
+qwen36-35b-a3b,Qwen/Qwen3.6-35B-A3B,Qwen3.6-35B-A3B,General-Purpose,0.9277,0.96,0.86,0.9423,1.0,1258,1104,1138,986,47,1258
+xlam-70b,Salesforce/Llama-xLAM-2-70b-fc-r,xLAM-2-70B,General-Purpose,0.6948,0.6638,0.9364,0.6503,1.0,1258,1100,768,983,29,1258
+gemma-4-31b,google/gemma-4-31B-it,Gemma-4-31B,General-Purpose,0.9658,0.974,0.9288,0.9474,1.0,1258,1102,1110,984,48,1258

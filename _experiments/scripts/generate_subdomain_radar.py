@@ -1,31 +1,59 @@
-"""Intro teaser: per-subdomain tool-hit radar for four representative models.
+"""Intro teaser: per-sub-domain tool-hit radar for four representative configurations.
 
-Data-driven from star-bench/_experiments/results_kr/eval. Each axis is one of the
-four AML subdomains (tab:tool_suite); each polygon is one model's mean tool hit $h$
-over the tools in that subdomain. Shows that AML competence is multi-dimensional and
-model-specific, with the Regulatory Reporting axis the most divergent.
+Each axis is one of the four AML sub-domains (tab:tool_suite); each polygon is one
+configuration's mean tool hit `h` over the tools in that sub-domain. The point is
+that AML competence is multi-dimensional and configuration-specific, with the
+Regulatory Reporting axis the most divergent.
+
+The metric is `h`, the primary tool hit (0/1). The pre-audit figure read
+`by_category[t].aggregated.primary_tool_hit_rate`, a key that is gone with the
+weighted score it sat beside (D02); `h` is the same quantity under the scorer's
+own name (PORTING rule 1). A sub-domain value is the unweighted mean over its
+tools' category means.
+
+Which four are drawn is a rule, not a list of names (rule 3). The old `MODELS`
+literal named four model ids and raised SystemExit when one of them was not in
+the results, which is what a name list beside the registry does as soon as the
+cohort moves; with 18 of 28 scored, three of those four are not there. The rule:
+
+    the highest-h configuration of each registry `group`, plus the lowest-h
+    configuration in the cohort
+
+so the polygons are the best of each kind the registry distinguishes
+(General-Purpose, Korean-Specialized, Finance-Specialized) against the weakest
+configuration overall, which is what makes the spread on the Regulatory Reporting
+axis visible. Ranking is by overall single-turn `h`. If the weakest is already a
+group leader the next weakest is taken, and if the registry ever holds more
+groups than the radar can carry, the groups are taken in descending leader order.
+The chosen ids and their ranks are printed on every run, and the figure says how
+many of the 28 configurations are scored (rule 4).
+
+`SUBDOMAINS` below is the manuscript's tool mapping, not a cohort list, so it
+stays; a member tool with no `category` in `load.single()` is reported. Figures
+are written inside this repository only; copying into the manuscript is one
+explicit step (_figure_out, R2C-007).
+
+Outputs
+    _experiments/figures/fig_subdomain_radar.{png,pdf}
 """
-import json
-import glob
 import statistics as st
+import sys
 from pathlib import Path
+
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-# Figures are written inside this repository only; the manuscript copy is one
-# explicit step (_figure_out, R2C-007).
-import sys as _sys
-from pathlib import Path as _P
-_sys.path.insert(0, str(_P(__file__).resolve().parent))
-from _figure_out import install as _install_figure_out
-_SB = _P(__file__).resolve().parents[2]
+_SB = Path(__file__).resolve().parents[2]   # repository root
+for _p in (str(Path(__file__).resolve().parent), str(_SB)):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
+from _figure_out import install as _install_figure_out  # noqa: E402
+from _experiments.scripts.analysis import load  # noqa: E402
+
 SB_FIG = _install_figure_out()
-
-
-PAPER_ROOT = Path(__file__).resolve().parent.parent
-EVAL = _SB / "_experiments" / "results_kr" / "eval"
 OUT = Path(__file__).resolve().parent / "fig_subdomain_radar.png"
 
 # Four AML subdomains -> member tools (matches tab:tool_suite); generate_str excluded (multi-turn only)
@@ -42,43 +70,76 @@ SUBDOMAINS = {
                               "validate_str_fields", "get_aml_glossary"],
 }
 
+N_POLYGONS = 4   # four polygons is what the 0.38\textwidth teaser stays legible at
+
 import matplotlib as _mplD  # 색감 통일: 4 archetype 라인을 viridis(blue->green->yellow)에서 샘플
 _VIRD = _mplD.colormaps["viridis"]
-# Four representative archetypes (substring match on eval model id) -> (display, color)
-MODELS = [
-    ("google_gemma-4-31B-it",                      "Gemma-4-31B",     _VIRD(0.25)),
-    ("kakaocorp/kanana-2-30b-a3b-thinking-2601",   "Kanana-2-Think",  _VIRD(0.50)),
-    ("DragonLLM_Llama-Open-Finance-8B",            "Llama-Fin-8B",    _VIRD(0.72)),
-    ("microsoft_Phi-4-mini-instruct",              "Phi-4-mini",      _VIRD(0.90)),
-]
+COLORS = [_VIRD(v) for v in (0.25, 0.50, 0.72, 0.90)]
 
 
-def _norm(name):
-    """eval 의 model 필드는 원래 이름(google/gemma-4-31B-it)과 sanitize 이름
-    (google_gemma-4-31B-it)이 섞여 있고, MODELS 키도 두 형식이 섞여 있다. 원시 문자열로
-    부분문자열을 찾으면 형식이 어긋난 키를 못 찾아 SystemExit 로 멈춘다(2026-09-15 에 병합본
-    model 을 원래 이름으로 되돌린 뒤 네 키 중 셋이 그렇게 됐다). 양쪽을 한 형식으로 맞춘다."""
-    return name.replace("/", "_").replace(".", "_")
+def cohort_note():
+    """(n_configs, missing ids, one line saying so) for the scored cohort."""
+    todo = load.missing()
+    missing = sorted(todo.loc[~todo["single"], "config_id"])
+    n_total = len(todo)
+    n_scored = n_total - len(missing)
+    return n_scored, missing, n_total, f"{n_scored} of {n_total} configurations scored"
+
+
+def choose(overall):
+    """The configurations to draw: each group's leader, then the weakest overall.
+
+    `overall` is one row per configuration, sorted by `h` descending. Selection is
+    by registry `group` and by the metric, never by a name (rule 3).
+    """
+    chosen, why = [], {}
+    for _group, block in sorted(overall.groupby("group"),
+                                key=lambda kv: -kv[1]["h"].max()):
+        leader = block.iloc[0]          # `overall` is already sorted by h descending
+        if len(chosen) >= N_POLYGONS - 1:
+            break
+        chosen.append(leader["config_id"])
+        why[leader["config_id"]] = f"highest h in group {leader['group']}"
+    for _, row in overall.iloc[::-1].iterrows():        # weakest first
+        if len(chosen) >= N_POLYGONS:
+            break
+        if row["config_id"] not in chosen:
+            chosen.append(row["config_id"])
+            why[row["config_id"]] = "lowest h in the cohort"
+    return chosen, why
 
 
 def load_profiles():
-    files = {_norm(json.load(open(f))["model"]): f for f in glob.glob(str(EVAL / "eval_*.json"))}
+    cases = load.single()
+    per_cat = (cases.groupby(["config_id", "label", "group", "category"])
+                    .agg(h_mean=("h", "mean"), n_cases=("h", "size")).reset_index())
+    present = set(per_cat["category"])
+    tools_missing = {sd: [t for t in tools if t not in present]
+                     for sd, tools in SUBDOMAINS.items()}
+
+    overall = (cases.groupby(["config_id", "label", "group"])["h"].mean()
+                    .reset_index().sort_values("h", ascending=False).reset_index(drop=True))
+    if overall.empty:
+        raise SystemExit("no scored configuration in the single-turn column")
+    chosen, why = choose(overall)
+
     prof = {}
-    for key, disp, color in MODELS:
-        mid = next((m for m in files if _norm(key) in m), None)
-        if mid is None:
-            raise SystemExit(f"model not found: {key}")
-        cats = json.load(open(files[mid])).get("by_category", {})
+    for config_id, color in zip(chosen, COLORS):
+        block = per_cat[per_cat["config_id"] == config_id]
+        by_tool = dict(zip(block["category"], block["h_mean"]))
         vals = []
-        for sd, tools in SUBDOMAINS.items():
-            hs = [cats[t]["aggregated"]["primary_tool_hit_rate"] for t in tools if t in cats]
-            vals.append(st.mean(hs) if hs else 0.0)
-        prof[disp] = (vals, color)
-    return prof
+        for _sd, tools in SUBDOMAINS.items():
+            hits = [by_tool[t] for t in tools if t in by_tool]
+            vals.append(st.mean(hits) if hits else 0.0)
+        label = block["label"].iloc[0]
+        prof[label] = (vals, color)
+        why[label] = why.pop(config_id)
+    return prof, why, tools_missing, overall
 
 
 def main():
-    prof = load_profiles()
+    n_configs, missing, n_total, note = cohort_note()
+    prof, why, tools_missing, overall = load_profiles()
     axes = list(SUBDOMAINS.keys())
     N = len(axes)
     ang = np.linspace(0, 2 * np.pi, N, endpoint=False).tolist()
@@ -109,13 +170,24 @@ def main():
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncol=2,
               fontsize=7, frameon=False, handletextpad=0.4,
               handlelength=1.2, labelspacing=0.35, columnspacing=1.0)
+    # Rule 4: the four polygons are picked out of a cohort that is not yet whole,
+    # and the figure says so rather than leaving it to the caption.
+    fig.text(0.5, 1.0, f"{note}, {len(prof)} shown", ha="center", va="top",
+             fontsize=5, color="#888888")
     plt.tight_layout()
     plt.savefig(OUT, dpi=300, bbox_inches="tight", pad_inches=0.02)
     plt.savefig(str(OUT).replace(".png", ".pdf"), bbox_inches="tight", pad_inches=0.02)
     plt.close()
-    print(f"Saved {OUT}")
+    print(f"Saved {OUT.stem}.{{png,pdf}} -> {SB_FIG}")
+    print(f"n_configs={n_configs} of {n_total}; "
+          f"missing: {', '.join(missing) if missing else 'none'}")
+    print(f"drawn ({len(prof)} of {n_configs} scored), axes: "
+          + " ".join(a.replace(chr(10), ' ') for a in axes))
     for disp, (vals, _) in prof.items():
-        print(f"  {disp:16s} " + " ".join(f"{v:.3f}" for v in vals))
+        print(f"  {disp:24s} " + " ".join(f"{v:.3f}" for v in vals) + f"   [{why[disp]}]")
+    for sd, tools in tools_missing.items():
+        if tools:
+            print(f"  sub-domain tool with no category: {sd!r}: {', '.join(tools)}")
 
 
 if __name__ == "__main__":

@@ -80,6 +80,21 @@ def _means(frame, column: str, by: str = "config_id") -> dict[str, float]:
     return {k: (None if v != v else float(v)) for k, v in grouped.mean().items()}
 
 
+def _scored(setting: str, metric: str) -> dict[str, float]:
+    """A multi-turn metric as the scorer wrote it.
+
+    h_bar is "mean turn-level hit" (Section 4), so it is the mean over the 219
+    turns and not over the 50 scenario means; those differ in the third decimal
+    because scenarios hold different numbers of turns. Taking it from the
+    scorer's own aggregate keeps one definition in the paper.
+    """
+    out = {}
+    for config_id, aggregate in load.aggregates(setting).items():
+        value = (aggregate.get(metric) or {}).get("mean")
+        out[config_id] = None if value is None else float(value)
+    return out
+
+
 def _cohort_note(present: list[str]) -> str:
     total = len(registry.CONFIGS)
     if len(present) == total:
@@ -110,8 +125,8 @@ def main_table(out: Path) -> str:
     columns = {
         "h": _means(cases, "h"), "r": _means(cases, "r"), "p": _means(cases, "p"),
         "a": _means(cases, "a"), "o": _means(cases, "o"),
-        "hbar": _means(oracle, "h_mean"), "abar": _means(oracle, "a_mean"),
-        "c": _means(oracle, "c"),
+        "hbar": _scored("oracle", "h"), "abar": _scored("oracle", "a"),
+        "c": _scored("oracle", "c"),
     }
     marks = {name: _rank_marks(values) for name, values in columns.items()}
 
@@ -162,8 +177,11 @@ def ablation_table(out: Path) -> str:
         lines.append("\\addlinespace[2pt]")
         members.sort(key=lambda cid: -(means["single"].get(cid) or -1))
         for config_id in members:
+            # The column head reads query language first, tool language second, which
+            # is how Section 5 reads the table: "with Korean tool definitions,
+            # English queries reach ... within 0.6 points" is columns one and two.
             cells_text = [_fmt(means[name].get(config_id))
-                          for name in ("single", "entools_krq", "krtools_enq", "entools_enq")]
+                          for name in ("single", "krtools_enq", "entools_krq", "entools_enq")]
             lines.append(f"{_label(config_id, labels)} & " + " & ".join(cells_text) + " \\\\")
         if group != GROUP_ORDER[-1]:
             lines.append("\\midrule")
@@ -171,7 +189,7 @@ def ablation_table(out: Path) -> str:
     header = ["\\multicolumn{1}{c}{\\textbf{Model}} & \\textbf{KR-KR} & \\textbf{EN-KR} & "
               "\\textbf{KR-EN} & \\textbf{EN-EN} \\\\"]
     text = _table(lines, spec="lcccc", header=header, label="tab:2x2_ablation",
-                  caption=("Tool hit $h$ across tool definition language $\\times$ query language "
+                  caption=("Tool hit $h$ across query language $\\times$ tool definition language "
                            "(KR/EN), for the configurations run on all four cells; within each "
                            "group rows are sorted by the KR-KR baseline. (T)/(NT) denote thinking "
                            "mode on/off."),
@@ -185,8 +203,8 @@ def e2e_tables(out: Path, subset_rows: int = 5) -> str:
     e2e, _ = load.multiturn("e2e")
     labels = {c.config_id: c.label for c in registry.CONFIGS}
     windows = {c.config_id: c.model_window for c in registry.CONFIGS}
-    o_h, o_c = _means(oracle, "h_mean"), _means(oracle, "c")
-    e_h, e_c = _means(e2e, "h_mean"), _means(e2e, "c")
+    o_h, o_c = _scored("oracle", "h"), _scored("oracle", "c")
+    e_h, e_c = _scored("e2e", "h"), _scored("e2e", "c")
     scenarios = int(oracle["scenario_id"].nunique())
 
     ordered = sorted(o_h, key=lambda cid: -o_h[cid])
