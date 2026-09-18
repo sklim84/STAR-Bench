@@ -1,479 +1,288 @@
 {
- "total_calls": 5550,
- "ok": 3047,
- "empty": 1179,
- "error": 1324,
- "error_rate": 0.2386,
- "empty_rate": 0.2124,
+ "total_calls": 3111,
+ "ok": 2951,
+ "empty": 105,
+ "error": 55,
+ "error_rate": 0.0177,
+ "empty_rate": 0.0338,
+ "truncated": 212,
+ "truncated_rate": 0.0681,
  "by_cause": {
-  "platform_nan": 538,
-  "entity_absent": 281,
-  "platform_model_artifact": 169,
-  "platform_key_error": 109,
-  "model_bad_argument": 87,
-  "graph_backend_absent": 47,
-  "model_missing_argument": 44,
-  "model_bad_sql": 35,
-  "model_unknown_tool": 14
+  "model_bad_argument": 19,
+  "model_unknown_tool": 12,
+  "model_bad_sql": 9,
+  "model_missing_argument": 6,
+  "model_unknown_term": 6,
+  "model_malformed_arguments": 3
  },
  "by_family": {
-  "platform": 863,
-  "data": 281,
-  "model": 180
+  "model": 55
  },
  "family_rate": {
-  "model": 0.0324,
-  "platform": 0.1555,
-  "data": 0.0506
+  "model": 0.0177
  },
  "examples": {
-  "model_bad_argument": "Input parameter error",
+  "model_bad_argument": "date_from(20240001) must be a date as a YYYYMMDD integer, e.g. 20240131.",
+  "model_bad_sql": "Query execution error: Conversion Error: Could not convert string '갑작스러운 거래패턴의 변화' to INT8\n\nLINE 1: ... AND date <= 20241231 AND media_type = 1 AND fraud_type =",
+  "model_unknown_tool": "Unknown tool: generate_str<|channel|>commentary",
+  "model_malformed_arguments": "arguments are str, not an object: {\"str_draft\":{\"Header\":{\"ReportingDate\":\"2024-05-31\"},\"I_ReportingInstitution\":{\"WithdrawalInstitutionCode\":\"159\"},\"II_Transac",
   "model_missing_argument": "Summary content for STR generation is empty.",
-  "platform_nan": "Account profile retrieval error: cannot convert float NaN to integer",
-  "platform_key_error": "An unexpected error occurred during tool execution: 'str' object has no attribute 'get'",
-  "entity_absent": "No transaction history for this account.",
-  "platform_model_artifact": "An unexpected error occurred during tool execution: 'predict_prob'",
-  "model_bad_sql": "Query execution error: Conversion Error: Could not convert string '2023-01-01' to INT32\n\nLINE 1: SELECT * FROM hofinet WHERE date BETWEEN '2023-01-01' AND '2023",
-  "graph_backend_absent": "Unable to find shortest path as Memgraph is not running.",
-  "model_unknown_tool": "Unknown tool: get_cross_institution_flow"
+  "model_unknown_term": "Term 'cash' not found."
  },
  "per_model": {
-  "DragonLLM/Llama-Open-Finance-8B": {
-   "empty": 35,
-   "error": 78,
-   "cause:model_bad_argument": 6,
-   "ok": 96,
-   "cause:model_missing_argument": 1,
-   "cause:platform_nan": 31,
-   "cause:platform_key_error": 13,
-   "cause:entity_absent": 12,
-   "cause:platform_model_artifact": 12,
+  "ax-4.0": {
+   "ok": 171,
+   "error": 5,
+   "cause:model_bad_argument": 2,
+   "empty": 10,
    "cause:model_bad_sql": 3
   },
-  "DragonLLM/Qwen-Open-Finance-R-8B": {
-   "error": 41,
-   "cause:platform_nan": 24,
-   "ok": 100,
-   "empty": 26,
-   "cause:entity_absent": 9,
-   "cause:platform_model_artifact": 6,
-   "cause:graph_backend_absent": 1,
+  "gemma-4-31b": {
+   "ok": 215,
+   "empty": 5
+  },
+  "gpt-oss-120b-nt": {
+   "ok": 200,
+   "empty": 7,
+   "error": 1,
    "cause:model_bad_argument": 1
   },
-  "LGAI-EXAONE/EXAONE-4.0-1.2B": {
-   "ok": 140,
-   "error": 55,
-   "cause:platform_nan": 27,
-   "cause:entity_absent": 15,
-   "empty": 17,
-   "cause:platform_model_artifact": 8,
-   "cause:model_bad_sql": 1,
-   "cause:model_unknown_tool": 2,
-   "cause:model_bad_argument": 1,
-   "cause:model_missing_argument": 1
-  },
-  "LGAI-EXAONE/EXAONE-4.0-32B": {
-   "error": 50,
-   "cause:platform_nan": 27,
-   "empty": 38,
-   "ok": 105,
-   "cause:entity_absent": 12,
-   "cause:platform_model_artifact": 8,
-   "cause:model_missing_argument": 2,
-   "cause:graph_backend_absent": 1
-  },
-  "NousResearch/Hermes-3-Llama-3.1-8B": {
-   "empty": 37,
-   "ok": 90,
-   "error": 40,
-   "cause:model_bad_argument": 3,
-   "cause:platform_nan": 22,
-   "cause:model_bad_sql": 3,
-   "cause:entity_absent": 8,
-   "cause:platform_model_artifact": 3,
-   "cause:graph_backend_absent": 1
-  },
-  "Qwen/Qwen3.5-27B": {
-   "error": 74,
-   "cause:platform_nan": 38,
-   "empty": 98,
-   "ok": 294,
-   "cause:entity_absent": 21,
-   "cause:platform_model_artifact": 9,
-   "cause:model_missing_argument": 2,
-   "cause:graph_backend_absent": 3,
-   "cause:model_bad_sql": 1
-  },
-  "Qwen/Qwen3.5-4B": {
-   "empty": 118,
-   "ok": 291,
-   "error": 100,
-   "cause:platform_nan": 46,
-   "cause:entity_absent": 26,
-   "cause:platform_model_artifact": 17,
-   "cause:model_bad_sql": 4,
-   "cause:model_missing_argument": 3,
-   "cause:graph_backend_absent": 3,
-   "cause:model_bad_argument": 1
-  },
-  "Qwen/Qwen3.6-27B": {
-   "empty": 44,
-   "error": 48,
-   "cause:platform_nan": 23,
-   "ok": 144,
-   "cause:platform_model_artifact": 6,
-   "cause:entity_absent": 14,
-   "cause:model_missing_argument": 2,
-   "cause:platform_key_error": 1,
-   "cause:graph_backend_absent": 2
-  },
-  "Qwen/Qwen3.6-35B-A3B": {
-   "empty": 52,
-   "ok": 150,
-   "error": 44,
-   "cause:platform_nan": 23,
-   "cause:entity_absent": 14,
-   "cause:platform_model_artifact": 3,
-   "cause:model_missing_argument": 2,
-   "cause:platform_key_error": 1,
-   "cause:graph_backend_absent": 1
-  },
-  "Salesforce/Llama-xLAM-2-70b-fc-r": {
-   "error": 48,
-   "cause:platform_nan": 29,
-   "ok": 97,
-   "empty": 31,
-   "cause:model_bad_argument": 3,
-   "cause:entity_absent": 10,
-   "cause:platform_model_artifact": 5,
-   "cause:graph_backend_absent": 1
-  },
-  "Salesforce/xLAM-2-3b-fc-r": {
-   "error": 75,
-   "cause:platform_nan": 38,
-   "ok": 88,
-   "cause:entity_absent": 12,
-   "empty": 11,
-   "cause:platform_model_artifact": 4,
-   "cause:model_bad_argument": 7,
-   "cause:model_unknown_tool": 3,
-   "cause:model_bad_sql": 2,
-   "cause:model_missing_argument": 9
-  },
-  "google/gemma-4-31B-it": {
-   "empty": 49,
-   "ok": 116,
-   "error": 61,
-   "cause:model_bad_sql": 2,
-   "cause:platform_model_artifact": 21,
-   "cause:graph_backend_absent": 9,
-   "cause:entity_absent": 12,
-   "cause:model_missing_argument": 2,
-   "cause:platform_nan": 15
-  },
-  "google/gemma-4-E4B-it": {
-   "empty": 24,
-   "ok": 57,
-   "error": 30,
-   "cause:entity_absent": 9,
-   "cause:platform_model_artifact": 4,
-   "cause:platform_nan": 14,
-   "cause:model_missing_argument": 1,
-   "cause:model_bad_sql": 1,
-   "cause:graph_backend_absent": 1
-  },
-  "kakaocorp/kanana-2-30b-a3b-instruct": {
-   "empty": 49,
-   "ok": 132,
-   "error": 31,
-   "cause:platform_nan": 8,
-   "cause:entity_absent": 12,
-   "cause:platform_model_artifact": 1,
-   "cause:model_missing_argument": 4,
-   "cause:graph_backend_absent": 4,
+  "gpt-oss-120b-t": {
+   "ok": 190,
+   "empty": 6,
+   "error": 2,
    "cause:model_bad_sql": 2
   },
-  "kakaocorp/kanana-2-30b-a3b-thinking-2601": {
-   "empty": 57,
-   "ok": 182,
-   "error": 34,
-   "cause:platform_nan": 11,
-   "cause:entity_absent": 9,
-   "cause:graph_backend_absent": 10,
-   "cause:platform_model_artifact": 3,
-   "cause:model_missing_argument": 1
+  "gpt-oss-20b-nt": {
+   "ok": 199,
+   "error": 6,
+   "cause:model_unknown_tool": 4,
+   "empty": 4,
+   "cause:model_malformed_arguments": 2
   },
-  "meta-llama/Llama-3.2-3B-Instruct": {
-   "empty": 40,
-   "error": 98,
-   "cause:model_bad_argument": 25,
-   "ok": 66,
-   "cause:platform_key_error": 41,
-   "cause:platform_nan": 16,
-   "cause:entity_absent": 10,
-   "cause:platform_model_artifact": 2,
-   "cause:model_missing_argument": 2,
-   "cause:model_unknown_tool": 1,
-   "cause:model_bad_sql": 1
-  },
-  "meta-llama/Llama-3.3-70B-Instruct": {
-   "empty": 37,
-   "error": 109,
-   "cause:model_bad_argument": 19,
-   "ok": 59,
-   "cause:platform_key_error": 52,
-   "cause:platform_nan": 22,
-   "cause:entity_absent": 11,
-   "cause:platform_model_artifact": 4,
-   "cause:graph_backend_absent": 1
-  },
-  "microsoft/Phi-4-mini-instruct": {
-   "error": 58,
-   "cause:platform_nan": 19,
-   "cause:model_bad_argument": 17,
-   "cause:platform_key_error": 1,
-   "ok": 55,
-   "cause:entity_absent": 7,
-   "empty": 27,
-   "cause:platform_model_artifact": 8,
+  "gpt-oss-20b-t": {
+   "ok": 167,
+   "error": 2,
    "cause:model_unknown_tool": 2,
-   "cause:model_missing_argument": 3,
-   "cause:graph_backend_absent": 1
+   "empty": 4
   },
-  "mistralai/Ministral-3-3B-Instruct-2512": {
-   "empty": 57,
-   "ok": 129,
-   "error": 63,
-   "cause:model_bad_sql": 8,
-   "cause:platform_nan": 29,
-   "cause:entity_absent": 6,
-   "cause:platform_model_artifact": 16,
-   "cause:model_missing_argument": 3,
-   "cause:graph_backend_absent": 1
+  "llama-3.3-70b": {
+   "ok": 188,
+   "empty": 9,
+   "error": 21,
+   "cause:model_bad_argument": 14,
+   "cause:model_missing_argument": 6,
+   "cause:model_malformed_arguments": 1
   },
-  "mistralai/Mistral-Small-3.2-24B-Instruct-2506": {
-   "empty": 49,
-   "ok": 135,
-   "error": 40,
-   "cause:platform_nan": 14,
-   "cause:entity_absent": 12,
-   "cause:model_bad_sql": 3,
-   "cause:platform_model_artifact": 5,
-   "cause:graph_backend_absent": 2,
-   "cause:model_bad_argument": 2,
-   "cause:model_missing_argument": 2
+  "ministral-3b": {
+   "ok": 179,
+   "empty": 7,
+   "error": 17,
+   "cause:model_bad_argument": 1,
+   "cause:model_unknown_term": 6,
+   "cause:model_bad_sql": 4,
+   "cause:model_unknown_tool": 6
   },
-  "openai/gpt-oss-120b": {
-   "empty": 109,
-   "ok": 222,
-   "error": 51,
-   "cause:entity_absent": 16,
-   "cause:platform_model_artifact": 10,
-   "cause:platform_nan": 20,
-   "cause:model_bad_sql": 1,
-   "cause:model_missing_argument": 2,
-   "cause:graph_backend_absent": 2
+  "mistral-small": {
+   "ok": 214,
+   "empty": 13
   },
-  "openai/gpt-oss-20b": {
-   "empty": 100,
-   "ok": 191,
-   "error": 60,
-   "cause:entity_absent": 14,
-   "cause:model_unknown_tool": 6,
-   "cause:platform_model_artifact": 10,
-   "cause:platform_nan": 28,
-   "cause:graph_backend_absent": 1,
-   "cause:model_bad_sql": 1
+  "qwen35-27b-nt": {
+   "ok": 208,
+   "empty": 7
   },
-  "skt/A.X-4.0": {
-   "ok": 70,
-   "empty": 44,
-   "error": 22,
-   "cause:entity_absent": 7,
-   "cause:platform_model_artifact": 3,
-   "cause:platform_nan": 10,
-   "cause:model_missing_argument": 1,
-   "cause:graph_backend_absent": 1
+  "qwen35-27b-t": {
+   "ok": 220,
+   "empty": 6
   },
-  "skt/A.X-4.0-Light": {
-   "ok": 38,
-   "empty": 30,
-   "error": 14,
-   "cause:model_bad_sql": 2,
-   "cause:platform_nan": 4,
-   "cause:entity_absent": 3,
-   "cause:model_missing_argument": 1,
-   "cause:model_bad_argument": 2,
-   "cause:platform_model_artifact": 1,
-   "cause:graph_backend_absent": 1
+  "qwen35-4b-t": {
+   "ok": 206,
+   "empty": 10
+  },
+  "qwen36-27b": {
+   "ok": 214,
+   "empty": 3
+  },
+  "qwen36-35b-a3b": {
+   "ok": 212,
+   "empty": 5
+  },
+  "xlam-70b": {
+   "ok": 168,
+   "error": 1,
+   "cause:model_bad_argument": 1,
+   "empty": 9
   }
  },
  "per_tool": {
-  "analyze_account": {
-   "error": 1,
-   "cause:model_unknown_tool": 1
-  },
-  "analyze_account_profile": {
-   "error": 1,
-   "cause:model_unknown_tool": 1
-  },
   "analyze_channel_risk": {
-   "ok": 79
+   "ok": 44,
+   "error": 1,
+   "cause:model_bad_argument": 1
   },
   "analyze_cross_institution_flow": {
-   "ok": 86,
-   "empty": 1
+   "ok": 29,
+   "error": 1,
+   "cause:model_bad_argument": 1
   },
   "analyze_network": {
-   "ok": 219,
-   "error": 1,
-   "cause:model_missing_argument": 1
+   "ok": 119
   },
-  "analyze_smurfing_network": {
-   "error": 1,
-   "cause:model_unknown_tool": 1
+  "and": {
+   "error": 4,
+   "cause:model_unknown_tool": 4
   },
   "compare_periods": {
-   "ok": 71,
-   "error": 10,
-   "cause:platform_nan": 10
+   "ok": 53,
+   "error": 5,
+   "cause:model_bad_argument": 5
   },
   "detect_aml_patterns": {
-   "empty": 212,
-   "error": 58,
-   "cause:graph_backend_absent": 47,
-   "cause:model_bad_argument": 9,
-   "cause:model_missing_argument": 2
-  },
-  "detect_aml_patterns<|channel|>commentary": {
-   "error": 1,
-   "cause:model_unknown_tool": 1
+   "ok": 55,
+   "empty": 29
   },
   "detect_ctr_candidates": {
-   "ok": 135,
-   "empty": 6,
-   "error": 4,
-   "cause:model_bad_argument": 4
+   "error": 5,
+   "cause:model_bad_argument": 4,
+   "ok": 110,
+   "cause:model_malformed_arguments": 1
   },
   "detect_dormant_reactivation": {
-   "ok": 62
-  },
-  "detect_layering_patterns": {
-   "error": 1,
-   "cause:model_unknown_tool": 1
-  },
-  "detect_monitoring_alerts": {
-   "empty": 62,
-   "ok": 186,
-   "error": 27,
-   "cause:model_missing_argument": 19,
-   "cause:model_bad_argument": 8
-  },
-  "detect_monitoring_alerts<|channel|>commentary": {
-   "error": 1,
-   "cause:model_unknown_tool": 1
-  },
-  "detect_ring_patterns": {
-   "error": 1,
-   "cause:model_unknown_tool": 1
-  },
-  "detect_shortest_path": {
-   "error": 1,
-   "cause:model_unknown_tool": 1
-  },
-  "detect_smurfing_network": {
-   "empty": 128,
-   "ok": 31,
-   "error": 3,
-   "cause:model_bad_argument": 3
-  },
-  "generate_str": {
-   "error": 114,
-   "cause:model_missing_argument": 12,
-   "ok": 239,
-   "cause:platform_key_error": 98,
-   "cause:platform_model_artifact": 4
-  },
-  "get_account_profile": {
-   "error": 499,
-   "cause:platform_nan": 494,
-   "ok": 12,
-   "cause:model_missing_argument": 3,
-   "cause:model_bad_argument": 2
-  },
-  "get_aml_glossary": {
-   "ok": 25
-  },
-  "get_cross_institution_flow": {
-   "error": 1,
-   "cause:model_unknown_tool": 1
-  },
-  "get_fiu_reference_types": {
-   "error": 1,
-   "cause:model_unknown_tool": 1
-  },
-  "get_fraud_type_summary": {
-   "error": 48,
-   "cause:platform_nan": 34,
-   "ok": 317,
-   "cause:model_missing_argument": 1,
-   "cause:model_bad_argument": 2,
-   "cause:platform_key_error": 11
-  },
-  "get_fraud_type_summary<|channel|>commentary": {
-   "error": 1,
-   "cause:model_unknown_tool": 1
-  },
-  "get_institution_report": {
-   "ok": 146
-  },
-  "get_receiving_account_profile": {
-   "ok": 138,
+   "ok": 28,
    "error": 2,
    "cause:model_bad_argument": 2
   },
-  "get_statistics": {
-   "ok": 113
+  "detect_monitoring_alerts": {
+   "ok": 88,
+   "empty": 1
   },
-  "get_trend_analysis": {
-   "ok": 78
+  "detect_smurfing_network": {
+   "ok": 86,
+   "empty": 9
   },
-  "lookup_fiu_reference_types": {
-   "empty": 129,
-   "ok": 62
-  },
-  "predict_fraud": {
-   "error": 79,
-   "cause:model_bad_argument": 56,
-   "ok": 227,
-   "cause:platform_model_artifact": 23
-  },
-  "query_transactions": {
-   "empty": 641,
-   "ok": 747,
-   "error": 40,
-   "cause:model_bad_sql": 35,
+  "generate_str": {
+   "ok": 424,
+   "error": 5,
    "cause:model_missing_argument": 5
   },
-  "query_transactions<|channel|>commentary": {
+  "generate_str<|channel|>analysis": {
+   "error": 1,
+   "cause:model_unknown_tool": 1
+  },
+  "generate_str<|channel|>commentary": {
    "error": 3,
    "cause:model_unknown_tool": 3
   },
-  "rank_risky_transactions": {
-   "error": 142,
-   "cause:platform_model_artifact": 142
+  "generate_str<|channel|>json": {
+   "error": 1,
+   "cause:model_unknown_tool": 1
   },
-  "score_account_risk": {
-   "ok": 53,
-   "error": 282,
-   "cause:entity_absent": 281,
+  "get_account_profile": {
+   "ok": 178,
+   "error": 2,
+   "cause:model_bad_argument": 2,
+   "empty": 1
+  },
+  "get_aml_glossary": {
+   "ok": 30,
+   "error": 6,
+   "cause:model_unknown_term": 6
+  },
+  "get_fraud_type_summary": {
+   "ok": 192,
+   "empty": 7
+  },
+  "get_institution_report": {
+   "ok": 118,
+   "error": 1,
    "cause:model_bad_argument": 1
   },
-  "validate_str_fields": {
-   "ok": 21,
+  "get_receiving_account_profile": {
+   "ok": 63
+  },
+  "get_statistics": {
+   "ok": 60
+  },
+  "get_trend_analysis": {
+   "ok": 38
+  },
+  "lookup_fiu_reference_types": {
+   "empty": 47,
+   "ok": 79
+  },
+  "order": {
    "error": 1,
-   "cause:model_missing_argument": 1
+   "cause:model_unknown_tool": 1
+  },
+  "predict_fraud": {
+   "ok": 278,
+   "error": 2,
+   "cause:model_bad_argument": 2
+  },
+  "query_transactions": {
+   "ok": 651,
+   "error": 11,
+   "cause:model_bad_sql": 9,
+   "empty": 11,
+   "cause:model_missing_argument": 1,
+   "cause:model_malformed_arguments": 1
+  },
+  "rank_risky_transactions": {
+   "ok": 20,
+   "error": 1,
+   "cause:model_bad_argument": 1
+  },
+  "score_account_risk": {
+   "ok": 181
+  },
+  "validate_str": {
+   "error": 1,
+   "cause:model_unknown_tool": 1
+  },
+  "validate_str_fields": {
+   "ok": 27,
+   "error": 1,
+   "cause:model_malformed_arguments": 1
+  },
+  "where": {
+   "error": 1,
+   "cause:model_unknown_tool": 1
   }
  },
- "results_dir": "_experiments/results_mt_real"
+ "setting": "e2e",
+ "n_configs": 28,
+ "n_scored": 15,
+ "missing_config_ids": [
+  "ax-light",
+  "exaone-1.2b",
+  "exaone-32b",
+  "kanana-2-inst",
+  "kanana-2-think",
+  "dragon-llama-fin",
+  "dragon-qwen-fin",
+  "llama-3.2-3b",
+  "hermes-3-8b",
+  "phi-4-mini",
+  "qwen35-4b-nt",
+  "xlam-3b",
+  "gemma-4-e4b"
+ ],
+ "scored_config_ids": [
+  "ax-4.0",
+  "gemma-4-31b",
+  "gpt-oss-120b-nt",
+  "gpt-oss-120b-t",
+  "gpt-oss-20b-nt",
+  "gpt-oss-20b-t",
+  "llama-3.3-70b",
+  "ministral-3b",
+  "mistral-small",
+  "qwen35-27b-nt",
+  "qwen35-27b-t",
+  "qwen35-4b-t",
+  "qwen36-27b",
+  "qwen36-35b-a3b",
+  "xlam-70b"
+ ],
+ "results_dir": "_experiments/results_2026rerun"
 }

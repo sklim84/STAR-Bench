@@ -1,64 +1,91 @@
 {
-  "n_models_total": 28,
-  "n_models_with_both_outcomes": 28,
-  "mean_gap_succ_minus_fail": -0.0525,
-  "mean_t1_hit_rate": 0.7107,
-  "mean_subseq_after_fail": 0.6918,
-  "mean_subseq_after_succ": 0.6393,
-  "mean_recovery_rate": 0.7516,
+  "n_configs": 28,
+  "missing_config_ids": [
+    "ax-light",
+    "exaone-1.2b",
+    "exaone-32b",
+    "dragon-llama-fin",
+    "llama-3.2-3b",
+    "hermes-3-8b",
+    "phi-4-mini",
+    "qwen35-4b-nt",
+    "xlam-3b",
+    "gemma-4-e4b"
+  ],
+  "n_models_total": 18,
+  "n_models_with_both_outcomes": 18,
+  "mean_gap_succ_minus_fail": -0.0188,
+  "n_gap": 18,
+  "mean_t1_hit_rate": 0.8022,
+  "mean_subseq_after_fail": 0.8813,
+  "n_subseq_after_fail": 18,
+  "mean_subseq_after_succ": 0.8625,
+  "n_subseq_after_succ": 18,
+  "mean_recovery_rate": 0.961,
+  "n_recovery": 18,
   "top_5_largest_gap": [
     {
-      "model": "openai/gpt-oss-20b",
-      "gap": 0.0716,
+      "config_id": "gpt-oss-20b-t",
+      "label": "gpt-oss-20B (T)",
+      "gap": 0.1761,
       "n_t1_fail": 10
     },
     {
-      "model": "openai/gpt-oss-20b",
-      "gap": 0.066,
-      "n_t1_fail": 12
+      "config_id": "ministral-3b",
+      "label": "Ministral-3-3B",
+      "gap": 0.109,
+      "n_t1_fail": 17
     },
     {
-      "model": "microsoft/Phi-4-mini-instruct",
-      "gap": 0.0617,
-      "n_t1_fail": 23
+      "config_id": "ax-4.0",
+      "label": "A.X-4.0 (72B)",
+      "gap": 0.0641,
+      "n_t1_fail": 4
     },
     {
-      "model": "skt/A.X-4.0-Light",
-      "gap": 0.0258,
-      "n_t1_fail": 15
+      "config_id": "mistral-small",
+      "label": "Mistral-Small-24B",
+      "gap": 0.0573,
+      "n_t1_fail": 9
     },
     {
-      "model": "DragonLLM/Llama-Open-Finance-8B",
-      "gap": 0.0183,
+      "config_id": "kanana-2-inst",
+      "label": "Kanana-2-Instruct",
+      "gap": 0.0341,
       "n_t1_fail": 14
     }
   ],
   "top_5_smallest_gap_robust": [
     {
-      "model": "Qwen/Qwen3.5-27B",
-      "gap": -0.1504,
+      "config_id": "xlam-70b",
+      "label": "xLAM-2-70B",
+      "gap": -0.0981,
       "n_t1_fail": 9
     },
     {
-      "model": "LGAI-EXAONE/EXAONE-4.0-1.2B",
-      "gap": -0.1442,
-      "n_t1_fail": 22
-    },
-    {
-      "model": "mistralai/Mistral-Small-3.2-24B-Instruct-2506",
-      "gap": -0.1399,
+      "config_id": "gpt-oss-120b-t",
+      "label": "gpt-oss-120B (T)",
+      "gap": -0.0888,
       "n_t1_fail": 7
     },
     {
-      "model": "mistralai/Ministral-3-3B-Instruct-2512",
-      "gap": -0.1374,
-      "n_t1_fail": 18
+      "config_id": "qwen35-4b-t",
+      "label": "Qwen3.5-4B (T)",
+      "gap": -0.0881,
+      "n_t1_fail": 14
     },
     {
-      "model": "google/gemma-4-E4B-it",
-      "gap": -0.1371,
-      "n_t1_fail": 14
+      "config_id": "qwen36-27b",
+      "label": "Qwen3.6-27B",
+      "gap": -0.0861,
+      "n_t1_fail": 12
+    },
+    {
+      "config_id": "kanana-2-think",
+      "label": "Kanana-2-Think",
+      "gap": -0.0833,
+      "n_t1_fail": 4
     }
   ],
-  "note": "gap_succ_minus_fail = subseq_hit_after_t1_succ - subseq_hit_after_t1_fail. large gap = 초기 오류가 후속에 강하게 전파. small/negative gap = 회복 능력 또는 전파 적음."
+  "note": "gap_succ_minus_fail = subseq_hit_after_t1_succ - subseq_hit_after_t1_fail, over turns 2..N of the oracle scenarios. A turn fails when h == 0. A large gap means an early miss carries; a small or negative gap means the turns that follow are largely independent of it."
 }

@@ -1,18 +1,32 @@
-"""추가 논문 Figure 생성 스크립트.
+"""The remaining paper figures: the benchmark's own shape, and two over results.
 
-7개 figure:
-- Fig: Think vs NoThink diverging bar (tab:think 대체)
-- Fig: Per-turn hit rate line chart (fig:turnwise 대체)
-- Fig: Question length boxplot by category (신규, appendix)
-- Fig: Difficulty distribution stacked bar (신규)
-- Fig: Parameter complexity bar (신규, appendix)
-- Fig: Size vs Performance scatter (신규, appendix)
-- Fig: t-SNE semantic space (신규, appendix)
+This module did not import. `FIGURES_DIR` read a name `_WS` that is assigned
+nowhere, so every call raised `NameError` before drawing anything, and the step
+had been dead for as long as that line has been there. It also pointed at a
+manuscript checkout outside this repository, which is what `_figure_out` exists
+to prevent. Figures are written inside `_experiments/figures/` and copied to the
+manuscript in one explicit step (R2C-007).
+
+Three figures were removed rather than ported. `fig_think_diverging` and
+`fig_think_modes` carried nine and nine hardcoded numbers said to come from
+`repro_mean_std.json`, a file that no longer exists, for model sizes that are not
+in the cohort (Qwen3.5-0.8B, 2B, 9B). `RQ4_thinking_effect` draws the thinking
+comparison from the scored runs, so that is where it belongs. `fig_error_modes`
+and `fig_error_by_family` read an `error_analysis_single_turn.json` produced by a
+script that is not a step of `regenerate_analysis`; they now read the scorer's
+own error types.
+
+What is left falls in two groups. The benchmark figures read `benchmarks/`
+directly and do not depend on any run: question length, difficulty, parameter
+complexity, composition, t-SNE. The result figures read `analysis/load.py` like
+every other step: per-turn hit, size against performance, and the two error
+figures.
 """
 
 import json
 import glob
 import os
+import re
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
@@ -30,10 +44,22 @@ SB_FIG = _install_figure_out()
 import matplotlib.ticker as mticker
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-FIGURES_DIR = _WS / "STAR-Bench-manu" / "figures"
+PROJECT_ROOT = _SB
+FIGURES_DIR = SB_FIG
 BENCHMARKS_DIR = _SB / "benchmarks"
 FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+
+_sys.path.insert(0, str(_SB))
+from _experiments.scripts.analysis import load  # noqa: E402
+
+
+def _cohort_note() -> str:
+    table = load.missing()
+    absent = table.loc[~table["single"], "config_id"].tolist()
+    scored = len(table) - len(absent)
+    if not absent:
+        return f"all {len(table)} configurations scored"
+    return f"{scored} of {len(table)} configurations scored"
 
 # ── Color palette (consistent with generate_paper_figures.py) ──
 COLORS = {
@@ -90,98 +116,23 @@ def apply_style(ax, title=None, xlabel=None, ylabel=None):
 # ═══════════════════════════════════════════════════════════════════
 # Fig 1: Think vs NoThink Diverging Bar Chart
 # ═══════════════════════════════════════════════════════════════════
-def fig_think_diverging():
-    """Think vs NoThink Δh (tool hit) as diverging horizontal bar chart."""
-    # Δh = h_think - h_nothink from repro_mean_std.json (Korean, 3-round mean)
-    data = [
-        ("Qwen3.5-0.8B",  -0.129),
-        ("Qwen3.5-2B",    -0.062),
-        ("Qwen3.5-9B",    -0.015),
-        ("gpt-oss-20B",   -0.001),
-        ("Qwen3-4B-Think",-0.000),
-        ("Qwen3-30B-Think",+0.000),
-        ("Kanana-2-Think", +0.001),
-        ("Qwen3.5-27B",   +0.006),
-        ("Qwen3.5-4B",    +0.008),
-    ]
-
-    models = [d[0] for d in data]
-    deltas = [d[1] for d in data]
-
-    fig, ax = plt.subplots(figsize=(5, 4))
-    y = np.arange(len(models))
-    bar_colors = ["#E15759" if d < 0 else "#4E79A7" for d in deltas]
-
-    bars = ax.barh(y, deltas, color=bar_colors, alpha=0.85, height=0.6, edgecolor="white", linewidth=0.5)
-
-    # Add value labels — 음수 값은 바 왼쪽 끝(왼쪽 밖), 양수는 오른쪽 밖
-    for i, (val, bar) in enumerate(zip(deltas, bars)):
-        if val < 0:
-            # 큰 음수는 바 왼쪽 끝 바깥
-            offset = -0.004
-            ha = "right"
-        elif val > 0:
-            offset = 0.003
-            ha = "left"
-        else:
-            offset = 0.003
-            ha = "left"
-        label = f"{val:+.3f}" if val != 0 else "0.000"
-        ax.text(val + offset, i, label, va="center", ha=ha, fontsize=9, fontweight="bold")
-
-    ax.set_yticks(y)
-    ax.set_yticklabels(models, fontsize=12)
-    ax.axvline(0, color="black", linewidth=0.8, linestyle="-")
-    ax.set_xlim(-0.165, 0.03)
-    ax.tick_params(axis='x', labelsize=12)
-
-    # Annotations
-    ax.text(-0.16, -0.8, "← Hurts", fontsize=10, color="#E15759", fontstyle="italic")
-    ax.text(0.005, -0.8, "Helps →", fontsize=10, color="#4E79A7", fontstyle="italic")
-
-    apply_style(ax, xlabel="$\\Delta h$ (think $-$ nothink)")
-    ax.invert_yaxis()
-    plt.tight_layout()
-    plt.savefig(FIGURES_DIR / "fig_think_delta.png", dpi=300, bbox_inches="tight")
-    plt.close()
-    print("  Saved: fig_think_delta.png (compact)")
-
-
 # ═══════════════════════════════════════════════════════════════════
 # Fig 2: Per-turn Hit Rate Line Chart
 # ═══════════════════════════════════════════════════════════════════
 def fig_turnwise_line():
     """Cohort-level per-turn tool hit rate, column width.
 
-    Aggregate over the full 29-model cohort: mean tool hit per turn with a
-    +/-1 std band across models (no per-model selection). Turns 1-4 cover all
-    50 scenarios; turn 5 covers the 18 longer scenarios (>=5 turns); turn 6
-    (n=1 scenario) is excluded.
+    Mean tool hit per turn with a +/-1 SD band across the scored configurations,
+    from the oracle setting. Turn 6 is left out: one scenario reaches it, so the
+    band there is one model's variance and not the cohort's.
     """
-    from collections import defaultdict
-    MT = _SB / "_experiments" / "results_mt_oracle" / "eval"
     MAX_TURN = 5
-    EXCLUDE = {  # 28-model cohort: drop 8 non-cohort variants + redundant Kanana-2-Instruct-2601
-        "Qwen_Qwen3-30B-A3B-Instruct-2507", "Qwen_Qwen3-4B-Instruct-2507",
-        "Qwen_Qwen3-8B", "Qwen_Qwen3_5-9B__nothink", "Qwen_Qwen3_5-9B__think",
-        "Salesforce_Llama-xLAM-2-8b-fc-r", "Salesforce_xLAM-2-1b-fc-r",
-        "Salesforce_xLAM-2-32b-fc-r",
-        "kakaocorp_kanana-2-30b-a3b-instruct-2601",
-    }
     turns = list(range(1, MAX_TURN + 1))
-    # per-model per-turn mean hit, then aggregate across models
-    per_model = []  # list of dict turn->rate
-    for f in glob.glob(str(MT / "multiturn_*.json")):
-        stem = Path(f).stem.replace("multiturn_", "")
-        if stem in EXCLUDE:
-            continue
-        d = json.load(open(f))
-        s, c = defaultdict(float), defaultdict(int)
-        for sc in d["scenarios"]:
-            for t in sc["turns"]:
-                if t["turn"] <= MAX_TURN and t.get("tool_hit") is not None:
-                    s[t["turn"]] += t["tool_hit"]; c[t["turn"]] += 1
-        per_model.append({tn: (s[tn] / c[tn] * 100) for tn in turns if c[tn]})
+    _, turn_rows = load.multiturn("oracle")
+    kept = turn_rows[turn_rows["turn"] <= MAX_TURN]
+    per_config = (kept.groupby(["config_id", "turn"])["h"].mean() * 100).unstack("turn")
+    per_model = [{tn: row[tn] for tn in turns if tn in row and row[tn] == row[tn]}
+                 for _, row in per_config.iterrows()]
     mean = np.array([np.mean([m[tn] for m in per_model if tn in m]) for tn in turns])
     std = np.array([np.std([m[tn] for m in per_model if tn in m]) for tn in turns])
 
@@ -392,56 +343,48 @@ def fig_param_complexity():
 # Fig 6: Size vs Performance Scatter
 # ═══════════════════════════════════════════════════════════════════
 def fig_size_vs_performance():
-    """Model size vs tool hit ($h$) scatter plot."""
-    # Model name → (params_B, is_MoE_active_B_or_None)
-    SIZE_MAP = {
-        "Qwen_Qwen3_5-27B": 27, "Qwen_Qwen3_5-9B": 9, "Qwen_Qwen3_5-4B": 4,
-        "Qwen_Qwen3_5-2B": 2, "Qwen_Qwen3_5-0_8B": 0.8,
-        "Qwen_Qwen3-30B-A3B-Thinking-2507": 3,  # active params
-        "Qwen_Qwen3-30B-A3B-Instruct-2507": 3,
-        "Qwen_Qwen3-4B-Thinking-2507": 4,
-        "Qwen_Qwen3-4B-Instruct-2507": 4,
-        "Qwen_Qwen3-8B": 8,
-        "Qwen_Qwen3-Coder-30B-A3B-Instruct": 3,
-        "Qwen_Qwen2_5-1_5B-Instruct": 1.5,
-        "Salesforce_xLAM-2-32b-fc-r": 32,
-        "Salesforce_Llama-xLAM-2-8b-fc-r": 8,
-        "Salesforce_xLAM-2-3b-fc-r": 3,
-        "Salesforce_xLAM-2-1b-fc-r": 1,
-        "Salesforce_Llama-xLAM-2-70b-fc-r": 70,
-        "mistralai_Mistral-Small-3_2-24B-Instruct-2506": 24,
-        "mistralai_Ministral-3-14B-Instruct-2512": 14,
-        "mistralai_Ministral-3-8B-Instruct-2512": 8,
-        "mistralai_Ministral-3-3B-Instruct-2512": 3,
-        "mistralai_Mistral-Nemo-Instruct-2407": 12,
-        "meta-llama_Llama-3_3-70B-Instruct": 70,
-        "meta-llama_Llama-3_1-8B-Instruct": 8,
-        "meta-llama_Llama-3_2-3B-Instruct": 3,
-        "meta-llama_Llama-3_2-1B-Instruct": 1,
-        "LGAI-EXAONE_EXAONE-4_0-32B": 32,
-        "LGAI-EXAONE_EXAONE-4_0-1_2B": 1.2,
-        "kakaocorp_kanana-2-30b-a3b-thinking-2601": 3,
-        "kakaocorp_kanana-2-30b-a3b-instruct": 3,
-        "zai-org_GLM-4_7-Flash": 9,
-        "openai_gpt-oss-20b": 20,
-        "skt_A_X-4_0": 72,
-        "skt_A_X-4_0-Light": 7,
-        "NousResearch_Hermes-3-Llama-3_1-8B": 8,
-    }
+    """Model size against tool hit, over the scored configurations.
 
-    # results_kr/eval/eval_*.json single-round 결과를 repro_mean_std-like list로 빌드 (repro_mean_std.json 누락 대체)
-    import re, glob, os
-    results_kr_eval = _SB / "_experiments" / "results_kr" / "eval"
-    repro = []
-    for f in sorted(glob.glob(str(results_kr_eval / "eval_*.json"))):
-        base = os.path.basename(f).replace('.json', '')
-        m = re.match(r'eval_(.+?)_\d{8}_\d{6}$', base)
-        if not m:
+    Size comes from the registry label, which names it for every configuration
+    but four. Those four are here by name with the reason: three are mixtures of
+    experts, where the axis is the active parameter count and not the total, and
+    Phi-4-mini's label does not carry a size at all. A configuration whose size
+    cannot be resolved is named on the console and left out of the figure rather
+    than placed at a guessed x.
+    """
+    BY_NAME = {
+        "kanana-2-inst": 3.0,     # 30B total, A3B active
+        "kanana-2-think": 3.0,    # 30B total, A3B active
+        "qwen36-35b-a3b": 3.0,    # 35B total, A3B active
+        "phi-4-mini": 3.8,        # the label carries no size
+    }
+    THINKING = {"think", "effort_high", "always_on"}
+
+    def size_of(config_id: str, label: str):
+        if config_id in BY_NAME:
+            return BY_NAME[config_id]
+        found = re.findall(r"(\d+(?:\.\d+)?)\s*B\b", label)
+        return float(found[-1]) if found else None
+
+    cases = load.single()
+    configs = load.configs()
+    h_by_config = cases.groupby("config_id")["h"].mean()
+
+    repro, unresolved = [], []
+    for config_id, h in h_by_config.items():
+        row = configs.loc[config_id]
+        size = size_of(config_id, row["label"])
+        if size is None:
+            unresolved.append(config_id)
             continue
-        fid = m.group(1)
-        with open(f) as fp:
-            d = json.load(fp)
-        repro.append({"model": fid, "h_mean": d['overall']['primary_tool_hit_rate']})
+        marker = "^" if row["reasoning_mode"] in THINKING else (
+            "v" if row["reasoning_mode"] == "nothink" or row["reasoning_mode"] == "effort_low"
+            else "o")
+        repro.append({"model": row["model"], "label": row["label"], "size": size,
+                      "h_mean": float(h), "marker": marker})
+    if unresolved:
+        print(f"  size unresolved, left out: {', '.join(unresolved)}")
+    print(f"  {_cohort_note()}")
 
     fig, ax = plt.subplots(figsize=(3.5, 2.7))
 
@@ -449,14 +392,9 @@ def fig_size_vs_performance():
     from collections import defaultdict
     family_points = defaultdict(list)
     for item in repro:
-        model = item["model"]
-        base = model.replace("__think", "").replace("__nothink", "")
-        size = SIZE_MAP.get(base)
-        if size is None:
-            continue
-        family = get_family(model)
-        marker = "^" if "__think" in model else ("v" if "__nothink" in model else "o")
-        family_points[family].append((size, item["h_mean"], marker, model))
+        family = get_family(item["model"])
+        family_points[family].append((item["size"], item["h_mean"], item["marker"],
+                                      item["label"]))
 
     plotted_families = set()
     for family, pts in family_points.items():
@@ -793,278 +731,14 @@ def fig_question_length_boxplot_summary():
 # ═══════════════════════════════════════════════════════════════════
 # Fig: Thinking mode — (a) Qwen3.5 size dependence (b) per-model paired bar
 # ═══════════════════════════════════════════════════════════════════
-def fig_think_modes():
-    """Two PNGs for RQ3 thinking mode subfigures.
-
-    (a) fig_think_size.png — Qwen3.5 size dependence on Delta h / Delta h_bar.
-    (b) fig_think_amp.png  — All 9 models paired bar (single- vs. multi-turn).
-    """
-    # 3-round mean (post-rescore) Δh and Δh_bar for Qwen3.5 think vs nothink
-    qwen35 = [
-        ("0.8B", 0.8, -0.122, -0.365),
-        ("2B", 2.0, -0.057, -0.212),
-        ("4B", 4.0, -0.012, -0.021),
-        ("9B", 9.0, -0.042, -0.055),
-        ("27B", 27.0, -0.010, -0.049),
-    ]
-    others = [
-        ("Qwen3-4B", -0.000, -0.011),
-        ("Qwen3-30B", +0.000, +0.000),
-        ("gpt-oss-20B", -0.001, +0.007),
-        ("Kanana-2-30B", +0.001, +0.010),
-    ]
-
-    SINGLE_C = "#1F4E79"   # Deep navy
-    MULTI_C = "#5B8DBE"    # Steel blue (paired with navy)
-
-    # ─── Panel (a): Qwen3.5 size dependence (line chart, log x-axis) ──
-    fig, ax = plt.subplots(figsize=(7, 4.8))
-
-    sizes_unsorted = [d[1] for d in qwen35]
-    sorted_idx = np.argsort(sizes_unsorted)
-    sizes = [qwen35[i][1] for i in sorted_idx]
-    labels = [qwen35[i][0] for i in sorted_idx]
-    delta_h = [qwen35[i][2] for i in sorted_idx]
-    delta_h_bar = [qwen35[i][3] for i in sorted_idx]
-
-    ax.axhline(y=0, color="#666", linestyle="--", linewidth=1, zorder=1, alpha=0.7)
-
-    ax.fill_between(sizes, delta_h_bar, delta_h, alpha=0.13,
-                     color="#999", zorder=2)
-
-    ax.plot(sizes, delta_h, "o-", color=SINGLE_C, linewidth=2.4,
-             markersize=11, label=r"Single-turn $\Delta h$",
-             markeredgecolor="white", markeredgewidth=1.5, zorder=4)
-    ax.plot(sizes, delta_h_bar, "s-", color=MULTI_C, linewidth=2.4,
-             markersize=11, label=r"Multi-turn $\Delta \bar{h}$",
-             markeredgecolor="white", markeredgewidth=1.5, zorder=4)
-
-    ax.set_xscale("log")
-    ax.set_xticks(sizes)
-    ax.set_xticklabels(labels, fontsize=14)
-    ax.set_xlabel("Qwen3.5 model size (log scale)", fontsize=14)
-    ax.set_ylabel(r"Think $-$ NoThink delta", fontsize=14)
-    ax.set_ylim(-0.42, 0.05)
-    ax.legend(loc="lower right", fontsize=12, frameon=True,
-               framealpha=0.95, edgecolor="#ccc")
-    ax.grid(True, alpha=0.3, linestyle="--", linewidth=0.6)
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.tick_params(axis="y", labelsize=13)
-
-    # Annotate amplification at largest gap
-    ax.annotate(r"$\times 2.8$ amp.", xy=(0.8, (delta_h[0] + delta_h_bar[0]) / 2),
-                 xytext=(15, 0), textcoords="offset points",
-                 fontsize=10.5, color="#444", style="italic",
-                 ha="left", va="center")
-
-    plt.tight_layout()
-    plt.savefig(FIGURES_DIR / "fig_think_size.png", dpi=300, bbox_inches="tight")
-    plt.close()
-    print("  Saved: fig_think_size.png")
-
-    # ─── Panel (b): All 9 models paired bar ──
-    fig, ax = plt.subplots(figsize=(8, 4.8))
-
-    qwen35_sorted = sorted(qwen35, key=lambda d: d[1])
-    qwen35_names = [f"Qwen3.5-{d[0]}" for d in qwen35_sorted]
-    qwen35_dh = [d[2] for d in qwen35_sorted]
-    qwen35_dhb = [d[3] for d in qwen35_sorted]
-
-    other_names = [d[0] for d in others]
-    other_dh = [d[1] for d in others]
-    other_dhb = [d[2] for d in others]
-
-    all_names = qwen35_names + other_names
-    all_dh = qwen35_dh + other_dh
-    all_dhb = qwen35_dhb + other_dhb
-
-    x = np.arange(len(all_names))
-    width = 0.4
-
-    ax.axhline(y=0, color="#666", linestyle="--", linewidth=1,
-                zorder=1, alpha=0.7)
-    ax.bar(x - width / 2, all_dh, width, color=SINGLE_C,
-            label=r"Single-turn $\Delta h$",
-            edgecolor="white", linewidth=0.8, zorder=3)
-    ax.bar(x + width / 2, all_dhb, width, color=MULTI_C,
-            label=r"Multi-turn $\Delta \bar{h}$",
-            edgecolor="white", linewidth=0.8, zorder=3)
-
-    sep_x = len(qwen35) - 0.5
-    ax.axvline(x=sep_x, color="#999", linestyle=":", linewidth=1.2, zorder=2)
-
-    ax.set_ylim(-0.42, 0.07)
-    ax.text((len(qwen35) - 1) / 2, 0.04, "Qwen3.5 series",
-             fontsize=10.5, color="#555", ha="center", style="italic")
-    ax.text(sep_x + (len(others)) / 2, 0.04, "Other models",
-             fontsize=10.5, color="#555", ha="center", style="italic")
-
-    ax.set_xticks(x)
-    ax.set_xticklabels(all_names, rotation=30, ha="right",
-                        fontsize=13, rotation_mode="anchor")
-    ax.set_ylabel(r"Think $-$ NoThink delta", fontsize=14)
-    ax.legend(loc="lower left", fontsize=12, frameon=True,
-               framealpha=0.95, edgecolor="#ccc")
-    ax.grid(True, alpha=0.3, axis="y", linestyle="--", linewidth=0.6)
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.tick_params(axis="y", labelsize=13)
-
-    plt.tight_layout()
-    plt.savefig(FIGURES_DIR / "fig_think_amp.png", dpi=300, bbox_inches="tight")
-    plt.close()
-    print("  Saved: fig_think_amp.png")
-
-
 # ═══════════════════════════════════════════════════════════════════
 # Fig: Error modes — error type distribution + family x error heatmap (RQ4)
 # ═══════════════════════════════════════════════════════════════════
-def fig_error_modes():
-    """Error type distribution + family x error type heatmap for RQ4."""
-    results_path = _SB / "_experiments" / "results_RQ1" / "error_analysis_single_turn.json"
-    with open(results_path) as f:
-        data = json.load(f)
-
-    families = data["3_family_error_distribution"]["by_family"]
-
-    err_types_order = ["correct", "wrong_func", "other", "wrong_value",
-                        "hallucinated_call", "missing_param", "api_error"]
-    err_colors = {
-        "correct": "#59A14F",
-        "wrong_func": "#E15759",
-        "other": "#BAB0AC",
-        "wrong_value": "#F28E2B",
-        "hallucinated_call": "#B07AA1",
-        "missing_param": "#4E79A7",
-        "api_error": "#76B7B2",
-    }
-
-    overall = {et: 0 for et in err_types_order}
-    for info in families.values():
-        for et, c in info["error_distribution"].items():
-            if et in overall:
-                overall[et] += c["count"]
-    total = sum(overall.values())
-    overall_pct = {et: overall[et] / total * 100 for et in err_types_order}
-
-    err_focus = ["wrong_func", "wrong_value", "hallucinated_call", "missing_param"]
-    family_order = sorted(families.keys())
-    heatmap_data = []
-    for fam in family_order:
-        info = families[fam]
-        n = info["n_records"]
-        row = []
-        for et in err_focus:
-            c = info["error_distribution"].get(et, {"count": 0})["count"]
-            row.append(c / n * 100)
-        heatmap_data.append(row)
-    heatmap_data = np.array(heatmap_data)
-
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 4.8),
-                                     gridspec_kw={"width_ratios": [1, 1.15]})
-
-    # (a) Horizontal stacked bar
-    left = 0
-    for et in err_types_order:
-        pct = overall_pct[et]
-        ax1.barh([0], [pct], left=left, color=err_colors[et],
-                 label=f"{et} ({pct:.1f}%)", edgecolor="white", linewidth=0.6)
-        if pct >= 4:
-            text_color = "white" if et != "other" else "black"
-            ax1.text(left + pct / 2, 0, f"{pct:.1f}%", ha="center", va="center",
-                     fontsize=10, color=text_color, fontweight="bold")
-        left += pct
-    ax1.set_xlim(0, 100)
-    ax1.set_xlabel("Share of all calls (%)", fontsize=12)
-    ax1.set_yticks([])
-    ax1.set_title("(a) Error type distribution (n={:,})".format(total),
-                   fontsize=12, pad=10)
-    ax1.legend(loc="upper center", bbox_to_anchor=(0.5, -0.18),
-                ncol=3, fontsize=9, frameon=False, columnspacing=0.8)
-    ax1.set_xticks([0, 20, 40, 60, 80, 100])
-    ax1.spines["top"].set_visible(False)
-    ax1.spines["right"].set_visible(False)
-    ax1.spines["left"].set_visible(False)
-
-    # (b) Heatmap family x error type
-    im = ax2.imshow(heatmap_data, aspect="auto", cmap="YlOrRd",
-                     vmin=0, vmax=max(heatmap_data.max(), 1))
-    ax2.set_xticks(range(len(err_focus)))
-    ax2.set_xticklabels([e.replace("_", "\n") for e in err_focus], fontsize=10)
-    ax2.set_yticks(range(len(family_order)))
-    ax2.set_yticklabels(family_order, fontsize=10)
-    ax2.set_title("(b) Error rate by family (% of family calls)",
-                   fontsize=12, pad=10)
-
-    vmax = heatmap_data.max()
-    for i in range(len(family_order)):
-        for j in range(len(err_focus)):
-            v = heatmap_data[i, j]
-            color = "white" if v > vmax * 0.55 else "black"
-            ax2.text(j, i, f"{v:.1f}", ha="center", va="center",
-                      fontsize=9, color=color)
-
-    cbar = plt.colorbar(im, ax=ax2, fraction=0.05, pad=0.03)
-    cbar.set_label("% of calls", fontsize=10)
-
-    plt.tight_layout()
-    plt.savefig(FIGURES_DIR / "fig_error_modes.png", dpi=300, bbox_inches="tight")
-    plt.close()
-    print("  Saved: fig_error_modes.png")
-
-
-def fig_error_by_family():
-    """Family x error-type heatmap only (panel (b) of fig_error_modes),
-    sized for a column-width subfigure in the main text."""
-    results_path = _SB / "_experiments" / "results_RQ1" / "error_analysis_single_turn.json"
-    with open(results_path) as f:
-        data = json.load(f)
-    families = data["3_family_error_distribution"]["by_family"]
-
-    err_focus = ["wrong_func", "wrong_value", "hallucinated_call", "missing_param"]
-    family_order = sorted(families.keys())
-    heatmap_data = []
-    for fam in family_order:
-        info = families[fam]
-        n = info["n_records"]
-        heatmap_data.append([
-            info["error_distribution"].get(et, {"count": 0})["count"] / n * 100
-            for et in err_focus
-        ])
-    heatmap_data = np.array(heatmap_data)
-
-    fig, ax = plt.subplots(figsize=(5.2, 4.2))
-    im = ax.imshow(heatmap_data, aspect="auto", cmap="YlOrRd",
-                   vmin=0, vmax=max(heatmap_data.max(), 1))
-    ax.set_xticks(range(len(err_focus)))
-    ax.set_xticklabels([e.replace("_", "\n") for e in err_focus], fontsize=11)
-    ax.set_yticks(range(len(family_order)))
-    ax.set_yticklabels(family_order, fontsize=11)
-
-    vmax = heatmap_data.max()
-    for i in range(len(family_order)):
-        for j in range(len(err_focus)):
-            v = heatmap_data[i, j]
-            ax.text(j, i, f"{v:.1f}", ha="center", va="center",
-                    fontsize=10, color="white" if v > vmax * 0.55 else "black")
-
-    cbar = plt.colorbar(im, ax=ax, fraction=0.05, pad=0.03)
-    cbar.set_label("% of family calls", fontsize=10)
-    cbar.ax.tick_params(labelsize=9)
-
-    plt.tight_layout()
-    plt.savefig(FIGURES_DIR / "fig_error_by_family.png", dpi=300, bbox_inches="tight")
-    plt.close()
-    print("  Saved: fig_error_by_family.png")
-
-
 # ═══════════════════════════════════════════════════════════════════
 # Main
 # ═══════════════════════════════════════════════════════════════════
 if __name__ == "__main__":
     print("Generating new paper figures...")
-    fig_think_diverging()
     fig_turnwise_line()
     fig_question_length_boxplot()
     fig_difficulty_distribution()
@@ -1074,7 +748,4 @@ if __name__ == "__main__":
     fig_difficulty_distribution_summary()
     fig_question_length_boxplot_summary()
     fig_benchmark_composition_combined()
-    fig_think_modes()
-    fig_error_modes()
-    fig_error_by_family()
     print("Done!")
