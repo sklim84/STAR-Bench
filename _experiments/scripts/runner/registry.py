@@ -18,6 +18,8 @@ either host (measured, not sized on paper).
 `max_model_len_e2e` is the cohort's 65536 only where the model's own window
 reaches it. Kanana-2 stops at 32768 and Qwen-Open-Finance-R at 40960, so those
 entries carry their own value and the appendix reports the e2e window per row.
+A.X-4.0-Light stops at 16384, below L5-012's single context, so it is the one
+entry that also carries its own base window and output budget.
 
 Decisions carried here: D05 (one labelled mode per model; T/NT only for Qwen3.5
 `enable_thinking` and gpt-oss `reasoning_effort` high/low), D07 (one stack,
@@ -106,6 +108,10 @@ class ServingConfig:
     # A bare file name is under chat_templates/; a name with a directory is
     # relative to _experiments/scripts.
     chat_template: str | None = None
+    # `max_position_embeddings` from the model's own config, filled in only where it
+    # is under one of the cohort windows. It is what makes a smaller context here a
+    # recorded fact instead of a silent exception, and the gate checks against it.
+    model_window: int | None = None
     max_model_len: int = CONTEXT
     max_model_len_e2e: int | None = None
     max_tokens: int = BUDGET_PLAIN
@@ -159,7 +165,16 @@ CONFIGS: tuple[ServingConfig, ...] = (
     # -- Korean-specialised ------------------------------------------------
     _cfg(config_id="ax-light", label="A.X-4.0-Light (7B)", model="skt/A.X-4.0-Light",
          group="Korean-Specialized", parser="hermes", tp=1, tp_80g=1,
-         max_model_len_e2e=CONTEXT_E2E),
+         model_window=16384, max_model_len=16384, max_tokens=3072,
+         max_model_len_e2e=16384,
+         notes="the only entry under D07's 32768, because the model stops at 16384 "
+               "and the 2026-09 round served it there too. Its own tokenizer puts "
+               "the Korean system prompt and 23 tool schemas at 6177 tokens and the "
+               "longest question at 334, so 3072 of output still leaves 6801 for "
+               "tool results. 3072 covers the 99th percentile of what the same "
+               "family generates (A.X-4.0: p99 3200 over 10049 rounds); the cost is "
+               "7 of 1258 single-turn cases and 4 of 50 e2e scenarios whose history "
+               "outgrows the window"),
     _cfg(config_id="ax-4.0", label="A.X-4.0 (72B)", model="skt/A.X-4.0",
          group="Korean-Specialized", parser="hermes", tp=4, tp_80g=4,
          gpu_memory_utilization=0.95, needs_four_gpu_host=True,
@@ -178,14 +193,14 @@ CONFIGS: tuple[ServingConfig, ...] = (
          model="kakaocorp/kanana-2-30b-a3b-instruct", group="Korean-Specialized",
          parser="functionary_kanana", tp=2, tp_80g=1,
          chat_template=KANANA_TEMPLATE, tool_parser_plugin=KANANA_PARSER_PLUGIN,
-         max_model_len_e2e=32768),
+         model_window=32768, max_model_len_e2e=32768),
     _cfg(config_id="kanana-2-think", label="Kanana-2-Think",
          model="kakaocorp/kanana-2-30b-a3b-thinking-2601", group="Korean-Specialized",
          parser="hermes", tp=2, tp_80g=1,
          reasoning_mode="always_on", reasoning_control="always_on",
          reasoning_parser="deepseek_r1", chat_template=None,
          max_tokens=BUDGET_REASONING,
-         max_model_len_e2e=32768,
+         model_window=32768, max_model_len_e2e=32768,
          smoke_required="reasoning tokens appear and tool calls survive the reasoning parser",
          notes="L5-008: served on its own template (the model's, not the instruct "
                "functionary one) with a reasoning parser"),
@@ -198,7 +213,7 @@ CONFIGS: tuple[ServingConfig, ...] = (
          model="DragonLLM/Qwen-Open-Finance-R-8B", group="Finance-Specialized",
          parser="hermes", tp=1, tp_80g=1, reasoning_mode="always_on",
          reasoning_control="always_on", reasoning_parser="qwen3",
-         max_tokens=BUDGET_REASONING, max_model_len_e2e=40960,
+         max_tokens=BUDGET_REASONING, model_window=40960, max_model_len_e2e=40960,
          smoke_required="native tool calls, not the fallback parser",
          notes="L5-010: the template emits Hermes <tool_call> JSON, so qwen3_xml "
                "never matched and every call came from the text fallback"),

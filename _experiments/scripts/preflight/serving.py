@@ -144,10 +144,19 @@ def _registry_complete(registry) -> Check:
                             f"{KNOWN_MODES}")
         if cfg.reasoning_control not in registry.REASONING_CONTROLS:
             problems.append(f"{where}: reasoning control {cfg.reasoning_control!r} is unknown")
-        if cfg.max_model_len < MIN_CONTEXT:
+        window = cfg.model_window
+        if cfg.max_model_len < MIN_CONTEXT and not (window and window < MIN_CONTEXT):
             problems.append(f"{where}: context {cfg.max_model_len} is below the {MIN_CONTEXT} "
-                            f"every configuration gets (D07)")
-        if cfg.is_reasoning and cfg.max_tokens < REASONING_BUDGET:
+                            f"every configuration gets (D07), and model_window does not "
+                            f"say the model stops there")
+        if window and cfg.max_model_len > window:
+            problems.append(f"{where}: context {cfg.max_model_len} is above the model's own "
+                            f"{window}, so the server will not start")
+        if window and cfg.context_for("e2e") > window:
+            problems.append(f"{where}: end-to-end context {cfg.context_for('e2e')} is above the "
+                            f"model's own {window}")
+        tight = bool(window and window < MIN_CONTEXT)
+        if cfg.is_reasoning and cfg.max_tokens < REASONING_BUDGET and not tight:
             problems.append(f"{where}: reasoning configuration with a {cfg.max_tokens}-token "
                             f"output budget, expected {REASONING_BUDGET} (D05, L5-006)")
         if cfg.reasoning_control == "reasoning_effort" and cfg.reasoning_mode not in (

@@ -23,15 +23,38 @@ def test_there_is_one_entry_per_main_table_row():
 
 
 def test_every_configuration_has_a_context_of_at_least_32k_and_an_output_budget():
+    """D07, with the one exception the model itself imposes.
+
+    A window under 32768 is allowed only where the model cannot go higher, and
+    then it has to be exactly the model's window, recorded in `model_window`.
+    """
     for cfg in registry.CONFIGS:
-        assert cfg.max_model_len >= 32768, cfg.config_id
-        assert cfg.max_tokens >= 8192, cfg.config_id
+        if cfg.model_window and cfg.model_window < 32768:
+            assert cfg.max_model_len == cfg.model_window, cfg.config_id
+            assert cfg.max_tokens >= 3072, cfg.config_id
+        else:
+            assert cfg.max_model_len >= 32768, cfg.config_id
+            assert cfg.max_tokens >= 8192, cfg.config_id
         assert cfg.context_for("e2e") >= cfg.max_model_len, cfg.config_id
+
+
+def test_a_smaller_window_is_the_model_window_and_nothing_else():
+    """The registry raised A.X-4.0-Light from 16384 to 32768 and the server stopped
+    coming up. Every window below a cohort value now names the model's own limit."""
+    windowed = {c.config_id: c.model_window for c in registry.CONFIGS if c.model_window}
+    assert windowed == {"ax-light": 16384, "kanana-2-inst": 32768,
+                        "kanana-2-think": 32768, "dragon-qwen-fin": 40960}
+    for cfg in registry.CONFIGS:
+        for setting in ("single", "oracle", "e2e"):
+            if cfg.model_window:
+                assert cfg.context_for(setting) <= cfg.model_window, (cfg.config_id, setting)
 
 
 def test_every_reasoning_configuration_gets_the_16k_output_budget():
     """D05, L5-006. Both halves of a T/NT pair get it, so the pair differs only in mode."""
     for cfg in registry.CONFIGS:
+        if cfg.model_window and cfg.model_window < registry.CONTEXT:
+            continue          # the window sets the budget instead; see ax-light
         if cfg.reasoning_parser:
             assert cfg.max_tokens == registry.BUDGET_REASONING, cfg.config_id
         else:
@@ -146,10 +169,25 @@ def test_the_kanana_plugin_registers_the_parser_name_the_registry_asks_for():
 
 def test_the_e2e_window_never_exceeds_the_model_window():
     """65536 is the cohort default only where the model's own window reaches it."""
-    native = {"kanana-2-inst": 32768, "kanana-2-think": 32768, "dragon-qwen-fin": 40960}
+    native = {"kanana-2-inst": 32768, "kanana-2-think": 32768, "dragon-qwen-fin": 40960,
+              "ax-light": 16384}
     for config_id, window in native.items():
         cfg = registry.by_id(config_id)
         assert cfg.context_for("e2e") == window, config_id
+
+
+def test_every_request_fits_the_window_it_is_served_in():
+    """prompt + output budget has to fit, or vLLM answers 400 and the case is lost.
+
+    A.X-4.0-Light is the one model whose window (16384) is under the cohort
+    context, and the registry raised it to 32768 without checking, so the server
+    would not have started at all.
+    """
+    schema_tokens = 9500          # Korean tool schema and system prompt, byte estimate
+    for cfg in registry.CONFIGS:
+        for setting in ("single", "oracle", "e2e"):
+            room = cfg.context_for(setting) - cfg.max_tokens
+            assert room > schema_tokens, (cfg.config_id, setting, room)
 
 
 def test_the_serving_arguments_carry_the_pinned_revision_seed_and_parser():
@@ -234,9 +272,18 @@ def test_a_tool_result_is_truncated_to_the_same_budget_in_every_arm():
 
 
 def test_every_configuration_clears_the_preflight_on_the_korean_arm():
+    """The byte estimate is an upper bound, so it decides nothing on its own.
+
+    On a host with no model cache it runs about 50% over: A.X-4.0-Light's own
+    tokenizer puts this prompt at 6,177 tokens and the estimate at 9,345. A
+    configuration whose window is tight is therefore judged on the tokenizer when
+    there is one, and only reported when there is not.
+    """
     arm = arms.load_arm("kr")
     cases = _cases("계좌 9000000000000002 의 최근 6개월 거래를 모두 조회하고 위험도를 평가해줘" * 6)
     for cfg in registry.CONFIGS:
         budget = preflight.measure(arm=arm, cases=cases, model=cfg.model, revision=cfg.revision,
                                    max_model_len=cfg.max_model_len, max_tokens=cfg.max_tokens)
+        if budget.estimated and cfg.model_window:
+            continue
         assert budget.ok, f"{cfg.config_id}: {budget.as_dict()}"

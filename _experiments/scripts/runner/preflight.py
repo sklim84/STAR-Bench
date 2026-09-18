@@ -42,6 +42,7 @@ class PromptBudget:
     headroom: int
     tokenizer: str
     longest_question_id: str | None = None
+    estimated: bool = False
 
     @property
     def ok(self) -> bool:
@@ -51,7 +52,7 @@ class PromptBudget:
         return {"prompt_tokens": self.prompt_tokens, "max_model_len": self.max_model_len,
                 "max_tokens": self.max_tokens, "headroom": self.headroom,
                 "tokenizer": self.tokenizer, "longest_question_id": self.longest_question_id,
-                "ok": self.ok}
+                "estimated": self.estimated, "ok": self.ok}
 
 
 def estimate_tokens(text: str) -> int:
@@ -120,7 +121,7 @@ def measure(*, arm, cases: list[dict], model: str, revision: str | None,
     headroom = max_model_len - prompt_tokens - max_tokens
     return PromptBudget(prompt_tokens=prompt_tokens, max_model_len=max_model_len,
                         max_tokens=max_tokens, headroom=headroom, tokenizer=name,
-                        longest_question_id=longest_id)
+                        longest_question_id=longest_id, estimated=tok is None)
 
 
 def check(budget: PromptBudget) -> None:
