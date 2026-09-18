@@ -223,3 +223,70 @@ def missing(*, eval_root: Path | str | None = None) -> pd.DataFrame:
             row[setting] = (root / directory / cfg.config_id).is_dir()
         rows.append(row)
     return pd.DataFrame(rows)
+
+
+# --- run records ------------------------------------------------------------
+# The eval files hold scores, not what the model wrote. Two steps need the calls
+# themselves: the STR quality table reads the report text the model passed to
+# `validate_str_fields`, and the end-to-end error rates read what the tools
+# answered. Both come from the Contract 2 records the runner wrote.
+
+RECORD_DIRS = {
+    "single": "single", "entools_krq": "single_entools_krq",
+    "krtools_enq": "single_krtools_enq", "entools_enq": "single_entools_enq",
+    "oracle": "mt_oracle", "e2e": "mt_e2e",
+}
+DEFAULT_RUN_ROOT = _ROOT / "_experiments" / "results_2026rerun"
+
+
+def _record_files(directory: Path) -> list[tuple[str, Path]]:
+    out = []
+    for config_dir in sorted(p for p in directory.glob("*") if p.is_dir()):
+        files = [p for p in sorted(config_dir.glob("*.jsonl")) if "partial" not in p.name]
+        if files:
+            out.append((config_dir.name, files[-1]))
+    return out
+
+
+def calls(column_or_setting: str = "single", *, run_root: Path | str | None = None,
+          configs_only: list[str] | None = None) -> pd.DataFrame:
+    """One row per tool call, with its arguments and what the tool answered.
+
+    `source` says whether the gateway or the server parsed the call natively or
+    the text fallback did (L5-010): a column whose calls are all `fallback` is a
+    serving problem and not a model result, and a figure over it has to say so.
+    """
+    name = RECORD_DIRS.get(column_or_setting)
+    if name is None:
+        raise ValueError(f"unknown column or setting {column_or_setting!r}; one of "
+                         f"{sorted(RECORD_DIRS)}")
+    directory = Path(run_root or DEFAULT_RUN_ROOT) / name
+    if not directory.is_dir():
+        raise FileNotFoundError(f"{directory} does not exist")
+    rows = []
+    for config_id, path in _record_files(directory):
+        if configs_only and config_id not in configs_only:
+            continue
+        with open(path, encoding="utf-8") as handle:
+            for line in handle:
+                record = json.loads(line)
+                executed = {}
+                for round_record in record.get("rounds") or ():
+                    for item in round_record.get("executed") or ():
+                        executed[item.get("tool_call_id")] = item
+                for round_record in record.get("rounds") or ():
+                    for call in round_record.get("tool_calls") or ():
+                        result = executed.get(call.get("id")) or {}
+                        rows.append({
+                            "config_id": config_id, "column": column_or_setting,
+                            "case_id": record.get("case_id"), "turn": record.get("turn"),
+                            "round": round_record.get("idx"),
+                            "tool": call.get("name"), "arguments": call.get("arguments"),
+                            "source": call.get("source"), "valid_json": call.get("valid_json"),
+                            "result": result.get("result"), "result_error": result.get("error"),
+                            "finish_reason": round_record.get("finish_reason"),
+                            "stop_reason": record.get("stop_reason"),
+                        })
+    if not rows:
+        raise FileNotFoundError(f"{directory} holds no run records")
+    return pd.DataFrame(rows)
