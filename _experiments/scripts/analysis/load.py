@@ -293,3 +293,53 @@ def calls(column_or_setting: str = "single", *, run_root: Path | str | None = No
     if not rows:
         raise FileNotFoundError(f"{directory} holds no run records")
     return pd.DataFrame(rows)
+
+
+# --- baselines --------------------------------------------------------------
+# The finance-specialisation comparison needs each specialised model's own base.
+# Neither base is a configuration of the 28, and neither should become one: they
+# are not candidates for deployment, they are the reference a fine-tune is
+# measured against. They are run through the gateway on the same benchmark, the
+# same tool schema and the same scorer, and they live outside the cohort tree so
+# that a cohort figure cannot pick them up by accident.
+
+BASELINES = {
+    "base-llama-3.1-8b": {"label": "Llama-3.1-8B-Instruct",
+                          "model": "meta-llama/Llama-3.1-8B-Instruct",
+                          "base_of": "dragon-llama-fin"},
+    "base-qwen3-8b": {"label": "Qwen3-8B", "model": "Qwen/Qwen3-8B",
+                      "base_of": "dragon-qwen-fin"},
+}
+DEFAULT_BASELINE_EVAL = _ROOT / "_experiments" / "results_2026rerun" / "eval_baselines"
+
+
+def baselines(*, eval_root: Path | str | None = None) -> pd.DataFrame:
+    """One row per (baseline, case), shaped like `single()` but never in the cohort.
+
+    A specialisation claim compares a fine-tune against the model it was tuned
+    from. Reading the base out of the cohort would put a model nobody proposes
+    deploying into the main table, so the bases sit here and only the
+    specialisation analysis joins them.
+    """
+    directory = Path(eval_root or DEFAULT_BASELINE_EVAL) / "single"
+    if not directory.is_dir():
+        raise FileNotFoundError(f"{directory} does not exist; score the baseline runs first")
+    rows = []
+    for baseline_id, path in _eval_files(directory):
+        meta = BASELINES.get(baseline_id)
+        if meta is None:
+            raise RuntimeError(f"{baseline_id} is scored but not declared in load.BASELINES")
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        provenance = _meta_row(payload["meta"])
+        for case in payload["results"]:
+            row = {"config_id": baseline_id, "column": "baseline",
+                   "label": meta["label"], "model": meta["model"],
+                   "base_of": meta["base_of"], "group": "Baseline",
+                   "case_id": case.get("case_id"), "category": case.get("category"),
+                   "difficulty": case.get("difficulty")}
+            row.update({k: case.get(k) for k in CASE_FIELDS})
+            row.update({k: tuple(case.get(k) or ()) for k in LIST_FIELDS})
+            rows.append(row | provenance)
+    if not rows:
+        raise FileNotFoundError(f"{directory} holds no scored baseline")
+    return pd.DataFrame(rows)
