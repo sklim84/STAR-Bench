@@ -123,12 +123,33 @@ def test_the_mistral_models_are_served_with_the_vendor_format():
         assert "--config-format" in extra and "--load-format" in extra
 
 
-def test_the_kanana_parser_plugin_path_resolves():
-    for config_id in ("kanana-2-inst", "kanana-2-think"):
+def test_the_kanana_plugin_registers_the_parser_name_the_registry_asks_for():
+    """The registry named a parser nothing registered, so neither server came up.
+
+    The plugin registered itself as `functionary_v3_llama_31` while the registry
+    asked for `functionary_kanana`; vLLM then refused to start. Only the instruct
+    model emits that format, so the thinking model is on the built-in parser and
+    loads no plugin at all.
+    """
+    cfg = registry.by_id("kanana-2-inst")
+    assert cfg.parser == "functionary_kanana"
+    assert cfg.tool_parser_plugin_path.is_file()
+    registered = cfg.tool_parser_plugin_path.read_text(encoding="utf-8")
+    assert f'register_module(["{cfg.parser}"])' in registered
+    args = registry.vllm_args(cfg, require_revision=False)
+    assert str(cfg.tool_parser_plugin_path) in args
+
+    think = registry.by_id("kanana-2-think")
+    assert think.parser == "hermes"
+    assert think.tool_parser_plugin_path is None
+
+
+def test_the_e2e_window_never_exceeds_the_model_window():
+    """65536 is the cohort default only where the model's own window reaches it."""
+    native = {"kanana-2-inst": 32768, "kanana-2-think": 32768, "dragon-qwen-fin": 40960}
+    for config_id, window in native.items():
         cfg = registry.by_id(config_id)
-        assert cfg.tool_parser_plugin_path.is_file(), config_id
-        args = registry.vllm_args(cfg, require_revision=False)
-        assert str(cfg.tool_parser_plugin_path) in args
+        assert cfg.context_for("e2e") == window, config_id
 
 
 def test_the_serving_arguments_carry_the_pinned_revision_seed_and_parser():

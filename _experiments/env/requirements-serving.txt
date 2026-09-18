@@ -16,8 +16,12 @@
 vllm==0.20.1
 transformers==5.7.0
 torch==2.11.0
-tokenizers==0.23.1
-huggingface-hub==1.6.2
+tokenizers==0.22.2
+
+# `tokenizers==0.23.1` and `huggingface-hub==1.6.2` were written from a resolved
+# environment that no longer installs: 1.6.2 is not on PyPI, and 0.23.1 conflicts
+# with transformers 5.7.0. 0.22.2 is what the three pins above resolve to, and it
+# is pinned here so every host in the cohort lands on the same one.
 
 # The Kanana tool parser is loaded as a vLLM plugin from this repository
 # (_experiments/scripts/kanana_tool_calls); it needs no package.

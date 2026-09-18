@@ -159,7 +159,11 @@ def is_complete_json(input_str):
     except JSONDecodeError:
         return False
 
-@ToolParserManager.register_module(["functionary_v3_llama_31"])
+# The registry asks for "functionary_kanana"; this plugin used to register itself as
+# "functionary_v3_llama_31", a name nothing referred to, so neither kanana server came
+# up at all. The instruct model emits this format; the thinking model does not and is
+# served by the built-in hermes parser instead.
+@ToolParserManager.register_module(["functionary_kanana"])
 class FunctionaryV3Llama31ToolParser(ToolParser):
     def __init__(self, tokenizer: Union[PreTrainedTokenizerBase, AnyTokenizer], tools=None):
         try:

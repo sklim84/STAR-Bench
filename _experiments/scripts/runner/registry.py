@@ -11,7 +11,13 @@ Concurrency is the one field a run may override, and the override is recorded.
 Sizing targets the rerun hardware: hosts with 2 or 4 NVIDIA L40S 48 GB cards,
 plus on-demand hosts with 80 GB cards. `tp` is the 48 GB plan and `tp_80g` the
 80 GB one; `needs_four_gpu_host` marks the four entries that do not fit on a
-two-card host.
+two-card host. The 70B-class weights are 140 GB in bf16, which two 80 GB cards
+cannot hold together with a 32k window, so those three entries are four cards on
+either host (measured, not sized on paper).
+
+`max_model_len_e2e` is the cohort's 65536 only where the model's own window
+reaches it. Kanana-2 stops at 32768 and Qwen-Open-Finance-R at 40960, so those
+entries carry their own value and the appendix reports the e2e window per row.
 
 Decisions carried here: D05 (one labelled mode per model; T/NT only for Qwen3.5
 `enable_thinking` and gpt-oss `reasoning_effort` high/low), D07 (one stack,
@@ -155,7 +161,7 @@ CONFIGS: tuple[ServingConfig, ...] = (
          group="Korean-Specialized", parser="hermes", tp=1, tp_80g=1,
          max_model_len_e2e=CONTEXT_E2E),
     _cfg(config_id="ax-4.0", label="A.X-4.0 (72B)", model="skt/A.X-4.0",
-         group="Korean-Specialized", parser="hermes", tp=4, tp_80g=2,
+         group="Korean-Specialized", parser="hermes", tp=4, tp_80g=4,
          gpu_memory_utilization=0.95, needs_four_gpu_host=True,
          max_model_len_e2e=CONTEXT_E2E),
     _cfg(config_id="exaone-1.2b", label="EXAONE-4.0-1.2B", model="LGAI-EXAONE/EXAONE-4.0-1.2B",
@@ -172,14 +178,14 @@ CONFIGS: tuple[ServingConfig, ...] = (
          model="kakaocorp/kanana-2-30b-a3b-instruct", group="Korean-Specialized",
          parser="functionary_kanana", tp=2, tp_80g=1,
          chat_template=KANANA_TEMPLATE, tool_parser_plugin=KANANA_PARSER_PLUGIN,
-         max_model_len_e2e=CONTEXT_E2E),
+         max_model_len_e2e=32768),
     _cfg(config_id="kanana-2-think", label="Kanana-2-Think",
          model="kakaocorp/kanana-2-30b-a3b-thinking-2601", group="Korean-Specialized",
-         parser="functionary_kanana", tp=2, tp_80g=1,
+         parser="hermes", tp=2, tp_80g=1,
          reasoning_mode="always_on", reasoning_control="always_on",
          reasoning_parser="deepseek_r1", chat_template=None,
-         tool_parser_plugin=KANANA_PARSER_PLUGIN, max_tokens=BUDGET_REASONING,
-         max_model_len_e2e=CONTEXT_E2E,
+         max_tokens=BUDGET_REASONING,
+         max_model_len_e2e=32768,
          smoke_required="reasoning tokens appear and tool calls survive the reasoning parser",
          notes="L5-008: served on its own template (the model's, not the instruct "
                "functionary one) with a reasoning parser"),
@@ -192,7 +198,7 @@ CONFIGS: tuple[ServingConfig, ...] = (
          model="DragonLLM/Qwen-Open-Finance-R-8B", group="Finance-Specialized",
          parser="hermes", tp=1, tp_80g=1, reasoning_mode="always_on",
          reasoning_control="always_on", reasoning_parser="qwen3",
-         max_tokens=BUDGET_REASONING, max_model_len_e2e=CONTEXT_E2E,
+         max_tokens=BUDGET_REASONING, max_model_len_e2e=40960,
          smoke_required="native tool calls, not the fallback parser",
          notes="L5-010: the template emits Hermes <tool_call> JSON, so qwen3_xml "
                "never matched and every call came from the text fallback"),
@@ -225,7 +231,7 @@ CONFIGS: tuple[ServingConfig, ...] = (
          max_model_len_e2e=CONTEXT_E2E,
          notes="C2-007, L5-005: repaired template, and the runner serialises parallel calls"),
     _cfg(config_id="llama-3.3-70b", label="Llama-3.3-70B", model="meta-llama/Llama-3.3-70B-Instruct",
-         group="General-Purpose", parser="llama3_json", tp=4, tp_80g=2,
+         group="General-Purpose", parser="llama3_json", tp=4, tp_80g=4,
          chat_template="llama3_tools.jinja", serialize_parallel_calls=True,
          gpu_memory_utilization=0.95, needs_four_gpu_host=True,
          max_model_len_e2e=CONTEXT_E2E),
@@ -283,7 +289,7 @@ CONFIGS: tuple[ServingConfig, ...] = (
          group="General-Purpose", parser="xlam", tp=1, tp_80g=1,
          max_model_len_e2e=CONTEXT),
     _cfg(config_id="xlam-70b", label="xLAM-2-70B", model="Salesforce/Llama-xLAM-2-70b-fc-r",
-         group="General-Purpose", parser="xlam", tp=4, tp_80g=2,
+         group="General-Purpose", parser="xlam", tp=4, tp_80g=4,
          gpu_memory_utilization=0.95, needs_four_gpu_host=True, max_model_len_e2e=CONTEXT),
     _cfg(config_id="gemma-4-e4b", label="Gemma-4-E4B", model="google/gemma-4-E4B-it",
          group="General-Purpose", parser="gemma4", tp=1, tp_80g=1,

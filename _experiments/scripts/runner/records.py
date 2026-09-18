@@ -98,6 +98,7 @@ class RoundRecord:
             "finish_reason": self.finish_reason,
             "content": self.content,
             "reasoning_chars": self.reasoning_chars,
+            "reasoning": self.reasoning,
             "usage": self.usage,
             "tool_calls": [c.to_dict() for c in self.tool_calls],
             "executed": [e.to_dict() for e in self.executed],

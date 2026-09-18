@@ -66,9 +66,41 @@ def _git(root: Path, *args: str) -> str | None:
     return out.stdout.strip() if out.returncode == 0 else None
 
 
+# Two tracked paths are written by the run procedure itself, so a run that
+# follows the procedure always starts from a tree the gate would call dirty: the
+# revision file is filled by whoever downloads the weights, and the preflight
+# writes its own report. Neither changes what the model is asked or how the
+# answer is scored, and both are recorded elsewhere -- the revision per config in
+# `config.model_revision`, the report as its own artefact -- so they do not count
+# towards `star_bench_dirty`. Everything else still does.
+PROCEDURE_PATHS = (
+    "_experiments/scripts/model_revisions.json",
+    "_experiments/scripts/preflight/reports/",
+)
+
+
+def _split_procedure(status_output: str | None) -> tuple[list[str], list[str]]:
+    """(paths the gate judges, paths the run procedure is allowed to write)."""
+    judged, procedure = [], []
+    for line in (status_output or "").splitlines():
+        entry = _status_entry(line)
+        if entry is None:
+            continue
+        name = entry[1]
+        target = procedure if any(name == p or name.startswith(p)
+                                  for p in PROCEDURE_PATHS) else judged
+        target.append(name)
+    return sorted(judged), sorted(procedure)
+
+
 def star_bench_commit() -> dict:
-    return {"star_bench_commit": _git(_ROOT, "rev-parse", "HEAD"),
-            "star_bench_dirty": bool(_git(_ROOT, "status", "--porcelain", "--untracked-files=no") or "")}
+    judged, procedure = _split_procedure(
+        _git(_ROOT, "status", "--porcelain", "--untracked-files=no"))
+    out = {"star_bench_commit": _git(_ROOT, "rev-parse", "HEAD"),
+           "star_bench_dirty": bool(judged)}
+    if procedure:
+        out["star_bench_procedure_files"] = procedure
+    return out
 
 
 def working_tree_status(root: Path | str | None = None) -> dict:

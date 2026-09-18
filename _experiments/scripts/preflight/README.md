@@ -57,7 +57,12 @@ sample by its documented rule.
 | `_probe.py`, `_gold_driver.py`, `_budget_driver.py` | the three things that run in their own process, so a platform import error is a failed check rather than a traceback |
 | `expected_counts.json` | the case counts the write-up reports; a stream that adds cases updates it |
 | `gold_selftest_expected.json` | what a fresh gold self-test must produce per directory, with the benchmark sha256 it was produced from; gate 4 regenerates and compares |
-| `reports/` | the last `--report` run: `preflight_report.md` and `.json`, tracked |
+| `reports/` | the last `--report` run: `preflight_report.md` and `.json`, untracked |
+
+The report was tracked until 2026-09-18. Running the preflight then modified a
+tracked file, and the runner's clean-tree gate refused the run that the preflight
+had just cleared. The report belongs to the run, so it travels with the run's
+output directory and not with the repository.
 | `allow_empty.json` | the gold calls that answer nothing, case by case with the reason |
 | `run_plan.json` | the configurations and columns the rerun covers, and the hosts it has |
 | `thresholds.json` | the canary's anomaly thresholds, each with the measurement it came from |

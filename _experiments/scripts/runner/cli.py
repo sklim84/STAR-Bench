@@ -50,7 +50,7 @@ def add_common_arguments(ap: argparse.ArgumentParser) -> None:
     g.add_argument("--base-url", default=os.environ.get("VLLM_BASE_URL"),
                    help="OpenAI-compatible endpoint (default: $VLLM_BASE_URL)")
     g.add_argument("--api-key-env", default=None, help="environment variable holding the API key")
-    g.add_argument("--timeout", type=float, default=float(os.environ.get("BENCH_TIMEOUT", "300")))
+    g.add_argument("--timeout", type=float, default=float(os.environ.get("BENCH_TIMEOUT", "900")))
     g.add_argument("--provider-order", help="comma-separated provider order (OpenRouter)")
     g.add_argument("--provider-quantizations", help="comma-separated allowed quantizations")
     g.add_argument("--allow-provider-fallbacks", action="store_true",
