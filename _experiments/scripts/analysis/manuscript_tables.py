@@ -35,6 +35,20 @@ DEFAULT_OUT = _ROOT / "_experiments" / "paper_tables"
 GROUP_ORDER = ("Korean-Specialized", "Finance-Specialized", "General-Purpose")
 MISSING = "--"
 
+# The bibliography key for each model, so a generated row cites what the hand-kept
+# one cited. A model with no entry is a model the paper does not cite.
+CITE = {
+    "exaone-1.2b": "bae2025exaone", "exaone-32b": "bae2025exaone",
+    "gpt-oss-20b-nt": "openai2025gptoss", "gpt-oss-20b-t": "openai2025gptoss",
+    "gpt-oss-120b-nt": "openai2025gptoss", "gpt-oss-120b-t": "openai2025gptoss",
+    "hermes-3-8b": "teknium2024hermes3",
+    "kanana-2-inst": "kakao2025kanana", "kanana-2-think": "kakao2025kanana",
+    "llama-3.2-3b": "grattafiori2024llama3", "llama-3.3-70b": "grattafiori2024llama3",
+    "ministral-3b": "liu2026ministral3", "mistral-small": "mistral2025small",
+    "phi-4-mini": "microsoft2025phi4mini",
+    "xlam-3b": "prabhakar2025apigenmt", "xlam-70b": "prabhakar2025apigenmt",
+}
+
 
 def _fmt(value: float | None, places: int = 3) -> str:
     """A metric as the manuscript writes it: no leading zero, a dash when absent."""
@@ -68,8 +82,10 @@ def _cell(value: float | None, mark: str | None) -> str:
     return f"\\{mark}{{{text}}}" if mark and text != MISSING else text
 
 
-def _label(config_id: str, labels: dict[str, str]) -> str:
-    return labels.get(config_id, config_id).replace("&", "\\&")
+def _label(config_id: str, labels: dict[str, str], *, cite: bool = True) -> str:
+    text = labels.get(config_id, config_id).replace("&", "\\&")
+    key = CITE.get(config_id)
+    return f"{text}~\\cite{{{key}}}" if cite and key else text
 
 
 def _means(frame, column: str, by: str = "config_id") -> dict[str, float]:
@@ -256,6 +272,61 @@ def e2e_tables(out: Path, subset_rows: int = 5) -> str:
             f"{len(both)} with end-to-end, {scenarios} scenarios")
 
 
+def str_quality_table(out: Path) -> str:
+    """tab:str-quality, from the step that scores the generated reports.
+
+    The table shows a few configurations rather than all of them, chosen for what
+    each one demonstrates: the best report quality, the best workflow completion,
+    both finance-specialised models, and the two highest single-turn models, which
+    are there because reaching the writing step at all is most of the difficulty.
+    """
+    import csv
+    source = _ROOT / "_experiments" / "results_RQ3" / "str_generation_quality.csv"
+    if not source.is_file():
+        return "tab-str-quality.tex: results_RQ3/str_generation_quality.csv is missing"
+    rows = {r["config_id"]: r for r in csv.DictReader(source.open(encoding="utf-8"))}
+    labels = {c.config_id: c.label for c in registry.CONFIGS}
+    cases = load.single()
+    single = cases.groupby("config_id")["h"].mean()
+    oracle = load.aggregates("oracle")
+
+    def number(row, key):
+        value = row.get(key)
+        return float(value) if value not in (None, "") else None
+
+    picked, why = [], {}
+    def take(config_id, reason):
+        if config_id in rows and config_id not in why:
+            picked.append(config_id); why[config_id] = reason
+    take(max(rows, key=lambda k: number(rows[k], "str_overall") or -1), "best report quality")
+    take(max(oracle, key=lambda k: oracle[k]["c"]["mean"]), "best workflow completion")
+    for config_id in ("dragon-llama-fin", "dragon-qwen-fin"):
+        take(config_id, "finance-specialised")
+    for config_id in sorted(single.index, key=lambda k: -single[k])[:2]:
+        take(config_id, "highest single-turn tool hit")
+
+    picked.sort(key=lambda k: -(number(rows[k], "str_overall") or -1))
+    lines = []
+    for config_id in picked:
+        row = rows[config_id]
+        cells = [_fmt(number(row, k)) for k in ("str_production_rate", "field_coverage",
+                                                "grounding", "terminology", "hallucination",
+                                                "str_overall")]
+        lines.append(f"{_label(config_id, labels)} & " + " & ".join(cells) + " \\\\")
+    header = ["\\multicolumn{1}{c}{\\textbf{Model}} & \\textbf{Rate} & \\textbf{Field} & "
+              "\\textbf{Ground.} & \\textbf{Term} & \\textbf{Halluc.} & \\textbf{Overall} \\\\"]
+    turns = rows[picked[0]].get("n_str_turn", "45")
+    text = _table(lines, spec="lcccccc", header=header, label="tab:str-quality",
+                  caption=(f"STR generation quality over the {turns} scenarios whose gold ends in "
+                           f"report writing. Rate is the production rate; Field, Ground., Term and "
+                           f"Halluc.\\ are required-field completeness, evidence grounding, "
+                           f"terminology use and the unsupported-fact rate. The quality columns are "
+                           f"penalised so that a scenario without a report scores zero."),
+                  note="; ".join(f"{labels.get(k, k)}: {why[k]}" for k in picked))
+    (out / "tab-str-quality.tex").write_text(text, encoding="utf-8")
+    return f"tab-str-quality.tex: {len(picked)} representative rows of {len(rows)}"
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -271,7 +342,8 @@ def main(argv: list[str] | None = None) -> int:
               file=sys.stderr)
         return 1
     args.out.mkdir(parents=True, exist_ok=True)
-    for line in (main_table(args.out), ablation_table(args.out), e2e_tables(args.out)):
+    for line in (main_table(args.out), ablation_table(args.out), e2e_tables(args.out),
+                 str_quality_table(args.out)):
         print(line)
     if unscored:
         print(f"note: {len(unscored)} configurations are not scored yet: {', '.join(unscored)}")
