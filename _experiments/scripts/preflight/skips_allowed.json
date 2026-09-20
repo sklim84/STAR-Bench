@@ -1,15 +1,25 @@
 {
- "_why": "Gate 2 fails on a SKIPPED test unless its reason is one of these. A skip is a test that did not run, and the gate used to read only the exit status: `test_templates.py` skipped itself for want of jinja2 and the D21 template repairs were never exercised by the report that said the gate passed. Every entry names a reason that is a property of the release, not of the machine, and a package a run needs belongs in _experiments/env/requirements-eval.txt instead.",
+ "_why": "Gate 2 fails on a SKIPPED test unless its reason is one of these. A skip is a test that did not run, and the gate used to read only the exit status: `test_templates.py` skipped itself for want of jinja2 and the template repairs were never exercised by the report that said the gate passed. Every entry names a reason that is a property of the release, not of the machine, and a package a run needs belongs in _experiments/env/requirements-eval.txt instead.",
  "allowed": [
-  {"reason_contains": "neo4j driver not installed",
-   "why": "D06 replaced every Memgraph path with DuckDB/NetworkX; the driver is an app-only extra and no tool needs it"},
-  {"reason_contains": "is an app-only dependency",
-   "why": "streamlit, plotly, streamlit-option-menu and anthropic are in requirements.txt, not requirements-tools.txt; the evaluation stack does not install them"},
-  {"reason_contains": "HOFINET 원천 데이터 비공개",
-   "why": "the raw source table is not released; the published parquet is what the tools read"},
-  {"reason_contains": "HOFINET.csv 비공개",
-   "why": "the pre-parquet CSV is not released"},
-  {"reason_contains": "_docs는 공개 repo에 포함되지 않는",
-   "why": "_docs is a working directory that is not part of the release"}
+  {
+   "reason_contains": "neo4j driver not installed",
+   "why": "replaced every Memgraph path with DuckDB/NetworkX; the driver is an app-only extra and no tool needs it"
+  },
+  {
+   "reason_contains": "is an app-only dependency",
+   "why": "streamlit, plotly, streamlit-option-menu and anthropic are in requirements.txt, not requirements-tools.txt; the evaluation stack does not install them"
+  },
+  {
+   "reason_contains": "HOFINET 원천 데이터 비공개",
+   "why": "the raw source table is not released; the published parquet is what the tools read"
+  },
+  {
+   "reason_contains": "HOFINET.csv 비공개",
+   "why": "the pre-parquet CSV is not released"
+  },
+  {
+   "reason_contains": "_docs는 공개 repo에 포함되지 않는",
+   "why": "_docs is a working directory that is not part of the release"
+  }
  ]
 }

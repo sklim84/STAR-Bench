@@ -208,7 +208,7 @@ def _star_bench_tree(info: dict, command: str) -> Check:
 
 
 def _revisions(ctx: Context) -> Check:
-    """Every configuration about to be run needs a pinned model snapshot (R2C-003)."""
+    """Every configuration about to be run needs a pinned model snapshot."""
     from .serving import load_registry
 
     registry, error = load_registry(ctx)

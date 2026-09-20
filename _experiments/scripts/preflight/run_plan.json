@@ -1,8 +1,12 @@
 {
- "_why": "The configurations and columns the rerun covers (register step 11). Gate 5 fails when this list and runner/registry.py disagree in either direction, so a row cannot leave the main table without someone saying so. Hosts are the machines named in IMPLEMENTATION_SPEC.md: co-author 1 has 2-card 48 GB hosts, co-author 2 a 4-card 48 GB host and on-demand 80 GB hosts.",
- "columns": ["single", "oracle", "e2e"],
+ "_why": "The pinned serving settings say concurrency 1. The registry runs 8 cases in flight per configuration, because 28 configurations across 3 columns do not fit the schedule one request at a time, and the tool-layer race that forced serial execution is fixed (per-call DuckDB cursors; 504 tagged concurrent calls identical to serial). The deviation is deliberate and its cost is measured rather than assumed: the agreement run below happens before any headline number is quoted, and a configuration whose agreement is low enough to move a ranking is run again at --concurrency 1, which is one flag and no code change.",
+ "columns": [
+  "single",
+  "oracle",
+  "e2e"
+ ],
  "concurrency": {
-  "_why": "D07 says concurrency 1. The rerun runs 8 cases in flight per configuration, because 28 configurations x 3 columns do not fit the 2026-09-25 deadline one request at a time, and the tool-layer race that forced serial execution is fixed (per-call DuckDB cursors; 504 tagged concurrent calls identical to serial). The deviation is deliberate and its cost is measured rather than assumed: the agreement run below is run before any headline number is quoted, and a configuration whose agreement is low enough to move a ranking is rerun at --concurrency 1, which is one flag and no code change.",
+  "_why": "says concurrency 1. The rerun runs 8 cases in flight per configuration, because 28 configurations x 3 columns do not fit the deadline one request at a time, and the tool-layer race that forced serial execution is fixed (per-call DuckDB cursors; 504 tagged concurrent calls identical to serial). The deviation is deliberate and its cost is measured rather than assumed: the agreement run below is run before any headline number is quoted, and a configuration whose agreement is low enough to move a ranking is rerun at --concurrency 1, which is one flag and no code change.",
   "registry_default": 8,
   "decision_value": 1,
   "agreement_run": {
@@ -12,45 +16,122 @@
    "query_lang": "kr",
    "reports": "share of cases with the same tool-call sequence, and the difference in h and a, between the two batched runs and between batched and serial",
    "runs": [
-    {"label": "batched_a", "concurrency": 8},
-    {"label": "batched_b", "concurrency": 8},
-    {"label": "serial", "concurrency": 1}
+    {
+     "label": "batched_a",
+     "concurrency": 8
+    },
+    {
+     "label": "batched_b",
+     "concurrency": 8
+    },
+    {
+     "label": "serial",
+     "concurrency": 1
+    }
    ]
   }
  },
  "hosts": [
-  {"name": "two-card 48 GB", "gpus": 2, "profile": "48g"},
-  {"name": "four-card 48 GB", "gpus": 4, "profile": "48g"},
-  {"name": "on-demand 80 GB", "gpus": 2, "profile": "80g"}
+  {
+   "name": "two-card 48 GB",
+   "gpus": 2,
+   "profile": "48g"
+  },
+  {
+   "name": "four-card 48 GB",
+   "gpus": 4,
+   "profile": "48g"
+  },
+  {
+   "name": "on-demand 80 GB",
+   "gpus": 2,
+   "profile": "80g"
+  }
  ],
  "configurations": [
-  {"config_id": "ax-light"},
-  {"config_id": "ax-4.0"},
-  {"config_id": "exaone-1.2b"},
-  {"config_id": "exaone-32b"},
-  {"config_id": "kanana-2-inst"},
-  {"config_id": "kanana-2-think"},
-  {"config_id": "dragon-llama-fin"},
-  {"config_id": "dragon-qwen-fin"},
-  {"config_id": "gpt-oss-20b-nt"},
-  {"config_id": "gpt-oss-20b-t"},
-  {"config_id": "gpt-oss-120b-nt"},
-  {"config_id": "gpt-oss-120b-t"},
-  {"config_id": "llama-3.2-3b"},
-  {"config_id": "llama-3.3-70b"},
-  {"config_id": "hermes-3-8b"},
-  {"config_id": "ministral-3b"},
-  {"config_id": "mistral-small"},
-  {"config_id": "phi-4-mini"},
-  {"config_id": "qwen35-4b-nt"},
-  {"config_id": "qwen35-4b-t"},
-  {"config_id": "qwen35-27b-nt"},
-  {"config_id": "qwen35-27b-t"},
-  {"config_id": "qwen36-27b"},
-  {"config_id": "qwen36-35b-a3b"},
-  {"config_id": "xlam-3b"},
-  {"config_id": "xlam-70b"},
-  {"config_id": "gemma-4-e4b"},
-  {"config_id": "gemma-4-31b"}
+  {
+   "config_id": "ax-light"
+  },
+  {
+   "config_id": "ax-4.0"
+  },
+  {
+   "config_id": "exaone-1.2b"
+  },
+  {
+   "config_id": "exaone-32b"
+  },
+  {
+   "config_id": "kanana-2-inst"
+  },
+  {
+   "config_id": "kanana-2-think"
+  },
+  {
+   "config_id": "dragon-llama-fin"
+  },
+  {
+   "config_id": "dragon-qwen-fin"
+  },
+  {
+   "config_id": "gpt-oss-20b-nt"
+  },
+  {
+   "config_id": "gpt-oss-20b-t"
+  },
+  {
+   "config_id": "gpt-oss-120b-nt"
+  },
+  {
+   "config_id": "gpt-oss-120b-t"
+  },
+  {
+   "config_id": "llama-3.2-3b"
+  },
+  {
+   "config_id": "llama-3.3-70b"
+  },
+  {
+   "config_id": "hermes-3-8b"
+  },
+  {
+   "config_id": "ministral-3b"
+  },
+  {
+   "config_id": "mistral-small"
+  },
+  {
+   "config_id": "phi-4-mini"
+  },
+  {
+   "config_id": "qwen35-4b-nt"
+  },
+  {
+   "config_id": "qwen35-4b-t"
+  },
+  {
+   "config_id": "qwen35-27b-nt"
+  },
+  {
+   "config_id": "qwen35-27b-t"
+  },
+  {
+   "config_id": "qwen36-27b"
+  },
+  {
+   "config_id": "qwen36-35b-a3b"
+  },
+  {
+   "config_id": "xlam-3b"
+  },
+  {
+   "config_id": "xlam-70b"
+  },
+  {
+   "config_id": "gemma-4-e4b"
+  },
+  {
+   "config_id": "gemma-4-31b"
+  }
  ]
 }
