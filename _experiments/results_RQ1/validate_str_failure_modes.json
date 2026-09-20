@@ -1,47 +1,40 @@
 {
   "tool": "validate_str_fields",
-  "n_configs": 18,
+  "n_configs": 28,
   "n_configs_expected": 28,
-  "missing_config_ids": [
-    "ax-light",
-    "dragon-llama-fin",
-    "exaone-1.2b",
-    "exaone-32b",
-    "gemma-4-e4b",
-    "hermes-3-8b",
-    "llama-3.2-3b",
-    "phi-4-mini",
-    "qwen35-4b-nt",
-    "xlam-3b"
-  ],
+  "missing_config_ids": [],
   "n_cases": 25,
-  "total_call_units": 450,
-  "h_mean": 0.8711,
-  "h_n": 450,
-  "a_mean": 0.8089,
-  "a_n": 450,
+  "total_call_units": 700,
+  "h_mean": 0.7557,
+  "h_n": 700,
+  "a_mean": 0.69,
+  "a_n": 700,
   "mode_distribution": {
-    "no_call": 53,
-    "correct_only": 390,
-    "correct_with_extra": 2,
-    "miscall_only": 5
+    "no_call": 163,
+    "correct_only": 496,
+    "correct_with_extra": 33,
+    "miscall_only": 8
   },
   "mode_distribution_pct": {
-    "no_call": 11.8,
-    "correct_only": 86.7,
-    "correct_with_extra": 0.4,
+    "no_call": 23.3,
+    "correct_only": 70.9,
+    "correct_with_extra": 4.7,
     "miscall_only": 1.1
   },
   "error_type_distribution": {
-    "correct": 363,
-    "no_call": 52,
-    "param_error": 28,
-    "wrong_tool": 5,
-    "length_stop": 1,
-    "over_call": 1
+    "correct": 467,
+    "no_call": 129,
+    "param_error": 46,
+    "parse_fail": 33,
+    "over_call": 16,
+    "wrong_tool": 8,
+    "length_stop": 1
   },
   "miscalled_tools_distribution": {
-    "get_aml_glossary": 7
+    "get_aml_glossary": 35,
+    "get_fraud_type_summary": 31,
+    "compare_periods": 11,
+    "query_transactions": 7
   },
   "per_model_breakdown": {
     "ax-4.0": {
@@ -50,6 +43,21 @@
       "correct_only": 25,
       "total": 25
     },
+    "ax-light": {
+      "label": "A.X-4.0-Light (7B)",
+      "group": "Korean-Specialized",
+      "correct_only": 6,
+      "total": 25,
+      "no_call": 19
+    },
+    "dragon-llama-fin": {
+      "label": "Llama-Open-Finance-8B",
+      "group": "Finance-Specialized",
+      "correct_only": 7,
+      "total": 25,
+      "correct_with_extra": 16,
+      "no_call": 2
+    },
     "dragon-qwen-fin": {
       "label": "Qwen-Open-Finance-R-8B",
       "group": "Finance-Specialized",
@@ -57,8 +65,27 @@
       "total": 25,
       "no_call": 6
     },
+    "exaone-1.2b": {
+      "label": "EXAONE-4.0-1.2B",
+      "group": "Korean-Specialized",
+      "correct_only": 24,
+      "total": 25,
+      "no_call": 1
+    },
+    "exaone-32b": {
+      "label": "EXAONE-4.0-32B",
+      "group": "Korean-Specialized",
+      "correct_only": 25,
+      "total": 25
+    },
     "gemma-4-31b": {
       "label": "Gemma-4-31B",
+      "group": "General-Purpose",
+      "correct_only": 25,
+      "total": 25
+    },
+    "gemma-4-e4b": {
+      "label": "Gemma-4-E4B",
       "group": "General-Purpose",
       "correct_only": 25,
       "total": 25
@@ -90,6 +117,13 @@
       "total": 25,
       "no_call": 11
     },
+    "hermes-3-8b": {
+      "label": "Hermes-3-8B",
+      "group": "General-Purpose",
+      "no_call": 24,
+      "total": 25,
+      "correct_only": 1
+    },
     "kanana-2-inst": {
       "label": "Kanana-2-Instruct",
       "group": "Korean-Specialized",
@@ -103,6 +137,15 @@
       "group": "Korean-Specialized",
       "correct_only": 25,
       "total": 25
+    },
+    "llama-3.2-3b": {
+      "label": "Llama-3.2-3B",
+      "group": "General-Purpose",
+      "correct_with_extra": 15,
+      "total": 25,
+      "no_call": 6,
+      "miscall_only": 3,
+      "correct_only": 1
     },
     "llama-3.3-70b": {
       "label": "Llama-3.3-70B",
@@ -124,6 +167,12 @@
       "total": 25,
       "no_call": 9
     },
+    "phi-4-mini": {
+      "label": "Phi-4-mini",
+      "group": "General-Purpose",
+      "no_call": 25,
+      "total": 25
+    },
     "qwen35-27b-nt": {
       "label": "Qwen3.5-27B (NT)",
       "group": "General-Purpose",
@@ -135,6 +184,13 @@
       "group": "General-Purpose",
       "correct_only": 25,
       "total": 25
+    },
+    "qwen35-4b-nt": {
+      "label": "Qwen3.5-4B (NT)",
+      "group": "General-Purpose",
+      "correct_only": 17,
+      "total": 25,
+      "no_call": 8
     },
     "qwen35-4b-t": {
       "label": "Qwen3.5-4B (T)",
@@ -154,6 +210,12 @@
       "correct_only": 25,
       "total": 25
     },
+    "xlam-3b": {
+      "label": "xLAM-2-3B",
+      "group": "General-Purpose",
+      "no_call": 25,
+      "total": 25
+    },
     "xlam-70b": {
       "label": "xLAM-2-70B",
       "group": "General-Purpose",
@@ -162,5 +224,5 @@
       "correct_only": 2
     }
   },
-  "note": "validate_str_fields = 25 cases x 18 configurations = 450 call units. 18 of 28 configurations are scored; the rest are listed in missing_config_ids and are absent from every number here. no_call: the model called no tool. correct_only: validate_str_fields alone. correct_with_extra: validate_str_fields plus other tools. miscall_only: validate_str_fields not called, other tools called. Keys of per_model_breakdown are config_ids: thinking and non-thinking are separate configurations. h is the case outcome that the pre-audit weighted score was thresholded for (PORTING rule 1); a_mean is taken over the a_n cases that have parameter checks, never over nulls read as zero (PORTING rule 2)."
+  "note": "validate_str_fields = 25 cases x 28 configurations = 700 call units. 28 of 28 configurations are scored; the rest are listed in missing_config_ids and are absent from every number here. no_call: the model called no tool. correct_only: validate_str_fields alone. correct_with_extra: validate_str_fields plus other tools. miscall_only: validate_str_fields not called, other tools called. Keys of per_model_breakdown are config_ids: thinking and non-thinking are separate configurations. h is the case outcome that the pre-audit weighted score was thresholded for (PORTING rule 1); a_mean is taken over the a_n cases that have parameter checks, never over nulls read as zero (PORTING rule 2)."
 }

@@ -1,13 +1,14 @@
 {
   "cohort": {
     "n_registry": 28,
-    "n_configs": 6,
+    "n_configs": 7,
     "config_ids": [
       "gemma-4-31b",
       "qwen35-27b-nt",
       "qwen36-27b",
       "qwen35-27b-t",
       "ax-4.0",
+      "exaone-32b",
       "llama-3.3-70b"
     ],
     "labels": [
@@ -16,25 +17,14 @@
       "Qwen3.6-27B",
       "Qwen3.5-27B (T)",
       "A.X-4.0 (72B)",
+      "EXAONE-4.0-32B",
       "Llama-3.3-70B"
     ],
     "missing_config_ids_per_cell": {
-      "KR-KR": [
-        "ax-light",
-        "exaone-1.2b",
-        "exaone-32b",
-        "dragon-llama-fin",
-        "llama-3.2-3b",
-        "hermes-3-8b",
-        "phi-4-mini",
-        "qwen35-4b-nt",
-        "xlam-3b",
-        "gemma-4-e4b"
-      ],
+      "KR-KR": [],
       "EN-KR": [
         "ax-light",
         "exaone-1.2b",
-        "exaone-32b",
         "kanana-2-inst",
         "kanana-2-think",
         "dragon-llama-fin",
@@ -58,7 +48,6 @@
       "KR-EN": [
         "ax-light",
         "exaone-1.2b",
-        "exaone-32b",
         "kanana-2-inst",
         "kanana-2-think",
         "dragon-llama-fin",
@@ -82,7 +71,6 @@
       "EN-EN": [
         "ax-light",
         "exaone-1.2b",
-        "exaone-32b",
         "kanana-2-inst",
         "kanana-2-think",
         "dragon-llama-fin",
@@ -104,7 +92,7 @@
         "gemma-4-e4b"
       ]
     },
-    "note": "6 of 28 configurations have all four cells; the ablation is over those 6"
+    "note": "7 of 28 configurations have all four cells; the ablation is over those 7"
   },
   "cells": {
     "KR-KR": {
@@ -112,58 +100,58 @@
       "query_lang": "kr",
       "tools_lang": "kr",
       "eval_dir": "_experiments/results_2026rerun/eval/single",
-      "n_configs_scored": 18
+      "n_configs_scored": 28
     },
     "EN-KR": {
       "column": "krtools_enq",
       "query_lang": "en",
       "tools_lang": "kr",
       "eval_dir": "_experiments/results_2026rerun/eval/single_krtools_enq",
-      "n_configs_scored": 6
+      "n_configs_scored": 7
     },
     "KR-EN": {
       "column": "entools_krq",
       "query_lang": "kr",
       "tools_lang": "en",
       "eval_dir": "_experiments/results_2026rerun/eval/single_entools_krq",
-      "n_configs_scored": 6
+      "n_configs_scored": 7
     },
     "EN-EN": {
       "column": "entools_enq",
       "query_lang": "en",
       "tools_lang": "en",
       "eval_dir": "_experiments/results_2026rerun/eval/single_entools_enq",
-      "n_configs_scored": 6
+      "n_configs_scored": 7
     }
   },
-  "n_configs": 6,
+  "n_configs": 7,
   "cell_means_h": {
-    "KR-KR": 0.9138,
-    "EN-KR": 0.898,
-    "KR-EN": 0.9176,
-    "EN-EN": 0.9175
+    "KR-KR": 0.9103,
+    "EN-KR": 0.896,
+    "KR-EN": 0.909,
+    "EN-EN": 0.911
   },
   "cell_means_a": {
-    "KR-KR": 0.915,
-    "EN-KR": 0.9005,
-    "KR-EN": 0.9161,
-    "EN-EN": 0.9116
+    "KR-KR": 0.9092,
+    "EN-KR": 0.8972,
+    "KR-EN": 0.9057,
+    "EN-EN": 0.9062
   },
   "cell_n_a": {
-    "KR-KR": 5914,
-    "EN-KR": 5914,
-    "KR-EN": 5917,
-    "EN-EN": 5917
+    "KR-KR": 6900,
+    "EN-KR": 6902,
+    "KR-EN": 6903,
+    "EN-EN": 6905
   },
   "cell_n_h": {
-    "KR-KR": 7548,
-    "EN-KR": 7548,
-    "KR-EN": 7548,
-    "EN-EN": 7548
+    "KR-KR": 8806,
+    "EN-KR": 8806,
+    "KR-EN": 8806,
+    "EN-EN": 8806
   },
-  "mean_delta_query_only": -0.0158,
-  "mean_delta_tool_only": 0.0038,
-  "mean_delta_both": 0.0037,
+  "mean_delta_query_only": -0.0143,
+  "mean_delta_tool_only": -0.0012,
+  "mean_delta_both": 0.0007,
   "rows": [
     {
       "model": "Gemma-4-31B",
@@ -286,6 +274,30 @@
       "delta_both": -0.038155802861685184
     },
     {
+      "model": "EXAONE-4.0-32B",
+      "config_id": "exaone-32b",
+      "group": "Korean-Specialized",
+      "h_KR-KR": 0.8895071542130366,
+      "n_h_KR-KR": 1258,
+      "a_KR-KR": 0.8745069858012171,
+      "n_a_KR-KR": 986,
+      "h_EN-KR": 0.8839427662957074,
+      "n_h_EN-KR": 1258,
+      "a_EN-KR": 0.8770861437246963,
+      "n_a_EN-KR": 988,
+      "h_KR-EN": 0.8577106518282989,
+      "n_h_KR-EN": 1258,
+      "a_KR-EN": 0.842897790060852,
+      "n_a_KR-EN": 986,
+      "h_EN-EN": 0.8720190779014309,
+      "n_h_EN-EN": 1258,
+      "a_EN-EN": 0.8742408896761134,
+      "n_a_EN-EN": 988,
+      "delta_query_tool_kr": -0.005564387917329161,
+      "delta_tool_query_kr": -0.031796502384737746,
+      "delta_both": -0.01748807631160576
+    },
+    {
       "model": "Llama-3.3-70B",
       "config_id": "llama-3.3-70b",
       "group": "General-Purpose",
@@ -310,5 +322,5 @@
       "delta_both": 0.04689984101748812
     }
   ],
-  "note": "h = mean primary tool hit, a = mean parameter accuracy over the cases that have parameter checks (a is null, not 1.0, where there is nothing to check). Delta = cell - KR-KR. The cell name reads query language first, tool schema language second. 6 of 28 configurations have all four cells; the ablation is over those 6"
+  "note": "h = mean primary tool hit, a = mean parameter accuracy over the cases that have parameter checks (a is null, not 1.0, where there is nothing to check). Delta = cell - KR-KR. The cell name reads query language first, tool schema language second. 7 of 28 configurations have all four cells; the ablation is over those 7"
 }

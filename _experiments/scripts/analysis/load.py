@@ -41,6 +41,7 @@ if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
 from _experiments.scripts.runner import registry  # noqa: E402
+from _experiments.scripts.scoring import aggregate_multiturn, aggregate_single  # noqa: E402
 
 __all__ = ["COLUMNS", "DEFAULT_EVAL_ROOT", "configs", "single", "multiturn", "aggregates",
            "missing"]
@@ -87,18 +88,37 @@ def configs() -> pd.DataFrame:
     return pd.DataFrame(rows).set_index("config_id", drop=False)
 
 
-def _eval_files(directory: Path) -> list[tuple[str, Path]]:
-    """(config_id, eval file) for every scored configuration under a column."""
+def _eval_files(directory: Path) -> list[tuple[str, list[Path]]]:
+    """(config_id, eval files) for every scored configuration under a column.
+
+    A column is usually one run and one eval file. A run that stopped and was
+    resumed writes one file per run id over disjoint cases, and the column is
+    their union: the scorer aggregates per run id, so the parts are re-aggregated
+    here with the scorer's own function rather than averaged.
+    """
     out = []
     for config_dir in sorted(p for p in directory.glob("*") if p.is_dir()):
         files = sorted(config_dir.glob("eval_*.json"))
-        if not files:
-            continue
-        if len(files) > 1:
-            raise RuntimeError(f"{config_dir} holds {len(files)} eval files; the column has to "
-                               f"name one run per configuration")
-        out.append((config_dir.name, files[0]))
+        if files:
+            out.append((config_dir.name, files))
     return out
+
+
+def _cases_of(paths: list[Path]) -> tuple[list[dict], dict]:
+    """Every scored case across a configuration's eval files, and the first meta."""
+    results, meta = [], None
+    seen = set()
+    for path in paths:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        meta = meta or payload["meta"]
+        for case in payload["results"]:
+            key = (case.get("case_id"), case.get("turn"))
+            if key in seen:
+                raise RuntimeError(f"{path} repeats {key}; the parts of a resumed run have to "
+                                   f"cover disjoint cases")
+            seen.add(key)
+            results.append(case)
+    return results, meta
 
 
 def _meta_row(meta: dict) -> dict:
@@ -123,13 +143,13 @@ def single(column: str = "single", *, eval_root: Path | str | None = None,
         raise FileNotFoundError(f"{directory} does not exist; score the runs first")
     meta_cols = configs()
     rows = []
-    for config_id, path in _eval_files(directory):
+    for config_id, paths in _eval_files(directory):
         if configs_only and config_id not in configs_only:
             continue
-        payload = json.loads(path.read_text(encoding="utf-8"))
-        meta = _meta_row(payload["meta"])
+        cases, raw_meta = _cases_of(paths)
+        meta = _meta_row(raw_meta)
         registry_row = meta_cols.loc[config_id] if config_id in meta_cols.index else None
-        for case in payload["results"]:
+        for case in cases:
             row = {"config_id": config_id, "column": column,
                    "tools_lang_arm": COLUMNS[column][1], "query_lang_arm": COLUMNS[column][2],
                    "case_id": case.get("case_id"), "category": case.get("category"),
@@ -159,11 +179,11 @@ def multiturn(setting: str = "oracle", *, eval_root: Path | str | None = None,
         raise FileNotFoundError(f"{directory} does not exist; score the runs first")
     meta_cols = configs()
     scenarios, turns = [], []
-    for config_id, path in _eval_files(directory):
+    for config_id, paths in _eval_files(directory):
         if configs_only and config_id not in configs_only:
             continue
-        payload = json.loads(path.read_text(encoding="utf-8"))
-        meta = _meta_row(payload["meta"])
+        scenarios_raw, raw_meta = _cases_of(paths)
+        meta = _meta_row(raw_meta)
         registry_row = meta_cols.loc[config_id] if config_id in meta_cols.index else None
         extra = {}
         if registry_row is not None:
@@ -171,7 +191,7 @@ def multiturn(setting: str = "oracle", *, eval_root: Path | str | None = None,
                      "model": registry_row["model"],
                      "reasoning_mode": registry_row["reasoning_mode"],
                      "is_reasoning": registry_row["is_reasoning"]}
-        for scenario in payload["results"]:
+        for scenario in scenarios_raw:
             base = {"config_id": config_id, "setting": setting,
                     "scenario_id": scenario.get("case_id"),
                     "sub_category": scenario.get("sub_category")}
@@ -206,8 +226,15 @@ def aggregates(column_or_setting: str = "single", *,
         raise ValueError(f"unknown column or setting {column_or_setting!r}; one of "
                          f"{sorted(COLUMNS)} or {sorted(SETTINGS)}")
     directory = Path(eval_root or DEFAULT_EVAL_ROOT) / name
-    return {config_id: json.loads(path.read_text(encoding="utf-8"))["aggregate"]
-            for config_id, path in _eval_files(directory)}
+    out = {}
+    for config_id, paths in _eval_files(directory):
+        if len(paths) == 1:
+            out[config_id] = json.loads(paths[0].read_text(encoding="utf-8"))["aggregate"]
+            continue
+        cases, _ = _cases_of(paths)
+        combine = aggregate_multiturn if name in SETTINGS.values() else aggregate_single
+        out[config_id] = combine(cases)
+    return out
 
 
 def missing(*, eval_root: Path | str | None = None) -> pd.DataFrame:
@@ -325,13 +352,13 @@ def baselines(*, eval_root: Path | str | None = None) -> pd.DataFrame:
     if not directory.is_dir():
         raise FileNotFoundError(f"{directory} does not exist; score the baseline runs first")
     rows = []
-    for baseline_id, path in _eval_files(directory):
+    for baseline_id, paths in _eval_files(directory):
         meta = BASELINES.get(baseline_id)
         if meta is None:
             raise RuntimeError(f"{baseline_id} is scored but not declared in load.BASELINES")
-        payload = json.loads(path.read_text(encoding="utf-8"))
-        provenance = _meta_row(payload["meta"])
-        for case in payload["results"]:
+        cases, raw_meta = _cases_of(paths)
+        provenance = _meta_row(raw_meta)
+        for case in cases:
             row = {"config_id": baseline_id, "column": "baseline",
                    "label": meta["label"], "model": meta["model"],
                    "base_of": meta["base_of"], "group": "Baseline",

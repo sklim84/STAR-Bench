@@ -1,61 +1,66 @@
 {
   "cohort": {
     "column": "single",
-    "n_configs": 18,
+    "n_configs": 28,
     "n_registry": 28,
     "config_ids": [
       "ax-4.0",
+      "ax-light",
+      "dragon-llama-fin",
       "dragon-qwen-fin",
+      "exaone-1.2b",
+      "exaone-32b",
       "gemma-4-31b",
+      "gemma-4-e4b",
       "gpt-oss-120b-nt",
       "gpt-oss-120b-t",
       "gpt-oss-20b-nt",
       "gpt-oss-20b-t",
+      "hermes-3-8b",
       "kanana-2-inst",
       "kanana-2-think",
+      "llama-3.2-3b",
       "llama-3.3-70b",
       "ministral-3b",
       "mistral-small",
+      "phi-4-mini",
       "qwen35-27b-nt",
       "qwen35-27b-t",
+      "qwen35-4b-nt",
       "qwen35-4b-t",
       "qwen36-27b",
       "qwen36-35b-a3b",
+      "xlam-3b",
       "xlam-70b"
     ],
-    "missing_config_ids": [
-      "ax-light",
-      "exaone-1.2b",
-      "exaone-32b",
-      "dragon-llama-fin",
-      "llama-3.2-3b",
-      "hermes-3-8b",
-      "phi-4-mini",
-      "qwen35-4b-nt",
-      "xlam-3b",
-      "gemma-4-e4b"
-    ]
+    "missing_config_ids": []
   },
   "correct_definition": "h == 1 (primary tool hit); the pre-audit score >= 0.9 is gone (D02)",
   "test": "McNemar, continuity corrected, chi-square with df = 1",
   "n_registry_pairs": 4,
-  "n_pairs_tested": 3,
-  "pairs_without_both_arms": [
+  "n_pairs_tested": 4,
+  "pairs_without_both_arms": [],
+  "pairs": [
     {
       "model": "Qwen/Qwen3.5-4B",
       "label": "Qwen3.5-4B",
       "nothink_config_id": "qwen35-4b-nt",
       "think_config_id": "qwen35-4b-t",
-      "nothink_label": "Qwen3.5-4B (NT)",
-      "think_label": "Qwen3.5-4B (T)",
       "nothink_reasoning_mode": "nothink",
       "think_reasoning_mode": "think",
-      "missing_arm": [
-        "qwen35-4b-nt"
-      ]
-    }
-  ],
-  "pairs": [
+      "n_cases": 1258,
+      "nothink_h": 0.9054,
+      "think_h": 0.9141,
+      "delta_pp": 0.87,
+      "both_wrong": 63,
+      "flip_to_correct": 56,
+      "flip_to_wrong": 45,
+      "both_correct": 1094,
+      "mcnemar_chi2": 0.99,
+      "p_value": "0.3197",
+      "significant_05": false,
+      "significant_001": false
+    },
     {
       "model": "Qwen/Qwen3.5-27B",
       "label": "Qwen3.5-27B",

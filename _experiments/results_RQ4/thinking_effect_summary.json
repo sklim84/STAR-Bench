@@ -1,57 +1,44 @@
 {
   "cohort": {
     "n_registry": 28,
-    "n_configs": 18,
-    "n_configs_multiturn": 18,
+    "n_configs": 28,
+    "n_configs_multiturn": 28,
     "config_ids": [
       "ax-4.0",
+      "ax-light",
+      "dragon-llama-fin",
       "dragon-qwen-fin",
+      "exaone-1.2b",
+      "exaone-32b",
       "gemma-4-31b",
+      "gemma-4-e4b",
       "gpt-oss-120b-nt",
       "gpt-oss-120b-t",
       "gpt-oss-20b-nt",
       "gpt-oss-20b-t",
+      "hermes-3-8b",
       "kanana-2-inst",
       "kanana-2-think",
+      "llama-3.2-3b",
       "llama-3.3-70b",
       "ministral-3b",
       "mistral-small",
+      "phi-4-mini",
       "qwen35-27b-nt",
       "qwen35-27b-t",
+      "qwen35-4b-nt",
       "qwen35-4b-t",
       "qwen36-27b",
       "qwen36-35b-a3b",
+      "xlam-3b",
       "xlam-70b"
     ],
-    "missing_config_ids": [
-      "ax-light",
-      "exaone-1.2b",
-      "exaone-32b",
-      "dragon-llama-fin",
-      "llama-3.2-3b",
-      "hermes-3-8b",
-      "phi-4-mini",
-      "qwen35-4b-nt",
-      "xlam-3b",
-      "gemma-4-e4b"
-    ],
-    "note": "3 of 4 registry thinking pairs have both arms scored; 18 of 28 configurations are scored single-turn"
+    "missing_config_ids": [],
+    "note": "4 of 4 registry thinking pairs have both arms scored; 28 of 28 configurations are scored single-turn"
   },
   "n_registry_pairs": 4,
-  "n_thinking_pairs": 3,
-  "pairs_without_both_arms": [
-    {
-      "model": "Qwen/Qwen3.5-4B",
-      "display": "Qwen3.5-4B",
-      "nothink_config_id": "qwen35-4b-nt",
-      "think_config_id": "qwen35-4b-t",
-      "nothink_reasoning_mode": "nothink",
-      "think_reasoning_mode": "think",
-      "missing_arm": [
-        "qwen35-4b-nt"
-      ]
-    }
-  ],
+  "n_thinking_pairs": 4,
+  "pairs_without_both_arms": [],
   "pairs": [
     {
       "model": "gpt-oss-20B",
@@ -90,6 +77,24 @@
       "delta_h_multi": -0.062000000000000055
     },
     {
+      "model": "Qwen3.5-4B",
+      "model_id": "Qwen/Qwen3.5-4B",
+      "nothink_config_id": "qwen35-4b-nt",
+      "think_config_id": "qwen35-4b-t",
+      "nothink_reasoning_mode": "nothink",
+      "think_reasoning_mode": "think",
+      "h_nothink": 0.9054054054054054,
+      "h_think": 0.9141494435612083,
+      "n_cases_nothink": 1258,
+      "n_cases_think": 1258,
+      "delta_h_single": 0.008744038155802936,
+      "h_bar_nothink": 0.846,
+      "h_bar_think": 0.82566666,
+      "n_scenarios_nothink": 50,
+      "n_scenarios_think": 50,
+      "delta_h_multi": -0.020333339999999978
+    },
+    {
       "model": "Qwen3.5-27B",
       "model_id": "Qwen/Qwen3.5-27B",
       "nothink_config_id": "qwen35-27b-nt",
@@ -108,9 +113,9 @@
       "delta_h_multi": -0.06600000000000017
     }
   ],
-  "mean_delta_single": -0.04,
-  "n_pairs_delta_single": 3,
-  "mean_delta_multi": -0.0923,
-  "n_pairs_delta_multi": 3,
-  "note": "Delta h = h(T) - h(NT) over the single-turn cases; Delta h_bar = h_bar(T) - h_bar(NT) over the oracle scenarios, where h_bar is the mean per-scenario h_mean (the old avg_tool_hit). No pair is excluded from the means: every pair with both arms scored is in them. 3 of 4 registry thinking pairs have both arms scored; 18 of 28 configurations are scored single-turn"
+  "mean_delta_single": -0.0278,
+  "n_pairs_delta_single": 4,
+  "mean_delta_multi": -0.0743,
+  "n_pairs_delta_multi": 4,
+  "note": "Delta h = h(T) - h(NT) over the single-turn cases; Delta h_bar = h_bar(T) - h_bar(NT) over the oracle scenarios, where h_bar is the mean per-scenario h_mean (the old avg_tool_hit). No pair is excluded from the means: every pair with both arms scored is in them. 4 of 4 registry thinking pairs have both arms scored; 28 of 28 configurations are scored single-turn"
 }
