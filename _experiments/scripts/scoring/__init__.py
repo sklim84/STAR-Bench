@@ -1,4 +1,4 @@
-"""STAR-Bench scoring library (Contract 3 over Contract 2 records and Contract 1 gold).
+"""STAR-Bench scoring library: eval files built from run records and gold annotations.
 
 Single-turn and multi-turn share one comparison module (``compare``), so a
 parameter is judged the same way wherever it appears. The metric definitions are

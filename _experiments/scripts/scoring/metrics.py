@@ -1,11 +1,11 @@
 """Metric definitions shared by single-turn cases and multi-turn turns.
 
-h  every gold tool appears among the calls (D01)
+h  every gold tool appears among the calls
 r  fraction of gold tools called
 p  calls that name a gold tool / calls made (None when nothing was called)
-o  first occurrences of the ordered tools are strictly increasing (L4-028)
-a  mean score of the parameter checks, None when the case has no checks (D02)
-f1 F1 of the called tool SET against the gold tool set (D01 companion metric)
+o  first occurrences of the ordered tools are strictly increasing
+a  mean score of the parameter checks, None when the case has no checks
+f1 F1 of the called tool SET against the gold tool set, the companion of h
 """
 
 from __future__ import annotations
@@ -44,7 +44,7 @@ def tool_metrics(gold_tools: list[str], calls: list[Call]) -> dict:
 
 
 def order_metric(tool_order: list[str], calls: list[Call]) -> int | None:
-    """None unless an order is specified and every ordered tool was called (D02)."""
+    """None unless an order is specified and every ordered tool was called."""
     if not tool_order:
         return None
     first: dict[str, int] = {}

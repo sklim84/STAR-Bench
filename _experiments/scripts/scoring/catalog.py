@@ -2,7 +2,7 @@
 
 ``lookup_fiu_reference_types(keyword)`` and ``get_aml_glossary(term)`` are pure
 functions of a static catalog, so "did the model ask for the same thing" is the
-row set they return, not the spelling of the argument (L1-019). The catalog
+row set they return, not the spelling of the argument. The catalog
 functions are imported from the platform; no database is involved.
 """
 

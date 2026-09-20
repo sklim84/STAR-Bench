@@ -4,7 +4,7 @@ Oracle and end-to-end differ in one place only: where a ``context_ref`` value
 comes from. Oracle reads it from the gold ``tool_result`` that was injected into
 the history; end-to-end reads it from the run's OWN executed result for the
 source turn, and marks the reference not-applicable when that turn produced no
-usable result (L4-007). Everything else uses the single-turn comparison module.
+usable result. Everything else uses the single-turn comparison module.
 """
 
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""Single-turn scoring: one Contract 1 case against one Contract 2 run record."""
+"""Single-turn scoring: one gold case against one run record."""
 
 from __future__ import annotations
 
@@ -113,7 +113,7 @@ def _error_type(cand: Candidate, s: dict, view: RunView) -> str:
 
 def score_case(case: dict, record: dict | None, ctx: ScoringContext, *,
                category: str | None = None) -> dict:
-    """Contract 3 result for one case. ``record`` None means the run has no record for it."""
+    """Eval result for one case. ``record`` None means the run has no record for it."""
     view = view_record(record or {"rounds": [], "final_text": "",
                                   "error": {"type": "missing_record", "message": "no run record"},
                                   "stop_reason": "error"})

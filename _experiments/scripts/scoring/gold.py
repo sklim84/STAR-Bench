@@ -1,4 +1,4 @@
-"""Loading a benchmark directory (Contract 1 single-turn cases or multi-turn scenarios)."""
+"""Loading a benchmark directory of gold single-turn cases or multi-turn scenarios."""
 
 from __future__ import annotations
 

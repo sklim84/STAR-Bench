@@ -15,7 +15,7 @@ to such an OR does not restrict the result.
 The fallback used to skip any clause whose text contained SELECT, so the two
 cases whose reference SQL puts a scalar subquery in the WHERE clause
 (`st_qt_025`, `st_qt_039`) silently lost their sibling predicates and the gold
-self-test read 1256/1258 in a sqlglot-less environment (V-05). Terms the
+self-test read 1256/1258 in a sqlglot-less environment. Terms the
 fallback still cannot read are now reported: `extract_atoms_detailed` returns
 them and `check_sql_conditions` names them in the reason of a failing check, so
 a check that fails because of the environment says so instead of looking like a
@@ -528,7 +528,7 @@ def check_sql_conditions(sql: Any, conditions: list[dict]) -> dict:
         [p["condition"] for p in per if not p["met"]], ensure_ascii=False)
     if unreadable and not passed:
         # Say when the environment, not the data, is what failed the check: with
-        # sqlglot installed this statement is read by the parser (V-05).
+        # sqlglot installed this statement is read by the parser.
         reason += (f"; the regex fallback could not read {json.dumps(unreadable, ensure_ascii=False)}"
                    f" - install sqlglot {SQLGLOT_PIN} "
                    f"(_experiments/scripts/scoring/requirements.txt) to score this statement with "

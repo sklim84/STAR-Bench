@@ -1,9 +1,9 @@
-"""Argument comparison shared by single-turn and multi-turn scoring (L4-018).
+"""Argument comparison shared by single-turn and multi-turn scoring.
 
 A gold call spec is ``(tool, checks)`` where ``checks`` maps an argument name or
 a special check key to the expected value. Every check of one spec is evaluated
 on the SAME model call; the call that satisfies the most checks is chosen, and
-two specs for the same tool never share a call (L4-008).
+two specs for the same tool never share a call.
 """
 
 from __future__ import annotations

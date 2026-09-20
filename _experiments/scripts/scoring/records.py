@@ -1,4 +1,4 @@
-"""Reading Contract 2 run records into the call list the scorer works on."""
+"""Reading run records into the call list the scorer works on."""
 
 from __future__ import annotations
 
@@ -157,7 +157,7 @@ def record_files(runs: Path) -> list[Path]:
 
 
 # ---------------------------------------------------------------------------
-# Final-text checks for abstention and clarification (D19)
+# Final-text checks for abstention and clarification
 # ---------------------------------------------------------------------------
 
 _CALL_MARKUP = re.compile(

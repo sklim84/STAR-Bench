@@ -1,7 +1,7 @@
-"""Adapter from the pre-audit checkpoints to Contract 2 run records.
+"""Adapter from the legacy checkpoint format to run records.
 
 For comparison and regression only. New results are never produced this way:
-the old checkpoints are what the audit found wanting, and two of their gaps
+the old checkpoints record less than the scorer needs, and two of those gaps
 cannot be filled after the fact.
 
 What survives the conversion
@@ -15,8 +15,9 @@ What cannot be recovered
         only), so every parameter check is marked not-applicable: a is None for
         every converted single-turn case and only h, r, p, o and f1 compare.
     final text              never stored in either runner, so abstention and
-        clarification are judged by "no tool call" alone, which is the pre-D19
-        rule; those cases are flagged in the record.
+        clarification are judged by "no tool call" alone, without the check
+        that the answer text is present and is not an unparsed tool call;
+        those cases are flagged in the record.
     tool results (single)   never stored, so sql_valid is re-executed by the
         scorer (or fails when execution is off).
 
@@ -46,7 +47,7 @@ def _error_from_legacy(error_type: str | None) -> tuple[dict | None, str | None]
 
 
 def single_turn_record(row: dict, *, run_id: str) -> dict:
-    """One legacy single-turn checkpoint row as a Contract 2 record (without arguments)."""
+    """One legacy single-turn checkpoint row as a run record (without arguments)."""
     calls = [{"id": f"legacy{i}", "name": name, "arguments": None, "arguments_raw": None,
               "source": "native", "valid_json": None, "arguments_recorded": False}
              for i, name in enumerate(row.get("called_tools") or [])]
@@ -70,7 +71,7 @@ def single_turn_record(row: dict, *, run_id: str) -> dict:
 
 
 def multiturn_records(row: dict, *, run_id: str) -> list[dict]:
-    """One legacy multi-turn scenario row as one Contract 2 record per turn."""
+    """One legacy multi-turn scenario row as one run record per turn."""
     out = []
     setting = "e2e" if row.get("setting") == "real" else "oracle"
     for turn in row.get("turns") or []:

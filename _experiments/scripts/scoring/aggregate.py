@@ -1,4 +1,4 @@
-"""Aggregates. Every number is reported with the n it was computed over (Contract 3)."""
+"""Aggregates. Every number is reported with the n it was computed over."""
 
 from __future__ import annotations
 

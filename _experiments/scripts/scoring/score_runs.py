@@ -1,4 +1,4 @@
-"""CLI: score Contract 2 run records against a Contract 1 benchmark directory.
+"""CLI: score run records against a gold benchmark directory.
 
     python -m _experiments.scripts.scoring.score_runs \
         --runs _experiments/results_kr_v2/records --benchmark benchmarks --out _experiments/results_kr_v2/eval
@@ -7,12 +7,12 @@ One eval file per run id, each with per-case (or per-scenario) results and
 aggregates that carry n for every metric.
 
 Every record says which benchmark files the run was asked about
-(`provenance.benchmark_sha256`, C1-012). The scorer compares that with the
-directory it was given and refuses a mismatch: scoring a Korean run against
-`benchmarks_en` used to succeed silently and write an eval whose provenance hash
-and whose gold came from different data (V-04). `--allow-benchmark-mismatch`
-scores it anyway and records the override, the two hashes and the reason in
-every eval file it writes.
+(`provenance.benchmark_sha256`). The scorer compares that with the directory it
+was given and refuses a mismatch: scoring a Korean run against `benchmarks_en`
+would otherwise succeed silently and write an eval whose provenance hash and
+whose gold came from different data. `--allow-benchmark-mismatch` scores it
+anyway and records the override, the two hashes and the reason in every eval
+file it writes.
 """
 
 from __future__ import annotations
@@ -163,7 +163,7 @@ def _meta(records: list[dict], bench: Benchmark, ctx: ScoringContext, run_id: st
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--runs", required=True, help="directory (or file) of Contract 2 JSONL run records")
+    ap.add_argument("--runs", required=True, help="directory (or file) of JSONL run records")
     ap.add_argument("--benchmark", required=True, help="benchmark directory with cases_*.json")
     ap.add_argument("--out", required=True, help="directory for the eval files")
     ap.add_argument("--setting", choices=["oracle", "e2e"], help="multi-turn setting override")
