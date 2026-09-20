@@ -51,7 +51,7 @@ def main() -> int:
     declines = set(base["subdomains_where_every_pair_declines"])
 
     # Drawn 1:1 for a 0.42\\textwidth wrapfigure, so nothing is scaled at use.
-    fig, ax = plt.subplots(figsize=(2.35, 1.95))
+    fig, ax = plt.subplots(figsize=(2.35, 1.78))
     x = np.arange(len(subdomains))
     width = 0.20
     for slot, (fine_id, pair) in enumerate(pairs.items()):
