@@ -29,11 +29,12 @@ from _plot_style import FS_TICK, FS_LABEL, FS_LEGEND, style_axes  # noqa: E402
 
 OUT_DIR = _SB / "_experiments" / "results_RQ5"
 SPEC_FILE = OUT_DIR / "finance_specialization.json"
-# Two lines, because four sub-domain names do not fit across a column at one line.
-SHORT = {"Transaction Inquiry & Statistics": "Txn Inquiry\n& Statistics",
-         "Suspicious Activity Detection": "Suspicious\nDetection",
-         "Money Flow & Network Analysis": "Money Flow\n& Network",
-         "Regulatory Reporting": "Regulatory\nReporting"}
+# One short word per sub-domain: four full names do not fit across a wrapfigure,
+# and the caption gives them in full.
+SHORT = {"Transaction Inquiry & Statistics": "Inquiry",
+         "Suspicious Activity Detection": "Detection",
+         "Money Flow & Network Analysis": "Network",
+         "Regulatory Reporting": "Reporting"}
 BASE_COLOUR, FINE_COLOUR = "#A9C0D6", "#2A6099"
 
 
@@ -49,9 +50,10 @@ def main() -> int:
     subdomains = list(spec["sub_domains"])
     declines = set(base["subdomains_where_every_pair_declines"])
 
-    fig, ax = plt.subplots(figsize=(5.5, 2.3))
+    # Drawn 1:1 for a 0.42\\textwidth wrapfigure, so nothing is scaled at use.
+    fig, ax = plt.subplots(figsize=(2.35, 1.95))
     x = np.arange(len(subdomains))
-    width = 0.19
+    width = 0.20
     for slot, (fine_id, pair) in enumerate(pairs.items()):
         centre = (slot - (len(pairs) - 1) / 2) * (2 * width + 0.07)
         for j, which in enumerate(("base", "fine")):
@@ -66,17 +68,20 @@ def main() -> int:
             ax.axvspan(k - 0.46, k + 0.46, color="#D9534F", alpha=0.07, linewidth=0, zorder=0)
 
     ax.set_xticks(x)
-    ax.set_xticklabels([SHORT.get(sd, sd) for sd in subdomains], fontsize=6.5,
-                       linespacing=1.15)
-    ax.set_ylabel("Tool hit $h$", fontsize=7.5)
-    ax.set_ylim(0, 1.08)
-    ax.tick_params(axis="y", labelsize=6.5)
+    ax.set_xticklabels([SHORT.get(sd, sd) for sd in subdomains], fontsize=5.2)
+    ax.set_ylabel("Tool hit $h$", fontsize=5.6)
+    ax.set_ylim(0, 1.12)
+    ax.tick_params(axis="y", labelsize=5, pad=1.5)
     ax.tick_params(axis="x", length=0, pad=2)
-    ax.legend(fontsize=6, ncol=2, frameon=False, loc="upper center",
-              bbox_to_anchor=(0.5, -0.22), handlelength=1.4, columnspacing=1.2)
-    ax.text(0.99, 0.97, "shaded: both pairs decline", transform=ax.transAxes,
-            ha="right", va="top", fontsize=5.8, color="#A0554F")
+    ax.legend(fontsize=4.2, ncol=1, frameon=False, loc="lower left",
+              bbox_to_anchor=(-0.02, -0.34), handlelength=0.9,
+              labelspacing=0.18, borderpad=0.1, ncols=1)
+    ax.text(0.99, 0.99, "shaded: both pairs decline", transform=ax.transAxes,
+            ha="right", va="top", fontsize=4.2, color="#A0554F")
     style_axes(ax)
+    # style_axes sets a shared tick size; this figure is drawn small, so it keeps its own.
+    ax.tick_params(axis="y", labelsize=5, pad=1.5)
+    ax.tick_params(axis="x", labelsize=5.2, length=0, pad=2)
     fig.tight_layout()
     for suffix in ("pdf", "png"):
         fig.savefig(OUT_DIR / f"fig_subdomain_grouped_bar.{suffix}", dpi=300, bbox_inches="tight")
