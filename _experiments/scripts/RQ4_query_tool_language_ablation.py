@@ -36,7 +36,7 @@ Output (unchanged names, under `_experiments/results_RQ4`):
   - <out>/fig_four_way_delta_decomposition.{pdf,png}
 
     python -m _experiments.scripts.RQ4_query_tool_language_ablation \
-        --results-root _experiments/results_2026rerun --out _experiments/results_RQ4
+        --results-root _experiments/runs --out _experiments/results_RQ4
 """
 import argparse
 import csv

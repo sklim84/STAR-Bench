@@ -1,7 +1,7 @@
 """Merges partial Contract 2 runs into one record set, and says where each line came from.
 
     python -m _experiments.scripts.merge_partial_results \
-        --runs _experiments/results_2026rerun/single/qwen35-27b-t \
+        --runs _experiments/runs/single/qwen35-27b-t \
         --expect benchmarks --out merged.jsonl
 
 The old merger read checkpoints line by line into `records[key] = rec` and kept

@@ -3,7 +3,7 @@
     python -m _experiments.scripts.benchmark_multiturn \
         --config qwen35-27b-t --tools-lang kr --setting oracle \
         --cases-dir benchmarks_multiturn \
-        --out _experiments/results_2026rerun/mt_oracle/qwen35-27b-t
+        --out _experiments/runs/mt_oracle/qwen35-27b-t
 
 `--setting oracle` injects the gold call and the gold tool result after every
 turn, so each turn starts from a correct context. `--setting e2e` executes the

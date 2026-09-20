@@ -2,7 +2,7 @@
 
     python -m _experiments.scripts.benchmark \
         --config qwen35-27b-t --tools-lang kr --cases-dir benchmarks \
-        --out _experiments/results_2026rerun/single/qwen35-27b-t
+        --out _experiments/runs/single/qwen35-27b-t
 
 The runner no longer scores. It records what the model did, and
 `_experiments/scripts/scoring/score_runs.py` reads those records together with

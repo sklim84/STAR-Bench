@@ -1,7 +1,7 @@
 """End-to-end tool error and empty-result rates, attributed by cause (L3-001).
 
     python -m _experiments.scripts.e2e_error_rates
-    python -m _experiments.scripts.e2e_error_rates --results _experiments/results_2026rerun
+    python -m _experiments.scripts.e2e_error_rates --results _experiments/runs
     python -m _experiments.scripts.e2e_error_rates --out _experiments/results_RQ3 --list-unmatched
 
 The appendix caption said "5,550 calls, 30 errors (0.5%)" and read the E2E drop

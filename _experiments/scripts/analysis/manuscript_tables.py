@@ -8,7 +8,7 @@ a cohort that no longer existed. These are the same tables, generated.
     python -m _experiments.scripts.analysis.manuscript_tables
     python -m _experiments.scripts.analysis.manuscript_tables --out <dir>
 
-Written (default `_experiments/results_manuscript/`, never over the manuscript):
+Written (default `_experiments/paper_tables/`, never over the manuscript):
 
     tab-exp-oveall.tex     tab:overall        h r p a o | h_bar a_bar c
     tab-2x2-ablation.tex   tab:2x2_ablation   tool schema x question language
@@ -33,7 +33,7 @@ if str(_ROOT) not in sys.path:
 from _experiments.scripts.analysis import load  # noqa: E402
 from _experiments.scripts.runner import registry  # noqa: E402
 
-DEFAULT_OUT = _ROOT / "_experiments" / "results_manuscript"
+DEFAULT_OUT = _ROOT / "_experiments" / "paper_tables"
 GROUP_ORDER = ("Korean-Specialized", "Finance-Specialized", "General-Purpose")
 MISSING = "--"
 

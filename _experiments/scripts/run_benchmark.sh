@@ -2,7 +2,7 @@
 # Serve one registry configuration and run one benchmark column against it.
 #
 #   bash _experiments/scripts/run_benchmark.sh --config qwen35-27b-t --gpu 0,1 \
-#        --mode single --tools-lang kr --out-root _experiments/results_2026rerun
+#        --mode single --tools-lang kr --out-root _experiments/runs
 #
 #   --config      serving configuration id (_experiments/scripts/runner/registry.py)
 #   --gpu         CUDA devices for this server; the count must match the

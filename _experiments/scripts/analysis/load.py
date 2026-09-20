@@ -46,7 +46,7 @@ from _experiments.scripts.scoring import aggregate_multiturn, aggregate_single  
 __all__ = ["COLUMNS", "DEFAULT_EVAL_ROOT", "configs", "single", "multiturn", "aggregates",
            "missing"]
 
-DEFAULT_EVAL_ROOT = _ROOT / "_experiments" / "results_2026rerun" / "eval"
+DEFAULT_EVAL_ROOT = _ROOT / "_experiments" / "runs" / "eval"
 
 # arm name -> (directory under the eval root, tool schema language, question language)
 COLUMNS = {
@@ -266,7 +266,7 @@ RECORD_DIRS = {
     "krtools_enq": "single_krtools_enq", "entools_enq": "single_entools_enq",
     "oracle": "mt_oracle", "e2e": "mt_e2e",
 }
-DEFAULT_RUN_ROOT = _ROOT / "_experiments" / "results_2026rerun"
+DEFAULT_RUN_ROOT = _ROOT / "_experiments" / "runs"
 
 
 def _record_files(directory: Path) -> list[tuple[str, Path]]:
@@ -337,7 +337,7 @@ BASELINES = {
     "base-qwen3-8b": {"label": "Qwen3-8B", "model": "Qwen/Qwen3-8B",
                       "base_of": "dragon-qwen-fin"},
 }
-DEFAULT_BASELINE_EVAL = _ROOT / "_experiments" / "results_2026rerun" / "eval_baselines"
+DEFAULT_BASELINE_EVAL = _ROOT / "_experiments" / "runs" / "eval_baselines"
 
 
 def baselines(*, eval_root: Path | str | None = None) -> pd.DataFrame:

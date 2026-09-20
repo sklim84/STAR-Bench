@@ -3,7 +3,7 @@
 #
 #   bash _experiments/scripts/run_master.sh --host-gpus 4 \
 #        --columns single,oracle,e2e --tools-lang kr \
-#        --out-root _experiments/results_2026rerun
+#        --out-root _experiments/runs
 #
 #   --host-gpus     cards on this host; a configuration that needs more is listed
 #                   as not runnable here and does not silently disappear

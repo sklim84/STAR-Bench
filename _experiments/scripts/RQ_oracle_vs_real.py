@@ -33,7 +33,7 @@ Ported to the scored rerun; the input is `analysis/load.py` and nothing else
 Usage:
   PYTHONPATH=. python _experiments/scripts/RQ_oracle_vs_real.py
   python -m _experiments.scripts.RQ_oracle_vs_real \
-      --oracle _experiments/results_2026rerun/eval --e2e _experiments/results_2026rerun/eval
+      --oracle _experiments/runs/eval --e2e _experiments/runs/eval
 Output: _experiments/results_RQ3/oracle_vs_real.{json,csv}
 """
 from __future__ import annotations

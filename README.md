@@ -68,18 +68,18 @@ _experiments/
     data_fixes/           — Benchmark linters and the regulatory terminology table
     benchmark.py, benchmark_multiturn.py, run_master.sh — the runners
     regenerate_analysis.py — rebuilds every table and figure from the scored runs
-  results_2026rerun/
+  runs/
     single/ mt_oracle/ mt_e2e/        — run records, one JSON line per case or turn
     single_entools_krq/ single_krtools_enq/ single_entools_enq/ — the 2x2 arms
     baselines/                        — the two un-specialised bases, outside the cohort
     eval/                             — scores, one directory per column and configuration
   results_RQ1 … results_RQ5/ — Per-research-question analysis outputs and figures
-  results_manuscript/       — The paper's data tables, generated
+  paper_tables/       — The paper's data tables, generated
   bfcl_results/             — BFCL scores for the general-vs-domain comparison
   figures/                  — Generated figures
 ```
 
-Every number in the paper is rebuilt from `results_2026rerun/` by
+Every number in the paper is rebuilt from `runs/` by
 `python -m _experiments.scripts.regenerate_analysis --all`. The run records are the
 primary artefact: each holds the raw response per round, the parsed calls with their
 arguments and whether the server or the text fallback produced them, the tool output,
@@ -146,7 +146,7 @@ the record.
 # Serve one configuration and run one column against it
 bash _experiments/scripts/run_benchmark.sh --config qwen35-27b-nt --gpu 0,1 \
   --mode single --tools-lang kr --query-lang kr \
-  --out-root _experiments/results_2026rerun
+  --out-root _experiments/runs
 
 # The 2x2 arms differ only in --tools-lang and --query-lang
 # The multi-turn columns are --mode oracle and --mode e2e
@@ -156,8 +156,8 @@ python -m _experiments.scripts.runner.plan --host-gpus 2
 
 # Score afterwards, from the records
 python _experiments/scripts/scoring/score_runs.py \
-  --runs _experiments/results_2026rerun/single/qwen35-27b-nt \
-  --benchmark benchmarks --out _experiments/results_2026rerun/eval/single/qwen35-27b-nt
+  --runs _experiments/runs/single/qwen35-27b-nt \
+  --benchmark benchmarks --out _experiments/runs/eval/single/qwen35-27b-nt
 
 # Rebuild every table and figure
 python -m _experiments.scripts.regenerate_analysis --all

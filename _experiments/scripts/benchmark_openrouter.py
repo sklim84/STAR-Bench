@@ -14,7 +14,7 @@ does instead of leaving it to the gateway (L5-014):
     PYTHONPATH=. python -m _experiments.scripts.benchmark_openrouter \
         --model qwen/qwen3.5-27b --tools-lang kr \
         --provider-order deepinfra --provider-quantizations bf16 \
-        --out _experiments/results_2026rerun/single/qwen35-27b-openrouter
+        --out _experiments/runs/single/qwen35-27b-openrouter
 
 A run through this path is a different serving stack from the local one and must
 be reported as such; it is not interchangeable with a registry configuration.

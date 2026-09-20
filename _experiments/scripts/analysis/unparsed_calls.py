@@ -30,7 +30,7 @@ if str(_ROOT) not in sys.path:
 
 from _experiments.scripts.analysis import load  # noqa: E402
 
-RUN_ROOT = _ROOT / "_experiments" / "results_2026rerun"
+RUN_ROOT = _ROOT / "_experiments" / "runs"
 # Shapes a model reaches for when it cannot produce a native call. The first is an
 # OpenAI tool-call or tool-definition object, the second Phi's documented marker,
 # the third a special token the template rendered as text.
