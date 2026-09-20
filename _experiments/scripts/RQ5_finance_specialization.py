@@ -47,6 +47,7 @@ for _p in (str(Path(__file__).resolve().parent), str(_SB)):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
+from _experiments.scripts.analysis import load
 from _plot_style import plt, FS_TICK, FS_LABEL, FS_LEGEND, style_axes  # noqa: E402
 from _experiments.scripts.analysis import load  # noqa: E402
 
@@ -85,6 +86,15 @@ FINANCE_GROUP = 'Finance-Specialized'
 # The group the finance models are read against. General-Purpose is the registry's
 # own name for "not specialised", which is the contrast the RQ is about.
 CONTRAST_GROUP = 'General-Purpose'
+
+
+
+def _subdomain_mean(rows, tools):
+    """Mean tool hit over a sub-domain, the same unweighted mean per tool the
+    cohort rows use, so a baseline row is comparable with a cohort row."""
+    per_tool = rows.groupby("category")["h"].mean()
+    hits = [per_tool[t] for t in tools if t in per_tool.index]
+    return round(float(sum(hits) / len(hits)), 4) if hits else None
 
 
 def cohort_note():
@@ -164,22 +174,57 @@ def main():
             if a is not None and b is not None:
                 finance_vs_contrast[sd] = round(a - b, 4)
 
-    # The comparison the step was written for, and why it is not here.
+    # Each fine-tune against the model it was tuned from. The bases are run on the
+    # same benchmark and scored by the same code, and they sit outside the cohort
+    # because a base model is a reference rather than a deployment candidate.
     scored_finance = group_members.get(FINANCE_GROUP, [])
-    base_comparison = {
-        'available': False,
-        'intended_pairs': {cid: BASE_OF[cid] for cid in sorted(BASE_OF)},
-        'missing_bases': sorted(set(BASE_OF.values())),
-        'reason': 'Neither base model is a configuration in the serving registry, so '
-                  'neither is part of the scored cohort. No stand-in is substituted: with '
-                  'a different 8B model in the base slot the result becomes a property of '
-                  'that model (Hermes-3-8B sits at regulatory h .3517 against .58-.70 for '
-                  'the other 8B models and would inflate the benefit of finance SFT).',
-        'finance_configs_in_registry': sorted(BASE_OF),
-        'finance_configs_scored': scored_finance,
-        'finance_configs_not_scored': [c for c in sorted(BASE_OF) if c not in scored_finance],
-        'substitute_used': None,
-    }
+    try:
+        baseline_cases = load.baselines()
+    except FileNotFoundError:
+        baseline_cases = None
+
+    if baseline_cases is None:
+        base_comparison = {
+            'available': False,
+            'intended_pairs': {cid: BASE_OF[cid] for cid in sorted(BASE_OF)},
+            'reason': 'The base models are not scored. Run them and score them into '
+                      'runs/eval_baselines/ for this comparison to appear.',
+            'finance_configs_scored': scored_finance,
+        }
+    else:
+        by_base = {bid: grp for bid, grp in baseline_cases.groupby('config_id')}
+        pairs = {}
+        for baseline_id, meta in load.BASELINES.items():
+            fine = meta['base_of']
+            if baseline_id not in by_base or fine not in per_config:
+                continue
+            base_rows = by_base[baseline_id]
+            base_sd = {sd: _subdomain_mean(base_rows, tools)
+                       for sd, tools in SUB_DOMAINS.items()}
+            fine_sd = per_config[fine]['h']
+            pairs[fine] = {
+                'base_config': baseline_id, 'base_label': meta['label'],
+                'base_model': meta['model'],
+                'fine_label': per_config[fine]['label'],
+                'base_overall_h': round(float(base_rows['h'].mean()), 4),
+                'fine_overall_h': round(float(cases[cases['config_id'] == fine]['h'].mean()), 4),
+                'by_subdomain': {sd: {'base': base_sd[sd], 'fine': fine_sd.get(sd),
+                                      'delta': (None if base_sd[sd] is None
+                                                or fine_sd.get(sd) is None
+                                                else round(fine_sd[sd] - base_sd[sd], 4))}
+                                 for sd in SUB_DOMAINS},
+            }
+            pairs[fine]['overall_delta'] = round(
+                pairs[fine]['fine_overall_h'] - pairs[fine]['base_overall_h'], 4)
+        declines = [sd for sd in SUB_DOMAINS
+                    if pairs and all((p['by_subdomain'][sd]['delta'] or 0) < 0
+                                     for p in pairs.values())]
+        base_comparison = {
+            'available': bool(pairs),
+            'pairs': pairs,
+            'subdomains_where_every_pair_declines': declines,
+            'finance_configs_scored': scored_finance,
+        }
 
     summary = {
         'n_configs': n_configs,
@@ -250,10 +295,17 @@ def main():
         print(f'  {g:20s} n={len(group_members[g])}  ' + '  '.join(
             f'{sd.split()[0]}={group_means[g][sd]}' for sd in SUB_DOMAINS))
     print(f'  finance vs {CONTRAST_GROUP} diff: {finance_vs_contrast}')
-    print('  base comparison NOT available: '
-          f'{", ".join(sorted(set(BASE_OF.values())))} are not in the serving registry; '
-          f'not scored in the finance group: '
-          f'{", ".join(base_comparison["finance_configs_not_scored"]) or "none"}')
+    bc = base_comparison
+    if bc.get('available'):
+        for fine, pair in bc['pairs'].items():
+            deltas = ", ".join(f"{sd.split()[0]} {100 * (pair['by_subdomain'][sd]['delta'] or 0):+.1f}"
+                               for sd in SUB_DOMAINS)
+            print(f"  {pair['base_label']} -> {fine}: overall "
+                  f"{100 * pair['overall_delta']:+.1f}pp  ({deltas})")
+        print(f"  every pair declines in: "
+              f"{', '.join(bc['subdomains_where_every_pair_declines']) or 'no sub-domain'}")
+    else:
+        print(f"  base comparison NOT available: {bc.get('reason', '')}")
     for sd, tools in summary['sub_domain_tools_missing'].items():
         print(f'  sub-domain tool with no category: {sd}: {", ".join(tools)}')
 

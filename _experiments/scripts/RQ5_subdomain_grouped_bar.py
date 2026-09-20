@@ -1,21 +1,18 @@
-"""RQ5 figure: mean tool hit per AML sub-domain, one bar group per registry group.
+#!/usr/bin/env python3
+"""Each finance fine-tune against the model it was tuned from, per sub-domain.
 
-Reads only what `RQ5_finance_specialization.py` wrote, so run that step first.
-It touches no results tree of its own, and every number here is the one that step
-computed from `h`, the primary tool hit (0/1).
+The claim this figure carries is pairwise: finance tuning moves capability
+between sub-domains rather than adding it, and Regulatory Reporting is the one
+sub-domain where both pairs lose. A figure of group means cannot show that,
+because the three groups hold two, six and twenty configurations of different
+sizes, so a difference between them is mostly a difference in what is in them.
 
-Nothing in this file names a model or a group: the bar groups, their display
-labels with the configuration count, their order, the sub-domain axis, the cohort
-size and the unscored ids all come out of `finance_specialization.json`. That is
-what keeps this figure from drawing a cohort the data does not have; the
-sub-domain short names below are line-wrapping for the axis, not a selection.
+Reads `results_RQ5/finance_specialization.json`, which the step beside this one
+writes; run that first.
 
-The bars are the registry groups rather than each fine-tune beside the model it
-was tuned from, because neither base is a configuration in the serving registry.
-`base_comparison` in the JSON names the two absent bases.
-
-출력: _experiments/results_RQ5/fig_subdomain_grouped_bar.{pdf,png}
+    python -m _experiments.scripts.RQ5_subdomain_grouped_bar
 """
+
 import json
 import sys
 from pathlib import Path
@@ -25,114 +22,75 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-_SB = Path(__file__).resolve().parents[2]   # repository root
+_SB = Path(__file__).resolve().parents[2]
 if str(Path(__file__).resolve().parent) not in sys.path:
     sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _plot_style import FS_TICK, FS_LABEL, FS_LEGEND, style_axes  # noqa: E402
 
 OUT_DIR = _SB / "_experiments" / "results_RQ5"
 SPEC_FILE = OUT_DIR / "finance_specialization.json"
+# Two lines, because four sub-domain names do not fit across a column at one line.
+SHORT = {"Transaction Inquiry & Statistics": "Txn Inquiry\n& Statistics",
+         "Suspicious Activity Detection": "Suspicious\nDetection",
+         "Money Flow & Network Analysis": "Money Flow\n& Network",
+         "Regulatory Reporting": "Regulatory\nReporting"}
+BASE_COLOUR, FINE_COLOUR = "#A9C0D6", "#2A6099"
 
-if not SPEC_FILE.exists():
-    raise SystemExit(f"{SPEC_FILE} does not exist; run RQ5_finance_specialization.py first")
-spec = json.loads(SPEC_FILE.read_text(encoding="utf-8"))
 
-sub_domains = spec["sub_domains"]
-group_means = spec["group_means"]
-# Groups, their order and their labels are the step's, not this file's.
-GROUP_ORDER = spec["group_order"]
-GROUP_LABELS = spec["group_labels"]
-n_configs = spec["n_configs"]
-missing = spec["configs_missing_from_28"]
-cohort_note = spec["cohort_note"]
+def main() -> int:
+    if not SPEC_FILE.exists():
+        raise SystemExit(f"{SPEC_FILE} does not exist; run RQ5_finance_specialization.py first")
+    spec = json.loads(SPEC_FILE.read_text(encoding="utf-8"))
+    base = spec.get("base_comparison") or {}
+    if not base.get("available"):
+        raise SystemExit("base_comparison is not available: score the base models first")
 
-import matplotlib as _mpl  # viridis 계열(blue->green->yellow)로 통일 — 색감 통일 샘플
-_VIR = _mpl.colormaps["viridis"]
-GROUP_COLORS = {g: _VIR(v) for g, v in
-                zip(GROUP_ORDER, np.linspace(0.25, 0.90, len(GROUP_ORDER)))}
+    pairs = base["pairs"]
+    subdomains = list(spec["sub_domains"])
+    declines = set(base["subdomains_where_every_pair_declines"])
 
-# ── 서브도메인 단축명 ─────────────────────────────────────────────────────────
-SD_SHORT = {
-    "Transaction Inquiry & Statistics": "Txn\nInquiry",
-    "Suspicious Activity Detection":    "Suspicious\nDetection",
-    "Money Flow & Network Analysis":    "Money Flow\n& Network",
-    "Regulatory Reporting":             "Regulatory\nReporting",
-}
-# 축 라벨은 두 줄로 둔다. 한 줄이면 전폭(5.5in)에서도 이웃 라벨과 겹친다.
-sd_labels = [SD_SHORT.get(sd, sd) for sd in sub_domains]
+    fig, ax = plt.subplots(figsize=(5.5, 2.3))
+    x = np.arange(len(subdomains))
+    width = 0.19
+    for slot, (fine_id, pair) in enumerate(pairs.items()):
+        centre = (slot - (len(pairs) - 1) / 2) * (2 * width + 0.07)
+        for j, which in enumerate(("base", "fine")):
+            values = [pair["by_subdomain"][sd][which] or 0 for sd in subdomains]
+            ax.bar(x + centre + (j - 0.5) * width, values, width,
+                   color=BASE_COLOUR if which == "base" else FINE_COLOUR,
+                   edgecolor="white", linewidth=0.5,
+                   label=(pair["base_label"] if which == "base" else pair.get("fine_label", fine_id))
+                   if slot < len(pairs) else None)
+    for k, sd in enumerate(subdomains):
+        if sd in declines:
+            ax.axvspan(k - 0.46, k + 0.46, color="#D9534F", alpha=0.07, linewidth=0, zorder=0)
 
-n_sd    = len(sub_domains)
-n_grp   = len(GROUP_ORDER)
-x       = np.arange(n_sd)
-total_w = 0.75
-bar_w   = total_w / n_grp
-offsets = np.linspace(-(total_w - bar_w) / 2, (total_w - bar_w) / 2, n_grp)
+    ax.set_xticks(x)
+    ax.set_xticklabels([SHORT.get(sd, sd) for sd in subdomains], fontsize=6.5,
+                       linespacing=1.15)
+    ax.set_ylabel("Tool hit $h$", fontsize=7.5)
+    ax.set_ylim(0, 1.08)
+    ax.tick_params(axis="y", labelsize=6.5)
+    ax.tick_params(axis="x", length=0, pad=2)
+    ax.legend(fontsize=6, ncol=2, frameon=False, loc="upper center",
+              bbox_to_anchor=(0.5, -0.22), handlelength=1.4, columnspacing=1.2)
+    ax.text(0.99, 0.97, "shaded: both pairs decline", transform=ax.transAxes,
+            ha="right", va="top", fontsize=5.8, color="#A0554F")
+    style_axes(ax)
+    fig.tight_layout()
+    for suffix in ("pdf", "png"):
+        fig.savefig(OUT_DIR / f"fig_subdomain_grouped_bar.{suffix}", dpi=300, bbox_inches="tight")
+    plt.close(fig)
 
-# ── 플롯 ─────────────────────────────────────────────────────────────────────
-# 본문 폭(5.5in)에 1:1로 들어가도록 가로로 넓고 낮게 그린다. 글자는 6~8pt.
-fig, ax = plt.subplots(figsize=(5.5, 2.0))
+    print(f"Saved fig_subdomain_grouped_bar to {OUT_DIR}")
+    for fine_id, pair in pairs.items():
+        print(f"  {pair['base_label']} -> {fine_id}: "
+              + ", ".join(f"{SHORT.get(sd, sd)} "
+                          f"{100 * (pair['by_subdomain'][sd]['delta'] or 0):+.1f}"
+                          for sd in subdomains))
+    print("  every pair declines in: " + (", ".join(sorted(declines)) or "no sub-domain"))
+    return 0
 
-for grp, off in zip(GROUP_ORDER, offsets):
-    vals = [group_means[grp][sd] for sd in sub_domains]
-    bars = ax.bar(
-        x + off, [v if v is not None else 0.0 for v in vals], bar_w,
-        color=GROUP_COLORS[grp],
-        alpha=0.88,
-        label=GROUP_LABELS[grp],
-        edgecolor="white",
-        linewidth=0.4,
-    )
-    # 수치 주석 (상단에, 작게). 값이 없는 서브도메인은 빈 막대가 아니라 "n/a"로 적는다.
-    for bar, val in zip(bars, vals):
-        ax.text(
-            bar.get_x() + bar.get_width() / 2,
-            bar.get_height() + 0.015,
-            f"{val:.2f}" if val is not None else "n/a",
-            ha="center", va="bottom",
-            rotation=90,
-            fontsize=6,
-            color="#1a1a1a",
-        )
 
-ax.set_xticks(x)
-ax.set_xticklabels(sd_labels, fontsize=7.5, rotation=0, ha="center")
-ax.set_ylabel("Tool hit $h$", fontsize=8)
-ax.set_ylim(0, 1.18)
-# 네모박스: 4면 spine 모두 표시 (fig:bfcl과 일치)
-ax.grid(True, alpha=0.3)
-ax.tick_params(axis="y", labelsize=7)
-# Rule 4: the cohort is on the figure, under the legend, so a caption cannot
-# claim 28 configurations while the bars average fewer.
-ax.text(0.0, 1.30, cohort_note, transform=ax.transAxes, fontsize=6,
-        color="#555555", ha="left", va="bottom")
-
-ax.legend(
-    fontsize=7.5,
-    loc="lower center",
-    bbox_to_anchor=(0.5, 1.0),
-    frameon=False,
-    ncol=n_grp,
-    handlelength=1.0,
-    handletextpad=0.4,
-    columnspacing=0.8,
-)
-
-fig.tight_layout()
-
-out_pdf = OUT_DIR / "fig_subdomain_grouped_bar.pdf"
-out_png = OUT_DIR / "fig_subdomain_grouped_bar.png"
-fig.savefig(out_pdf, dpi=300, bbox_inches="tight")
-fig.savefig(out_png, dpi=300, bbox_inches="tight")
-print(f"Saved: {out_pdf}")
-print(f"Saved: {out_png}")
-
-# 통계 출력
-print(f"\n{cohort_note}")
-if missing:
-    print("not scored: " + ", ".join(missing))
-print("\nGroup means per subdomain:")
-for sd in sub_domains:
-    row = "  " + SD_SHORT.get(sd, sd).replace("\n", " ") + ":"
-    for grp in GROUP_ORDER:
-        val = group_means[grp][sd]
-        row += f"  {GROUP_LABELS[grp]}={'n/a' if val is None else f'{val:.3f}'}"
-    print(row)
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -795,26 +795,78 @@
     "Regulatory Reporting": -0.0085
   },
   "base_comparison": {
-    "available": false,
-    "intended_pairs": {
-      "dragon-llama-fin": "meta-llama/Llama-3.1-8B-Instruct",
-      "dragon-qwen-fin": "Qwen/Qwen3-8B"
+    "available": true,
+    "pairs": {
+      "dragon-llama-fin": {
+        "base_config": "base-llama-3.1-8b",
+        "base_label": "Llama-3.1-8B-Instruct",
+        "base_model": "meta-llama/Llama-3.1-8B-Instruct",
+        "fine_label": "Llama-Open-Finance-8B",
+        "base_overall_h": 0.7011,
+        "fine_overall_h": 0.7353,
+        "by_subdomain": {
+          "Transaction Inquiry & Statistics": {
+            "base": 0.6074,
+            "fine": 0.6477,
+            "delta": 0.0403
+          },
+          "Suspicious Activity Detection": {
+            "base": 0.8159,
+            "fine": 0.9355,
+            "delta": 0.1196
+          },
+          "Money Flow & Network Analysis": {
+            "base": 0.7621,
+            "fine": 0.8387,
+            "delta": 0.0766
+          },
+          "Regulatory Reporting": {
+            "base": 0.932,
+            "fine": 0.7532,
+            "delta": -0.1788
+          }
+        },
+        "overall_delta": 0.0342
+      },
+      "dragon-qwen-fin": {
+        "base_config": "base-qwen3-8b",
+        "base_label": "Qwen3-8B",
+        "base_model": "Qwen/Qwen3-8B",
+        "fine_label": "Qwen-Open-Finance-R-8B",
+        "base_overall_h": 0.9261,
+        "fine_overall_h": 0.8426,
+        "by_subdomain": {
+          "Transaction Inquiry & Statistics": {
+            "base": 0.9154,
+            "fine": 0.7872,
+            "delta": -0.1282
+          },
+          "Suspicious Activity Detection": {
+            "base": 0.9632,
+            "fine": 0.9045,
+            "delta": -0.0587
+          },
+          "Money Flow & Network Analysis": {
+            "base": 0.9462,
+            "fine": 0.9083,
+            "delta": -0.0379
+          },
+          "Regulatory Reporting": {
+            "base": 0.9721,
+            "fine": 0.812,
+            "delta": -0.1601
+          }
+        },
+        "overall_delta": -0.0835
+      }
     },
-    "missing_bases": [
-      "Qwen/Qwen3-8B",
-      "meta-llama/Llama-3.1-8B-Instruct"
-    ],
-    "reason": "Neither base model is a configuration in the serving registry, so neither is part of the scored cohort. No stand-in is substituted: with a different 8B model in the base slot the result becomes a property of that model (Hermes-3-8B sits at regulatory h .3517 against .58-.70 for the other 8B models and would inflate the benefit of finance SFT).",
-    "finance_configs_in_registry": [
-      "dragon-llama-fin",
-      "dragon-qwen-fin"
+    "subdomains_where_every_pair_declines": [
+      "Regulatory Reporting"
     ],
     "finance_configs_scored": [
       "dragon-llama-fin",
       "dragon-qwen-fin"
-    ],
-    "finance_configs_not_scored": [],
-    "substitute_used": null
+    ]
   },
   "note": "A sub-domain value is the unweighted mean over its tools' category means, and a group value the unweighted mean over its configurations. positive diff = the Finance-Specialized group above the General-Purpose group. The base-vs-SFT comparison is not available; see base_comparison."
 }
