@@ -73,9 +73,11 @@ def main() -> int:
     ax.set_ylim(0, 1.12)
     ax.tick_params(axis="y", labelsize=5, pad=1.5)
     ax.tick_params(axis="x", length=0, pad=2)
-    ax.legend(fontsize=4.2, ncol=1, frameon=False, loc="lower left",
-              bbox_to_anchor=(-0.02, -0.34), handlelength=0.9,
-              labelspacing=0.18, borderpad=0.1, ncols=1)
+    # Four entries as two pairs: each row is one base-and-fine-tune pair, which is
+    # the comparison the bars make, and it costs half the vertical space.
+    ax.legend(fontsize=4.2, ncol=2, frameon=False, loc="lower left",
+              bbox_to_anchor=(-0.02, -0.28), handlelength=0.9,
+              labelspacing=0.18, columnspacing=0.6, borderpad=0.1)
     ax.text(0.99, 0.99, "shaded: both pairs decline", transform=ax.transAxes,
             ha="right", va="top", fontsize=4.2, color="#A0554F")
     style_axes(ax)
