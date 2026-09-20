@@ -13,7 +13,7 @@ single-turn tool calling.
 ## Key features
 
 - **1,258 expert-authored, cross-validated single-turn cases** over 23 tools and 3
-  difficulty levels (Easy 673 / Medium 412 / Hard 173).
+  difficulty levels (Easy 737 / Medium 283 / Hard 238).
 - **4 AML subdomains** derived from the reference platform (see below).
 - **50 multi-turn STR scenarios**, evaluated under both an **oracle** setting
   (ground-truth tool results injected each turn) and an **end-to-end (E2E)** setting
@@ -21,8 +21,11 @@ single-turn tool calling.
 - **Controlled bilingual evaluation**: query language (KR/EN) × tool-definition
   language (KR/EN), enabling a 2×2 decomposition of language effects.
 - **24 open-weight models (28 thinking/non-thinking configurations)** across families,
-  evaluated with native function calling, vLLM-served on NVIDIA H100 80GB GPUs
-  (OpenAI/Anthropic providers also supported).
+  evaluated with native function calling. Each configuration is served alone from a
+  pinned registry entry that fixes the model revision, chat template, tool-call
+  parser, reasoning mode, context window and output budget. Most are vLLM on NVIDIA
+  L40S 48 GB and 80 GB hosts; a few are served through a commercial gateway, and the
+  run records say which.
 - **Deterministic decoding** (temperature 0); case-level bootstrap (10,000 resamples)
   confirms stable rankings (Kendall τ = 0.936, 95% CI [0.900, 0.968]).
 
@@ -41,9 +44,9 @@ single-turn tool calling.
 
 | Difficulty | Call type | Category |
 |---|---|---|
-| Easy: 673 | Tool-required: 1,099 | Single-tool: 1,133 |
-| Medium: 412 | Abstain (irrelevant query): 159 | Multi-tool: 100 |
-| Hard: 173 | | Missing-parameter: 25 |
+| Easy: 737 | Tool-required: 1,024 | Single-tool: 1,089 |
+| Medium: 283 | Abstain (irrelevant or underspecified): 234 | Multi-tool: 125 |
+| Hard: 238 | | Missing-parameter: 44 |
 
 Difficulty reflects two independent factors: semantic ambiguity between
 similar-function tools, and information completeness of the query (missing-parameter
@@ -57,21 +60,32 @@ benchmarks_en/            — English-translated single-turn cases (1,258)
 benchmarks_multiturn/     — Multi-turn STR scenarios, Korean (50)
 benchmarks_multiturn_en/  — English multi-turn STR scenarios
 _experiments/
-  scripts/                — Evaluation engine (benchmark.py, benchmark_multiturn.py, run_master.sh)
-  results_kr/             — Single-turn results: KR queries, KR tool definitions (primary)
-  results_en/             — Single-turn results: EN queries, KR tool definitions
-  results_kr_tools_en/    — 2×2 ablation arm: KR queries, EN tool definitions
-  results_en_tools_en/    — 2×2 ablation arm: EN queries, EN tool definitions
-  results_mt_oracle/      — Multi-turn STR results: oracle tool-result injection (main setting)
-  results_mt_real/        — Multi-turn STR results: end-to-end execution (errors propagate)
+  scripts/
+    runner/               — Serving registry, request layer, run records (Contract 2)
+    scoring/              — Scorer: metric definitions, gold comparison, aggregates
+    analysis/             — One reader over the scored runs, and the manuscript tables
+    preflight/            — Six gates that must pass before a run
+    data_fixes/           — Benchmark linters and the regulatory terminology table
+    benchmark.py, benchmark_multiturn.py, run_master.sh — the runners
+    regenerate_analysis.py — rebuilds every table and figure from the scored runs
+  results_2026rerun/
+    single/ mt_oracle/ mt_e2e/        — run records, one JSON line per case or turn
+    single_entools_krq/ single_krtools_enq/ single_entools_enq/ — the 2x2 arms
+    baselines/                        — the two un-specialised bases, outside the cohort
+    eval/                             — scores, one directory per column and configuration
   results_RQ1 … results_RQ5/ — Per-research-question analysis outputs and figures
-  bfcl_results/           — BFCL runs for the general-vs-domain comparison
-  figures/                — Generated figures
-  MODELS.md               — Evaluated-model registry
+  results_manuscript/       — The paper's data tables, generated
+  bfcl_results/             — BFCL scores for the general-vs-domain comparison
+  figures/                  — Generated figures
 ```
 
-> The paper manuscript lives in a separate repository (`STAR-Bench-paper`). The
-> **executable AML tools** live in the companion platform repository,
+Every number in the paper is rebuilt from `results_2026rerun/` by
+`python -m _experiments.scripts.regenerate_analysis --all`. The run records are the
+primary artefact: each holds the raw response per round, the parsed calls with their
+arguments and whether the server or the text fallback produced them, the tool output,
+and the stop reason, so the scoring can be repeated without serving a model again.
+
+> The **executable AML tools** live in the companion platform repository,
 > `STAR-Bench-Web`, which is released alongside this one — this repository holds
 > the cases, the evaluator and the runners, and calls into that one rather than
 > keeping a second copy of the tool layer. See *Installation* below.
@@ -124,32 +138,36 @@ stack pinned in `requirements.txt`.
 
 Run from the repository root with `PYTHONPATH=.`:
 
+A run names a registry configuration rather than a model string, so the revision,
+template, parser, reasoning mode, context and budget come from one place and land in
+the record.
+
 ```bash
-# Single-turn, Korean (primary)
-PYTHONPATH=. python -m _experiments.scripts.benchmark \
-  --models Qwen/Qwen3-8B --output _experiments/results_kr/ --checkpoint --resume
+# Serve one configuration and run one column against it
+bash _experiments/scripts/run_benchmark.sh --config qwen35-27b-nt --gpu 0,1 \
+  --mode single --tools-lang kr --query-lang kr \
+  --out-root _experiments/results_2026rerun
 
-# Single-turn, English queries
-PYTHONPATH=. python -m _experiments.scripts.benchmark \
-  --models Qwen/Qwen3-8B --output _experiments/results_en/ \
-  --cases-dir benchmarks_en/ --checkpoint --resume
+# The 2x2 arms differ only in --tools-lang and --query-lang
+# The multi-turn columns are --mode oracle and --mode e2e
 
-# Multi-turn STR — oracle setting (main): ground-truth tool results injected each turn
-PYTHONPATH=. python -m _experiments.scripts.benchmark_multiturn \
-  --models Qwen/Qwen3-8B --setting oracle --output _experiments/results_mt_oracle/
+# Every configuration this host can serve
+python -m _experiments.scripts.runner.plan --host-gpus 2
 
-# Multi-turn STR — end-to-end setting: the model's own tool outputs propagate
-PYTHONPATH=. python -m _experiments.scripts.benchmark_multiturn \
-  --models Qwen/Qwen3-8B --setting real --output _experiments/results_mt_real/
+# Score afterwards, from the records
+python _experiments/scripts/scoring/score_runs.py \
+  --runs _experiments/results_2026rerun/single/qwen35-27b-nt \
+  --benchmark benchmarks --out _experiments/results_2026rerun/eval/single/qwen35-27b-nt
 
-# Full automation across modes (vLLM)
-bash _experiments/scripts/run_master.sh --server 1 --modes kr,en,mt
+# Rebuild every table and figure
+python -m _experiments.scripts.regenerate_analysis --all
 ```
 
-**Providers.** Native function calling for OpenAI (gpt-4o/5-mini family), Anthropic
-(Claude Haiku/Sonnet), and vLLM-served open-weight models. vLLM uses per-model
-tool-call parsers (with a custom plugin for Kanana); thinking models are split into
-`think` / `nothink` entries.
+**Providers.** Native function calling against a vLLM server, with a per-configuration
+tool-call parser and a custom plugin for Kanana. `benchmark_openrouter.py` runs the same
+column through a gateway for a model the host cannot serve, pinning the provider and the
+quantisation so the gateway cannot silently reroute; a gateway run is a different serving
+stack and the record says so. Thinking models are two configurations, not one.
 
 ### Before a run: the pre-flight gates
 
@@ -183,62 +201,76 @@ path against the mock server, without a GPU. `--report` writes the full report t
 
 ## Headline findings
 
-Full per-model tables, metrics, and statistics are in the paper and under
-`_experiments/results_*`; the analysis outputs behind each finding below are grouped
-under `results_RQ1`–`results_RQ5`.
+Every figure below is over the full 28-configuration cohort and is rebuilt by
+`regenerate_analysis --all`; the per-research-question outputs sit under
+`results_RQ1`–`results_RQ5`.
 
 | Model | Single-turn `h` | Multi-turn `h̄` | Completion `c` |
 |---|:---:|:---:|:---:|
-| Gemma-4-31B | .914 | .722 | .040 |
-| Qwen3.6-27B | .910 | .719 | .020 |
-| Mistral-Small-24B | .883 | .845 | .220 |
-| xLAM-2-70B | .828 | .812 | .160 |
-| Llama-3.3-70B | .808 | .798 | .060 |
-| Kanana-2-Think | .718 | .857 | .240 |
+| Gemma-4-31B | .966 | .904 | .66 |
+| Qwen3.6-27B | .943 | .840 | .40 |
+| Kanana-2-Think | .897 | .922 | .68 |
+| Mistral-Small-24B | .814 | .922 | .72 |
+| Llama-3.3-70B | .779 | .900 | .60 |
+| xLAM-2-70B | .695 | .849 | .46 |
 
-Representative models — single-turn tool hit `h`, multi-turn mean tool hit `h̄`, and
-scenario completion `c` (the full 28-configuration table is in the paper). Single-turn
-leaders (Gemma-4-31B, Qwen3.6-27B) rank near the bottom on multi-turn completion, while
-Kanana-2-Think inverts this, illustrating that single-turn skill does not imply workflow
-readiness. Reproduce with `bash _experiments/scripts/run_master.sh --server 1 --modes kr,mt`.
+- **Single-turn accuracy does not predict workflow completion.** Configurations
+  within six points of one another on single-turn tool hit, from .904 to .966,
+  complete between 36% and 66% of STR scenarios. The configuration that completes the
+  most, Mistral-Small-24B at .72, is 17th of 28 on single-turn tool hit. Turn-level
+  hit and completion agree almost exactly (ρ = 0.99), so the workflow axis is one
+  coherent thing that single-turn tool use does not reach.
 
-- **Tool operation.** Tool-hit accuracy does **not** scale monotonically
-  with model size: mid- and small-sized models (e.g., Mistral-Small-24B,
-  Ministral-3-3B) outperform larger ones (e.g., Llama-3.3-70B). Wrong-tool errors are
-  structured — concentrated on near-duplicate tools (e.g., account-profile vs
-  receiving-account-profile) — rather than random.
-- **Regulatory reportability gap.** The Regulatory Reporting subdomain is the **weakest**
-  (mean tool hit ≈ 0.56 vs. 0.77–0.84 for the other subdomains; an average gap of about
-  24.7 percentage points against ordinary analysis tools). The subdomain is the four
-  reporting tools — CTR-candidate detection, STR-field validation, FIU reference-type
-  lookup, and the AML glossary — averaged per tool over the 28-configuration cohort.
-  Its failures stem from **not engaging the regulatory tool**: STR-field validation
-  fails almost entirely by no-call,
-  CTR-candidate detection by wrong-tool fallback to a generic transaction query, and FIU
-  reference lookup by keyword-mapping errors (correct tool, wrong search keyword).
-- **Workflow readiness.** Single-turn skill does not transfer to multi-turn STR
-  completion, and multi-turn rankings differ substantially from single-turn rankings.
-  Even under the favorable **oracle** setting, the per-turn hit rate collapses by roughly
-  27 percentage points at the STR-writing/reporting turn; **end-to-end** execution
-  amplifies the errors further (mean scenario completion drops from .173 to .062).
-  Multi-turn completion correlates with context carry-over accuracy (Spearman ρ = 0.73).
-- **Bilingual robustness.** With tool definitions fixed in Korean, Korean queries
-  are generally stronger than English queries, but the magnitude varies substantially
-  across model families; switching tool definitions from Korean to English does not
-  consistently close the gap.
-- **Generalization gap.** General function-calling rank does **not** predict AML
-  tool use: among the 10 overlapping (BFCL top-ranked) models, the rank correlation is
-  weak and not significant (Spearman ρ = 0.333, p = 0.347). Model size and specialization
-  labels are likewise unreliable predictors; finance-oriented fine-tuning helps most in
-  the regulation- and detection-heavy subdomains.
+- **The workflow breaks at the reporting turn.** Under the oracle setting, which
+  injects the ground-truth call and its executed output after every turn, hit climbs
+  through the investigation turns (.739, .819, .871) and falls to .694 at the fourth,
+  where 28 of the 50 scenarios ask for the report. The drop survives a setting that
+  erases every earlier mistake.
+
+- **Reporting fails in a shape of its own, not at a higher rate.** Averaged over the
+  cohort the four Regulatory Reporting tools sit within a point and a half of the
+  analysis tools, and 13 of 28 configurations are worse on reporting. What differs is
+  the failure: across analysis tools 57% of failures are wrong-tool substitutions,
+  while STR-field validation fails by never calling the tool 90% of the time and the
+  AML glossary 96%. CTR-candidate detection falls back to a generic transaction query
+  in 49% of its failures. FIU reference lookup is selected correctly 93.3% of the time
+  and grounded correctly 59.8%, the widest such gap in the suite: the model reaches the
+  right tool and cannot convert Korean regulatory terminology into its argument.
+
+- **End-to-end execution costs parameter grounding, not tool selection.** Feeding the
+  agent its own tool outputs lowers mean turn-level hit by 4.2 points and completion by
+  2.2, while parameter accuracy falls further. Tool executions returned an error for
+  1.8% of calls, and all of it was caused by the model rather than the platform or the
+  data.
+
+- **Some models cannot emit a callable form.** Four configurations name the correct
+  tool in their answer text far more often than they produce a parseable call.
+  Phi-4-mini reports h = .120 while naming the gold tool in 639 of 1,099 cases, and
+  replaying those answers through every vLLM 0.20.1 parser recovers almost none of
+  them: the shapes are not any vendor's format. `unparsed_calls.py` reports this gap
+  per configuration.
+
+- **General function-calling rank does not predict AML tool use.** Over the 14
+  configurations that overlap with BFCL the rank correlation is weak and not
+  significant (Spearman ρ = 0.23, p = 0.43). xLAM-2-70B is second under BFCL and tenth
+  here; Qwen3.5-4B rises from fourth to second.
+
+- **Language alignment is a per-model question.** In the 2×2 over query language and
+  tool-definition language, the average effects are small, and the exceptions belong to
+  particular models: A.X-4.0 loses 4.5 points on English queries, while Llama-3.3-70B
+  is best when query and schema are both English.
 
 ## Evaluation metrics
 
-**Single-turn.** Tool hit `h` (correct primary tool selected; the primary metric),
-required-tool recall `r`, precision `p` (false-positive control), parameter accuracy
-`a` (key–value constraints on correctly selected tools), and order score `o` (LCS-based
-call-order consistency for multi-tool cases). Parser failures score zero; a correct
-abstention on an irrelevant or underspecified query counts as a successful refusal.
+**Single-turn.** Tool hit `h` (every gold tool is among the calls; the primary
+metric), required-tool recall `r`, precision `p`, parameter accuracy `a` (key-value
+constraints on correctly selected tools) and order score `o` (LCS-based call-order
+consistency for multi-tool cases). `p`, `a` and `o` are undefined rather than perfect
+where they do not apply: `p` for a case with no calls, `a` for a case with no
+parameter check, `o` for a case whose order is unconstrained. Every aggregate carries
+the count it was taken over. Parser failures score zero; a correct abstention on an
+irrelevant or underspecified query counts as a successful refusal, and requires an
+answer rather than merely the absence of a call.
 
 **Multi-turn STR.** Per-turn tool hit `h̄` and parameter accuracy `ā` (scenario-level
 means), and scenario completion rate `c` (fraction of scenarios in which every turn
@@ -253,6 +285,8 @@ terminology use, and unsupported-fact rate, combined into an overall score. Unde
 penalized setting, a scenario without an STR scores zero on every quality axis.
 
 ## Citation
+
+<!-- The anonymous mirror ships without this block. -->
 
 ```bibtex
 @misc{lim2026starbench,
