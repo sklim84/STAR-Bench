@@ -79,7 +79,7 @@ def test_the_environment_check_is_recorded_even_when_it_is_not_fatal(
 # ---------------------------------------------------------------------------
 
 def test_the_record_says_which_database_object_answered():
-    """C2-016: `collect()` read connection_info() before anything opened it."""
+    """`collect()` must not read connection_info() before anything has opened it."""
     arm = arms.load_arm("kr")
     record = provenance.collect(arm=arm, config={})
     database = record["database"]
@@ -99,7 +99,7 @@ def test_a_run_whose_database_never_opened_is_refused():
 
 
 def test_the_record_carries_the_hash_of_the_benchmark_files_it_read(tmp_path):
-    """C1-012: the eval file carried a data hash and the run record did not."""
+    """The hash belongs in the run record, not only in the eval file written later."""
     arm = arms.load_arm("kr")
     record = provenance.collect(arm=arm, config={}, cases_dir="benchmarks")
     assert record["benchmark_dir"] == "benchmarks"
@@ -121,7 +121,7 @@ def test_the_benchmark_hash_moves_when_a_case_file_changes(tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# What the working tree holds, read for gate 1 (V-10)
+# What the working tree holds, read for gate 1
 # ---------------------------------------------------------------------------
 
 @pytest.mark.parametrize("line,expected", [

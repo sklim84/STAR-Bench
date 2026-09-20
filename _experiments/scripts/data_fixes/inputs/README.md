@@ -1,22 +1,14 @@
-# Replay inputs
+# Build inputs
 
-The inputs a pass reads but does not derive. They live here, tracked, so that a clean
-clone can replay the whole correction round with
+The inputs a build step reads but does not derive. They are tracked here so that a clean
+clone can rebuild `benchmarks/` and `benchmarks_en/` without reaching outside the
+repository.
 
-```bash
-python -m _experiments.scripts.data_fixes.run_all --from 574c077
-```
+| file | what it is |
+|---|---|
+| `fix_table_data.json` | The per-case table of the question and gold values that are pinned by hand rather than derived from HOFINET (296 cases). Each entry records both the value the data is expected to carry and the value the table pins, so a build step that applies it stops when the tree in front of it is not the tree the table was written for, instead of rewriting a value that is already correct. |
 
-and reproduce `benchmarks/` and `benchmarks_en/` byte for byte. Before 2026-09-16 the
-fix table sat in `_experiments/dataset_fix_20260915/`, which is internal audit material
-and is gitignored, so the replay only worked on a machine that happened to still carry
-that directory.
-
-| file | read by | what it is |
-|---|---|---|
-| `fix_table_data.json` | `p01_apply_v3` | the approved single-turn fix table v3: per case the as-is question and gold and the approved to-be values (296 cases). The pass refuses to run when an as-is value no longer matches the data. |
-
-Nothing else in `data_fixes/` reads outside the repository. `account_map.json`,
-`new_cases/new_cases.json` and `new_cases/grounding.json` are next to the passes that
-replay them, and the multi-turn build derives everything from `multiturn/scenarios*.py`
-and the HOFINET database.
+Nothing else here reads outside the repository. `account_map.json`,
+`new_cases/new_cases.json` and `new_cases/grounding.json` sit next to the code that reads
+them, and the multi-turn data is derived from `multiturn/scenarios*.py` and the HOFINET
+database.

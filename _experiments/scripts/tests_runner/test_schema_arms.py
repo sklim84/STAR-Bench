@@ -1,4 +1,4 @@
-"""The two schema arms differ in prose and in nothing else (D16, D13, C2-006)."""
+"""The two schema arms differ in prose and in nothing else."""
 
 from __future__ import annotations
 
@@ -85,7 +85,7 @@ def test_the_korean_query_tool_describes_english_columns(both):
 
 
 # The Korean labels mirror monitoring.RULE_NAMES, so the label the model reads is
-# the one the tool returns in `rule_name` and the one the questions use (L1-008).
+# the one the tool returns in `rule_name` and the one the questions use.
 RULE_LABELS = {
     "R001": ("Nighttime Bulk Transactions", "심야 대량 거래"),
     "R002": ("Same-Day Rapid-Fire Transactions", "당일 단기 다발 거래"),

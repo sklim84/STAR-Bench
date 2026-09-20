@@ -1,9 +1,7 @@
 """The manuscript's data tables, written from the scored runs.
 
-The four tables that carry numbers were maintained by hand: someone read a
-figure off an analysis output and typed it into `table/*.tex`. Nothing checked
-that the two agreed, and the 2026-09 audit found the tables holding values from
-a cohort that no longer existed. These are the same tables, generated.
+The four tables that carry numbers are generated rather than transcribed, so a
+value in the paper and the value in the runs cannot disagree.
 
     python -m _experiments.scripts.analysis.manuscript_tables
     python -m _experiments.scripts.analysis.manuscript_tables --out <dir>

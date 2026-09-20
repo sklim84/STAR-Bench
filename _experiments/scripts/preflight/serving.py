@@ -1,21 +1,20 @@
 """Gate 5: could every configuration actually be served and fit its prompt?
 
 No GPU is touched. Everything here is a property of the registry, the templates
-and the Korean arm, and every one of them was a real 2026 failure: Phi-4-mini was
-registered at 12,288 tokens, which left the Korean prompt about 100 tokens of
-headroom and scored its 866 tool cases as model failures (C2-001); the
-orchestrator pinned every two-card model to devices 0 and 1 whatever lane asked
-(L5-017); two rows of the multi-turn table were the same configuration run twice
-(C2-012).
+and the Korean arm, and every one of them has been a real failure: Phi-4-mini
+registered at 12,288 tokens left the Korean prompt about 100 tokens of headroom
+and scored its 866 tool cases as model failures; the orchestrator pinned every
+two-card model to devices 0 and 1 whatever lane asked; two rows of the
+multi-turn table were the same configuration run twice.
 
-`run_plan.json` is the list of configurations the rerun covers. The gate fails
-when the registry and the plan disagree in either direction, so a configuration
-cannot quietly leave the table.
+`run_plan.json` is the list of configurations the evaluation covers. The gate
+fails when the registry and the plan disagree in either direction, so a
+configuration cannot quietly leave the table.
 
-It also carries the one deliberate deviation from a final decision: D07 says
-concurrency 1 and the registry runs 8. The deviation is allowed only while the
-plan says what measures it, so the gate fails when the registry default is not
-the decision value and the plan holds no batching-agreement run.
+It also carries the one deliberate deviation from the pinned serving settings:
+the pinned concurrency is 1 and the registry runs 8. The deviation is allowed
+only while the plan says what measures it, so the gate fails when the registry
+default is not the pinned value and the plan holds no batching-agreement run.
 """
 
 from __future__ import annotations
@@ -90,11 +89,11 @@ def _plan_matches_registry(registry, plan: dict) -> Check:
 
 
 def _concurrency_deviation(registry, plan: dict) -> Check:
-    """A default that is not D07's 1 has to be declared and measured, not silent."""
+    """A default other than the pinned 1 has to be declared and measured, not silent."""
     block = plan.get("concurrency")
     if not isinstance(block, dict):
         return Check("the concurrency deviation is declared and measured", False,
-                     "run_plan.json has no `concurrency` block; D07 pins concurrency 1 and "
+                     "run_plan.json has no `concurrency` block; concurrency is pinned at 1 and "
                      f"the registry default is {registry.CONCURRENCY}")
     default = registry.CONCURRENCY
     decision = block.get("decision_value")
@@ -121,11 +120,11 @@ def _concurrency_deviation(registry, plan: dict) -> Check:
         if len({r.get("label") for r in runs}) != len(runs):
             problems.append("the batching-agreement runs do not have distinct labels")
     detail = "; ".join(problems) if problems else (
-        f"concurrency {default} (D07 says {decision}), measured by {run.get('config_id')} "
+        f"concurrency {default} (the plan declares {decision}), measured by {run.get('config_id')} "
         f"{run.get('column')} run " + " and ".join(
             f"{sum(1 for r in run.get('runs', []) if r.get('concurrency') == n)}x at {n}"
             for n in sorted({r.get("concurrency") for r in run.get("runs", [])}, reverse=True))
-        if default != decision else f"concurrency {default}, which is what D07 asks for")
+        if default != decision else f"concurrency {default}, which is the declared value")
     return Check("the concurrency deviation is declared and measured", not problems, detail,
                  "bash _experiments/scripts/run_master.sh --agreement-only --host-gpus 2 "
                  "--tools-lang kr --out-root <fresh dir>",
@@ -147,7 +146,7 @@ def _registry_complete(registry) -> Check:
         window = cfg.model_window
         if cfg.max_model_len < MIN_CONTEXT and not (window and window < MIN_CONTEXT):
             problems.append(f"{where}: context {cfg.max_model_len} is below the {MIN_CONTEXT} "
-                            f"every configuration gets (D07), and model_window does not "
+                            f"every configuration gets, and model_window does not "
                             f"say the model stops there")
         if window and cfg.max_model_len > window:
             problems.append(f"{where}: context {cfg.max_model_len} is above the model's own "
@@ -158,7 +157,7 @@ def _registry_complete(registry) -> Check:
         tight = bool(window and window < MIN_CONTEXT)
         if cfg.is_reasoning and cfg.max_tokens < REASONING_BUDGET and not tight:
             problems.append(f"{where}: reasoning configuration with a {cfg.max_tokens}-token "
-                            f"output budget, expected {REASONING_BUDGET} (D05, L5-006)")
+                            f"output budget, expected {REASONING_BUDGET}")
         if cfg.reasoning_control == "reasoning_effort" and cfg.reasoning_mode not in (
                 "effort_high", "effort_low"):
             problems.append(f"{where}: reasoning_effort control with mode {cfg.reasoning_mode!r}")
@@ -173,7 +172,7 @@ def _registry_complete(registry) -> Check:
         key = (cfg.model, cfg.reasoning_mode)
         if key in pairs:
             problems.append(f"{cfg.config_id} and {pairs[key]} are the same model in the same "
-                            f"mode, which is how the 2026 table got two identical rows (C2-012)")
+                            f"mode, so the table would carry the same run twice")
         pairs[key] = cfg.config_id
     return Check("every registry entry is complete and distinct", not problems,
                  "; ".join(problems[:5]) if problems
@@ -183,9 +182,9 @@ def _registry_complete(registry) -> Check:
 
 
 def _template_hashes(ctx: Context, registry) -> Check:
-    """A repaired template is only reproducible if its hash is published (D21).
+    """A repaired template is only reproducible if its hash is published.
 
-    The check is on the templates the rerun actually serves: each file exists and
+    The check is on the templates the run actually serves: each file exists and
     its sha256 is one of the published values. `hashes.json` names a vendor
     template by a shortened path, so the file is resolved by name rather than by
     the key being a path that opens.
@@ -229,7 +228,7 @@ def _template_hashes(ctx: Context, registry) -> Check:
 
 
 def _host_profiles(registry, plan: dict) -> Check:
-    """Every configuration has to fit one of the hosts the rerun actually has."""
+    """Every configuration has to fit one of the hosts the evaluation actually has."""
     from _experiments.scripts.runner import plan as plan_module
 
     hosts = plan["hosts"]
@@ -253,7 +252,7 @@ def _host_profiles(registry, plan: dict) -> Check:
         if not covered:
             problems.append(f"{host['name']} can serve nothing")
         host["unservable"] = unservable
-    return Check("every configuration fits a host the rerun has", not problems,
+    return Check("every configuration fits an available host", not problems,
                  "; ".join(problems[:4]) if problems
                  else "; ".join(f"{h['name']}: {len(registry.CONFIGS) - len(h['unservable'])}"
                                 f"/{len(registry.CONFIGS)} configurations" for h in hosts),
@@ -262,7 +261,7 @@ def _host_profiles(registry, plan: dict) -> Check:
 
 
 def _prompt_budget(ctx: Context) -> Check:
-    """The Korean arm is the longest prompt, and it is the arm every column runs (D17)."""
+    """The Korean arm is the longest prompt, and it is the arm every column runs."""
     done = run_command([ctx.python, "-m", "_experiments.scripts.preflight._budget_driver"],
                        cwd=ctx.root, env=ctx.env, timeout=ctx.timeout_s)
     try:

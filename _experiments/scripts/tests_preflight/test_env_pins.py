@@ -74,7 +74,7 @@ def test_a_pin_that_disagrees_with_the_platform_file_is_named(monkeypatch, capsy
 
 
 # ---------------------------------------------------------------------------
-# L5-021: a tracked script must not carry this checkout's path
+# A tracked script must not carry this checkout's path
 # ---------------------------------------------------------------------------
 
 def test_no_tracked_script_embeds_a_checkout_path():
@@ -102,13 +102,13 @@ def test_no_tracked_script_embeds_a_checkout_path():
 
 
 # The three directories where a machine's own paths are the record: two remote
-# hosts the round was run on, and the superseded launchers.
+# hosts the experiments were served on, and the superseded launchers.
 _HOST_PATH_DIRS = ("_experiments/scripts/archive/", "_experiments/scripts/e2e_rerun/",
                    "_experiments/scripts/goldfix_remote/")
 
 
 def test_only_the_archived_and_remote_scripts_carry_another_machines_home_path():
-    """run_rerun_all.sh sat at the top of scripts/ with a serving host's cache paths (V-07)."""
+    """run_rerun_all.sh sat at the top of scripts/ with a serving host's cache paths."""
     import re
     import subprocess
     from pathlib import Path

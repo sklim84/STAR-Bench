@@ -7,10 +7,9 @@
         --results-root _experiments/runs
     python -m _experiments.scripts.regenerate_analysis --copy-to-manuscript ../STAR-Bench-manu/figures
 
-There was no such entry point (R2C-005). Regenerating the analysis meant
-remembering which of some thirty scripts to run and in which order, and four of
-them were superseded and silently overwrote the manuscript's figures under the
-same names; those now live in `archive/` and are not listed here.
+The steps below are the whole analysis, in the order the paper reads them, so
+regenerating a number does not depend on knowing which script to run and when.
+A script that is not a step here produces nothing the manuscript reads.
 
 Every step names what it produces and which manuscript object reads it, so a
 number in the paper can be traced to the script that made it and the results
@@ -99,7 +98,7 @@ STEPS: tuple[Step, ...] = (
          inputs=("_experiments/runs/eval/mt_oracle", "_experiments/runs/eval/mt_e2e"),
          outputs=("_experiments/results_RQ3/oracle_vs_real.csv",)),
     Step("e2e_error_rates", "e2e_error_rates",
-         "the end-to-end error and empty-result rates by cause (appendix caption, L3-001)",
+         "the end-to-end error and empty-result rates by cause (appendix caption)",
          inputs=("_experiments/runs/mt_e2e",),
          outputs=("_experiments/results_RQ3/e2e_error_rates.json",
                   "_experiments/results_RQ3/e2e_error_rates.md"),

@@ -83,7 +83,7 @@ def test_multiturn_records_are_grouped_by_scenario_and_turn(tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# The records say which benchmark they were run on; the scorer checks it (V-04)
+# The records say which benchmark they were run on; the scorer checks it
 #
 # Scoring the Korean run against benchmarks_en succeeded silently and wrote an
 # eval whose provenance hash and whose gold came from different data.
@@ -108,7 +108,7 @@ def _run_dir(tmp_path, rows, name="runs"):
 
 
 def _records(bench_dir, *, sha=None, case_ids=("c1", "c2")):
-    """Records carrying the Contract 2 benchmark digest, as the runner writes it."""
+    """Records carrying the benchmark digest, as the runner writes it."""
     digest = sha if sha is not None else load_benchmark(bench_dir).sha256
     rows = []
     for case_id in case_ids:
@@ -172,7 +172,7 @@ def test_the_override_flag_scores_and_records_both_hashes(tmp_path):
 
 
 def test_records_without_the_digest_are_scored_with_a_warning(tmp_path, capsys):
-    """Records from before C1-012 carry no hash; there is nothing to compare."""
+    """Records written before the digest existed carry no hash; there is nothing to compare."""
     bench = _bench(tmp_path)
     runs = _run_dir(tmp_path, [record([], case_id="c1", run_id="model_a"),
                                record([], case_id="c2", run_id="model_a")])

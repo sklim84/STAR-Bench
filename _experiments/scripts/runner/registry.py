@@ -2,13 +2,13 @@
 
 A row of the main table is one entry here, and nothing else decides how that row
 is served: model id and pinned revision, tokenizer/chat template with its hash,
-tool-call parser, reasoning parser and the single labelled reasoning mode (D05),
+tool-call parser, reasoning parser and the single labelled reasoning mode,
 context length, output budget, temperature, seed, concurrency and tensor-parallel
-size (D07). The shell launcher asks this module for the vLLM arguments, so a
-configuration cannot differ between the launcher and the record (L5-017, R1-R3).
+size. The shell launcher asks this module for the vLLM arguments, so a
+configuration cannot differ between the launcher and the record.
 Concurrency is the one field a run may override, and the override is recorded.
 
-Sizing targets the rerun hardware: hosts with 2 or 4 NVIDIA L40S 48 GB cards,
+Sizing targets the serving hardware: hosts with 2 or 4 NVIDIA L40S 48 GB cards,
 plus on-demand hosts with 80 GB cards. `tp` is the 48 GB plan and `tp_80g` the
 80 GB one; `needs_four_gpu_host` marks the four entries that do not fit on a
 two-card host. The 70B-class weights are 140 GB in bf16, which two 80 GB cards
@@ -18,16 +18,19 @@ either host (measured, not sized on paper).
 `max_model_len_e2e` is the cohort's 65536 only where the model's own window
 reaches it. Kanana-2 stops at 32768 and Qwen-Open-Finance-R at 40960, so those
 entries carry their own value and the appendix reports the e2e window per row.
-A.X-4.0-Light stops at 16384, below L5-012's single context, so it is the one
-entry that also carries its own base window and output budget.
+A.X-4.0-Light stops at 16384, below the single-turn context every other entry
+gets, so it is the one entry that also carries its own base window and output
+budget.
 
-Decisions carried here: D05 (one labelled mode per model; T/NT only for Qwen3.5
-`enable_thinking` and gpt-oss `reasoning_effort` high/low), D07 (one stack,
-concurrency 1, >= 32k context), D21 (vendor formats, repaired templates),
-C2-001 (Phi-4-mini back to 32768), L5-006 (16k output for reasoning configs),
-L5-010 (Qwen3-8B family on hermes), L5-008 (Kanana-2-Think on its own template
-with a reasoning parser), L5-009 (Qwen3.6 with a reasoning parser and an
-explicit mode), L5-012 (one context budget), L5-025 (Mistral vendor format).
+What the table holds to: each model gets one labelled reasoning mode, with T/NT
+pairs only for Qwen3.5 `enable_thinking` and gpt-oss `reasoning_effort`
+high/low; every configuration is served on one stack at concurrency 1 with at
+least a 32k context; tool calls use the vendor's own format, with a repaired
+template where the released one is broken. Phi-4-mini is served at 32768,
+reasoning configurations get a 16k output budget, the Qwen3-8B family is served
+on the hermes parser, Kanana-2-Think on its own template with a reasoning
+parser, Qwen3.6 with a reasoning parser and an explicit mode, and Mistral on the
+vendor format.
 """
 
 from __future__ import annotations
@@ -51,14 +54,14 @@ KANANA_TEMPLATE = "kanana_tool_calls/kanana_tool_calls/lmalign_v1.jinja"
 SEED = 20260925
 TEMPERATURE = 0.0
 # Cases in flight per configuration. The tool layer is thread-safe (per-call
-# DuckDB cursors), so the benchmark runs several cases at once; the rerun does
-# not fit its deadline one request at a time. `--concurrency` overrides it, and
-# the value actually used is what goes into the record and the manifest.
+# DuckDB cursors), so the benchmark runs several cases at once; a full sweep
+# does not fit its deadline one request at a time. `--concurrency` overrides it,
+# and the value actually used is what goes into the record and the manifest.
 CONCURRENCY = 8
-CONTEXT = 32768          # D07: every configuration gets at least 32k
-CONTEXT_E2E = 65536      # L5-012: the end-to-end setting reads more tool output
+CONTEXT = 32768          # every configuration gets at least 32k
+CONTEXT_E2E = 65536      # the end-to-end setting reads more tool output
 BUDGET_PLAIN = 8192
-BUDGET_REASONING = 16384  # D05, L5-006
+BUDGET_REASONING = 16384  # a labelled reasoning mode needs room to think and still answer
 
 # How the labelled reasoning mode is sent to the server.
 #   none               the model has no reasoning mode
@@ -119,7 +122,7 @@ class ServingConfig:
     extra_args: tuple[str, ...] = ()
     tool_parser_plugin: str | None = None
     # Templates trained on one call per assistant turn. The runner sends parallel
-    # calls as consecutive single-call turns for these (D21, L5-005).
+    # calls as consecutive single-call turns for these.
     serialize_parallel_calls: bool = False
     needs_four_gpu_host: bool = False
     smoke_required: str | None = None     # what a GPU smoke test must confirm
@@ -140,7 +143,7 @@ class ServingConfig:
 
     @property
     def reasoning_history_key(self) -> str | None:
-        """Key the chat template reads a previous turn's reasoning back from (C2-004)."""
+        """Key the chat template reads a previous turn's reasoning back from."""
         return "reasoning_content" if self.reasoning_parser else None
 
     @property
@@ -158,7 +161,7 @@ def _cfg(**kw) -> ServingConfig:
 
 
 # ---------------------------------------------------------------------------
-# The 28 main-table configurations (D07). Order follows the manuscript table.
+# The 28 main-table configurations. Order follows the manuscript table.
 # ---------------------------------------------------------------------------
 
 CONFIGS: tuple[ServingConfig, ...] = (
@@ -167,8 +170,8 @@ CONFIGS: tuple[ServingConfig, ...] = (
          group="Korean-Specialized", parser="hermes", tp=1, tp_80g=1,
          model_window=16384, max_model_len=16384, max_tokens=3072,
          max_model_len_e2e=16384,
-         notes="the only entry under D07's 32768, because the model stops at 16384 "
-               "and the 2026-09 round served it there too. Its own tokenizer puts "
+         notes="the only entry under the cohort's 32768, because the model's own "
+               "window stops at 16384. Its own tokenizer puts "
                "the Korean system prompt and 23 tool schemas at 6177 tokens and the "
                "longest question at 334, so 3072 of output still leaves 6801 for "
                "tool results. 3072 covers the 99th percentile of what the same "
@@ -183,12 +186,12 @@ CONFIGS: tuple[ServingConfig, ...] = (
          group="Korean-Specialized", parser="hermes", tp=1, tp_80g=1,
          reasoning_mode="nothink", reasoning_control="chat_template_kwargs",
          extra_args=("--trust-remote-code",), max_model_len_e2e=CONTEXT_E2E,
-         notes="hybrid reasoning model; D05 gives it one labelled mode, thinking off"),
+         notes="hybrid reasoning model; it gets one labelled mode, thinking off"),
     _cfg(config_id="exaone-32b", label="EXAONE-4.0-32B", model="LGAI-EXAONE/EXAONE-4.0-32B",
          group="Korean-Specialized", parser="hermes", tp=2, tp_80g=1,
          reasoning_mode="nothink", reasoning_control="chat_template_kwargs",
          extra_args=("--trust-remote-code",), max_model_len_e2e=CONTEXT_E2E,
-         notes="hybrid reasoning model; D05 gives it one labelled mode, thinking off"),
+         notes="hybrid reasoning model; it gets one labelled mode, thinking off"),
     _cfg(config_id="kanana-2-inst", label="Kanana-2-Instruct",
          model="kakaocorp/kanana-2-30b-a3b-instruct", group="Korean-Specialized",
          parser="functionary_kanana", tp=2, tp_80g=1,
@@ -202,7 +205,7 @@ CONFIGS: tuple[ServingConfig, ...] = (
          max_tokens=BUDGET_REASONING,
          model_window=32768, max_model_len_e2e=32768,
          smoke_required="reasoning tokens appear and tool calls survive the reasoning parser",
-         notes="L5-008: served on its own template (the model's, not the instruct "
+         notes="served on its own template (the model's, not the instruct "
                "functionary one) with a reasoning parser"),
     # -- Finance-specialised ----------------------------------------------
     _cfg(config_id="dragon-llama-fin", label="Llama-Open-Finance-8B",
@@ -215,8 +218,8 @@ CONFIGS: tuple[ServingConfig, ...] = (
          reasoning_control="always_on", reasoning_parser="qwen3",
          max_tokens=BUDGET_REASONING, model_window=40960, max_model_len_e2e=40960,
          smoke_required="native tool calls, not the fallback parser",
-         notes="L5-010: the template emits Hermes <tool_call> JSON, so qwen3_xml "
-               "never matched and every call came from the text fallback"),
+         notes="the template emits Hermes <tool_call> JSON, so qwen3_xml "
+               "never matches and every call would come from the text fallback"),
     # -- General purpose ---------------------------------------------------
     _cfg(config_id="gpt-oss-20b-nt", label="gpt-oss-20B (NT)", model="openai/gpt-oss-20b",
          group="General-Purpose", parser="openai", tp=1, tp_80g=1,
@@ -244,7 +247,7 @@ CONFIGS: tuple[ServingConfig, ...] = (
          group="General-Purpose", parser="llama3_json", tp=1, tp_80g=1,
          chat_template="llama3_tools.jinja", serialize_parallel_calls=True,
          max_model_len_e2e=CONTEXT_E2E,
-         notes="C2-007, L5-005: repaired template, and the runner serialises parallel calls"),
+         notes="repaired template, and the runner serialises parallel calls"),
     _cfg(config_id="llama-3.3-70b", label="Llama-3.3-70B", model="meta-llama/Llama-3.3-70B-Instruct",
          group="General-Purpose", parser="llama3_json", tp=4, tp_80g=4,
          chat_template="llama3_tools.jinja", serialize_parallel_calls=True,
@@ -259,24 +262,24 @@ CONFIGS: tuple[ServingConfig, ...] = (
          extra_args=("--tokenizer-mode", "mistral", "--config-format", "mistral",
                      "--load-format", "mistral"),
          max_model_len_e2e=CONTEXT_E2E,
-         notes="L5-025: vendor tokenizer/config/load format, which also fixes the "
+         notes="vendor tokenizer/config/load format, which also satisfies the "
                "9-character tool_call_id rule"),
     _cfg(config_id="mistral-small", label="Mistral-Small-24B",
          model="mistralai/Mistral-Small-3.2-24B-Instruct-2506", group="General-Purpose",
          parser="mistral", tp=2, tp_80g=1,
          extra_args=("--tokenizer-mode", "mistral", "--config-format", "mistral",
                      "--load-format", "mistral"),
-         max_model_len_e2e=CONTEXT_E2E, notes="L5-025: vendor format"),
+         max_model_len_e2e=CONTEXT_E2E, notes="vendor format"),
     _cfg(config_id="phi-4-mini", label="Phi-4-mini", model="microsoft/Phi-4-mini-instruct",
          group="General-Purpose", parser="phi4_mini_json", tp=1, tp_80g=1,
          chat_template="phi4_mini_tools.jinja", max_model_len_e2e=CONTEXT_E2E,
-         notes="C2-001: back to 32768; C2-018: repaired template"),
+         notes="32768 context, which the model's window allows; repaired template"),
     _cfg(config_id="qwen35-4b-nt", label="Qwen3.5-4B (NT)", model="Qwen/Qwen3.5-4B",
          group="General-Purpose", parser="qwen3_coder", tp=1, tp_80g=1,
          reasoning_mode="nothink", reasoning_control="chat_template_kwargs",
          reasoning_parser="qwen3", max_tokens=BUDGET_REASONING, max_model_len_e2e=CONTEXT_E2E,
          notes="the NT half of the pair keeps the T half's output budget, so the two "
-               "rows differ in the mode and not in the budget (L5-006)"),
+               "rows differ in the mode and not in the budget"),
     _cfg(config_id="qwen35-4b-t", label="Qwen3.5-4B (T)", model="Qwen/Qwen3.5-4B",
          group="General-Purpose", parser="qwen3_coder", tp=1, tp_80g=1,
          reasoning_mode="think", reasoning_control="chat_template_kwargs",
@@ -285,7 +288,7 @@ CONFIGS: tuple[ServingConfig, ...] = (
          group="General-Purpose", parser="qwen3_coder", tp=2, tp_80g=1,
          reasoning_mode="nothink", reasoning_control="chat_template_kwargs",
          reasoning_parser="qwen3", max_tokens=BUDGET_REASONING, max_model_len_e2e=CONTEXT_E2E,
-         notes="the NT half of the pair keeps the T half's output budget (L5-006)"),
+         notes="the NT half of the pair keeps the T half's output budget"),
     _cfg(config_id="qwen35-27b-t", label="Qwen3.5-27B (T)", model="Qwen/Qwen3.5-27B",
          group="General-Purpose", parser="qwen3_coder", tp=2, tp_80g=1,
          reasoning_mode="think", reasoning_control="chat_template_kwargs",
@@ -294,12 +297,12 @@ CONFIGS: tuple[ServingConfig, ...] = (
          group="General-Purpose", parser="qwen3_xml", tp=2, tp_80g=1,
          reasoning_mode="think", reasoning_control="chat_template_kwargs",
          reasoning_parser="qwen3", max_tokens=BUDGET_REASONING, max_model_len_e2e=CONTEXT_E2E,
-         notes="L5-009: reasoning parser added and the mode is labelled, not implicit"),
+         notes="reasoning parser, and the mode is labelled rather than implicit"),
     _cfg(config_id="qwen36-35b-a3b", label="Qwen3.6-35B-A3B", model="Qwen/Qwen3.6-35B-A3B",
          group="General-Purpose", parser="qwen3_xml", tp=2, tp_80g=1,
          reasoning_mode="think", reasoning_control="chat_template_kwargs",
          reasoning_parser="qwen3", max_tokens=BUDGET_REASONING, max_model_len_e2e=CONTEXT_E2E,
-         notes="L5-009"),
+         notes="reasoning parser, and the mode is labelled rather than implicit"),
     _cfg(config_id="xlam-3b", label="xLAM-2-3B", model="Salesforce/xLAM-2-3b-fc-r",
          group="General-Purpose", parser="xlam", tp=1, tp_80g=1,
          max_model_len_e2e=CONTEXT),
@@ -310,12 +313,12 @@ CONFIGS: tuple[ServingConfig, ...] = (
          group="General-Purpose", parser="gemma4", tp=1, tp_80g=1,
          reasoning_mode="nothink", reasoning_control="chat_template_kwargs",
          max_model_len_e2e=CONTEXT_E2E,
-         notes="toggle model; D05 gives it one labelled mode, thinking off"),
+         notes="toggle model; it gets one labelled mode, thinking off"),
     _cfg(config_id="gemma-4-31b", label="Gemma-4-31B", model="google/gemma-4-31B-it",
          group="General-Purpose", parser="gemma4", tp=2, tp_80g=1,
          reasoning_mode="nothink", reasoning_control="chat_template_kwargs",
          gpu_memory_utilization=0.92, max_model_len_e2e=CONTEXT_E2E,
-         notes="toggle model; D05 gives it one labelled mode, thinking off"),
+         notes="toggle model; it gets one labelled mode, thinking off"),
 )
 
 _BY_ID = {c.config_id: c for c in CONFIGS}
@@ -344,7 +347,7 @@ def vllm_args(cfg: ServingConfig, *, setting: str = "single", port: int = 11434,
     if revision is None and require_revision:
         raise UnpinnedRevision(
             f"{cfg.config_id}: no snapshot revision pinned for {cfg.model}. Add it to "
-            f"{REVISIONS_PATH.name} (R2C-003) or pass --allow-unpinned-revision for a smoke run.")
+            f"{REVISIONS_PATH.name} or pass --allow-unpinned-revision for a smoke run.")
     args = ["--model", cfg.model, "--port", str(port),
             "--max-model-len", str(cfg.context_for(setting)),
             "--gpu-memory-utilization", str(cfg.gpu_memory_utilization),

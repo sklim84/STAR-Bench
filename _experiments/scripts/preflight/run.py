@@ -1,4 +1,4 @@
-"""One command that runs every pre-flight gate before the rerun (L5-003).
+"""One command that runs every pre-flight gate before a benchmark run.
 
     python -m _experiments.scripts.preflight.run --all
     python -m _experiments.scripts.preflight.run --all --report
@@ -9,7 +9,8 @@
 Gates run in dependency order and all of them run even when an early one fails,
 because the point is one report rather than one error at a time. The exit status
 is non-zero if any gate failed. Nothing here repairs anything: a gate that fails
-names the file and the id, and the stream that owns it fixes it.
+names the file and the id, and the fix belongs with the code or the data that
+owns it.
 
 Gate 6 (the canary) needs a served model, so it is a subcommand and not part of
 `--all`; `--mock` runs it against the mock OpenAI server for testing.

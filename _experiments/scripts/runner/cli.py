@@ -2,9 +2,10 @@
 
 The two runners take the same options with the same meaning and the same
 defaults, so a run command that is right for one is right for the other. The
-schema arm has no default that depends on the runner: `--tools-lang` is required,
-because the pre-audit default was documented as Korean and was in fact the
-English platform schema (C2-015).
+schema arm has no default that depends on the runner: `--tools-lang` is
+required, because an arm chosen by default is invisible in the command that
+produced the records, and a column served on the English platform schema but
+documented as Korean cannot be told apart afterwards.
 """
 
 from __future__ import annotations
@@ -130,8 +131,8 @@ def _case_filter(args) -> set[str] | None:
     if not args.partial:
         raise SystemExit(
             "--case-ids/--case-ids-file selects a subset, so the run must be marked --partial. "
-            "A subset written into a full eval file is what produced the eval files with "
-            "total_cases = 0 (C2-014).")
+            "A subset written into a full eval file is what produces an eval file with "
+            "total_cases = 0.")
     return ids
 
 
@@ -163,12 +164,12 @@ def resolve(args, *, cases: list[dict], setting: str, query_lang_default: str,
         if serving.revision is None and not args.allow_unpinned_revision and not gateway:
             raise SystemExit(
                 f"{serving.config_id}: no snapshot revision is pinned for {serving.model}. Fill "
-                f"_experiments/scripts/model_revisions.json (R2C-003) or pass "
+                f"_experiments/scripts/model_revisions.json or pass "
                 f"--allow-unpinned-revision for a smoke run.")
         if gateway and serving.revision is None:
             # A gateway serves weights we do not hold, so there is no snapshot to pin.
             # The identity of the run is the pinned provider plus the model the gateway
-            # reports per round, both of which the record carries (L5-014).
+            # reports per round, both of which the record carries.
             print(f"{serving.config_id}: served by a gateway as {args.served_model_name}; "
                   "the pinned provider stands in for the snapshot revision")
         config = registry.config_block(serving, setting=setting, engine=engine)
@@ -244,7 +245,7 @@ def select_cases(cases: list[dict], args, *, keys, out_dir: Path, setup: RunSetu
 
     `setup` is what makes `--resume` an arm check rather than a case-id check: a
     directory whose records were produced with another benchmark directory, arm,
-    prompt variant or model is refused instead of being merged (V-03).
+    prompt variant or model is refused instead of being merged.
     """
     wanted = _case_filter(args)
     if wanted is not None:

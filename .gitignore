@@ -16,21 +16,15 @@ eval/
 _manuscript/KFinEval_figures/
 _backup/
 
-# 본 실험 결과 (eval + checkpoint)는 paper repo에 동봉 (위 ignore 규칙 무력화)
-# results_{kr,en,mt} 및 RQ2 ablation 변형 (results_*_tools_en) 모두 포함
-!_experiments/results_*/
-!_experiments/results_*/eval/
-!_experiments/results_*/eval/*.json
-!_experiments/results_*/checkpoint/
-!_experiments/results_*/checkpoint/*.jsonl
-!_experiments/results_*/comparison_*.json
-!_experiments/results_*/comparison_*.xlsx
-!_experiments/results_*/multiturn_*.json
-# 무효 처리된 결과 archive (audit trail; eval+checkpoint 모두 포함)
-!_experiments/results_*/eval/_invalid_*/
-!_experiments/results_*/eval/_invalid_*/**
-!_experiments/results_*/checkpoint/_invalid_*/
-!_experiments/results_*/checkpoint/_invalid_*/**
+# Everything under _experiments/runs/ ships with the benchmark: the run records,
+# the scores derived from them and the manifests beside them. The rules above
+# exclude `eval/`, `checkpoint/` and `*.jsonl` by name, and a file cannot be
+# re-included while a parent directory is excluded, so each level is named here.
+!_experiments/runs/
+!_experiments/runs/**/
+!_experiments/runs/**/*.json
+!_experiments/runs/**/*.jsonl
+!_experiments/paper_tables/
 
 # 실험 로그는 추적하지 않음 (옵션 A — 비민감 실행/오케스트레이션 로그, 레포에서 제외).
 # 상단 **/logs/ 규칙이 _experiments/logs/ 도 무시.
@@ -48,14 +42,12 @@ _experiments/scripts/preflight/reports/
 
 # Scoring logs travel with the run, not with the repository; the eval JSON beside
 # them is the artefact.
-_experiments/results_*/eval*/**/*.log
-# Unpacked co-author archives: the records they hold are already under
-# runs and the zip is in the manuscript repository.
+_experiments/runs/eval*/**/*.log
+# Unpacked archives handed over between hosts; their records are already under
+# _experiments/runs/.
 _experiments/coauthor*_handover_x/
 _experiments/coauthor*_handover.zip
 
-# The 2026 rerun's Contract 2 run records. They are the only thing a reader can
-# re-score from, so they ship with the benchmark rather than as an archive: each
-# round's raw response, the parsed calls with arguments, the tool output and the
-# stop reason. 108 files, the largest 25 MB.
-!_experiments/runs/**/*.jsonl
+
+# Expert evaluation working files: they carry a rater name and the blind key.
+_experiments/human_eval/

@@ -1,4 +1,4 @@
-"""One request/response layer for both runners (C2-012).
+"""One request/response layer for both runners.
 
 Everything that decides what a model is asked and how its answer is read lives
 here: schema arm and prompt, token budget, the labelled reasoning mode, the
@@ -28,7 +28,7 @@ __all__ = ["ChatOptions", "RoundResult", "ModelClient", "parse_fallback_calls",
            "fallback_call_id", "strip_reasoning_markup", "RETRYABLE_STATUS"]
 
 # A 429 or a 5xx is worth another attempt; a 400 is the template or the request
-# and will fail the same way every time (C2-013).
+# and will fail the same way every time.
 RETRYABLE_STATUS = frozenset({408, 409, 425, 429, 500, 502, 503, 504})
 
 
@@ -36,13 +36,13 @@ def fallback_call_id(round_idx: int, index: int) -> str:
     """Nine alphanumeric characters, which is what the Mistral server requires.
 
     The old `fallback_000` ids broke that rule and produced 948 HTTP 400s in the
-    multi-turn runs (L5-011).
+    multi-turn runs.
     """
     return f"F{round_idx:02d}{index:02d}".ljust(9, "0")[:9]
 
 
 # ---------------------------------------------------------------------------
-# Fallback parsing (L5-011)
+# Fallback parsing
 # ---------------------------------------------------------------------------
 
 _THINK_BLOCK = re.compile(
@@ -121,7 +121,7 @@ def parse_fallback_calls(content: str, round_idx: int) -> list[CallRecord]:
 
     Returns every call it finds, each marked `source="fallback"` with the raw
     fragment kept, so the share of a model's calls that needed the fallback can be
-    reported (L5-011).
+    reported.
     """
     text = strip_reasoning_markup(content or "")
     if not text.strip():
@@ -178,7 +178,7 @@ class ChatOptions:
     max_retries: int = 2
     retry_backoff_s: float = 2.0
     timeout_s: float = 300.0
-    provider: dict | None = None          # OpenRouter provider pinning (L5-014)
+    provider: dict | None = None          # OpenRouter provider pinning
     extra_body: dict = field(default_factory=dict)
 
     def body(self) -> dict:
@@ -316,7 +316,7 @@ class ModelClient:
         if not choices:
             # Observed on OpenRouter: a 200 with no choices. Left alone it raises
             # 'NoneType is not subscriptable' inside the case handler and the case
-            # is recorded as a silent zero (C2-012).
+            # is recorded as a silent zero.
             raise GatewayError(f"the gateway returned no choices (model={self.options.model})")
         choice = choices[0]
         msg = getattr(choice, "message", None)
@@ -358,9 +358,9 @@ class ModelClient:
                           calls: list[CallRecord]) -> dict:
         """The assistant turn as it goes back into the history.
 
-        The model's own text is kept (C2-010) and its reasoning goes back under the
-        key the chat template reads, so a thinking configuration does not continue
-        rounds 2 to 5 with no reasoning at all (C2-004, D05).
+        The model's own text is kept, and its reasoning goes back under the key
+        the chat template reads, so a thinking configuration does not continue
+        rounds 2 to 5 with no reasoning at all.
         """
         message: dict[str, Any] = {"role": "assistant", "content": content or ""}
         key = self.options.reasoning_history_key
@@ -382,7 +382,7 @@ class ModelClient:
         A template trained on one call per turn (Llama-3.x) answers a parallel call
         with an HTTP 400 in the next round, which used to throw away the calls the
         model had already made and score the whole case zero. The calls are sent as
-        consecutive single-call turns instead (D21, L5-005).
+        consecutive single-call turns instead.
         """
         if not calls:
             return [message]

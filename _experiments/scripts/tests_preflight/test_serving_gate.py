@@ -44,7 +44,7 @@ def test_a_configuration_missing_from_the_run_plan_is_named():
 
 
 def test_the_same_model_in_the_same_mode_twice_is_refused():
-    """The 2026 multi-turn (T)/(NT) rows were one configuration run twice (C2-012)."""
+    """A (T)/(NT) pair of multi-turn rows must not be one configuration run twice."""
     registry = _fake(_cfg(config_id="a"), _cfg(config_id="b"))
     check = serving._registry_complete(registry)
     assert not check.ok
@@ -87,7 +87,7 @@ def test_a_configuration_that_fits_no_host_is_named():
 
 
 # ---------------------------------------------------------------------------
-# The one deliberate deviation from a final decision (D07 concurrency)
+# The one deliberate deviation from the pinned serving settings (concurrency)
 # ---------------------------------------------------------------------------
 
 def _plan(**overrides):

@@ -6,12 +6,12 @@ Two independent readings of the same data:
   it. A case whose gold is internally inconsistent cannot score 1 against itself,
   and whatever does not is a data defect, not a scoring defect.
 * the platform's own gold-call harness (`scripts/gold_calls.py`) executes every
-  gold call on HOFINET. The round-2 audit ran exactly this and found 42.8% of the
-  well-formed gold calls returning nothing usable (L3-007).
+  gold call on HOFINET. Running it over the whole benchmark found 42.8% of the
+  well-formed gold calls returning nothing usable, which no self-test can see.
 
 An error fails the gate. An empty or unexecutable call fails it too unless
 `allow_empty.json` names that case and says why, so the ring and layering scans
-that HOFINET cannot answer stay visible instead of being rounded away (D06).
+that HOFINET cannot answer stay visible instead of being rounded away.
 
 `gold_selftest_expected.json`, tracked next to this module, holds the counts a
 fresh self-test must produce and the benchmark sha256 they were produced from.
@@ -19,7 +19,7 @@ The gate regenerates the self-test and compares. The reference used to be the
 four reports under the private notes directory, which were once 1176/1258 with
 82 defects while the data was 1258/1258 with none, so a stale report read as a
 measurement of data that no longer existed; untracking that directory then took
-the reference away altogether and the branch head failed this gate (V-02).
+the reference away altogether and the branch head failed this gate.
 
 Refresh it in the same commit as the data change that moves it:
 

@@ -5,7 +5,7 @@
 
 The plan is derived from the registry, so the shell orchestrator cannot invent a
 device assignment of its own: the old one pinned every TP=2 model to cards 0 and
-1 whatever the lane asked for (L5-017).
+1 whatever the lane asked for.
 """
 
 from __future__ import annotations

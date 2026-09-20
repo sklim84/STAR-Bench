@@ -1,6 +1,6 @@
 """Schema arms: the tool definitions and the system prompt a run shows the model.
 
-Two arms, and only two (D16):
+Two arms, and only two:
 
     en  the platform's own `agent.TOOLS` and `agent.SYSTEM_PROMPT`
     kr  `tools_kr.TOOLS_KR` and `tools_kr.SYSTEM_PROMPT_KR`, generated from
@@ -8,16 +8,16 @@ Two arms, and only two (D16):
 
 The old `tools_en.py` is retired: it was not a translation of the platform
 schema but a second, divergent schema that dropped every enum, default and item
-schema and changed five `required` lists (C2-005, L5-015).
+schema and changed five `required` lists.
 
 Because both arms carry the same parameter names, the runner executes what the
 model sent without rewriting anything. The value-normalisation map that turned
 Korean FIU keywords into the English ones the catalog holds is gone with it: it
 gave the Korean arm free parameter accuracy on nine cases that no other arm
-could get (C2-006).
+could get.
 
 The response-language rule is the same sentence in both arms: answer in the
-language of the user's question (D13, R1-N5).
+language of the user's question.
 """
 
 from __future__ import annotations
@@ -88,7 +88,7 @@ def load_arm(lang: str, *, prompt_variant: str = "baseline") -> Arm:
 
 
 # ---------------------------------------------------------------------------
-# Structural parity (D16): the arms differ in prose and in nothing else.
+# Structural parity: the arms differ in prose and in nothing else.
 # ---------------------------------------------------------------------------
 
 def _prop_signature(prop: dict) -> dict:

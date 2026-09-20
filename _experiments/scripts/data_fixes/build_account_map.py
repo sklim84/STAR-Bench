@@ -1,15 +1,16 @@
-"""Build the fake-account -> real-HOFINET-account map used by pass 04 (D03, L3-007).
+"""Build the account map: one real HOFINET account per account id a question names.
 
-Single-turn questions used invented 10-digit account numbers; HOFINET account ids
-are 16 digits and none of the invented ones exists, so every account-level gold
-call returned an empty result and every "that account" premise was false.
+Every account a question names has to be an account HOFINET holds, and it has to
+carry the history the question presumes. An id that is not in the data makes every
+account-level gold call return an empty result and every "that account" premise
+false, so no model can reproduce the gold.
 
-This script reads HOFINET read-only, collects the role each invented id has to
-play (sender history, receiver history, a neighbourhood, enough counterparties
-for a smurfing threshold, fraud history behind "high-risk" wording, a real path
-to its partner in a shortest_path case) and picks one real account per invented
-id that satisfies every role it appears in. The result is committed as
-``account_map.json`` so pass 04 replays it without a database.
+This script reads HOFINET read-only, collects the role each account id has to play
+(sender history, receiver history, a neighbourhood, enough counterparties for a
+smurfing threshold, fraud history behind "high-risk" wording, a real path to its
+partner in a shortest_path case) and picks one real account per id that satisfies
+every role it appears in. The result is committed as ``account_map.json``, so the
+assignment can be read and checked without a database.
 
     python -m _experiments.scripts.data_fixes.build_account_map
 """
@@ -192,8 +193,9 @@ def main() -> int:
     bench = Bench.load(KR, "kr")
     need, pairs = requirements(bench)
     if any(f > 10 ** 12 for f in need):
-        raise SystemExit("the benchmark already carries real account ids; rebuild the map from the "
-                         "pre-audit data or the map will remap accounts that are already correct")
+        raise SystemExit("the benchmark already carries HOFINET account ids; the map is derived "
+                         "from the ids the questions name, so rebuilding it here would remap "
+                         "accounts that are already correct")
     print(f"{len(need)} invented account ids, {len(pairs)} shortest_path pairs")
 
     # Candidates: prefer accounts that are neither the busiest nor the thinnest, so a

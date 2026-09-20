@@ -1,15 +1,15 @@
-"""Gate 3: the benchmark files the rerun will read.
+"""Gate 3: the benchmark files a run will read.
 
-Three of these checks belong to other streams and are called, not reimplemented:
-the single-turn linter (WS-D), `data_fixes.multiturn.verify` (WS-E) and
-`new_cases.verify --gate` (WS-G). The suite adds what sits between them: that
+Three of these checks live with the data they check and are called here rather
+than reimplemented: the single-turn linter, `data_fixes.multiturn.verify` and
+`new_cases.verify --gate`. The suite adds what sits between them: that
 the two languages carry the same cases in the same order with the same gold,
 that the counts are the ones the manuscript reports, and that no two cases ask
 the same question.
 
-Counts live in `expected_counts.json`. A stream that adds or removes cases
-updates that file in the same commit, so the number in the paper and the number
-on disk cannot drift apart unnoticed (L4-016, C2-014).
+Counts live in `expected_counts.json`. Adding or removing cases updates that
+file in the same commit, so the number in the paper and the number on disk
+cannot drift apart unnoticed.
 """
 
 from __future__ import annotations
@@ -63,11 +63,11 @@ def _verdict(output: str) -> str:
 
 
 def _new_cases(ctx: Context) -> Check:
-    """WS-G's verifier writes a review sheet, so it is pointed at a scratch file."""
+    """The expansion-case verifier writes a review sheet, so it is pointed at a scratch file."""
     with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as handle:
         sheet = Path(handle.name)
     try:
-        return _cli(ctx, "2026-09 expansion cases",
+        return _cli(ctx, "expansion cases",
                     ["-m", "_experiments.scripts.data_fixes.new_cases.verify", "--gate",
                      "--out", str(sheet)])
     finally:
@@ -93,7 +93,7 @@ def _normalise(text: str | None) -> str:
 
 
 def _parity(ctx: Context) -> Check:
-    """The two languages are one benchmark: same ids, same order, same gold (C1-010)."""
+    """The two languages are one benchmark: same ids, same order, same gold."""
     problems: list[str] = []
     for kr_name, en_name in (SINGLE_TURN_DIRS, MULTI_TURN_DIRS):
         kr, _ = load_cases(ctx.root / kr_name)
@@ -156,7 +156,7 @@ def _counts(ctx: Context) -> Check:
 
 
 def _duplicates(ctx: Context) -> list[Check]:
-    """Two cases that ask the same question are one case counted twice (D09)."""
+    """Two cases that ask the same question are one case counted twice."""
     checks = []
     for name in SINGLE_TURN_DIRS:
         cases, source = load_cases(ctx.root / name)

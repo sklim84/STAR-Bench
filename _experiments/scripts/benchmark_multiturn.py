@@ -14,8 +14,8 @@ This runner takes the same options as the single-turn one and goes through the
 same request layer, so the reasoning mode, the token budget, the gateway guard,
 the schema arm and the provider options apply here too. They did not before, and
 the gpt-oss (T) and (NT) multi-turn rows were in fact the same configuration run
-twice (C2-012). `--tools-lang` makes every main-table column runnable on the
-Korean schema (D17, L6-032).
+twice. `--tools-lang` makes every main-table column runnable on the Korean
+schema.
 
 `--limit N` is a smoke run: the first N scenarios are the run, and the run is
 verified against their turns rather than against the whole benchmark.

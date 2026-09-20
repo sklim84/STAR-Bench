@@ -49,7 +49,7 @@ SCENARIOS = [
     {"id": "mt_001", "scenario": "STR workflow", "sub_category": "str",
      "turns": [
          # As the rebuilt data has it: the arguments hold the CHECKS and the
-         # executable query is the reference (C2-008).
+         # executable query is the reference.
          {"turn": 1, "content": "이 계좌의 최근 거래를 조회해줘",
           "tool_calls": [{"name": "query_transactions",
                           "arguments": {"sql_conditions": [{"column": "sender_acc", "op": "=",

@@ -1,11 +1,10 @@
-"""Pre-flight data linter for the single-turn benchmark (C1-011).
+"""Pre-flight data linter for the single-turn benchmark.
 
-The old `check_hofinet_compliance.py` read Korean parameter keys that the data had
-not used since the April re-keying, so it reported "0 violations" both for HEAD
-and for a copy with the keys put back in Korean, and it never checked whether an
-account exists, whether an amount is one of the 48 HOFINET holds, or whether a
-gold key is a property of the tool at all. This replaces it. It exits non-zero on
-any violation, so it can gate a re-run.
+The gate the single-turn data has to clear before it is used: every gold has to be
+executable as written, every value in it has to be a value HOFINET holds, and the
+two language directories have to say the same thing about every case. The linter
+exits non-zero on any violation, so it can gate a run rather than only report on
+one.
 
     python -m _experiments.scripts.data_fixes.lint_benchmarks
     python -m _experiments.scripts.data_fixes.lint_benchmarks --benchmark benchmarks --no-db
@@ -31,10 +30,10 @@ Checks, per benchmark directory:
   kr_en_parity        the two directories hold the same ids, gold, difficulty and notes
   terminology         one spelling per pattern term, and a question whose gold selects the
                       structuring pattern does not name HOFINET fraud type 3, or the other
-                      way round (`terminology.py`, L1-010)
+                      way round (`terminology.py`)
   catalog_gold        an FIU keyword or glossary term the gold pins selects at least one
                       catalog row, and the same rows however it is capitalised, so its
-                      spelling cannot decide the score (L1-019)
+                      spelling cannot decide the score
 """
 
 from __future__ import annotations
@@ -189,7 +188,7 @@ def check_value(report: Report, case_id: str, lang: str, tool: str, key: str, va
     if tool == "predict_fraud" and key == "fund_type" and value == 4:
         report.add("hofinet_value", case_id, lang,
                    f"{tool}.{key}=4 carries no fraud label anywhere in HOFINET, so a fraud-risk "
-                   f"question about it has no possible answer (C1-003)")
+                   f"question about it has no possible answer")
     if key in DATE_KEYS and isinstance(value, int) and not DATE_RANGE[0] <= value <= DATE_RANGE[1]:
         report.add("hofinet_value", case_id, lang, f"{tool}.{key}={value} is outside 20210901-20241231")
     if key == "limit" and isinstance(value, int) and value > LIMIT_MAX:
@@ -247,7 +246,7 @@ def check_spec(report: Report, schemas, case_id: str, lang: str, spec: dict, lab
 
 
 def lint_terminology(bench: Bench, report: Report) -> None:
-    """One spelling per pattern, and no structuring / fraud-type-3 collision (L1-010)."""
+    """One spelling per pattern, and no structuring / fraud-type-3 collision."""
     for _, case in bench.cases():
         for hit in terminology.screen_text(case["question"], bench.lang,
                                            list(terminology.single_turn_calls(case))):
@@ -255,7 +254,7 @@ def lint_terminology(bench: Bench, report: Report) -> None:
 
 
 def lint_catalog_gold(bench: Bench, rows, report: Report) -> None:
-    """An FIU keyword or glossary term the gold pins cannot be decided by its case (L1-019)."""
+    """An FIU keyword or glossary term the gold pins cannot be decided by its case."""
     if rows is None:
         return
     for _, case in bench.cases():

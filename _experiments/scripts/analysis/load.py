@@ -1,16 +1,19 @@
-"""One reader over the scored rerun, for every analysis script.
+"""One reader over the scored runs, for every analysis script.
 
-The analysis was written against the pre-audit checkpoints, where each case row
-carried `primary_tool_hit`, `tool_recall`, `tool_precision`, `param_accuracy`,
-`order_score` and a weighted `score`. Those keys are gone on purpose (D02): p and
-o were 1.0 for a model that called nothing, a was 1.0 for a case with no checks,
-and the weighted score has no definition in the paper. An adapter that put the
-old names back over the new numbers would put those definitions back with them,
-so the analysis reads the fixed metrics here instead:
+Every analysis step reads its numbers through this module and nothing else from
+the results trees, so one definition of each metric serves the whole paper. The
+per-case metrics are:
 
     h r p a o f1_tools abstain_ok clarification_ok error_type error_flag
 
 and, for the multi-turn settings, c and context_accuracy.
+
+`p`, `a` and `o` are undefined rather than perfect where they do not apply: `p`
+for a case where the model called no tool, `a` for a case with no parameter
+checks, `o` for a case whose call order is unconstrained. Treating those as 1.0
+would reward a model for abstaining or for calling tools with no checkable
+arguments, so the field is None instead and a mean over it is taken over the
+rows that have it and carries the count it was taken over.
 
 Everything comes from the eval files `scoring/score_runs.py` writes, joined to
 the serving registry so a row knows its label, group and reasoning mode. Nothing
@@ -283,8 +286,8 @@ def calls(column_or_setting: str = "single", *, run_root: Path | str | None = No
     """One row per tool call, with its arguments and what the tool answered.
 
     `source` says whether the gateway or the server parsed the call natively or
-    the text fallback did (L5-010): a column whose calls are all `fallback` is a
-    serving problem and not a model result, and a figure over it has to say so.
+    the text fallback did: a column whose calls are all `fallback` is a serving
+    problem and not a model result, and a figure over it has to say so.
     """
     name = RECORD_DIRS.get(column_or_setting)
     if name is None:

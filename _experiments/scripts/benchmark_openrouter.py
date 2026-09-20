@@ -1,9 +1,9 @@
 """Single-turn runner over an OpenRouter endpoint: a preset for `benchmark.py`.
 
-D07 puts all 28 configurations and all four cells of the 2x2 on one pinned local
-vLLM stack, so nothing in the paper comes through this path any more. It stays
-for the rows a co-author cannot serve locally, and it now pins what the gateway
-does instead of leaving it to the gateway (L5-014):
+All 28 configurations and all four cells of the 2x2 are served on one pinned
+local vLLM stack, so nothing in the paper comes through this path. It stays for
+rows that cannot be served locally, and it pins what the gateway does instead of
+leaving the choice to the gateway:
 
   * `allow_fallbacks` is off and `require_parameters` is on, so a request that
     the chosen provider cannot honour fails instead of being silently rerouted;

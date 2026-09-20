@@ -13,7 +13,7 @@ _ROOT = Path(__file__).resolve().parents[3]
 
 
 # ---------------------------------------------------------------------------
-# Registry (D05, D07, D21, C2-001, L5-006 ... L5-014, L5-025)
+# Registry
 # ---------------------------------------------------------------------------
 
 def test_there_is_one_entry_per_main_table_row():
@@ -23,7 +23,7 @@ def test_there_is_one_entry_per_main_table_row():
 
 
 def test_every_configuration_has_a_context_of_at_least_32k_and_an_output_budget():
-    """D07, with the one exception the model itself imposes.
+    """The pinned 32k context, with the one exception the model itself imposes.
 
     A window under 32768 is allowed only where the model cannot go higher, and
     then it has to be exactly the model's window, recorded in `model_window`.
@@ -51,7 +51,7 @@ def test_a_smaller_window_is_the_model_window_and_nothing_else():
 
 
 def test_every_reasoning_configuration_gets_the_16k_output_budget():
-    """D05, L5-006. Both halves of a T/NT pair get it, so the pair differs only in mode."""
+    """Both halves of a T/NT pair get it, so the pair differs only in mode."""
     for cfg in registry.CONFIGS:
         if cfg.model_window and cfg.model_window < registry.CONTEXT:
             continue          # the window sets the budget instead; see ax-light
@@ -86,7 +86,7 @@ def test_every_configuration_is_deterministic_and_carries_the_default_concurrenc
 
 
 def test_only_qwen35_and_gpt_oss_have_two_modes():
-    """D05: one labelled mode per model, T/NT pairs only for those two families."""
+    """One labelled mode per model, T/NT pairs only for those two families."""
     by_model = {}
     for cfg in registry.CONFIGS:
         by_model.setdefault(cfg.model, []).append(cfg)
@@ -233,7 +233,7 @@ def test_the_four_gpu_entries_are_the_ones_that_do_not_fit_on_two_cards():
 
 
 # ---------------------------------------------------------------------------
-# Prompt budget (C2-001)
+# Prompt budget
 # ---------------------------------------------------------------------------
 
 def _cases(question: str) -> list[dict]:

@@ -1,8 +1,8 @@
 """The written report: every gate, every version and hash, every command.
 
 `--report` writes `_experiments/scripts/preflight/reports/preflight_report.md`
-and `.json`, both tracked, so the report a co-author reads is the one in the
-checkout they cloned. It exists so that a co-author whose run is blocked can
+and `.json`, both tracked, so the report a reader opens is the one in the
+checkout they cloned. It exists so that whoever is blocked by a failing run can
 paste one file and the person reading it can see which gate failed, on which
 checkout, and which command to run to see it again.
 
@@ -67,7 +67,7 @@ def _readable(command: str, versions: dict) -> str:
     """The command with the interpreter path replaced, so the report is pasteable.
 
     Which interpreter it was is in the versions table; the command itself reads
-    the way a co-author would type it.
+    the way a reader would type it.
     """
     for key in ("platform_python", "python"):
         path = versions.get(key)
@@ -217,7 +217,7 @@ def write_markdown(results: list[GateResult], *, command: str, versions: dict,
                  "model fills its snapshot revision, and the runner refuses to serve without it.")
     lines.append("")
 
-    lines.append("## Before a rerun")
+    lines.append("## Before a run")
     lines.append("")
     lines.append("```bash")
     lines.append("cd " + str(versions.get("star_bench_root") or "STAR-Bench"))

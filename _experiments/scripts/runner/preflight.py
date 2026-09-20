@@ -2,7 +2,7 @@
 
 Phi-4-mini was registered at 12,288 tokens on a wrong diagnosis, which would have
 left the Korean arm 90 to 160 tokens of headroom and scored almost every one of
-its 866 tool cases as a model failure (C2-001). A model whose context is smaller
+its 866 tool cases as a model failure. A model whose context is smaller
 than its prompt is a configuration bug, and it is cheap to catch before a run.
 
 The check renders system prompt + tool schema + the longest question with the
@@ -29,7 +29,7 @@ _WIDE_BYTES_PER_TOKEN = 2.3
 # Room a run needs on top of the prompt and the output budget: one tool result at
 # the size the runner truncates to, plus slack for the assistant turns around it.
 # Tool results are truncated to the same token count in every arm, so a long
-# result is a bounded cost rather than a context overflow (L5-012).
+# result is a bounded cost rather than a context overflow.
 TOOL_RESULT_TOKENS = 4000
 MIN_HEADROOM = TOOL_RESULT_TOKENS + 2000
 

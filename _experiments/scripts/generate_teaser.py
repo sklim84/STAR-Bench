@@ -1,11 +1,7 @@
 """The opening figure: single-turn tool hit against workflow completion.
 
-The previous teaser was a subdomain radar carrying the claim that Regulatory
-Reporting is the weakest area. The rerun does not support that claim: on the
-current cohort reporting sits within a point of the analysis tools, and for two
-of the four models the radar drew it was the strongest axis. The figure now
-carries the result that does hold and that the paper leads with, which is that
-single-turn tool accuracy does not predict workflow completion.
+The figure carries the result the paper leads with: single-turn tool accuracy
+does not predict workflow completion.
 
 One point per scored configuration. The shaded band marks the configurations
 within six points of one another on single-turn tool hit, whose completion rates

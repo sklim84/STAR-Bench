@@ -1,7 +1,10 @@
-"""Scripted, re-runnable fixes for the single-turn benchmark data (WS-D).
+"""Build and validation tooling for the single-turn benchmark data.
 
-Every change to ``benchmarks/`` and ``benchmarks_en/`` is produced by one of the
-``p??_*`` passes in this package and recorded in ``changelog/``. The data files
-carry no hand edits; re-running ``run_all.py`` from the pre-audit snapshot
-reproduces them byte for byte.
+``benchmarks/`` and ``benchmarks_en/`` are generated and checked from here rather
+than edited by hand, so every value in them traces back to HOFINET, to the
+platform tool schema or to the platform catalog. ``lint_benchmarks`` is the gate
+the data has to clear, ``terminology`` holds the question-wording convention,
+``build_account_map`` derives the account map from the database, and the
+``new_cases`` and ``multiturn`` sub-packages hold the case authoring and the
+verification that goes with it.
 """

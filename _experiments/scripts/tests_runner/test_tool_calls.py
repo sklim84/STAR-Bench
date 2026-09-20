@@ -21,7 +21,7 @@ def _run(server, bench, out, executor, extra=()):
 
 
 # ---------------------------------------------------------------------------
-# Parallel calls (L5-005, D21)
+# Parallel calls
 # ---------------------------------------------------------------------------
 
 def _client(serialize: bool) -> ModelClient:
@@ -73,7 +73,7 @@ def test_both_parallel_calls_are_executed_and_recorded(server, single_benchmark,
 
 
 # ---------------------------------------------------------------------------
-# Fallback parser (L5-011)
+# Fallback parser
 # ---------------------------------------------------------------------------
 
 def test_reasoning_is_stripped_before_anything_is_read_as_a_call():

@@ -6,8 +6,8 @@
 
 The old merger read checkpoints line by line into `records[key] = rec` and kept
 whichever line came last, with no run identifier anywhere. A forced rerun that
-failed therefore left the older record in place and looked like a success
-(L5-027). This one:
+failed therefore left the older record in place and looked like a success. This
+one:
 
   * keeps the newest record per key by the run's own `started_at`, and prints the
     run each key was taken from;

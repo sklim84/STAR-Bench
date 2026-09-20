@@ -1,20 +1,20 @@
 """Gate 2: the code that produces and reads the run records still passes its tests.
 
-Four suites and one generator check, because the rerun depends on all of them:
-the platform tool layer (WS-A), the scoring module (WS-B), the runners (WS-C)
-and this suite; plus `gen_tools_kr --check`, which fails while the generated
-Korean arm is stale, so a description added on the platform side cannot reach
-the English arm alone (D16, C2-005).
+Four suites and one generator check, because a benchmark run depends on all of
+them: the platform tool layer, the scoring module, the runners and this suite;
+plus `gen_tools_kr --check`, which fails while the generated Korean arm is
+stale, so a description added on the platform side cannot reach the English arm
+alone.
 
 A skipped test is a test that did not run. The gate used to read the exit status
 alone, so `test_templates.py` could skip itself for want of jinja2 and the
-report still said the D21/C2-007/C2-018 template repairs had been exercised.
+report still said the chat-template repairs had been exercised.
 Every suite now runs with `-rs` and a skip fails the gate unless its reason is
 in `skips_allowed.json`, which lists only reasons that are properties of the
 release (optional drivers, app-only packages, unreleased source data).
 
 The platform suite may need its own interpreter (`--platform-python`): it pins
-numpy 2 through the tool layer while the serving stack follows vLLM (R1-R4).
+numpy 2 through the tool layer while the serving stack follows vLLM.
 """
 
 from __future__ import annotations
@@ -90,7 +90,7 @@ def _pytest(ctx: Context, name: str, args: list[str], *, python: str | None = No
 
 
 def _schema_arm_parity(ctx: Context) -> Check:
-    """The Korean arm is generated from `agent.TOOLS`, so it cannot drift (D16)."""
+    """The Korean arm is generated from `agent.TOOLS`, so it cannot drift."""
     done = run_command([ctx.python, "-m", "_experiments.scripts.gen_tools_kr", "--check"],
                        cwd=ctx.root, env=ctx.env, timeout=600)
     return Check("Korean arm is generated from the platform schema", done.ok,

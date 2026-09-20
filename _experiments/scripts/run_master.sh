@@ -16,7 +16,7 @@
 #   --agreement     also run the batching-agreement measurement from run_plan.json
 #   --agreement-only  run only that measurement
 #
-# The batching-agreement run is what makes the concurrency deviation from D07
+# The batching-agreement run is what makes the deviation from concurrency 1
 # measurable: one small configuration on the full single-turn benchmark twice at
 # the registry default and once at 1, into three separate output directories, so
 # the agreement rate between two batched runs and between batched and serial can
@@ -24,8 +24,7 @@
 #
 # Every job runs alone on the cards the plan assigns. A job that fails is
 # reported at the end and the script exits non-zero; the old orchestrator
-# skipped a model whose server did not start and still said "전체 완료 rc=0"
-# (L5-017).
+# skipped a model whose server did not start and still said "전체 완료 rc=0".
 
 set -uo pipefail
 
@@ -105,7 +104,7 @@ for column in ${COLUMNS//,/ }; do
 done
 fi
 
-# --- batching agreement (the D07 concurrency deviation) ----------------------
+# --- batching agreement (the deviation from concurrency 1) ------------------
 if [[ -n "$AGREEMENT" ]]; then
     mapfile -t AGREE < <(python - <<'PYEOF'
 import json, pathlib

@@ -3,13 +3,12 @@
 The runner records what the model did and never what it scored. The evaluator
 reads these records together with the gold and writes the eval files
 (`_experiments/scripts/scoring/score_runs.py`), so a scoring rule can change
-without re-running a model (L4-016).
+without re-running a model.
 
-A run writes into a fresh directory. Old checkpoints are never read: a rerun
-that wants to skip finished cases passes `--resume`, which reads the records
-this very run directory already holds and refuses anything that does not carry
-the expected case count (C2-014, C2-015, L5-027) or does not belong to the same
-arm (`run_identity`, V-03).
+A run writes into a fresh directory. Old checkpoints are never read: a run that
+wants to skip finished cases passes `--resume`, which reads the records this
+very run directory already holds and refuses anything that does not carry the
+expected case count or does not belong to the same arm (`run_identity`).
 """
 
 from __future__ import annotations
@@ -40,8 +39,8 @@ def _utcnow() -> str:
 def new_run_id(prefix: str) -> str:
     """Run identifier: <prefix>-<utc timestamp>-<6 hex>.
 
-    Every record carries it, so a partial rerun merged next to an earlier run
-    still says which run each line came from (L5-027).
+    Every record carries it, so a partial run merged next to an earlier one
+    still says which run each line came from.
     """
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     safe = "".join(c if c.isalnum() or c in "-._" else "_" for c in prefix)
@@ -57,7 +56,7 @@ class CallRecord:
     arguments: Any
     source: str = "native"          # native | fallback
     valid_json: bool = True
-    args_is_object: bool = True     # C2-017: a list/str/null argument is flagged, never dropped
+    args_is_object: bool = True     # a list/str/null argument is flagged, never dropped
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -88,8 +87,8 @@ class RoundRecord:
     error: dict | None = None
     attempts: int = 1
     elapsed_s: float | None = None
-    serialized_from: int | None = None   # D21: index of the parallel round this turn was split from
-    provider: str | None = None          # gateway that served the request (L5-014)
+    serialized_from: int | None = None   # index of the parallel round this turn was split from
+    provider: str | None = None          # gateway that served the request
     served_model: str | None = None      # model id the gateway reports having used
 
     def to_dict(self) -> dict:
@@ -163,10 +162,9 @@ RESUME_REFUSED = ResumeRefused
 class RecordWriter:
     """Appends Contract 2 lines to one JSONL file, and writes the run manifest.
 
-    The file is named after the run id, so a partial rerun never writes into the
-    file of the run it is patching (L5-027, C2-014). `partial=True` marks the
-    manifest and the file name, so a merge step can tell a complete run from a
-    filtered one.
+    The file is named after the run id, so a partial run never writes into the
+    file of the run it is patching. `partial=True` marks the manifest and the
+    file name, so a merge step can tell a complete run from a filtered one.
     """
 
     def __init__(self, out_dir: Path | str, run_id: str, *, partial: bool = False):
@@ -278,7 +276,7 @@ def run_identity(record: dict) -> dict:
     The case ids of `benchmarks` and `benchmarks_en` are the same 1,258 by
     design, so a membership test cannot tell the two arms apart: resuming a
     Korean run with `--cases-dir benchmarks_en` was accepted, and the record file
-    then held both arms while the manifest claimed one (V-03). This reads the
+    then held both arms while the manifest claimed one. This reads the
     identity out of a record and out of the run about to start in the same shape,
     so the two compare.
     """
@@ -328,8 +326,8 @@ def resume_state(out_dir: Path | str, expected_keys: Iterable[str], *,
     Refuses when the directory holds records the benchmark does not know about,
     when it holds partial files (which are, by construction, not a full run),
     when every expected key is already there, because a resume that skips
-    everything is a configuration mistake and not a finished run (C2-015), and
-    when the records were produced by a different arm (V-03): another benchmark
+    everything is a configuration mistake and not a finished run, and when the
+    records were produced by a different arm: another benchmark
     directory or another copy of it, another schema arm, query language, prompt
     variant, model or revision.
     """

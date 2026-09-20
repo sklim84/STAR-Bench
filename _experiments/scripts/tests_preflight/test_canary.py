@@ -1,8 +1,8 @@
 """The canary sample, the thresholds and the anomaly gates.
 
-The gates are tested on records written for the test, one per failure the 2026
-run actually had, so a threshold that stops working is a red test rather than a
-quiet pass.
+The gates are tested on records written for the test, one per failure a real
+run has actually had, so a threshold that stops working is a red test rather
+than a quiet pass.
 """
 
 from __future__ import annotations
@@ -98,7 +98,7 @@ def test_a_case_whose_gold_expects_no_tool_is_not_counted_as_a_miss():
 
 
 def test_one_http_error_in_forty_cases_trips_the_error_gate():
-    """Llama-3.2-3B answered 16.1% of its 2026 cases with an error scored as zero."""
+    """Llama-3.2-3B answered 16.1% of its cases with an error scored as zero."""
     records = [record(f"st_{i}") for i in range(40)]
     records.append(record("st_boom", error={"type": "APIStatusError", "message": "503"},
                           stop_reason="error"))
@@ -115,7 +115,7 @@ def test_records_that_stop_on_length_trip_the_budget_gate():
 
 
 def test_calls_arriving_through_the_fallback_parser_trip_the_parser_gate():
-    """The finance Qwen was served with a parser that never matched (L5-010)."""
+    """The finance Qwen was served with a parser that never matched."""
     records = [record(f"st_{i}", source="fallback") for i in range(5)]
     records += [record(f"st_n{i}") for i in range(10)]
     metric = metrics(records)["fallback-parser share"]
@@ -144,7 +144,7 @@ def test_a_baseline_that_is_already_high_raises_the_limit_with_it():
 
 
 def test_a_prompt_that_leaves_no_room_for_a_tool_result_trips_the_headroom_gate():
-    """Phi-4-mini was registered at 12,288 tokens against a 9k prompt (C2-001)."""
+    """Phi-4-mini was registered at 12,288 tokens against a 9k prompt."""
     records = [record("st_a", prompt_tokens=11000, max_model_len=12288, max_tokens=1000)]
     metric = metrics(records)["prompt headroom (tokens)"]
     assert not metric.ok

@@ -103,7 +103,7 @@ def test_the_run_is_verified_against_the_expected_turn_count(server, multiturn_b
 
 def test_an_oracle_sql_turn_shows_the_query_and_never_the_checks(server, multiturn_benchmark,
                                                                  tmp_path, fake_tools):
-    """C2-008: the evaluator's keys are checks, not a call the model could make."""
+    """The evaluator's keys are checks, not a call the model could make."""
     server.always(text("네"))
     _run(server, multiturn_benchmark, tmp_path / "r", fake_tools)
 
@@ -169,7 +169,7 @@ def test_the_real_multi_turn_gold_renders_a_query_for_every_sql_turn():
 
 def test_a_turn_over_the_call_ceiling_is_recorded_as_one(server, multiturn_benchmark,
                                                          tmp_path, fake_tools):
-    """L5-024: the single-turn loop reports the ceiling; this one truncated silently."""
+    """The multi-turn loop reports the call ceiling too, instead of truncating silently."""
     from _experiments.scripts.runner.loop import MAX_CALLS_PER_ROUND
 
     many = tool_call("get_statistics", {})

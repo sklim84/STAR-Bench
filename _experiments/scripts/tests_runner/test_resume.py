@@ -1,4 +1,4 @@
-"""Fresh output directories, resume refusals and partial runs (C2-014, C2-015, L5-027)."""
+"""Fresh output directories, resume refusals and partial runs."""
 
 from __future__ import annotations
 
@@ -169,7 +169,7 @@ def test_run_ids_carry_the_arm_the_setting_and_a_timestamp(server, single_benchm
 
 
 # ---------------------------------------------------------------------------
-# A resume continues one arm; it does not merge two (V-03)
+# A resume continues one arm; it does not merge two
 #
 # `benchmarks` and `benchmarks_en` carry the same 1,258 case ids by design, so a
 # membership test cannot separate them: resuming a Korean run with

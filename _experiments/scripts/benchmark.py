@@ -7,14 +7,14 @@
 The runner no longer scores. It records what the model did, and
 `_experiments/scripts/scoring/score_runs.py` reads those records together with
 the gold and writes the eval files, so a scoring rule can change without
-re-running a model (L4-016). The comparison spreadsheet and the aggregate tables
+re-running a model. The comparison spreadsheet and the aggregate tables
 that used to live here moved with it.
 
 Old checkpoints are never read: a run writes into a fresh directory, and
 `--resume` skips only the cases that same directory already holds a record for,
 after checking that its contents belong to this run: the same benchmark
 directory and file hash, schema arm, query language, prompt variant, model and
-revision (C2-014, C2-015, L5-027, V-03).
+revision.
 
 `--limit N` is a smoke run: the first N cases of the benchmark are the run, and
 the run is verified against those N. It used to be checked against the whole
@@ -71,9 +71,9 @@ def main(argv: list[str] | None = None, *, executor=None) -> int:
     logging.basicConfig(level=logging.INFO if args.verbose else logging.WARNING,
                         format="%(asctime)s %(levelname)s %(message)s")
 
-    # --query-lang used to be a label only: it named the arm while the cases still came
-    # from the default directory, so an "EN query" run scored Korean questions (V-04 caught
-    # it on the 2x2 arms). The flag now picks the data, and a contradiction is refused.
+    # --query-lang picks the data, not just the label. Naming the arm while the cases
+    # came from the default directory made an "EN query" run score Korean questions, so
+    # a flag that contradicts the benchmark directory is refused.
     if args.cases_dir is None:
         args.cases_dir = _PROJECT_ROOT / ("benchmarks_en" if args.query_lang == "en"
                                           else "benchmarks")
@@ -121,7 +121,7 @@ def main(argv: list[str] | None = None, *, executor=None) -> int:
         done += 1
         if error is not None:
             # A worker that raised is this case's failure and nobody else's: the
-            # case still gets a record, with the reason (L5-019).
+            # case still gets a record, with the reason.
             record = loop.failed_record(
                 case["id"], error, run_id=setup.run_id, setting="single",
                 tools_lang=setup.arm.lang, query_lang=setup.query_lang,

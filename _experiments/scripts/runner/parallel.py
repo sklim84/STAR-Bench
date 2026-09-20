@@ -1,8 +1,8 @@
 """Running cases in parallel, with one worker's failure contained to that case.
 
-The rerun does not fit the deadline one request at a time, and the tool layer is
-thread-safe now (per-call DuckDB cursors, threading gate on the platform branch),
-so the cross-talk that forced concurrency 1 is gone.
+A full sweep does not fit its deadline one request at a time, and the tool layer
+is thread-safe (per-call DuckDB cursors, threading gate on the platform branch),
+so there is no cross-talk to force concurrency 1.
 
 Two rules keep a parallel run comparable with a serial one:
 

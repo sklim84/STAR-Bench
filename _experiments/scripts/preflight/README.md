@@ -1,7 +1,6 @@
 # Pre-flight gates
 
-Register step 10, issue L5-003. Everything that has to be true before the rerun
-starts, in one command:
+Everything that has to be true before a benchmark run starts, in one command:
 
 ```bash
 python -m _experiments.scripts.preflight.run --all --report
@@ -9,7 +8,8 @@ python -m _experiments.scripts.preflight.run --all --report
 
 Gates run in order, all of them run even when an early one fails, and the exit
 status is non-zero if any of them failed. Nothing here repairs anything: a gate
-that fails names the file and the id, and the stream that owns it fixes it.
+that fails names the file and the id, and the fix belongs with the code or the
+data that owns it.
 
 | | Gate | What it reads |
 |---|---|---|
@@ -55,16 +55,16 @@ sample by its documented rule.
 | `environment.py`, `code_tests.py`, `data.py`, `gold.py`, `serving.py`, `canary.py` | one gate each |
 | `report.py` | the markdown and JSON reports |
 | `_probe.py`, `_gold_driver.py`, `_budget_driver.py` | the three things that run in their own process, so a platform import error is a failed check rather than a traceback |
-| `expected_counts.json` | the case counts the write-up reports; a stream that adds cases updates it |
+| `expected_counts.json` | the case counts the paper reports; adding or removing cases updates it in the same commit |
 | `gold_selftest_expected.json` | what a fresh gold self-test must produce per directory, with the benchmark sha256 it was produced from; gate 4 regenerates and compares |
 | `reports/` | the last `--report` run: `preflight_report.md` and `.json`, untracked |
 
-The report was tracked until 2026-09-18. Running the preflight then modified a
+The report is untracked. While it was tracked, running the preflight modified a
 tracked file, and the runner's clean-tree gate refused the run that the preflight
 had just cleared. The report belongs to the run, so it travels with the run's
 output directory and not with the repository.
 | `allow_empty.json` | the gold calls that answer nothing, case by case with the reason |
-| `run_plan.json` | the configurations and columns the rerun covers, and the hosts it has |
+| `run_plan.json` | the configurations and columns the evaluation covers, and the hosts it has |
 | `thresholds.json` | the canary's anomaly thresholds, each with the measurement it came from |
 | `canary_sample.json` | the fixed sample |
 

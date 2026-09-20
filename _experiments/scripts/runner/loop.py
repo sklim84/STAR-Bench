@@ -8,11 +8,11 @@ record shape.
 What the loops guarantee, whatever goes wrong:
 
   * every call the model made before an error is in the record, with its
-    arguments and, when it ran, its result (D21, L5-005);
+    arguments and, when it ran, its result;
   * an argument that is not a JSON object is recorded and flagged, not dropped
-    and not turned into an exception (C2-017);
-  * the round count and the reason the loop stopped are recorded (L5-024);
-  * the model's own text stays in the history and in the record (C2-010).
+    and not turned into an exception;
+  * the round count and the reason the loop stopped are recorded;
+  * the model's own text stays in the history and in the record.
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ __all__ = ["ToolExecutor", "platform_executor", "run_case", "run_scenario",
            "CLARIFICATION_REPLIES"]
 
 MAX_ROUNDS = 5
-MAX_CALLS_PER_ROUND = 8   # L5-024: one case reached 318 calls with no ceiling
+MAX_CALLS_PER_ROUND = 8   # without a ceiling one case reached 318 calls
 
 
 ToolExecutor = Callable[[str, dict], str]
@@ -66,7 +66,7 @@ def _execute(executor: ToolExecutor, call: CallRecord) -> ExecutedRecord:
 
 
 def _tool_content(executed: ExecutedRecord, *, max_tokens: int = TOOL_RESULT_TOKENS) -> str:
-    """What the model reads back. The record keeps the full result (L5-012)."""
+    """What the model reads back. The record keeps the full result."""
     if executed.error is not None:
         return json.dumps({"error": executed.error["message"]}, ensure_ascii=False)
     result = executed.result
@@ -151,7 +151,7 @@ def run_case(case: dict, *, client: ModelClient, arm, executor: ToolExecutor,
 # The neutral reply the oracle history shows for a clarification turn. It is the
 # assistant speaking to the user, so it follows the language of the arm being
 # run; a Korean sentence in an English conversation is a language the model was
-# never asked to work in (D13).
+# never asked to work in.
 CLARIFICATION_REPLIES = {
     "kr": "확인이 필요합니다. 추가 정보를 알려주세요.",
     "en": "I need to check something. Could you give me more detail?",
@@ -165,7 +165,7 @@ def clarification_reply(lang: str | None) -> str:
 # Gold keys that describe a CHECK, not an argument. They belong to the evaluator
 # and must never appear in the conversation: an assistant turn carrying
 # `sql_conditions` and `sql_valid` is not a call any model would make, and it
-# shows the next turn the checking apparatus instead of the query (C2-008).
+# shows the next turn the checking apparatus instead of the query.
 EVALUATOR_ONLY_ARGS = frozenset({
     "sql_conditions", "sql_valid", "sql_contains",
     "result_row_count_min", "result_row_count_max", "result_contains",
@@ -202,8 +202,8 @@ def _oracle_turns(turn: dict, turn_no: int, reply: str = CLARIFICATION_REPLY) ->
     result = turn.get("tool_result")
     if not calls or result is None:
         # A clarification turn. The history gets a neutral reply in the language
-        # of the arm, not the gold annotation note, which used to leak the
-        # expected behaviour into the conversation (C2-010).
+        # of the arm, not the gold annotation note, which would leak the
+        # expected behaviour into the conversation.
         return [{"role": "assistant", "content": reply}]
     payload = result if isinstance(result, str) else json.dumps(result, ensure_ascii=False,
                                                                 default=str)
@@ -245,9 +245,9 @@ def run_scenario(scenario: dict, *, client: ModelClient, arm, executor: ToolExec
         executed = [_execute(executor, c) for c in calls] if setting == "e2e" else []
         round_rec = _round_record(0, result, calls, executed)
         if capped:
-            # The single-turn loop reports reaching the ceiling; this one used to
-            # truncate silently, so a turn that asked for 300 calls read as a
-            # turn that asked for 8 (L5-024).
+            # Both loops report reaching the ceiling. Truncating silently would
+            # make a turn that asked for 300 calls read as a turn that asked
+            # for 8.
             round_rec.error = round_rec.error or {
                 "type": "call_limit", "status": None,
                 "message": f"{len(result.tool_calls)} calls in one turn; "
@@ -274,7 +274,7 @@ def run_scenario(scenario: dict, *, client: ModelClient, arm, executor: ToolExec
                 messages.extend(client.history_turns(result.assistant_message, calls, results))
             else:
                 # The model answered in text. Its own answer goes into the history,
-                # not a '(no tool call)' placeholder (C2-010).
+                # not a '(no tool call)' placeholder.
                 messages.append({"role": "assistant",
                                  "content": result.content or reply})
         else:
@@ -288,7 +288,7 @@ def failed_record(case_id: str, error: BaseException, *, run_id: str, setting: s
     """A record for a case whose worker raised before it could build its own.
 
     A worker failure belongs to its own case: the case still gets a line, with the
-    exception on it, and no other worker's record is touched (L5-019).
+    exception on it, and no other worker's record is touched.
     """
     return RunRecord(
         run_id=run_id, case_id=case_id, setting=setting, tools_lang=tools_lang,

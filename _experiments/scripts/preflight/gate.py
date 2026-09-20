@@ -2,8 +2,8 @@
 
 A gate is a function `run(ctx) -> GateResult`. It reports; it does not repair.
 Every check that shells out records the exact command it ran, because the point
-of the report is that a co-author can paste the failing command and see the same
-thing (L5-003).
+of the report is that whoever reads it can paste the failing command and see the
+same thing.
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ PACKAGE_DIR = Path(__file__).resolve().parent
 # Everything a gate reads or writes is tracked inside this package, so a clean
 # clone of the branch runs every gate. The reports used to be written into the
 # private notes directory; untracking that directory took gate 4's reference
-# data with it and the branch head failed its own gate (V-02).
+# data with it and the branch head failed its own gate.
 REPORT_DIR = PACKAGE_DIR / "reports"
 
 SINGLE_TURN_DIRS = ("benchmarks", "benchmarks_en")

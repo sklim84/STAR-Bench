@@ -8,8 +8,8 @@
 #   --gpu         CUDA devices for this server; the count must match the
 #                 configuration's tensor-parallel size, on the chosen host profile
 #   --mode        single | oracle | e2e
-#   --tools-lang  kr | en   (no default: the old default was documented as Korean
-#                 and was in fact the English platform schema, C2-015)
+#   --tools-lang  kr | en   (no default: an arm chosen by default is invisible in
+#                 the command that produced the records)
 #   --query-lang  kr | en   (default kr; picks benchmarks/ or benchmarks_en/)
 #   --host-profile 48g | 80g
 #   --out-root    parent of the output directory; each run gets a fresh one
@@ -17,7 +17,7 @@
 # Every configuration is served alone, one request at a time, from the pinned
 # registry entry. The script stops with a non-zero status when the server does
 # not come up: the old one printed "[SKIP] ... 서버 기동 실패" and still exited 0,
-# so a row could be missing from a "complete" group (L5-017).
+# so a row could be missing from a "complete" group.
 
 set -euo pipefail
 

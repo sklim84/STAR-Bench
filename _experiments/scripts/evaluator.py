@@ -6,19 +6,20 @@ records plus the gold and writes the eval files. Nothing in a run record is a
 score any more.
 
 This module stays for entry points that still hold a list of tool events in
-memory (the pre-rerun runners, ad-hoc re-scoring notebooks). It wraps those
-events in a run record and returns the Contract 3 result, so a caller gets the
-fixed metrics rather than the pre-audit ones:
+memory (older runners, ad-hoc re-scoring notebooks). It wraps those events in a
+run record and returns the Contract 3 result, so a caller gets the metrics the
+scoring library defines:
 
     h, r, p, a, o, f1_tools, abstain_ok, clarification_ok, error_type, error_flag
 
 Pass ``final_text``: without it every abstention and clarification case fails,
-because D19 requires an answer and not merely the absence of a tool call.
+because an abstention is scored on the answer the model gave and not merely on
+the absence of a tool call.
 
-The pre-audit keys (``primary_tool_hit``, ``tool_recall``, ``tool_precision``,
-``param_accuracy``, ``order_score``, the weighted ``score``) are gone on
-purpose: p and o were 1.0 for a model that called nothing, a was 1.0 for a case
-without checks, and the weighted score has no definition in the paper (D02).
+The keys ``primary_tool_hit``, ``tool_recall``, ``tool_precision``,
+``param_accuracy``, ``order_score`` and the weighted ``score`` are deliberately
+absent: p and o were 1.0 for a model that called nothing, a was 1.0 for a case
+without checks, and the weighted score has no definition in the paper.
 """
 
 from __future__ import annotations
@@ -96,7 +97,7 @@ def classify_exception_error_type(exc: BaseException) -> str:
 
 
 def normalize_exception_result(result: dict, exc: BaseException) -> dict:
-    """Mark a case whose run raised: the calls it did make stay scored (D21)."""
+    """Mark a case whose run raised: the calls it did make stay scored."""
     out = dict(result)
     out["error_type"] = classify_exception_error_type(exc)
     out["error_flag"] = True

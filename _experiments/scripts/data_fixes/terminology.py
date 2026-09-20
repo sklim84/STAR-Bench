@@ -1,27 +1,24 @@
 """One spelling per AML pattern term, and the screen that keeps it that way.
 
 `TERMINOLOGY.md` next to this file is the prose version; this module is the
-executable copy, and it is what the passes and the verifiers actually run. Both
-`p23_terminology_residue` (single-turn) and `multiturn.verify` call `screen()`,
-so the convention is enforced over all four benchmark directories rather than
-over the two the original pass happened to load.
+executable copy, and it is what the linters actually run. Both the single-turn
+linter and `multiturn.verify` call `screen_text()`, so the convention is
+enforced over all four benchmark directories rather than over one arm.
 
 Two rules.
 
 **One spelling per pattern.** `CONVENTION` names it. `BANNED_KR` and `BANNED_EN`
-list the spellings that must therefore not appear in a question, whichever pass
-would have introduced them.
+list the spellings that must therefore not appear in a question.
 
-**No collision with the HOFINET fraud type (L1-010).** 분할 거래 / "split
-transaction" is HOFINET fraud type 3, a value of `fraud_type`. `structuring` is
-the pattern `detect_ctr_candidates(mode='structuring')`,
+**No collision with the HOFINET fraud type.** 분할 거래 / "split transaction" is
+HOFINET fraud type 3, a value of `fraud_type`. `structuring` is the pattern
+`detect_ctr_candidates(mode='structuring')`,
 `lookup_fiu_reference_types(keyword='structuring')` and the `Structuring`
 glossary entry are about. They are not the same thing and they are not answered
 by the same tool, so a question whose gold selects one must not name the other.
-The 2026-09-16 review left five places that did (`mt_str_010#t3`,
-`mt_str_039#t3`, `mt_str_049#t3`, `st_fiu_001`, `st_mtool_106`): for the two
-single-turn cases the literal reading of both arms is `keyword='split'`, which
-returns two catalog rows against the gold's one and scores 0.
+The collision is not cosmetic: a question that names the wrong side reads as a
+request for a different tool or a different catalog row from the one its gold
+pins, so a model that answers the question as written scores 0.
 
 Scope: the screen reads the text a model sees as the user's message, with any
 JSON payload removed. Gold argument values are out of scope by construction, and

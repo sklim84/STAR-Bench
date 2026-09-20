@@ -1,4 +1,4 @@
-"""Benchmark IO and the change log shared by every data-fix pass."""
+"""Benchmark IO and the change log shared by the build and validation tooling."""
 
 from __future__ import annotations
 
@@ -11,8 +11,8 @@ REPO = Path(__file__).resolve().parents[3]
 KR = REPO / "benchmarks"
 EN = REPO / "benchmarks_en"
 CHANGELOG = Path(__file__).resolve().parent / "changelog"
-# Inputs a pass reads but does not derive. They are tracked, so a clean clone can replay
-# the round; the internal audit directory they used to live in is gitignored.
+# Inputs a build step reads but does not derive. They are tracked next to the code, so a
+# clean clone can rebuild the data without reaching outside the repository.
 INPUTS = Path(__file__).resolve().parent / "inputs"
 
 
@@ -74,7 +74,7 @@ class Bench:
 
 
 class ChangeLog:
-    """Before/after record of one pass, written next to the pass scripts."""
+    """Before/after record of what one build step changed, written next to the code."""
 
     def __init__(self, pass_name: str, description: str):
         self.pass_name = pass_name

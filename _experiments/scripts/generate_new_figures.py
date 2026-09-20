@@ -1,26 +1,15 @@
 """The remaining paper figures: the benchmark's own shape, and two over results.
 
-This module did not import. `FIGURES_DIR` read a name `_WS` that is assigned
-nowhere, so every call raised `NameError` before drawing anything, and the step
-had been dead for as long as that line has been there. It also pointed at a
-manuscript checkout outside this repository, which is what `_figure_out` exists
-to prevent. Figures are written inside `_experiments/figures/` and copied to the
-manuscript in one explicit step (R2C-007).
+Figures are written inside `_experiments/figures/` and copied to the manuscript
+in one explicit step, so drawing a figure here cannot replace one the paper
+builds from.
 
-Three figures were removed rather than ported. `fig_think_diverging` and
-`fig_think_modes` carried nine and nine hardcoded numbers said to come from
-`repro_mean_std.json`, a file that no longer exists, for model sizes that are not
-in the cohort (Qwen3.5-0.8B, 2B, 9B). `RQ4_thinking_effect` draws the thinking
-comparison from the scored runs, so that is where it belongs. `fig_error_modes`
-and `fig_error_by_family` read an `error_analysis_single_turn.json` produced by a
-script that is not a step of `regenerate_analysis`; they now read the scorer's
-own error types.
-
-What is left falls in two groups. The benchmark figures read `benchmarks/`
+The figures fall in two groups. The benchmark figures read `benchmarks/`
 directly and do not depend on any run: question length, difficulty, parameter
 complexity, composition, t-SNE. The result figures read `analysis/load.py` like
 every other step: per-turn hit, size against performance, and the two error
-figures.
+figures, whose categories are the scorer's own error types so that a figure and
+a table classify the same failure the same way.
 """
 
 import json
@@ -33,7 +22,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 # Figures are written inside this repository only; the manuscript copy is one
-# explicit step (_figure_out, R2C-007).
+# explicit step (_figure_out).
 import sys as _sys
 from pathlib import Path as _P
 _sys.path.insert(0, str(_P(__file__).resolve().parent))

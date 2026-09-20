@@ -2,11 +2,11 @@
 
 The cheapest way to find out that a configuration is broken is to run forty cases
 through it and look at the shape of the output, not at the score. Every gate here
-fired in the 2026 data and nobody saw it: Llama-3.2-3B answered 16.1% of its cases
-with an HTTP error that was scored as a zero (L5-019); Phi-4-mini produced no tool
-call on 31.2% of its cases because its registered context was smaller than the
-prompt (C2-001); the finance Qwen's calls all arrived through the fallback parser
-because it was served with the wrong tool parser (L5-010).
+exists because the failure it names has already happened unnoticed: Llama-3.2-3B
+answered 16.1% of its cases with an HTTP error that was scored as a zero;
+Phi-4-mini produced no tool call on 31.2% of its cases because its registered
+context was smaller than the prompt; the finance Qwen's calls all arrived through
+the fallback parser because it was served with the wrong tool parser.
 
     python -m _experiments.scripts.preflight.run canary --config qwen35-4b-nt \
         --base-url http://127.0.0.1:11434/v1
@@ -32,7 +32,7 @@ KEY = "canary"
 TITLE = "canary run"
 
 SAMPLE_PATH = Path(__file__).resolve().parent / "canary_sample.json"
-DEFAULT_CONTEXT = 32768   # D07, for a canary run that names a model instead of a registry entry
+DEFAULT_CONTEXT = 32768   # the pinned context, for a canary run that names a model rather than a config
 THRESHOLDS_PATH = Path(__file__).resolve().parent / "thresholds.json"
 
 
@@ -100,7 +100,7 @@ def build_sample(root: Path, *, size: int = 40, scenarios: int = 3) -> dict:
             "multi-tool), then the lowest-id hard cases up to 40, plus one multi-turn "
             "scenario per sub-category. Fixed so two configurations are compared on "
             "the same cases and so a canary is cheap: 40 cases plus 3 scenarios is "
-            "about 13 minutes on the slowest 2026 configuration."),
+            "about 13 minutes on the slowest configuration."),
         "_rebuild": "python -m _experiments.scripts.preflight.run canary --rebuild-sample",
         "cases": sorted(chosen),
         "tools_covered": sorted(covered),
@@ -284,7 +284,7 @@ def baseline_empty_share(root: Path, sample: dict) -> float:
     """How often the sample's own gold calls answer nothing, from the allow-list.
 
     The empty share of a real run is only meaningful against this: the ring and
-    layering scans return nothing whatever the model does (D06).
+    layering scans return nothing whatever the model does.
     """
     from .gold import ALLOW_PATH
 

@@ -6,28 +6,21 @@ trees: `load.single()` for the five single-turn columns and
 `load.multiturn("oracle")` for the three multi-turn ones. Both are the arm the
 paper reports, the Korean tool schema with Korean questions.
 
-What changed. The old version carried a `GROUPS` literal of nine vendor groups
-over 28 model names, a `CHECK_NEEDED` set of four names that nothing read because
-its one use sat behind `and False`, and a `_norm_model_key` that patched the two
-spellings the pre-audit eval files used for the same model. All of it is gone.
 The cohort and its order are the serving registry, the display name is the
 registry `label`, and the group blocks are the registry `group`, which is the
 three way split the paper argues about (Korean-Specialized, Finance-Specialized,
-General-Purpose) rather than a vendor grouping that had to be edited by hand
-whenever a model was added. `\\krmodel{}` wraps a row when its registry group is
-Korean-Specialized, which is what the old `KR_GROUPS = {'kr'}` meant.
+General-Purpose). `\\krmodel{}` wraps a row when its registry group is
+Korean-Specialized.
 
-The two paths were relative to the working directory, so the step wrote
-`_experiments/results_RQ1` under whatever directory it happened to be launched
-from. They resolve from the repository root now (PORTING.md, Paths).
+Every path resolves from the repository root, so the step writes to
+`_experiments/results_RQ1` wherever it is launched from.
 
-Column meanings, with the fixed metrics (D02). `h r p a o` are per-case means
-over the cases where the metric is defined, so `p` skips the cases where the
-model called nothing and `a` skips the cases with no parameter checks. A cell
-cannot carry its own n without changing the table's shape, so the counts are a
-comment block at the end of the file (PORTING.md rule 2), where they do not sit
-between a person and the rows they came to paste. `h-bar` and `a-bar` are means
-over turns and `c` is
+Column meanings. `h r p a o` are per-case means over the cases where the metric
+is defined, so `p` skips the cases where the model called nothing and `a` skips
+the cases with no parameter checks. A cell cannot carry its own n without
+changing the table's shape, so the counts are a comment block at the end of the
+file, where they do not sit between a person and the rows they came to paste.
+`h-bar` and `a-bar` are means over turns and `c` is
 the scenario completion rate over scenarios, which is what the oracle scorer
 aggregates as `h`, `a` and `c`.
 
@@ -39,7 +32,7 @@ header comment says so in the file itself.
 
 A configuration the registry names and the scorer has not reached is printed as a
 comment line in its group position, so the gap is visible where the row belongs
-and not only in the summary at the top (PORTING.md rule 4).
+and not only in the summary at the top.
 
 Output: _experiments/results_RQ1/full_models_table_rows.tex
 """
@@ -107,7 +100,7 @@ def collect() -> tuple[dict[str, dict], dict[str, list[str]]]:
 
 
 def provenance(absent: dict[str, list[str]], total: int) -> list[str]:
-    """The header every output carries: which cohort this is (PORTING.md rule 4)."""
+    """The header every output carries: which cohort this is."""
     n_single = total - len(absent["single"])
     n_oracle = total - len(absent["oracle"])
     return [f"n_configs={n_single} of {total} single-turn, {n_oracle} of {total} oracle; "
@@ -119,11 +112,11 @@ def provenance(absent: dict[str, list[str]], total: int) -> list[str]:
 
 
 def counts(values: dict[str, dict]) -> list[str]:
-    """The n behind each cell (PORTING.md rule 2).
+    """The n behind each cell.
 
     It trails the rows rather than heading them. A cell cannot carry its own n
-    without changing the table's shape, and eighteen count lines in front of the
-    rows would bury the thing a person came to paste.
+    without changing the table's shape, and one count line per configuration in
+    front of the rows would bury the thing a person came to paste.
     """
     lines = ["per-configuration counts. p is over the cases that called a tool and a "
              "over the cases with parameter checks, so those are below n_cases:"]

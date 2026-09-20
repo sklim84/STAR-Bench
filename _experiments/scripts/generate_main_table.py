@@ -5,31 +5,26 @@ Reads `_experiments/scripts/analysis/load.py` and nothing else from the results
 trees. The arm is `load.single()`, the Korean tool schema with Korean questions,
 which is the arm tab:overall reports.
 
-What changed. The old version carried a 28 entry `ROWS` literal that paired an
-eval `model` string with a display name and a group, and it normalised that
-string by hand because the pre-audit eval files spelled the model two ways and
-kept `think` as a separate boolean. Rows now come from `load.single()` joined to
-`load.configs()`: the display name is the registry `label`, the group is the
-registry `group`, and a thinking pair is two `config_id`s with two labels instead
-of one model name with a suffix. No name list is left to drift from the registry.
+Rows come from `load.single()` joined to `load.configs()`: the display name is
+the registry `label`, the group is the registry `group`, and a thinking pair is
+two `config_id`s with two labels rather than one model name with a suffix. The
+cohort is the registry itself, so no list of names in this file can drift from
+what was served.
 
-The metrics are the fixed ones (D02), so a mean is taken over the cases where the
-metric is defined and is printed with that count in the CSV. `p` is null for a
-case where the model called no tool and `a` is null for a case with no parameter
-checks; the pre-audit keys wrote 1.0 into both, which inflated `p` for a model
-that abstained often and `a` for a model that called tools with no checkable
-arguments. `avg_tool_precision` therefore does not map onto a single new number:
-the per-case mean over the cases with calls is the honest counterpart, and it is
-what `load.single()["p"]` gives and what the scorer records as `p_case`.
+A mean is taken over the cases where the metric is defined and is printed with
+that count in the CSV. `p` is null for a case where the model called no tool and
+`a` is null for a case with no parameter checks, because a perfect score there
+would reward a model for abstaining or for calling tools with no checkable
+arguments. The per-case mean over the cases that have the metric is what
+`load.single()["p"]` gives and what the scorer records as `p_case`.
 
 The row order is the registry order, because tab:overall lists its rows in that
 order and a person transcribes this file into the table line by line. Every other
 ordering in the analysis comes from the metric.
 
-Ranks are computed over the scored rows only. 18 of the 28 configurations are
-scored today, so the bold and the underline say which of those 18 leads, not
-which of the 28 does; the header comment in the .tex says so and names the
-configurations that are missing (PORTING.md rule 4).
+Ranks are computed over the scored rows only, so the bold and the underline say
+which of the scored configurations leads. The header comment in the .tex says how
+many of the registry's configurations are in and names any that are not.
 
 Multi-turn columns (h-bar, a-bar, c) are not made here. tab:overall takes them
 from the oracle setting, and `generate_full_models_table.py` is the step that
@@ -113,7 +108,7 @@ def collect() -> tuple[list[dict], list[str]]:
 
 
 def provenance(rows: list[dict], absent: list[str]) -> list[str]:
-    """The comment block every output carries (PORTING.md rule 4)."""
+    """The comment block every output carries: how much of the cohort it covers."""
     total = len(rows) + len(absent)
     lines = [f"n_configs={len(rows)} of {total} in the serving registry, "
              f"arm=single (Korean tool schema, Korean questions)"]

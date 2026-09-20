@@ -2,7 +2,7 @@
 
 Every record carries this block, and a run refuses to start when the platform
 checkout, the HOFINET copy or the `hofinet` column list is not what the run was
-configured against (L5-020, C1-004, C2-016, R2C-003).
+configured against.
 
 The platform side of the guard lives in `src/provenance.py` and `src/data/db.py`
 of STAR-Bench-Web: `get_connection()` refuses a DuckDB file that does not match
@@ -28,8 +28,8 @@ __all__ = ["EnvironmentMismatch", "collect", "star_bench_commit", "sha256_file",
 _ROOT = Path(__file__).resolve().parents[3]
 
 # The `hofinet` columns the tools and the gold SQL are written against. A run on
-# a database with the pre-2026-09 Korean column names is the L5-001 failure and
-# must stop at startup rather than score 1,190 cases as model errors.
+# a database that still carries the older Korean column names must stop at
+# startup rather than score 1,190 cases as model errors.
 HOFINET_COLUMNS = (
     "date", "time_slot", "sender_bank", "sender_acc", "receiver_bank", "receiver_acc",
     "fund_type", "media_type", "amount", "is_fraud", "fraud_type", "fraud_description",
@@ -109,7 +109,7 @@ def working_tree_status(root: Path | str | None = None) -> dict:
     `star_bench_dirty` in a run record means "a tracked file differs from the
     commit", which is what makes a run irreproducible, and it stays that. But the
     same question read with `--untracked-files=no` also hid 215 scratch files
-    sitting inside the repository, so the gate says how many there are (V-10).
+    sitting inside the repository, so the gate says how many there are.
     """
     root = Path(root or _ROOT)
     out = _git(root, "status", "--porcelain", "--untracked-files=all")
@@ -148,11 +148,11 @@ def _status_entry(line: str) -> tuple[str, str] | None:
 
 
 def benchmark_digest(cases_dir: Path | str | None) -> dict:
-    """Hash of the case files a run read (C1-012).
+    """Hash of the case files a run read.
 
-    A run record said which platform commit and which database answered but not
-    which benchmark files it was asked about, and the 2026 data was edited and
-    reverted twice. The digest is over file name and bytes of every
+    A platform commit and a database hash say which code and which data answered,
+    not which benchmark files the run was asked about, and the case files are
+    edited between runs. The digest is over file name and bytes of every
     `cases_*.json` in name order, which is what `scoring.gold.load_benchmark`
     computes, so a record and an eval file can be compared.
     """
@@ -181,7 +181,7 @@ def open_database() -> str | None:
 
     `connection_info()` describes the connection that is open, and nothing had
     opened one when `collect()` ran, so `database.origin` and
-    `database.build_info` were null in every record (C2-016).
+    `database.build_info` were null in every record.
     """
     try:
         from _experiments.scripts._platform import ensure_platform_on_path
@@ -266,9 +266,9 @@ def expected_pin(path: Path | str | None = None) -> dict | None:
 def check_pin(record: dict, pin: dict | None, *, strict: bool = True) -> list[str]:
     """Compares the collected provenance with the pin; returns the differences.
 
-    With `strict` the differences raise, which is what a rerun wants: a platform
-    commit or a data hash that moved makes the results incomparable with the rest
-    of the cohort (L5-020).
+    With `strict` the differences raise, which is what a repeat run needs: a
+    platform commit or a data hash that moved makes the results incomparable with
+    the rest of the cohort.
     """
     problems: list[str] = []
     if record.get("platform_error"):

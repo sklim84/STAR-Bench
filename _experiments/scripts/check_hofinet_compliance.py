@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """HOFINET compliance check for the benchmark data.
 
-The implementation is `_experiments.scripts.data_fixes.lint_benchmarks`; this entry
-point is kept because the old one was referenced by the paper and the run scripts.
+Checks that every value the benchmark pins is a value HOFINET holds: accounts that
+exist, amounts among the 48 the data carries, institution and code values from the
+official tables, and gold keys that are properties of the tool they name.
 
-The previous version of this file read Korean parameter keys the data had not used
-since the April re-keying, so it reported "0 violations" both for the real data and
-for a copy with the keys put back in Korean, and it never checked account existence,
-the 48 HOFINET amounts, fund type 4 in a fraud context, or the tool schema. Do not
-quote its "0 violations" (C1-011).
+The implementation is `_experiments.scripts.data_fixes.lint_benchmarks`, which runs
+the same check over both language directories and exits non-zero on any violation.
+This entry point is kept because the run scripts call the benchmark data gate by
+this name.
 """
 
 from __future__ import annotations

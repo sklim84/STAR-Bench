@@ -6,7 +6,7 @@
 The launcher used to build the command in the shell and pin every TP=2 model to
 GPUs 0 and 1 whatever `--gpu` said, so two lanes fought over the same cards, the
 second lane's server failed to start, the model was skipped and the script still
-reported `rc=0` (L5-017). Here the devices come from `--gpu`, the count has to
+reported `rc=0`. Here the devices come from `--gpu`, the count has to
 match the configuration's tensor-parallel size, and a server that does not come
 up exits non-zero.
 """

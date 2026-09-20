@@ -1,9 +1,9 @@
-"""Gate 1: is this the machine and the checkout the rerun was pinned to?
+"""Gate 1: is this the machine and the checkout the run is pinned to?
 
-The 2026 run was scored on a database whose columns had been renamed and on a
-platform checkout nobody recorded, so 1,190 cases came back as model failures
-(L5-001, L5-020, C1-004, C2-016, R2C-003). Every one of those facts is cheap to
-read before a run, and none of them is recoverable afterwards.
+A run scored on a database whose columns had been renamed, against a platform
+checkout nobody recorded, returned 1,190 cases as model failures. Every one of
+those facts is cheap to read before a run, and none of them is recoverable
+afterwards.
 
 The serving dependency stack is checked only with `--serving`, because the
 machine that runs this suite is usually not the machine that serves the models.
@@ -174,7 +174,7 @@ def _star_bench_tree(info: dict, command: str) -> Check:
 
     Untracked files never made it into this check, because the underlying
     `git status` ran with `--untracked-files=no`: 215 scratch files sat inside
-    the repository and the gate called the tree clean (V-10). They are a warning,
+    the repository and the gate called the tree clean. They are a warning,
     not a failure - they cannot change what a tracked script does - but the count
     and the first few names are in the detail and the full list is in the data.
     """

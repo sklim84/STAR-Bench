@@ -1,7 +1,7 @@
-"""Counterexamples from the 2026-09 audit, pinned as single-turn scoring tests.
+"""Counterexamples pinned as single-turn scoring tests.
 
-Each test names the register id it fixes. A failure here means the scorer went
-back to a behaviour an auditor already showed to be wrong.
+Each test names the rule it holds in place. A failure here means the scorer
+went back to a behaviour already shown to be wrong.
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ QT = case("query_transactions", checks={"query_transactions": {
     "sql_conditions": [{"column": "fraud_type", "op": "=", "value": 4}], "sql_valid": True}}, case_id="qt")
 
 
-# --- L4-004, L1-021: a trivial no-call policy must not win p, o or a ----------
+# --- A trivial no-call policy must not win p, o or a --------------------------
 
 def test_null_model_gets_no_precision_or_order_credit(ctx):
     r = score_case(NET, record([]), ctx)
@@ -45,11 +45,11 @@ def test_null_model_aggregate_over_the_real_benchmark(ctx):
     agg = aggregate_single(results)
     assert agg["p_micro"]["mean"] is None and agg["p_micro"]["n_calls"] == 0
     assert agg["o"]["n"] == 0, "o is undefined when the ordered tools were never called"
-    assert agg["h"]["mean"] == 0.0, "empty answers fail the abstention cases too (D19)"
+    assert agg["h"]["mean"] == 0.0, "empty answers fail the abstention cases too"
     assert agg["a"]["n"] < agg["n_cases"], "a is averaged only over cases that have checks"
 
 
-# --- L4-005, D01: over-calling is visible in the tool-set F1 ------------------
+# --- Over-calling is visible in the tool-set F1 -------------------------------
 
 def test_call_every_tool_policy_keeps_h_but_loses_f1(ctx):
     calls = [call(name, {}) for name in sorted(ctx.schemas.names())]
@@ -67,7 +67,7 @@ def test_extra_tool_call_is_labelled_over_call(ctx):
     assert r["extra_tools"] == ["get_statistics"] and r["error_type"] == "over_call"
 
 
-# --- L4-008: every check of one tool is evaluated on the same call -----------
+# --- Every check of one tool is evaluated on the same call -------------------
 
 def test_checks_are_not_split_across_calls(ctx):
     calls = [call("predict_fraud", {"time_slot": 0, "amount": 1, "fund_type": 1}),
@@ -83,7 +83,7 @@ def test_best_call_is_picked(ctx):
     assert score_case(PF, record(calls), ctx)["a"] == 1.0
 
 
-# --- L4-015: SQL conditions, not substrings ---------------------------------
+# --- SQL conditions, not substrings -----------------------------------------
 
 def test_select_1_plus_unrelated_valid_sql_does_not_pass(ctx):
     calls = [call("query_transactions", {"sql": "SELECT * FROM nowhere WHERE fraud_type = 4"},
@@ -123,7 +123,7 @@ def test_legacy_sql_contains_needs_whole_tokens_outside_comments(ctx):
     assert year_only["a"] == 0.0 and in_comment["a"] == 0.0 and real["a"] == 1.0
 
 
-# --- L4-019: typed value comparison -----------------------------------------
+# --- Typed value comparison -------------------------------------------------
 
 @pytest.mark.parametrize("value,expected_score", [
     (78432, 1.0), ("78432", 1.0), (78432.0, 1.0), (78432.9, 0.0), ("78,432", 0.0), (None, 0.0),
@@ -147,7 +147,7 @@ def test_date_string_is_not_an_integer_date(ctx):
     assert score_case(c, record([call("compare_periods", {"period1_start": "2024-01-01"})]), ctx)["a"] == 0.0
 
 
-# --- L1-017: schema defaults are filled before comparison --------------------
+# --- Schema defaults are filled before comparison ----------------------------
 
 def test_omitted_argument_that_equals_the_schema_default_passes(ctx):
     c = case("detect_dormant_reactivation", checks={"detect_dormant_reactivation": {"dormant_days": 180}}, case_id="dorm")
@@ -160,7 +160,7 @@ def test_non_default_gold_value_still_needs_the_argument(ctx):
     assert score_case(c, record([call("detect_dormant_reactivation", {})]), ctx)["a"] == 0.0
 
 
-# --- L1-019: free-string catalog arguments compared by their result set ------
+# --- Free-string catalog arguments compared by their result set --------------
 
 def _fiu_score(ctx, gold, model):
     c = case("lookup_fiu_reference_types", checks={"lookup_fiu_reference_types": {"keyword": gold}}, case_id="fiu")
@@ -207,7 +207,7 @@ def test_gold_value_without_catalog_rows_falls_back_to_string_equality(ctx):
     assert r["a"] == 1.0 and flags.get("gold_empty_result") is True
 
 
-# --- L4-020: malformed arguments never crash the scorer ---------------------
+# --- Malformed arguments never crash the scorer -----------------------------
 
 def test_list_arguments_are_a_failed_check_not_an_exception(ctx):
     r = score_case(NET, record([call("analyze_network", [{"account_id": 78432}])]), ctx)
@@ -228,7 +228,7 @@ def test_non_numeric_hops_is_a_failed_check(ctx):
     assert r["a"] == 0.5
 
 
-# --- L4-021: hallucinated parameters are judged against the schema -----------
+# --- Hallucinated parameters are judged against the schema -------------------
 
 def test_valid_optional_argument_is_not_hallucinated(ctx):
     r = score_case(NET, record([call("analyze_network", {"account_id": 78432, "hops": 2})]), ctx)
@@ -240,7 +240,7 @@ def test_argument_outside_the_schema_counts_as_hallucinated(ctx):
     assert r["hallucinated_param_count"] == 1
 
 
-# --- L4-028: order by first occurrence, strict subsequence ------------------
+# --- Order by first occurrence, strict subsequence --------------------------
 
 def test_reordered_duplicates_do_not_score_full_order(ctx):
     calls = [call("analyze_network", {"account_id": 5}),
@@ -265,7 +265,7 @@ def test_order_is_undefined_when_an_ordered_tool_is_missing(ctx):
     assert r["o"] is None and r["h"] == 0 and r["error_type"] == "missing_tool"
 
 
-# --- L4-029: Harmony channel suffix is a parser artefact, not a tool ---------
+# --- Harmony channel suffix is a parser artefact, not a tool -----------------
 
 def test_harmony_channel_suffix_is_stripped_and_flagged(ctx):
     calls = [call("analyze_network<|channel|>commentary", {"account_id": 78432})]
@@ -280,7 +280,7 @@ def test_recipient_prefix_is_stripped(ctx):
     assert r["h"] == 1 and r["parser_artifacts"]
 
 
-# --- L4-009 and D19: abstention and clarification need an answer -------------
+# --- Abstention and clarification need an answer -----------------------------
 
 def test_abstention_needs_a_non_empty_answer(ctx):
     answered = score_case(ABSTAIN, record([], final_text="This is out of scope."), ctx)
@@ -312,7 +312,7 @@ def test_calling_a_tool_on_an_abstention_case_is_over_call(ctx):
     assert r["h"] == 0 and r["p"] == 0.0 and r["f1_tools"] == 0.0 and r["error_type"] == "over_call"
 
 
-# --- L4-022: error types name the actual failure ----------------------------
+# --- Error types name the actual failure ------------------------------------
 
 def test_error_type_labels(ctx):
     assert score_case(NET, record([]), ctx)["error_type"] == "no_call"
@@ -329,7 +329,7 @@ def test_system_error_and_length_stop(ctx):
     assert score_case(NET, long, ctx)["error_type"] == "length_stop"
 
 
-# --- D21: calls made before an error are still scored -----------------------
+# --- Calls made before an error are still scored ----------------------------
 
 def test_calls_before_an_error_are_scored_with_the_error_flag(ctx):
     rec = record([[call("query_transactions", {"sql": "SELECT 1"})], []],
@@ -345,7 +345,7 @@ def test_a_complete_case_that_errored_afterwards_stays_correct(ctx):
     assert r["h"] == 1 and r["error_flag"] is True and r["error_type"] == "correct"
 
 
-# --- Contract 1 alternatives ------------------------------------------------
+# --- Gold alternatives ------------------------------------------------------
 
 def test_alternative_tool_set_is_accepted(ctx):
     c = case("get_institution_report", checks={"get_institution_report": {"bank_id": 134}},
@@ -363,7 +363,7 @@ def test_abstain_alternative_is_accepted(ctx):
     assert r["h"] == 1 and r["matched"] == "alternative:0" and r["abstain_ok"] is True
 
 
-# --- Contract 3 shape and aggregates ---------------------------------------
+# --- Eval file shape and aggregates ----------------------------------------
 
 def test_aggregate_reports_n_for_every_metric(ctx):
     results = [
