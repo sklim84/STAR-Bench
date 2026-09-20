@@ -4,26 +4,18 @@
 Reads `_experiments/scripts/analysis/load.py` and nothing else from the results
 trees. The arm is `load.single()`, the Korean tool schema with Korean questions.
 
-What changed. The old version had no cohort filter at all. It listed every
-`*.json` under `_experiments/results_kr/eval`, which held 37 files, drew a bar
-for each one and titled the result "28 valid models". Nine of those files are
-models the registry does not carry at all: Qwen3-8B, Qwen3-4B-Instruct-2507 and
-Qwen3-30B-A3B-Instruct-2507, Qwen3.5-9B in both thinking modes, xLAM-2 at 1b, 8b
-and 32b, and Llama-3.1-8B-Instruct. The figure and its own title therefore
-disagreed about which models the reader was looking at, and the nine sat in the
-sort alongside the cohort. The cohort is now the serving registry through
-`load.configs()`, the bar count and the title come from the same number, and
-`load.missing()` names the configurations that are not scored yet in a note under
-the axes (PORTING.md rule 4). The `OUTLIERS` set and the hand written
-`display_name` substitution table are gone with it: the display name is the
-registry `label`, which is the name tab:overall prints.
+The cohort is the serving registry through `load.configs()`, so the bar count and
+the title come from one number and cannot disagree about which models the reader
+is looking at, and a configuration cannot enter the sort by appearing in a
+directory. `load.missing()` names the configurations that are not scored yet in a
+note under the axes. The display name is the registry `label`, which is the name
+tab:overall prints.
 
 `h` is a mean over every case. `a` is a mean over the cases that have parameter
-checks, because `a` is null where there is nothing to check and the pre-audit key
-wrote 1.0 there, which lifted the `a` bar of a model that called tools with no
-checkable arguments (D02). The per-configuration counts are printed to stdout
-next to each bar's value, so a short `a` bar can be read against the number of
-cases it covers.
+checks, because `a` is undefined where there is nothing to check: counting it as
+1.0 would lift the `a` bar of a model that called tools with no checkable
+arguments. The per-configuration counts are printed to stdout next to each bar's
+value, so a short `a` bar can be read against the number of cases it covers.
 
 The bars are sorted by `h` because this figure is about the ranking; the tables
 keep the registry order.

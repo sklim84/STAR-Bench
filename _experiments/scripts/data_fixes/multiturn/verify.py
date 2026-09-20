@@ -1,4 +1,4 @@
-"""Checks the rebuilt multi-turn benchmark, and prints the distribution the paper reports.
+"""Checks the multi-turn benchmark, and prints the distribution the paper reports.
 
     python -m _experiments.scripts.data_fixes.multiturn.verify
 
@@ -7,25 +7,28 @@ What it asserts:
 * Korean and English carry the same scenario ids in the same order, the same
   turn counts, and a byte-identical tool interface (`tool_calls`, `tool_result`,
   `context_ref`, `reference_calls`); only `content`, `scenario`,
-  `fraud_type_name` and `note` differ (C1-010).
+  `fraud_type_name` and `note` differ, so the two arms differ in language and in
+  nothing a model is scored on.
 * Every gold argument key is a property of that tool's schema, every required
   argument of a gold call is pinned, and every `query_transactions` turn carries
   an executable `reference_sql`.
 * Every `context_ref` resolves inside the source turn's real `tool_result` and
-  names an argument the gold call of its own turn takes (L2-013).
-* No old crime name, no institution id outside the HOFINET ranges, and no
-  account id that is not a HOFINET account (L2-006, L2-008, L3-018).
+  names an argument the gold call of its own turn takes, because a reference the
+  model cannot follow makes the turn unanswerable.
+* No crime name HOFINET does not carry, no institution id outside the HOFINET
+  ranges, and no account id that is not a HOFINET account: a turn that names one
+  describes data that is not there.
 * Every stored `tool_result` is still exactly what the platform returns for that
-  turn's gold call, so the injected history cannot drift from the tool layer (D03).
+  turn's gold call, so the injected history cannot drift from the tool layer.
 * No tool result is large enough to be truncated before it reaches the model.
 * One spelling per AML pattern term in every turn, and no turn that names HOFINET
   fraud type 3 where its own gold calls a `structuring` tool, or the other way
-  round (`data_fixes/terminology.py`, L1-010). `p20_terminology`'s own screen ran
-  over the single-turn arms only, which is how three turns kept 분할거래 for a
-  `detect_ctr_candidates(mode='structuring')` gold.
+  round (`data_fixes/terminology.py`). The screen runs over the multi-turn arms
+  here and over the single-turn arms in the linter, so one convention covers all
+  four directories.
 * Every FIU keyword and glossary term a gold pins selects at least one catalog
   row, and the same rows however it is capitalised, so its spelling cannot decide
-  the score (L1-019).
+  the score.
 """
 
 from __future__ import annotations
@@ -44,9 +47,10 @@ from .. import terminology
 from .build import KR_DIR, EN_DIR, FILENAME, resolve_path
 from .spec import CHECK_ONLY, KO_SOURCE
 
-# Crime names the pre-audit data used, which HOFINET does not carry.
+# Crime names HOFINET does not carry. A turn that uses one as if it were a
+# transaction type in the data is describing something the tools cannot return.
 OLD_NAMES = ["자금세탁", "보이스피싱", "대포통장", "불법도박", "유사수신", "정액거래", "라운드 금액"]
-# Institution ids the pre-audit data invented.
+# Institution ids that are in no HOFINET range.
 BAD_BANKS = {73, 88, 205, 305}
 TOOL_RESULT_CHAR_BUDGET = 12000   # about 4,000 tokens of Korean-and-English JSON
 
@@ -74,7 +78,7 @@ def hofinet_ids() -> tuple[set, set, set]:
     return accounts, senders, receivers
 
 
-# `generate_str` answers in the language of the question (D13), and it echoes the
+# `generate_str` answers in the language of the question, and it echoes the
 # summary it is given into VII_Narrative.SuspicionJudgmentReason, so those two places
 # are language-dependent by design. They are blanked before the two arms are compared,
 # and `check_summary_language` checks them on their own; everything else in the gold
@@ -126,7 +130,7 @@ def summaries(scenarios: list[dict]):
 
 
 def check_summary_language(kr: list[dict], en: list[dict], fail):
-    """The answer is written in the language of the question (D13).
+    """The answer is written in the language of the question.
 
     The `fraud_type` argument stays Korean in both arms: it is a §VI enum the platform
     only accepts in Korean. `summary` is free text, so it follows the question.
@@ -212,7 +216,7 @@ def check_entities(kr: list[dict], en: list[dict], accounts, senders, receivers,
 
 
 def check_results_are_live(kr: list[dict], fail):
-    """Re-execute every gold call and compare it with the stored result (D03)."""
+    """Re-execute every gold call and compare it with the stored result."""
     from .build import call_arguments, tool_executor
     from .spec import Turn
 
@@ -234,13 +238,13 @@ CATALOG_ARGS = {"lookup_fiu_reference_types": ("keyword",), "get_aml_glossary": 
 
 
 def check_terminology(kr: list[dict], en: list[dict], fail):
-    """One spelling per pattern, and no structuring / fraud-type-3 collision (L1-010)."""
+    """One spelling per pattern, and no structuring / fraud-type-3 collision."""
     for problem in terminology.screen_multiturn(kr, "kr") + terminology.screen_multiturn(en, "en"):
         fail(problem)
 
 
 def check_catalog_gold(kr: list[dict], fail):
-    """A catalog-valued gold cannot be decided by how it is capitalised (L1-019)."""
+    """A catalog-valued gold cannot be decided by how it is capitalised."""
     from src.features.aml_reference import get_aml_glossary, lookup_fiu_reference_types
 
     def rows(tool: str, value: str) -> frozenset:

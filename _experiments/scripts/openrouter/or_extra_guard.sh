@@ -1,10 +1,10 @@
 #!/bin/bash
 # or_extra 가 잉여인 en_tools_kr 팔로 넘어가면 즉시 세운다.
 # 주 표는 한국어 질의만 쓰므로 추가 6설정의 영어 축은 필요 없다.
-# 패턴 매칭으로 프로세스를 찾지 않는다(자기 자신을 죽인 전례가 있다).
+# 패턴 매칭으로 프로세스를 찾지 않는다. 감시자 자신이 그 패턴에 걸려 스스로를 종료시키기 때문이다.
 set -u
 # The driver's log and pid file live wherever the driver was started from; both
-# come from the environment so no machine path is baked in (L5-021).
+# come from the environment so no machine path is baked in.
 RUN_DIR="${OR_RUN_DIR:-${TMPDIR:-/tmp}}"
 LOG="${OR_LOG:-$RUN_DIR/or_extra.log}"
 PIDF="${OR_PIDFILE:-$RUN_DIR/or_extra.pid}"

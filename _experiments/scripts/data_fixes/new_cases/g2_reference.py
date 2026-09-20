@@ -1,7 +1,7 @@
 """Group 2 - the two catalog tools: `get_aml_glossary` (8 -> 25) and
 `lookup_fiu_reference_types` (8 -> 25).
 
-D10: these questions ask for what the catalog holds, not for a concept explanation.
+these questions ask for what the catalog holds, not for a concept explanation.
 Every glossary term is one of the 13 entries `aml_reference._AML_GLOSSARY` defines and
 every FIU keyword selects at least one catalog row (checked against `grounding.json`,
 which records the row counts). The keyword cases that name an industry need the catalog
@@ -9,7 +9,7 @@ rather than model knowledge, because the catalog is an excerpt: which rows it ho
 "balance certificate" in securities is not something a model can recall.
 
 Half of the glossary questions write the term out and half name the concept the term
-abbreviates, so the model has to resolve it; the D23 rule turns that into the easy /
+abbreviates, so the model has to resolve it; the rule turns that into the easy /
 medium split.
 """
 
@@ -38,7 +38,7 @@ GLOSSARY = [
     ("STR", "AML 용어집의 STR 항목과 CTR 항목을 비교해서 보고 대상과 기한 차이를 설명해줘",
      "Please compare the STR entry with the CTR entry in the AML glossary and explain how the "
      "reporting subject and the deadline differ.",
-     "CTR", "comparison of two entries the glossary holds; either lookup is the first step (D10)"),
+     "CTR", "comparison of two entries the glossary holds; either lookup is the first step"),
     ("Structuring", "AML 용어집에 등록된 Structuring 항목과 Layering 항목의 정의를 비교해줘",
      "Please compare the definitions of the Structuring entry and the Layering entry in the "
      "AML glossary.",

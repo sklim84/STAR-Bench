@@ -25,7 +25,7 @@ def cases():
 
 
 def test_the_pre_audit_keys_are_not_resurrected(cases):
-    """D02 removed these names with their definitions; a column of the same name
+    """removed these names with their definitions; a column of the same name
     over the new numbers would bring the definitions back."""
     gone = {"primary_tool_hit", "tool_recall", "tool_precision", "param_accuracy",
             "param_key_accuracy", "order_score", "score"}

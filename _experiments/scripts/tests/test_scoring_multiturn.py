@@ -22,7 +22,7 @@ NET_TURN = turn(1, [{"name": "analyze_network", "arguments": {"account_id": 7843
                 tool_result={"account_id": 78432, "connected_account_count": 8})
 
 
-# --- L4-018: one comparison module for both settings ------------------------
+# --- one comparison module for both settings ------------------------
 
 def test_best_call_wins_in_multi_turn_too(ctx):
     calls = [call("analyze_network", {"account_id": 1}), call("analyze_network", {"account_id": 78432})]
@@ -52,7 +52,7 @@ def test_over_calling_shows_up_in_precision_and_f1(ctx):
     assert t["h"] == 1 and t["p"] == 0.2 and t["f1_tools"] < 0.4 and t["error_type"] == "over_call"
 
 
-# --- L2-012 / L4-011: generate_str narrative and probability are not scored --
+# --- / generate_str narrative and probability are not scored --
 
 STR_TURN = turn(4, [{"name": "generate_str", "arguments": {
     "summary": "Account 78432 moved 49.5m KRW at night to three accounts.",
@@ -84,7 +84,7 @@ def test_list_arguments_score_as_set_recall(ctx):
     assert t["a"] == 0.5
 
 
-# --- L4-027: context_hit only from the expected tool's call -----------------
+# --- context_hit only from the expected tool's call -----------------
 
 CTX_SCENARIO = scenario([
     turn(1, [{"name": "detect_monitoring_alerts", "arguments": {"rule_id": "R001"}}],
@@ -103,7 +103,7 @@ def test_context_hit_requires_the_expected_tool(ctx):
     assert score_scenario(CTX_SCENARIO, wrong_tool, ctx)["turns"][1]["context_hit"] is False
 
 
-# --- L4-007: end-to-end references come from the run's own results ----------
+# --- end-to-end references come from the run's own results ----------
 
 def _e2e_records(own_account, *, executed=True):
     result = {"alerts": [{"account_id": own_account, "rule": "R001"}]} if executed else None
@@ -146,7 +146,7 @@ def test_e2e_sql_condition_value_follows_the_own_result(ctx):
     assert t["a"] == 1.0 and t["context_hit"] is True
 
 
-# --- L4-001 and D02: c is "every turn has h = 1" ----------------------------
+# --- and : c is "every turn has h = 1" ----------------------------
 
 def test_scenario_complete_needs_every_turn_to_hit(ctx):
     gold = scenario([NET_TURN, STR_TURN])

@@ -1,10 +1,9 @@
 # STAR-Bench dependencies (Python 3.12).
 #
 # There are two environments, and they are not installed together. A single file
-# could not hold both: the serving stack follows vLLM's and torch's numpy, the
-# tool layer needs numpy 2 for DuckDB, PyArrow and XGBoost, and the pin that used
-# to sit here (numpy==1.26.4) satisfied neither, so a co-author could not
-# reproduce a run on another machine (R1-R4).
+# could not hold both: the serving stack follows vLLM's and torch's numpy and the
+# tool layer needs numpy 2 for DuckDB, PyArrow and XGBoost, so one pin here would
+# satisfy neither and the run would not install on another machine.
 #
 #   serving host:      _experiments/env/requirements-serving.txt
 #   evaluation host:   _experiments/env/requirements-eval.txt

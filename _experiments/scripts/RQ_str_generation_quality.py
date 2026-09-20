@@ -31,11 +31,10 @@ never parsed into an object has no ``summary`` field; it counts as produced with
 an empty narrative, which scores 0 on every axis, and the count is reported as
 ``n_unparsed_arguments``.
 
-Ported to the scored rerun (see `analysis/PORTING.md`): the `EXCLUDE` list is
-gone and the cohort is the serving registry (rule 3); the output carries
-`n_configs` and the ids that are not scored (rule 4); every rate carries the n
-it was taken over (rule 2). The JSON is an object rather than a bare list so it
-can hold that cohort block, with the per-configuration rows under `rows`.
+The cohort is the serving registry rather than a list in this file; the output
+carries `n_configs` and the ids that are not scored, and every rate carries the n
+it was taken over. The JSON is an object rather than a bare list so it can hold
+that cohort block, with the per-configuration rows under `rows`.
 
 Per configuration, statistics run over the scenarios whose GOLD case has a
 ``generate_str`` turn; ``str_production_rate`` (how often an STR was produced at

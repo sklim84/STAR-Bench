@@ -10,8 +10,8 @@ What it reads
     below. It no longer walks `_experiments/results_kr/eval/*.json`, no longer
     resolves its paths against the working directory, and no longer carries an
     `EXCLUDE_MODELS` / `_CANONICAL_NAMES` literal: the cohort is the serving
-    registry (PORTING rule 3), and every output names how many of the 28
-    configurations are scored and which are not (PORTING rule 4).
+    registry (the rule), and every output names how many of the 28
+    configurations are scored and which are not (the rule).
 
 What changed in what it counts
     The question is the same, the gap between finding the tool and filling its
@@ -20,11 +20,11 @@ What changed in what it counts
     - `param_accuracy` was read as `float(... or 0)`, which turned a case with no
       parameter checks into a zero and inflated the gap. `a` is null for such a
       case, so every mean over it is taken across the non-null rows and carries
-      its own n beside it (PORTING rule 2). `hit_mean` and `param_acc_mean` can
+      its own n beside it (the rule). `hit_mean` and `param_acc_mean` can
       therefore rest on different denominators, and both are written out.
-    - the per-case weighted `score` is gone with its definition (PORTING rule 1);
+    - the per-case weighted `score` is gone with its definition (the rule);
       `h` is the case outcome, and `error_type` now comes from the new taxonomy
-      (PORTING rule 5), so its distribution is written out as well.
+      (the rule), so its distribution is written out as well.
     - `param_check_details` became `checks`, which `load.single()` does not
       expose, so the csv cannot carry the expected/actual pair per check. What it
       carries instead is `call_arguments`: the arguments the model passed to
@@ -189,7 +189,7 @@ def main() -> int:
             "gap = hit_mean - param_acc_mean, how far the model gets past finding the tool "
             "without filling its keyword. "
             "param_acc_mean is the mean of a over the param_acc_n cases that carry parameter "
-            "checks; a is null, never zero, for a case with none (PORTING rule 2), so hit_n "
+            "checks; a is null, never zero, for a case with none (the rule), so hit_n "
             "and param_acc_n can differ and the gap is a difference of two means over "
             "different denominators. "
             "Keys of per_model_summary are config_ids: thinking and non-thinking are separate "
@@ -212,7 +212,7 @@ def main() -> int:
         # Plot A: per case, tool hit against parameter accuracy
         case_ids = list(case_summary)
         # a case with no parameter checks anywhere has no a at all; it draws no
-        # bar rather than a bar at zero (PORTING rule 2)
+        # bar rather than a bar at zero (the rule)
         nan = float("nan")
         hits = [nan if case_summary[c]["hit_mean"] is None else case_summary[c]["hit_mean"]
                 for c in case_ids]
@@ -243,7 +243,7 @@ def main() -> int:
         plt.close()
 
         # Plot B: the configurations with the widest gap. Display names come
-        # from the registry label (PORTING rule 3), not a name table.
+        # from the registry label (the rule), not a name table.
         ranked = [(cid, v) for cid, v in model_summary.items() if v["gap"] is not None]
         ranked.sort(key=lambda item: -item[1]["gap"])
         ranked = ranked[:N_GAP_ROWS]

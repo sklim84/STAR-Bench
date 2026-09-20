@@ -5,8 +5,8 @@ is served: model id and pinned revision, tokenizer/chat template with its hash,
 tool-call parser, reasoning parser and the single labelled reasoning mode,
 context length, output budget, temperature, seed, concurrency and tensor-parallel
 size. The shell launcher asks this module for the vLLM arguments, so a
-configuration cannot differ between the launcher and the record.
-Concurrency is the one field a run may override, and the override is recorded.
+configuration cannot differ between the launcher and the record. Concurrency is
+the one field a run may override, and the override is recorded.
 
 Sizing targets the serving hardware: hosts with 2 or 4 NVIDIA L40S 48 GB cards,
 plus on-demand hosts with 80 GB cards. `tp` is the 48 GB plan and `tp_80g` the

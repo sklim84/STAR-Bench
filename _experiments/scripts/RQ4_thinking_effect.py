@@ -7,23 +7,17 @@ per-scenario mean tool hit, so the manuscript can cite both:
 - single Delta h and multi Delta h_bar per pair
 - the non-monotone effect of the thinking mode (it differs by family)
 
-Porting note (PORTING.md rule 1). This step read the pre-audit aggregates
-(`overall.primary_tool_hit_rate`, `overall.avg_tool_hit`) rather than
-thresholding the weighted `score` itself, but it belongs to the same family of
-steps and follows the same substitution: **`score >= 0.9` became `h == 1`**
-across this analysis, because that score has no definition in the paper (D02)
-and is gone. Single-turn h is now the mean of the per-case `h`, and the
-multi-turn h_bar is the mean of the per-scenario `h_mean`, which is what
-`avg_tool_hit` became. Every number carries its n (rule 2).
+Metrics. **A case is correct when `h == 1`**, so single-turn h is the mean of the
+per-case `h` and the multi-turn h_bar is the mean of the per-scenario `h_mean`.
+Every number carries its n.
 
-Pairing (rule 3). The `THINKING_PAIRS` list of four base ids with literal
-`__think` / `__nothink` suffixes is deleted. In the serving registry the two
-arms are separate `config_id`s, so the pairs come from `load.configs()`: two
-configurations that share a `model` and differ in `reasoning_mode`, with the
-mode saying which arm reasons. The `OUTLIERS` set, which was empty and drove
-`_ex_outlier` keys in the output, is deleted with it; no row is dropped from a
-mean without the output saying which and why. A registry pair with only one arm
-scored is reported as such rather than dropped in silence (rule 4).
+Pairing. In the serving registry the two arms are separate `config_id`s, so the
+pairs come from `load.configs()`: two configurations that share a `model` and
+differ in `reasoning_mode`, with the mode itself saying which arm reasons. No
+list of model names is kept here, so nothing can drift from what was served. No
+row is dropped from a mean without the output saying which and why, and a
+registry pair with only one arm scored is reported as such rather than dropped
+in silence.
 
 Output (unchanged names, under `_experiments/results_RQ4`):
   - thinking_effect_per_pair.csv
@@ -90,8 +84,8 @@ def single_hits() -> dict:
 def multiturn_hits() -> dict:
     """config_id -> {h_bar, n} over the oracle scenarios.
 
-    `h_bar` is the mean of the per-scenario `h_mean`, which is what the pre-audit
-    `avg_tool_hit` became.
+    `h_bar` is the mean of the per-scenario `h_mean`, the scorer's own
+    per-scenario mean turn-level hit.
     """
     try:
         scenarios, _ = load.multiturn(SETTING)
@@ -192,7 +186,7 @@ def main():
         'n_pairs_delta_multi': n_multi,
         'note': ('Delta h = h(T) - h(NT) over the single-turn cases; '
                  'Delta h_bar = h_bar(T) - h_bar(NT) over the oracle scenarios, where '
-                 'h_bar is the mean per-scenario h_mean (the old avg_tool_hit). '
+                 'h_bar is the mean per-scenario h_mean. '
                  'No pair is excluded from the means: every pair with both arms scored '
                  'is in them. ' + cohort_note),
     }
@@ -215,9 +209,9 @@ def main():
             ax.set_xticklabels(names, fontsize=FS_TICK, rotation=20, ha='right')
             ax.set_ylabel(ylabel, fontsize=FS_LABEL)
             ax.set_title(cohort_note, fontsize=FS_LEGEND - 2)
-            # The pre-audit offsets were absolute and tuned for the old scale, which
-            # put every label of an all-negative panel outside the axes. They follow
-            # the range of the bars instead, and the limits leave room for them.
+            # The label offsets follow the range of the bars rather than being
+            # absolute, because an absolute offset puts every label of an
+            # all-negative panel outside the axes. The limits leave room for them.
             span = max(abs(d) for d in deltas) or 1.0
             pad = 0.06 * span
             for i, d in enumerate(deltas):

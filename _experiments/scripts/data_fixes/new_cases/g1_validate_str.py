@@ -1,6 +1,6 @@
 """Group 1 - `validate_str_fields` cases (3 -> 25).
 
-Every case carries a full STR draft in the question (D19). The draft is built from
+Every case carries a full STR draft in the question. The draft is built from
 one real HOFINET transfer aggregate in `grounding.json`: the two account numbers,
 the withdrawal institution code, the channel, the window, the transaction count and
 the total amount are the values that pair actually has in that window, so a reviewer

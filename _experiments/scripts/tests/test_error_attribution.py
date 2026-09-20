@@ -1,11 +1,11 @@
-"""Which cause an executed tool error is attributed to (L3-001).
+"""Which cause an executed tool error is attributed to.
 
 A call is attributed to exactly one cause, by the first rule that matches its
 message, so a generic rule placed above a specific one takes its hits. That is
 what happened to `platform_model_artifact`: the tool layer wraps most of its own
 defects in "An unexpected error occurred during tool execution: ...", and the
 rule matching that wrapper sat above the rule naming the model-artifact keys, so
-142 `'predict_prob'` and 4 `__round__` messages were counted as generic (V-09).
+142 `'predict_prob'` and 4 `__round__` messages were counted as generic.
 Both causes are in the platform family, so the 863 / 281 / 180 split did not
 move, but the cause table a caption quotes did.
 """

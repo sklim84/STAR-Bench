@@ -20,15 +20,14 @@ is defined, so `p` skips the cases where the model called nothing and `a` skips
 the cases with no parameter checks. A cell cannot carry its own n without
 changing the table's shape, so the counts are a comment block at the end of the
 file, where they do not sit between a person and the rows they came to paste.
-`h-bar` and `a-bar` are means over turns and `c` is
-the scenario completion rate over scenarios, which is what the oracle scorer
-aggregates as `h`, `a` and `c`.
+`h-bar` and `a-bar` are means over turns and `c` is the scenario completion rate
+over scenarios, which is what the oracle scorer aggregates as `h`, `a` and `c`.
 
-`$\\pm$0.000` stays in every cell. There is one run per configuration, so no
-standard deviation was measured; the placeholder is there because the appendix
-table's cells were laid out with a `mean$\\pm$sd` shape and a person pastes these
-rows into that shape. It is a formatting filler, not a measured spread, and the
-header comment says so in the file itself.
+`$\\pm$0.000` is in every cell. There is one run per configuration, so no standard
+deviation is measured; the placeholder is there because the appendix table's cells
+are laid out in a `mean$\\pm$sd` shape and a person pastes these rows into it. It
+is a formatting filler, not a measured spread, and the header comment says so in
+the file itself.
 
 A configuration the registry names and the scorer has not reached is printed as a
 comment line in its group position, so the gap is visible where the row belongs

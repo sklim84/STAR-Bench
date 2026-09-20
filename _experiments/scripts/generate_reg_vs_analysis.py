@@ -5,10 +5,8 @@ regulatory-tool mean h joined by a thin segment, configurations sorted by the
 analysis mean. A dumbbell rather than two lines, because a line across
 categorical models invents a continuity that is not there.
 
-The metric is `h`, the primary tool hit (0/1). The pre-audit figure read
-`by_category[t].aggregated.primary_tool_hit_rate`, a key that is gone with the
-weighted score it sat beside (D02); `h` is the same quantity under the scorer's
-own name (PORTING rule 1).
+The metric is `h`, the primary tool hit (0/1): whether the configuration reached
+for the right tool on the case. "Is this case correct" means `h == 1`.
 
 Regulatory Reporting is four single-turn tools: STR-field validation,
 CTR-candidate detection, FIU reference-type lookup and AML glossary lookup.
@@ -17,14 +15,14 @@ category carries it. `multi_tool` and `missing_parameters` are case groups, not
 tools, and sit on neither side. Each side is the unweighted mean over its
 category means, the definition the manuscript states.
 
-The cohort is the serving registry through `load.single()`; the `EXCLUDE` and
-`NAME` literals are gone (rule 3) and the display name is the registry `label`.
-The figure states how many of the 28 configurations it draws, and the run prints
-the ids that are missing, so the caption cannot claim 28 while the plot shows
-fewer (rule 4).
+The cohort is the serving registry through `load.single()` and the display name
+is the registry `label`, so nothing in this file can name a model the registry
+does not serve. The figure states how many configurations it draws and the run
+prints the ids that are missing, so a caption cannot claim the whole cohort
+while the plot shows part of it.
 
 Figures are written inside this repository only; copying into the manuscript is
-one explicit step (_figure_out, R2C-007).
+one explicit step (_figure_out).
 
 Outputs
     _experiments/figures/fig_regulatory_vs_analysis_v2.{png,pdf}
@@ -103,12 +101,12 @@ def main():
     ax.set_xticklabels(labels, rotation=90, ha="center", fontsize=6.5)
     ax.tick_params(axis="y", labelsize=8)
     ax.set_ylabel("Mean tool hit $h$", fontsize=8)
-    # Rule 4: the cohort is on the figure, so a caption cannot claim 28 rows while
-    # the plot draws fewer.
+    # The cohort is on the figure, so a caption cannot claim the whole registry
+    # while the plot draws fewer rows.
     ax.set_title(f"{len(rows)} of {n_total} configurations scored", fontsize=6.5,
                  loc="left", color="#555555", pad=3)
-    # The limits follow the data: a fixed 0.95 top clipped the highest marker
-    # (Gemma-4-31B analysis h = .955) in half (L6-048).
+    # The limits follow the data, because a fixed top clips the highest marker
+    # in half as soon as a configuration scores above it.
     low = min(reg.min(), ana.min())
     high = max(reg.max(), ana.max())
     pad = max(0.02, (high - low) * 0.08)

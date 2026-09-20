@@ -5,17 +5,15 @@ For every configuration and every STR scenario, turn 1 either hit its gold tool
 or it did not, and this step compares the h of turns 2..N under the two
 outcomes, plus the recovery rate at turn 2 (turn 1 missed, turn 2 hit).
 
-Ported to the scored rerun; the input is `analysis/load.py` and nothing else
-(see `analysis/PORTING.md`):
+The input is `analysis/load.py` and nothing else:
 
   - the turn metric is `h`, the paper's primary metric, and it is already 0/1.
-    The old reader thresholded `tool_hit < 1.0`; a turn now fails when `h == 0`
-    (PORTING rule 1).
-  - the cohort is the serving registry, not the `EXCLUDE` list that used to sit
-    in this file (rule 3). Rows are the configurations scored in the oracle
-    setting, and `load.missing()` names the rest.
+    A turn fails when `h == 0`, which is what "is this turn correct" means.
+  - the cohort is the serving registry rather than a list in this file. Rows are
+    the configurations scored in the oracle setting, and `load.missing()` names
+    the rest.
   - the outputs and the two figures carry `n_configs` and the ids that were
-    missing, because 18 of the 28 configurations are scored today (rule 4).
+    missing, so a figure says how many configurations it covers.
 
 Cited in the text as: how far subsequent-turn h drops after a failed turn 1,
 and how much of that a model recovers by the next turn.

@@ -7,15 +7,12 @@ computed from `h`, the primary tool hit (0/1).
 Nothing in this file names a model or a group: the bar groups, their display
 labels with the configuration count, their order, the sub-domain axis, the cohort
 size and the unscored ids all come out of `finance_specialization.json`. That is
-what keeps this figure from drawing a cohort the data no longer has (PORTING
-rules 3 and 4); the sub-domain short names below are line-wrapping for the axis,
-not a selection.
+what keeps this figure from drawing a cohort the data does not have; the
+sub-domain short names below are line-wrapping for the axis, not a selection.
 
-The bars the pre-audit version drew were `finance` against `base_8b`, the two
-DragonLLM models beside the models they were tuned from. Those base models are
-not configurations in the serving registry and were never scored, so that pairing
-is gone; `base_comparison` in the JSON names them, and this figure draws the
-registry groups instead.
+The bars are the registry groups rather than each fine-tune beside the model it
+was tuned from, because neither base is a configuration in the serving registry.
+`base_comparison` in the JSON names the two absent bases.
 
 출력: _experiments/results_RQ5/fig_subdomain_grouped_bar.{pdf,png}
 """

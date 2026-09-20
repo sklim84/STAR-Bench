@@ -5,16 +5,12 @@ configuration's mean tool hit `h` over the tools in that sub-domain. The point i
 that AML competence is multi-dimensional and configuration-specific, with the
 Regulatory Reporting axis the most divergent.
 
-The metric is `h`, the primary tool hit (0/1). The pre-audit figure read
-`by_category[t].aggregated.primary_tool_hit_rate`, a key that is gone with the
-weighted score it sat beside (D02); `h` is the same quantity under the scorer's
-own name (PORTING rule 1). A sub-domain value is the unweighted mean over its
-tools' category means.
+The metric is `h`, the primary tool hit (0/1): whether the configuration reached
+for the right tool on the case. A sub-domain value is the unweighted mean over
+its tools' category means.
 
-Which four are drawn is a rule, not a list of names (rule 3). The old `MODELS`
-literal named four model ids and raised SystemExit when one of them was not in
-the results, which is what a name list beside the registry does as soon as the
-cohort moves; with 18 of 28 scored, three of those four are not there. The rule:
+Which four are drawn is a rule rather than a list of names, so the figure follows
+the registry instead of failing whenever a named model is not in the results:
 
     the highest-h configuration of each registry `group`, plus the lowest-h
     configuration in the cohort
@@ -26,12 +22,12 @@ axis visible. Ranking is by overall single-turn `h`. If the weakest is already a
 group leader the next weakest is taken, and if the registry ever holds more
 groups than the radar can carry, the groups are taken in descending leader order.
 The chosen ids and their ranks are printed on every run, and the figure says how
-many of the 28 configurations are scored (rule 4).
+many of the registry's configurations are scored.
 
-`SUBDOMAINS` below is the manuscript's tool mapping, not a cohort list, so it
-stays; a member tool with no `category` in `load.single()` is reported. Figures
-are written inside this repository only; copying into the manuscript is one
-explicit step (_figure_out, R2C-007).
+`SUBDOMAINS` below is the manuscript's tool mapping rather than a cohort list; a
+member tool with no `category` in `load.single()` is reported. Figures are
+written inside this repository only; copying into the manuscript is one explicit
+step (_figure_out).
 
 Outputs
     _experiments/figures/fig_subdomain_radar.{png,pdf}

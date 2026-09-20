@@ -2,7 +2,7 @@
 
 A gold call that returns an error, a "no transaction history" notice or an empty
 result set cannot be the reference answer to the question that asks for it
-(L3-007). The check runs the platform's own tool layer, so it sees exactly what
+(). The check runs the platform's own tool layer, so it sees exactly what
 a model would see.
 
     python -m _experiments.scripts.data_fixes.verify_gold_calls --benchmark benchmarks
@@ -69,7 +69,7 @@ def main(argv: list[str] | None = None) -> int:
                     help="report only calls that carry an account argument")
     ap.add_argument("--gate", action="store_true",
                     help="exit non-zero when a SQL or account-bearing gold call answers nothing; "
-                         "the empty ring, layering and funnel scans are HOFINET's own shape (D06)")
+                         "the empty ring, layering and funnel scans are HOFINET's own shape")
     args = ap.parse_args(argv)
 
     from _experiments.scripts._platform import ensure_platform_on_path  # noqa: PLC0415

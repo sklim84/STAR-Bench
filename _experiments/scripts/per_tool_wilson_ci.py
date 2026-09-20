@@ -8,23 +8,17 @@ For each tool (the case `category`) and each difficulty level, reports:
 - the same interval per configuration inside the bucket, so a narrow bucket says
   which configuration is unstable rather than only that the bucket is small
 
-Porting note (PORTING.md rule 1). The pre-audit version read
-`results_kr/checkpoint/checkpoint_*.jsonl` and called a case correct when the
-weighted `score` was `>= 0.9`. That score has no definition in the paper (D02)
-and is gone, so **`score >= 0.9` becomes `h == 1`**: the binary primary tool hit
-the paper actually reports. A Wilson interval is an interval for a binomial
-proportion and needs a binary outcome, so `h` is what the step wanted all along
-and not a compromise. One consequence: the old `mean_score` (a mean over the
-weighted score) and `prop_correct_0_9` (the thresholded rate) are the same
-number now, and the output carries it once, as `h_mean`.
+**A case is correct when `h == 1`**, the binary primary tool hit the paper
+reports. A Wilson interval is an interval for a binomial proportion and needs a
+binary outcome, so `h` is what the interval is built on and the rate the output
+carries is `h_mean`.
 
-The cohort is the registry, not the set of files on disk (rule 3): the old
-version globbed all 37 checkpoints with no filter. The output names how many
-configurations are scored and which ids are missing (rule 4).
+The cohort is the registry rather than the set of files on disk, so a
+configuration cannot enter a bucket by appearing in a directory. The output names
+how many configurations are scored and which ids are missing.
 
-Output: `_experiments/results_RQ1/per_tool_wilson_ci_round1.json`
-(the pre-audit version wrote it to `_experiments/results/`, outside the
-directory `regenerate_analysis.py` advertises for this step).
+Output: `_experiments/results_RQ1/per_tool_wilson_ci_round1.json`, under the
+directory `regenerate_analysis.py` advertises for this step.
 """
 from __future__ import annotations
 
@@ -172,7 +166,7 @@ def main() -> None:
 
     out = {
         "cohort": covered,
-        "correct_definition": "h == 1 (primary tool hit); the pre-audit score >= 0.9 is gone (D02)",
+        "correct_definition": "h == 1 (primary tool hit)",
         "per_tool": per_tool_summary,
         "per_difficulty": per_difficulty_summary,
         "top5_per_tool_ci": top_configs_per_tool,

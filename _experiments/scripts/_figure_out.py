@@ -1,15 +1,11 @@
 """Where a figure script is allowed to write.
 
-Six figure scripts carried a copied header that redirected matplotlib's savefig
-to two directories at once, one of them a manuscript checkout outside this
-repository. Running a superseded script therefore replaced a figure the paper
-builds from, under the same file name, with no sign that it had happened
-(R2C-007): `RQ3_turnwise_real.py` overwrote `fig_turnwise_line.png` with a
-six-model plot, and `generate_bfcl_comparison.py` wrote a different correlation
-under the name the manuscript uses.
+A figure script writes inside this repository only. A script that redirects
+matplotlib's savefig to a manuscript checkout as well can replace a figure the
+paper builds from, under the same file name and with no sign that it happened,
+so no script does.
 
-A figure script now writes inside this repository only. Copying into the
-manuscript is one explicit step:
+Copying into the manuscript is one explicit step:
 
     python -m _experiments.scripts.regenerate_analysis --copy-to-manuscript ../STAR-Bench-manu/figures
 

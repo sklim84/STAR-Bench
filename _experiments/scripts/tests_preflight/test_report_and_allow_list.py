@@ -148,7 +148,7 @@ def test_a_suite_with_only_allowed_skips_passes_the_check(monkeypatch):
 
 
 # ---------------------------------------------------------------------------
-# Gate 4 reads its own tracked summary, not the private notes directory (V-02)
+# Gate 4 reads its own tracked summary, not the private notes directory
 # ---------------------------------------------------------------------------
 
 from _experiments.scripts.preflight.gate import BENCHMARK_DIRS  # noqa: E402

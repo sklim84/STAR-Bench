@@ -8,8 +8,8 @@ WS-D (compare_periods, get_fraud_type_summary, detect_monitoring_alerts,
 rank_risky_transactions, get_institution_report, analyze_cross_institution_flow).
 
 Every combination here is new: none of the 87 existing multi-tool cases uses the
-same gold tool set. Each question names its own cue for each tool (D11), the STR
-drafts follow D19, and the two `query_transactions` cases carry `sql_conditions`
+same gold tool set. Each question names its own cue for each tool, the STR
+drafts follow , and the two `query_transactions` cases carry `sql_conditions`
 plus an executable reference SQL (Contract 1).
 """
 
@@ -267,7 +267,7 @@ def build(grounding: dict) -> list[dict]:
          ["get_trend_analysis", "detect_monitoring_alerts"],
          "2023년 분기별 이상거래 추이를 확인하고, 2023년 하반기 심야 대량 거래(R001) 알림도 조회해줘",
          "Please check the quarterly suspicious transaction trend for 2023, and retrieve the "
-         "nighttime bulk transaction (R001) alerts for the second half of 2023.",
+         "nighttime bulk transaction alerts for the second half of 2023.",
          "trend over a year beside the rule alerts of its second half"),
         ("st_mtool_124", ["get_aml_glossary", "lookup_fiu_reference_types", "detect_ctr_candidates"],
          {"get_aml_glossary": {"term": "Structuring"},

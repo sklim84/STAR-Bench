@@ -1,4 +1,4 @@
-"""SQL predicate matching (L4-015): conditions must actually restrict the query."""
+"""SQL predicate matching: conditions must actually restrict the query."""
 
 from __future__ import annotations
 
@@ -183,7 +183,7 @@ def test_both_parsers_read_the_same_atoms_from_the_same_statements():
 
 
 # ---------------------------------------------------------------------------
-# Subqueries in the WHERE clause (V-05)
+# Subqueries in the WHERE clause
 #
 # The fallback used to skip any clause whose text contained SELECT, so
 # st_qt_025 and st_qt_039 - both `... WHERE col = v AND amount >= (SELECT ...)`

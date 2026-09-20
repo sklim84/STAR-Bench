@@ -1,17 +1,18 @@
 """Build `benchmarks_multiturn/` and `benchmarks_multiturn_en/` from the scenario specs.
 
 Every gold call is executed on the platform and its real output becomes the
-turn's `tool_result` (D03, L3-004). Every `context_ref` is resolved against that
-real output while the scenario is being built, so a reference can only survive
-if the value is actually in the source turn's result and the receiving gold
-argument really carries it (L2-013).
+turn's `tool_result`, so the history a model is shown is what the tool layer
+would have produced. Every `context_ref` is resolved against that real output
+while the scenario is being built, so a reference can only survive if the value
+is actually in the source turn's result and the receiving gold argument really
+carries it.
 
     python -m _experiments.scripts.data_fixes.multiturn.build
     python -m _experiments.scripts.data_fixes.multiturn.build --check   # no write
 
-The English file is produced in the same pass, keyed by scenario id and turn
-number, so the two files cannot drift apart the way positional matching let them
-(C1-010).
+The English file is produced in the same build, keyed by scenario id and turn
+number, so the two arms are matched by identity rather than by position and
+cannot come apart.
 """
 
 from __future__ import annotations
@@ -75,9 +76,9 @@ def resolve_path(obj, path: str):
 
 _PLACEHOLDER = re.compile(r"\{([A-Za-z_][A-Za-z_0-9]*)(:[^}]*)?\}")
 
-# Korean particles pick their form from the sound the value ends on. Written out
-# once here rather than by hand in 50 scenarios, which is where the 4/28 bulk
-# substitution left "분할 거래이" and "변화으로" behind (L2-010).
+# Korean particles pick their form from the sound the value ends on. The rule is
+# written out once here rather than in 50 scenarios, because a particle chosen by
+# hand stops fitting as soon as the value it follows is rebuilt from the data.
 _PARTICLES = {"은는": ("은", "는"), "이가": ("이", "가"), "을를": ("을", "를"),
               "과와": ("과", "와"), "으로로": ("으로", "로"), "copula": ("이", "")}
 # How each digit is read: 0 영, 1 일, 2 이, 3 삼, 4 사, 5 오, 6 육, 7 칠, 8 팔, 9 구.
@@ -272,7 +273,7 @@ def build_scenario(sc: Scenario, execute) -> tuple[dict, dict, list[dict]]:
                 entry_en["tool_calls"] = [gold_call]
                 entry_en["tool_result"] = result
             else:
-                # An argument the model writes in the language of the question (D13):
+                # An argument the model writes in the language of the question:
                 # the English arm carries its own call and the result that call returns.
                 gold_en = gold_arguments(turn, args_en, conds)
                 gold_call_en = {"name": turn.tool, "arguments": gold_en}

@@ -2,9 +2,8 @@
 #
 # This host runs nothing else. It does not import the tool layer, the scorer or
 # the analysis code, so it does not share their numpy pin: vLLM and torch bring
-# their own, and forcing numpy==1.26.4 on them (as the single requirements.txt
-# used to) is the conflict that made a co-author's rerun impossible to install
-# (R1-R4).
+# their own, and forcing the tool layer's numpy on them is a conflict that leaves
+# the environment unable to install.
 #
 #     python -m venv .venv-serving && . .venv-serving/bin/activate
 #     pip install -r _experiments/env/requirements-serving.txt
@@ -18,10 +17,10 @@ transformers==5.7.0
 torch==2.11.0
 tokenizers==0.22.2
 
-# `tokenizers==0.23.1` and `huggingface-hub==1.6.2` were written from a resolved
-# environment that no longer installs: 1.6.2 is not on PyPI, and 0.23.1 conflicts
-# with transformers 5.7.0. 0.22.2 is what the three pins above resolve to, and it
-# is pinned here so every host in the cohort lands on the same one.
+# `tokenizers` is pinned at 0.22.2 rather than 0.23.1, which conflicts with
+# transformers 5.7.0. 0.22.2 is what the three pins above resolve to, and pinning
+# it keeps every host in the cohort on the same one. `huggingface-hub` carries no
+# pin: the version a resolved environment reports is not always one PyPI serves.
 
 # The Kanana tool parser is loaded as a vLLM plugin from this repository
 # (_experiments/scripts/kanana_tool_calls); it needs no package.

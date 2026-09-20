@@ -1,4 +1,4 @@
-"""The 50 multi-turn STR scenarios, on real HOFINET entities (D03, L3-018).
+"""The 50 multi-turn STR scenarios, on real HOFINET entities.
 
 Every account, institution, date, amount and channel below exists in HOFINET and
 was chosen because it carries the story the scenario tells: a night-bulk alert
@@ -30,7 +30,7 @@ COLS = ("date, time_slot, sender_bank, sender_acc, receiver_bank, receiver_acc, 
 # The tie-break columns are appended to the caller's order, minus the ones it
 # already sorts on: a column repeated in ORDER BY changes nothing, and this
 # string is the reference answer a reviewer reads and the assistant turn the
-# oracle history injects (L2-009).
+# oracle history injects.
 TIEBREAK = ("sender_acc", "receiver_acc", "date", "amount", "time_slot", "media_type", "fund_type")
 
 
@@ -57,7 +57,7 @@ def predict_args(turn: int) -> dict:
 
 
 def str_args(ft: int, summary_kr: str, summary_en: str, tools: list[str]) -> dict:
-    """The gold `generate_str` arguments; the summary is written in the arm's language (D13)."""
+    """The gold `generate_str` arguments; the summary is written in the arm's language."""
     return {"summary": Bi(summary_kr, summary_en), "fraud_type": STR_SECTION_VI[ft],
             "tools_used": tools}
 
@@ -77,7 +77,7 @@ DRAFT_046 = {
 # The same shape, on the account mt_str_023 investigates. The first draft named
 # account 9000000000041932, which is a real HOFINET account but not the one the
 # scenario queries in turn 3 and reports on in turn 5, so the story did not hold
-# (L3-018). These are the real 2024 same-day-withdrawal (type 5) transfers from
+#. These are the real 2024 same-day-withdrawal (type 5) transfers from
 # 9000000004387158 to its busiest type-5 counterparty that year.
 DRAFT_023 = {
     "Header": {"ReportingDate": "2024-05-31"},

@@ -22,7 +22,7 @@ CHECK_ONLY = {"sql_conditions", "sql_valid", "hops_min", "hops_max",
 
 @dataclass(frozen=True)
 class Bi:
-    """One gold argument whose value is written in the language of the question (D13).
+    """One gold argument whose value is written in the language of the question.
 
     `generate_str` echoes its `summary` into the report it returns, so the two arms
     execute the call separately and each stores the report in its own language.
@@ -43,7 +43,7 @@ class Ref:
 # The FIU catalog and the AML glossary are English-only in the platform, and so is the
 # notice detect_aml_patterns returns when a scan finds nothing. A Korean summary that
 # pastes those sentences in is not Korean prose, so `{name:ko}` renders the Korean the
-# row says (L2-012). The build fails on a value that is not in this table, so the
+# row says. The build fails on a value that is not in this table, so the
 # rendering cannot drift away from the result it came from.
 KO_SOURCE = {
     "Excessive number of transactions and bulk operations via internet banking throughout "
@@ -82,7 +82,7 @@ class Turn:
     conds: list[tuple] = field(default_factory=list)   # (column, op, value) sql_conditions
     ctx: tuple | None = None      # (from_turn, path, to_param)
     bind: dict = field(default_factory=dict)   # name -> Ref, read from THIS turn's result
-    clarify: bool = False         # asking back is the correct behaviour (D19)
+    clarify: bool = False         # asking back is the correct behaviour
     abstain: bool = False         # answering without a tool call is correct
     point_kr: str = ""            # what the turn tests, for the note
     point_en: str = ""

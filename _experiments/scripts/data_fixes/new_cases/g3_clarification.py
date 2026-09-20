@@ -1,11 +1,11 @@
 """Group 3 - clarification cases (21 -> 40).
 
-D19: a case expects a clarification only when a *schema-required* argument of the
+a case expects a clarification only when a *schema-required* argument of the
 tool the question asks for is missing or is left as an unresolved reference. Each
 entry below names that tool and that argument, and the question names everything
 else, so a default call cannot answer it and asking back is the only correct move.
 Tools whose arguments are all optional are deliberately absent: for those a default
-call is correct, which is what D19 settled for `st_mp_012/013/019/021/023`.
+call is correct, which is what settled for `st_mp_012/013/019/021/023`.
 """
 
 from __future__ import annotations
@@ -89,6 +89,6 @@ def build(grounding: dict) -> list[dict]:
             "question": question,
             "question_en": question_en,
             "expected": {"primary_tool": "", "tools_must_include": [], "expect_clarification": True},
-            "rationale": f"{tool} cannot run: its required argument {argument} is unresolved (D19)",
+            "rationale": f"{tool} cannot run: its required argument {argument} is unresolved",
         })
     return cases

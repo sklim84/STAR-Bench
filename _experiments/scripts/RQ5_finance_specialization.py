@@ -1,38 +1,34 @@
 #!/usr/bin/env python3
 """RQ5: what finance-domain SFT changes, per AML sub-domain.
 
-The metric is `h`, the primary tool hit (0/1). The pre-audit step read
-`by_category[t].aggregated.primary_tool_hit_rate`; that key is gone with the
-weighted score it sat beside (D02), and `h` is the same quantity under the
-scorer's own name (PORTING rule 1). A sub-domain's number is the unweighted mean
-over its tools' category means, and it carries the tool count and the case count
-behind it (rule 2).
+The metric is `h`, the primary tool hit (0/1): whether the configuration reached
+for the right tool on the case. A sub-domain's number is the unweighted mean over
+its tools' category means, and it carries the tool count and the case count
+behind it.
 
-The base comparison this step was written for is not available from the rerun
-cohort, and the step says so rather than quietly substituting something else.
-The two DragonLLM models were tuned from `meta-llama/Llama-3.1-8B-Instruct` and
-`Qwen/Qwen3-8B`. Neither base is a configuration in the serving registry, so
-neither was run or scored; the pre-audit step reached outside the 28-configuration
-cohort to get them, which is exactly the name-list-beside-the-registry that rule 3
-removes. Picking some other 8B model as a stand-in would make the conclusion a
-property of that one model: the step used to use Hermes-3-8B and its regulatory h
-of .3517 was half of the other 8B models', which inflated the apparent benefit of
-finance SFT. So `base_comparison` in the JSON reports `available: false` and names
-the two absent bases, and the comparison the cohort can actually support is
-emitted instead: the finance-specialised configurations against the other
-registry groups, sub-domain by sub-domain.
+A base comparison would pair each fine-tune with the model it was tuned from, and
+the cohort does not support one: the two DragonLLM models were tuned from
+`meta-llama/Llama-3.1-8B-Instruct` and `Qwen/Qwen3-8B`, and neither base is a
+configuration in the serving registry. Picking some other 8B model as a stand-in
+would make the conclusion a property of that one model. Hermes-3-8B sits at
+regulatory h .3517 against .58 to .70 for the other 8B models, so putting it in
+the base slot would inflate the apparent benefit of finance SFT. `base_comparison`
+in the JSON therefore reports `available: false` and names the two absent bases,
+and the comparison the cohort does support is emitted instead: the
+finance-specialised configurations against the other registry groups, sub-domain
+by sub-domain.
 
 That comparison is between registry groups (`Finance-Specialized`,
-`Korean-Specialized`, `General-Purpose`), not between a list of model names
-(rule 3), and every output carries `n_configs` and the ids still unscored
-(rule 4). Note what that costs today: `dragon-llama-fin` is one of the ten not
-yet scored, so the Finance-Specialized group is one configuration, and the group
-sizes are in the JSON and on the figure.
+`Korean-Specialized`, `General-Purpose`) rather than between a list of model
+names, so it follows what the registry serves. Every output carries `n_configs`
+and the ids still unscored, and the group sizes are in the JSON and on the
+figure, because a group of one configuration supports a narrower claim than a
+group of ten.
 
-The sub-domain definitions below are the manuscript's tab:tool_suite mapping,
-not a cohort list, so they stay. `sub_domain_tools_missing` reports any member
-tool with no `category` in `load.single()`; `generate_str` is expected there,
-being multi-turn only.
+The sub-domain definitions below are the manuscript's tab:tool_suite mapping
+rather than a cohort list. `sub_domain_tools_missing` reports any member tool
+with no `category` in `load.single()`; `generate_str` is expected there, being
+multi-turn only.
 
 Manuscript: the finance-specialisation discussion in Section 5.
 
@@ -174,12 +170,11 @@ def main():
         'available': False,
         'intended_pairs': {cid: BASE_OF[cid] for cid in sorted(BASE_OF)},
         'missing_bases': sorted(set(BASE_OF.values())),
-        'reason': 'Neither base model is a configuration in the serving registry, so neither '
-                  'was run or scored in the rerun. The pre-audit step reached outside the '
-                  '28-configuration cohort for them. No stand-in is substituted: with a '
-                  'different 8B model in the base slot the result becomes a property of that '
-                  'model (Hermes-3-8B, used earlier, sat at regulatory h .3517 against .58-.70 '
-                  'for the other 8B models and inflated the benefit of finance SFT).',
+        'reason': 'Neither base model is a configuration in the serving registry, so '
+                  'neither is part of the scored cohort. No stand-in is substituted: with '
+                  'a different 8B model in the base slot the result becomes a property of '
+                  'that model (Hermes-3-8B sits at regulatory h .3517 against .58-.70 for '
+                  'the other 8B models and would inflate the benefit of finance SFT).',
         'finance_configs_in_registry': sorted(BASE_OF),
         'finance_configs_scored': scored_finance,
         'finance_configs_not_scored': [c for c in sorted(BASE_OF) if c not in scored_finance],
@@ -190,8 +185,8 @@ def main():
         'n_configs': n_configs,
         'configs_missing_from_28': missing,
         'cohort_note': note,
-        'metric': 'h, primary tool hit (0/1). The pre-audit primary_tool_hit_rate under the '
-                  "scorer's own name; the weighted score is gone (D02).",
+        'metric': 'h, primary tool hit (0/1): did the configuration reach for the right '
+                  'tool on this case. A case is correct when h == 1.',
         'sub_domains': list(SUB_DOMAINS.keys()),
         'sub_domain_tools': {sd: list(tools) for sd, tools in SUB_DOMAINS.items()},
         'sub_domain_tools_used': tools_used,

@@ -27,7 +27,7 @@ single-turn tool calling.
   L40S 48 GB and 80 GB hosts; a few are served through a commercial gateway, and the
   run records say which.
 - **Deterministic decoding** (temperature 0); case-level bootstrap (10,000 resamples)
-  confirms stable rankings (Kendall τ = 0.936, 95% CI [0.900, 0.968]).
+  confirms stable rankings (Kendall τ = 0.962, 95% CI [0.935, 0.985]).
 
 ## Benchmark structure
 
@@ -132,7 +132,7 @@ platform (regenerate it with `python -m scripts.train_detector` if you prefer).
 
 Hosted-provider evaluation (OpenAI / Anthropic) needs only the analysis and client
 packages; reproducing the open-weight runs additionally requires the vLLM serving
-stack pinned in `requirements.txt`.
+stack pinned in `_experiments/env/requirements-serving.txt`.
 
 ## Running
 
@@ -201,8 +201,9 @@ path against the mock server, without a GPU. `--report` writes the full report t
 
 ## Headline findings
 
-Every figure below is over the full 28-configuration cohort and is rebuilt by
-`regenerate_analysis --all`; the per-research-question outputs sit under
+Every figure below is rebuilt by `regenerate_analysis --all` and carries the number
+of configurations it covers: 28 for the single-turn and oracle results, 25 for
+end-to-end, 7 for the language 2x2 and 10 for the BFCL comparison; the per-research-question outputs sit under
 `results_RQ1`–`results_RQ5`.
 
 | Model | Single-turn `h` | Multi-turn `h̄` | Completion `c` |
@@ -233,27 +234,27 @@ Every figure below is over the full 28-configuration cohort and is rebuilt by
   the failure: across analysis tools 57% of failures are wrong-tool substitutions,
   while STR-field validation fails by never calling the tool 90% of the time and the
   AML glossary 96%. CTR-candidate detection falls back to a generic transaction query
-  in 49% of its failures. FIU reference lookup is selected correctly 93.3% of the time
-  and grounded correctly 59.8%, the widest such gap in the suite: the model reaches the
+  in 49% of its failures. FIU reference lookup is selected correctly 87.6% of the time
+  and grounded correctly 53.0%, the widest such gap in the suite: the model reaches the
   right tool and cannot convert Korean regulatory terminology into its argument.
 
 - **End-to-end execution costs parameter grounding, not tool selection.** Feeding the
-  agent its own tool outputs lowers mean turn-level hit by 4.2 points and completion by
-  2.2, while parameter accuracy falls further. Tool executions returned an error for
-  1.8% of calls, and all of it was caused by the model rather than the platform or the
-  data.
+  agent its own tool outputs lowers mean turn-level hit by 4.1 points and completion by
+  2.2, while parameter accuracy falls by 9.7. Tool executions returned an error for
+  2.3% of calls, and every attributed one was caused by the model rather than by the
+  platform or the data.
 
 - **Some models cannot emit a callable form.** Four configurations name the correct
   tool in their answer text far more often than they produce a parseable call.
-  Phi-4-mini reports h = .120 while naming the gold tool in 639 of 1,099 cases, and
-  replaying those answers through every vLLM 0.20.1 parser recovers almost none of
-  them: the shapes are not any vendor's format. `unparsed_calls.py` reports this gap
-  per configuration.
+  Phi-4-mini reports h = .120 while naming the gold tool in 639 of its 1,258 cases, and
+  the shapes it emits are not any vendor's call format, so no parser accepts them.
+  `unparsed_calls.py` reports this gap per configuration.
 
-- **General function-calling rank does not predict AML tool use.** Over the 14
-  configurations that overlap with BFCL the rank correlation is weak and not
-  significant (Spearman ρ = 0.23, p = 0.43). xLAM-2-70B is second under BFCL and tenth
-  here; Qwen3.5-4B rises from fourth to second.
+- **General function-calling rank does not predict AML tool use.** Over the ten
+  configurations that overlap with BFCL and whose BFCL runs elicited tool calls at
+  all, the rank correlation is weak and not significant (Spearman ρ = 0.47,
+  p = 0.17). xLAM-2-70B is second under BFCL and seventh here; EXAONE-4.0-32B moves
+  the other way, ninth to fourth.
 
 - **Language alignment is a per-model question.** In the 2×2 over query language and
   tool-definition language, the average effects are small, and the exceptions belong to

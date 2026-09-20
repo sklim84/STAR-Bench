@@ -18,5 +18,6 @@ See the Korean directory's `README.md` for the schema and the evaluation.
 
 ```bash
 PYTHONPATH=. python -m _experiments.scripts.benchmark_multiturn \
-  --models <MODEL> --cases-dir benchmarks_multiturn_en --output _experiments/results_mt_en/
+  --config <CONFIG_ID> --tools-lang en --query-lang en --setting oracle \
+  --out _experiments/runs/mt_oracle_en/<CONFIG_ID>
 ```

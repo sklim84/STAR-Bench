@@ -7,24 +7,17 @@ configuration ranking for each bootstrap iteration. Reports:
 - % of iterations with tau > 0.8
 - Per-configuration 95% CI for rank position (top-10 focus)
 
-Porting note (PORTING.md rule 1). The pre-audit version ranked on the mean of
-the weighted `score` read out of `results_kr/eval/eval_*.json`
-(`by_category[*].per_case[*].score`). That score has no definition in the paper
-(D02) and is gone, so **`score >= 0.9` becomes `h == 1`** and the ranking is now
-over the mean of `h`, the binary primary tool hit the paper reports. The
-resampling is unchanged: the same 10,000 iterations, the same seed 42, the same
-percentile intervals, the same Kendall tau. Only the matrix that goes in
-changed.
+**A case is correct when `h == 1`**, so the ranking is over the mean of `h`, the
+binary primary tool hit the paper reports. The resampling is 10,000 iterations
+under seed 42, with percentile intervals and Kendall tau.
 
-Cohort (rule 3). The `EXCLUDE` list of ten names is deleted. The rows are the
-configurations `load.single()` returns, which is the registry, and a
-configuration cannot leak in by appearing in a directory. Display names come
-from `label`. The output names how many of the 28 are scored and which ids are
-missing (rule 4).
+Cohort. The rows are the configurations `load.single()` returns, which is the
+registry, so a configuration cannot leak in by appearing in a directory. Display
+names come from `label`. The output names how many of the registry's
+configurations are scored and which ids are missing.
 
-Output: `_experiments/results_RQ1/ranking_stability.json`
-(the pre-audit version wrote it to `_experiments/results/`, outside the
-directory `regenerate_analysis.py` advertises for this step).
+Output: `_experiments/results_RQ1/ranking_stability.json`, under the directory
+`regenerate_analysis.py` advertises for this step.
 """
 from __future__ import annotations
 
@@ -153,8 +146,8 @@ def main() -> None:
     result = bootstrap(matrix, config_ids, labels)
     result["cohort"] = covered
     result["nan_fraction"] = nan_frac
-    result["ranked_on"] = ("mean h (primary tool hit); the pre-audit weighted score "
-                           "is gone (D02)")
+    result["ranked_on"] = ("mean h (primary tool hit); a case is correct when "
+                           "h == 1")
 
     print("[3/3] Writing results...")
     OUT_DIR.mkdir(parents=True, exist_ok=True)

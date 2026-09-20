@@ -2,11 +2,9 @@
 """RQ2: the Regulatory Reporting tools against every other tool, per configuration.
 
 The metric is `h`, the primary tool hit (0/1): did the configuration reach for
-the right tool on this case. The pre-audit step read
-`by_category[t].aggregated.primary_tool_hit_rate`; that key is gone together with
-the weighted score it sat beside (D02), and `h` is the same quantity under the
-scorer's own name (PORTING rule 1). `load.single().groupby("category")["h"].mean()`
-and `load.aggregates("single")[cfg]["by_category"][t]["h"]["mean"]` agree.
+the right tool on this case. "Is this case correct" means `h == 1`.
+`load.single().groupby("category")["h"].mean()` and
+`load.aggregates("single")[cfg]["by_category"][t]["h"]["mean"]` agree.
 
 Regulatory Reporting is four single-turn tools: STR-field validation
 (`validate_str_fields`), CTR-candidate detection (`detect_ctr_candidates`), FIU
@@ -19,12 +17,12 @@ case groups rather than tools and are on neither side.
 Each side is the unweighted mean over its category means, the definition the
 manuscript states, and the gap is analysis minus regulatory: a positive gap means
 the regulatory tools were harder. Every row and the summary carry the number of
-categories and cases behind the mean (rule 2), and both outputs carry `n_configs`
-with the configuration ids still unscored (rule 4).
+categories and cases behind the mean, and both outputs carry `n_configs` with the
+configuration ids still unscored.
 
-The cohort is the serving registry through `load.single()`. The `EXCLUDE_MODELS`
-and `_CANONICAL_NAMES` literals this step used to carry are gone (rule 3):
-display names come from `label`, grouping from `group`.
+The cohort is the serving registry through `load.single()`: display names come
+from `label` and grouping from `group`, so no list of names in this file can
+drift from what was served.
 
 Manuscript: the numbers behind fig:reg_vs_anal and the "reporting tools are
 consistently harder than analysis tools" paragraph in Section 4.
@@ -133,8 +131,8 @@ def main():
         'n_configs': n_configs,
         'configs_missing_from_28': missing,
         'cohort_note': note,
-        'metric': 'h, primary tool hit (0/1). The pre-audit primary_tool_hit_rate under '
-                  'the scorer\'s own name; the weighted score is gone (D02).',
+        'metric': 'h, primary tool hit (0/1): did the configuration reach for the '
+                  'right tool on this case. A case is correct when h == 1.',
         'regulatory_categories': sorted(REGULATORY),
         'analysis_categories': analysis_categories,
         'analysis_categories_count': len(analysis_categories),

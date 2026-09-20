@@ -2,7 +2,7 @@
 set -u
 # The repository root is where this script lives, the way run_benchmark.sh and
 # run_master.sh find it; the interpreter comes from $BENCH_PYTHON (default
-# python3), so no checkout or virtual environment path is baked in (L5-021).
+# python3), so no checkout or virtual environment path is baked in.
 PROJECT_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
 cd "$PROJECT_ROOT"
 PY="${BENCH_PYTHON:-python3}"

@@ -5,29 +5,23 @@ What it reads
     `_experiments/scripts/analysis/load.py` and nothing else from the results
     trees: `load.single()` gives one row per (configuration, case) for the
     main-table arm (Korean schema, Korean questions), and this step keeps the
-    rows whose `category` is `validate_str_fields`. It no longer walks
-    `_experiments/results_kr/eval/*.json` and no longer carries an
-    `EXCLUDE_MODELS` / `_CANONICAL_NAMES` literal: the cohort is the serving
-    registry (PORTING rule 3), and every output names how many of the 28
-    configurations are scored and which are not (PORTING rule 4).
+    rows whose `category` is `validate_str_fields`. The cohort is the serving
+    registry, and every output names how many of its configurations are scored
+    and which are not.
 
-What changed in what it counts
-    The four call-unit modes are unchanged (`no_call`, `correct_only`,
-    `correct_with_extra`, `miscall_only`), and they are still one unit per
-    (configuration, case). What changed underneath them:
+What it counts
+    Four call-unit modes (`no_call`, `correct_only`, `correct_with_extra`,
+    `miscall_only`), one unit per (configuration, case):
 
-    - `called_tools` is now a tuple of plain tool-name strings, so the branch
-      that accepted either a string or a `{"name": ...}` dict is gone.
-    - the per-case `score` is gone with its definition (PORTING rule 1), so the
-      csv carries `h`, which is the "did this case come out right" the old
-      threshold was reaching for, in place of `primary_tool_hit`/`score`.
+    - `called_tools` is a tuple of plain tool-name strings.
+    - the csv carries `h`, because "did this case come out right" is `h == 1`.
     - `a` is null for a case with no parameter checks, so it is never read as
       zero: the summary reports its mean over the non-null rows together with
-      that count (PORTING rule 2).
-    - the unit count follows the data rather than a sentence: the arm now holds
-      25 `validate_str_fields` cases, not 3, so the note is computed.
-    - `error_type` values come from the new taxonomy (PORTING rule 5); the
-      distribution is written out so the modes can be read against it.
+      that count.
+    - the unit count is computed from the data rather than written into the
+      note, so it follows the arm instead of a sentence that goes stale.
+    - `error_type` values are the scorer's own; the distribution is written out
+      so the modes can be read against it.
     - the keys of `per_model_breakdown` are `config_id`s, not model names.
       Thinking and non-thinking are separate configurations, and each entry
       carries the registry `label` and `group`.
@@ -163,9 +157,9 @@ def main() -> int:
             f"miscall_only: {TOOL} not called, other tools called. "
             "Keys of per_model_breakdown are config_ids: thinking and non-thinking are "
             "separate configurations. "
-            "h is the case outcome that the pre-audit weighted score was thresholded for "
-            "(PORTING rule 1); a_mean is taken over the a_n cases that have parameter "
-            "checks, never over nulls read as zero (PORTING rule 2)."
+            "h == 1 is the case outcome: did this case come out right. "
+            "a_mean is taken over the a_n cases that have parameter "
+            "checks, never over nulls read as zero."
         ),
     }
     (OUT_DIR / "validate_str_failure_modes.json").write_text(
@@ -199,9 +193,9 @@ def main() -> int:
         # Plot B: which tools were called instead
         if miscall_dist:
             sorted_mis = sorted(miscall_dist.items(), key=lambda x: -x[1])[:8]
-            # The old arm miscalled eight different tools; this one miscalls far
-            # fewer, so the panel shrinks with the bar count instead of stretching
-            # one bar over 3.2 inches.
+            # The panel height follows the bar count, because a fixed 3.2 inches
+            # stretches a single bar across the whole figure when only one tool
+            # was miscalled.
             fig, ax = plt.subplots(figsize=(4.5, min(3.2, 0.42 * len(sorted_mis) + 0.95)))
             ax.barh([t for t, _ in sorted_mis][::-1], [c for _, c in sorted_mis][::-1],
                     color=COL_PURPLE, alpha=0.85)

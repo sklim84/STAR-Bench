@@ -6,18 +6,16 @@ What it reads
     trees: `load.single()` gives one row per (configuration, case) for the
     main-table arm (Korean schema, Korean questions), with `category`,
     `called_tools`, `gold_tools` and `error_type` already joined to the serving
-    registry. It no longer walks `_experiments/results_kr/eval/*.json`, and the
-    `EXCLUDE_MODELS` / `_CANONICAL_NAMES` literals are gone: the cohort is the
-    registry (PORTING rule 3) and the configurations that are not scored yet are
-    named on the figure and in the caption this script prints (PORTING rule 4).
+    registry. The cohort is the registry itself, and any configuration that is
+    not scored yet is named on the figure and in the caption this script prints,
+    so the figure cannot show fewer configurations than its caption claims.
 
-What it counts, and what changed
-    The old filter was `error_type == "wrong_func"`. That vocabulary is gone
-    (PORTING rule 5). Its successor is `wrong_tool`, which the scorer assigns
-    when the model called tools and not one of the gold tools was among them
-    (`r == 0`, so `h == 0`). That is exactly "a tool was called instead of the
-    right one", so this figure counts `wrong_tool` and nothing else, one count
-    per case, attributed to the first tool the model called.
+What it counts
+    The scorer assigns `wrong_tool` when the model called tools and not one of
+    the gold tools was among them (`r == 0`, so `h == 0`). That is exactly "a
+    tool was called instead of the right one", so this figure counts
+    `wrong_tool` and nothing else, one count per case, attributed to the first
+    tool the model called.
 
     Two neighbouring classes of the new taxonomy were considered and left out.
     The script prints how many cases each one holds, so what the figure does not
@@ -32,10 +30,9 @@ What it counts, and what changed
 
     `over_call` with `h == 0` is an abstain or clarification case where the model
     called a tool instead of asking for what was missing. Its expected side is
-    "no tool at all", so it has no row on an "Expected tool" axis; the pre-audit
-    taxonomy called these `hallucinated_call` and the old figure excluded them
-    too. `over_call` with `h == 1` called the right tool and some extras, which
-    are additions rather than substitutions.
+    "no tool at all", so it has no row on an "Expected tool" axis. `over_call`
+    with `h == 1` called the right tool and some extras, which are additions
+    rather than substitutions.
 
     `no_call`, `length_stop`, `system_error` and `parse_fail` either call nothing
     or fail before the model has chosen a tool, so they have no column at all.
@@ -132,7 +129,7 @@ def main() -> int:
         if not called:                      # r == 0 with no call cannot happen, but do not assume
             n_no_calls += 1
             continue
-        if called[0] == row.category:       # the guard the old script carried; never fires for wrong_tool
+        if called[0] == row.category:       # never fires for wrong_tool, but do not assume
             n_same_name += 1
             continue
         conf[row.category][called[0]] += 1

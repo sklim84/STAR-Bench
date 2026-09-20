@@ -1,14 +1,12 @@
-"""Retired. The English multi-turn file is written by the rebuild pass (C1-010).
+"""Retired. Both multi-turn language files are written by one build.
 
-This script used to derive `benchmarks_multiturn_en/` from `benchmarks_multiturn/`
-by collecting the unique Korean strings of each field, sorting them, numbering
-them F000/S000/C000/N000 and looking the number up in an embedded translation
-table. The numbering therefore depended on the *set* of Korean strings: changing
-one Korean turn renumbered everything after it, and the English file came out
-with 167 turns attached to other scenarios while the script reported no missing
-translations at all.
+Deriving the English file from the Korean one by collecting, sorting and numbering
+the unique Korean strings matches the two arms by position, and a positional match
+holds only as long as the set of Korean strings does not change. Reword or add one
+turn and the numbering shifts, so translations attach themselves to other
+scenarios while the script still reports nothing missing.
 
-Both language files are now produced by one pass over one scenario spec, keyed by
+Both language files are produced by one build over one scenario spec, keyed by
 scenario id and turn number:
 
     python -m _experiments.scripts.data_fixes.multiturn.build
@@ -22,9 +20,9 @@ fails the check instead of passing quietly.
 from __future__ import annotations
 
 _MESSAGE = (
-    "_experiments.scripts.build_multiturn_en was retired (C1-010). Both multi-turn "
+    "_experiments.scripts.build_multiturn_en was retired. Both multi-turn "
     "files are written by _experiments.scripts.data_fixes.multiturn.build; see the "
-    "module docstring for why positional matching was not usable."
+    "module docstring for why positional matching is not usable."
 )
 
 

@@ -67,7 +67,7 @@
         {{- "<|start_header_id|>ipython<|end_header_id|>\n\n" }}
         {#- A tool result is already text. Only a mapping or a list is serialised;
             a string is emitted as it is, so it does not arrive at the model as a
-            JSON string literal with escaped quotes (C2-007). #}
+            JSON string literal with escaped quotes. #}
         {%- if message.content is string %}
             {{- message.content }}
         {%- elif message.content is mapping or message.content is iterable %}
@@ -80,8 +80,9 @@
         {#- The model is trained on one call per assistant turn. Rather than raising
             on a parallel call and losing the whole conversation, each call is
             rendered as its own assistant turn, which is the serialisation the
-            runner also applies when it sends them (D21, L5-005). Any text the
-            assistant produced alongside the calls is kept (C2-010). #}
+            runner also applies when it sends them. Any text the assistant
+            produced alongside the calls is kept, so the model still sees what it
+            itself said. #}
         {%- if message.content %}
             {{- '<|start_header_id|>assistant<|end_header_id|>\n\n' + message.content | trim + '<|eot_id|>' }}
         {%- endif %}

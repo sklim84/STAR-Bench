@@ -2,11 +2,9 @@
 """RQ4 (a) 2x2 question-language x tool-schema-language ablation.
 
 The two axes are the language of the question and the language of the **tool
-schema**. Before the rerun this step read four separate results directories, and
-two of them turned out to be the same arm: `results_kr` / `results_en` were run
-against the English platform schema, so the second axis was English twice
-(R2C-005, D16). The rerun serves the four cells as four columns of one scored
-tree, and `load.COLUMNS` says which is which:
+schema**. The four cells are four columns of one scored tree and `load.COLUMNS`
+says which is which, so a cell is identified by what varies in it rather than by
+the name of the directory it sits in:
 
   KR-KR  load.single()                       Korean question x Korean schema (tools_kr.py)
   EN-KR  load.single("krtools_enq")          English question x Korean schema
@@ -15,19 +13,14 @@ tree, and `load.COLUMNS` says which is which:
 
 Cell name reads query-language first, tool-language second.
 
-Porting note (PORTING.md rule 1). This step never thresholded the weighted
-`score`; it read `overall.primary_tool_hit_rate`, which is now the mean of `h`,
-and `avg_param_accuracy`, which is now the mean of `a`. Recorded here for the
-same reason the sibling steps record it: **`score >= 0.9` became `h == 1`**
-across this analysis, and `h` is the number in every cell below. Rule 2 applies
-to `a`: it is null for a case with no parameter checks rather than 1.0, so the
-mean is taken over the non-null rows and the output carries that n next to it.
+Metrics. The number in every cell below is the mean of `h`, because **a case is
+correct when `h == 1`**. `a` is undefined for a case with no parameter checks
+rather than 1.0, so its mean is taken over the rows that have it and the output
+carries that n next to it.
 
-Cohort (rules 3 and 4). The `TARGETS` list of twelve model ids is deleted, along
-with the id-normalising helpers it needed. The rows are the configurations that
-have all four cells scored, which today is 6 of the 28 in the registry: the
-three extra arms were only run for those. The ablation is over those 6 and the
-CSV, the JSON and both figures say so.
+Cohort. The rows are the configurations that have all four cells scored, because
+the three extra arms cover a subset of the registry. The CSV, the JSON and both
+figures say how many configurations that is.
 
 Output (unchanged names, under `_experiments/results_RQ4`):
   - <out>/four_way_ablation.csv (per-configuration x cell h and a, with their n)
@@ -217,9 +210,9 @@ def main(argv=None):
 
         fig, ax = plt.subplots(figsize=(5.5, 3.8))
         mat = np.array([[r[f'h_{c}'] for c in CELL_ORDER] for r in rows])
-        # The pre-audit window was a fixed 0.3-0.85, which clips every cell of the
-        # rerun and draws the whole grid one colour. The window follows the data,
-        # rounded out to a twentieth, and the cell annotations carry the values.
+        # The colour window follows the data, rounded out to a twentieth, because a
+        # fixed window clips the cells and draws the whole grid one colour. The
+        # cell annotations carry the values either way.
         lo = float(np.floor(mat.min() * 20) / 20)
         hi = float(np.ceil(mat.max() * 20) / 20)
         im = ax.imshow(mat, cmap='viridis', aspect='auto', vmin=lo, vmax=hi)

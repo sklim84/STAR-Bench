@@ -6,27 +6,22 @@ script runs McNemar's test on the paired per-case outcomes:
 - c = cases the non-thinking arm got right BUT the thinking arm got wrong
 - chi^2 = (|b - c| - 1)^2 / (b + c)  (with continuity correction, df = 1)
 
-Porting note (PORTING.md rule 1). "Correct" used to mean the weighted
-`score >= 0.9`, read from `results_kr/checkpoint/checkpoint_*.jsonl`. That score
-has no definition in the paper (D02) and is gone, so **`score >= 0.9` becomes
-`h == 1`**, the binary primary tool hit the paper reports. McNemar's test is a
-test on a paired binary outcome, so `h` is what the step needed rather than a
-compromise. The test itself is unchanged: the same continuity correction, the
-same chi-square with one degree of freedom.
+**A case is correct when `h == 1`**, the binary primary tool hit the paper
+reports. McNemar's test is a test on a paired binary outcome, so `h` is the
+outcome it is run on, with a continuity correction and a chi-square with one
+degree of freedom.
 
-Pairing (rule 3). The pre-audit version derived the pairs from a `__think` /
-`__nothink` suffix on a checkpoint file name. In the serving registry the two
-arms are separate `config_id`s, so the pairs come from `load.configs()`: two
-configurations that share a `model` and differ in `reasoning_mode`, with the
-mode itself saying which arm is the thinking one. Nothing is matched on a file
-name, and no list of model names is kept here. A registry pair with only one arm
-scored is reported as such instead of being dropped in silence (rule 4).
+Pairing. In the serving registry the two arms are separate `config_id`s, so the
+pairs come from `load.configs()`: two configurations that share a `model` and
+differ in `reasoning_mode`, with the mode itself saying which arm is the thinking
+one. Nothing is matched on a file name and no list of model names is kept here,
+so a pair cannot drift from what was served. A registry pair with only one arm
+scored is reported as such instead of being dropped in silence.
 
-Output: `_experiments/results_RQ4/mcnemar_think_round1.json`
-(the pre-audit version wrote it to `_experiments/results/`, outside the
-directory `regenerate_analysis.py` advertises for this step). It is now an
-object rather than a bare list, so the cohort can travel with the rows: the
-per-pair rows are under `pairs`.
+Output: `_experiments/results_RQ4/mcnemar_think_round1.json`, under the directory
+`regenerate_analysis.py` advertises for this step. It is an object rather than a
+bare list so the cohort can travel with the rows: the per-pair rows are under
+`pairs`.
 """
 from __future__ import annotations
 
@@ -175,8 +170,7 @@ def main() -> None:
             "config_ids": sorted(scored),
             "missing_config_ids": absent,
         },
-        "correct_definition": ("h == 1 (primary tool hit); the pre-audit score >= 0.9 "
-                               "is gone (D02)"),
+        "correct_definition": "h == 1 (primary tool hit)",
         "test": "McNemar, continuity corrected, chi-square with df = 1",
         "n_registry_pairs": len(pairs),
         "n_pairs_tested": len(rows),

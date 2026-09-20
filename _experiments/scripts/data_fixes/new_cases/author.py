@@ -3,9 +3,9 @@
 The five group modules hold the questions and the gold; this pass adds the fields the
 rest of the data derives rather than states:
 
-* `difficulty` from the D23 rule, by calling `p11_difficulty.points` -- the same code
+* `difficulty` from the rule, by calling `difficulty.points` -- the same code
   that labelled the 1,115 existing cases, so the two sets are labelled by one rule;
-* `note` from `p12_notes.note_for`, so the note is a rendering of the final gold;
+* `note` from `case_notes.note_for`, so the note is a rendering of the final gold;
 * `"source": "2026-09 expansion"`, which marks the case as authored in this round so
   the review sheet and the paper can describe the composition.
 
@@ -29,8 +29,8 @@ if __package__ in (None, ""):
     __package__ = "_experiments.scripts.data_fixes.new_cases"
 
 from ..common import Bench, EN, KR, dump_json, load_json
-from ..p11_difficulty import label, points
-from ..p12_notes import note_for
+from ..difficulty import label, points
+from ..case_notes import note_for
 from . import g1_validate_str, g2_reference, g3_clarification, g4_single_tool, g5_multi_tool
 
 SOURCE = "2026-09 expansion"

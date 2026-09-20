@@ -192,7 +192,7 @@ def build(grounding: dict) -> list[dict]:
         ("st_mon_046", "cases_detect_monitoring_alerts.json", "detect_monitoring_alerts",
          {"rule_id": "R001", "account_id": monitor("R001", 0)},
          f"계좌 {monitor('R001', 0)}의 심야 대량 거래 알림(R001)을 조회해줘",
-         f"Please retrieve the nighttime bulk transaction alerts (R001) of account "
+         f"Please retrieve the nighttime bulk transaction alerts of account "
          f"{monitor('R001', 0)}.",
          "account filter on the night-time rule"),
         ("st_mon_047", "cases_detect_monitoring_alerts.json", "detect_monitoring_alerts",

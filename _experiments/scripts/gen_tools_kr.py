@@ -2,8 +2,9 @@
 
 The Korean schema arm must be the platform schema with Korean prose and nothing
 else: same tool names, parameter names, types, enums, defaults, `required` lists
-and item schemas (D16). Hand-maintaining a second schema is what produced the
-2026-04-21 divergence, so the arm is generated:
+and item schemas. A schema maintained by hand drifts from the platform, and a run
+on a drifted arm measures two tool interfaces rather than two languages, so the
+arm is generated:
 
     python -m _experiments.scripts.gen_tools_kr            # rewrite tools_kr.py
     python -m _experiments.scripts.gen_tools_kr --check    # fail if it is stale
@@ -36,14 +37,15 @@ _HEADER = '''"""Korean schema arm: the platform tool definitions with Korean pro
 
 GENERATED FILE. Edit `tools_kr_text.json` and run
 `python -m _experiments.scripts.gen_tools_kr`; `--check` fails when this file is
-stale, and `_experiments/scripts/tests_runner/test_schema_parity.py` fails when
+stale, and `_experiments/scripts/tests_runner/test_schema_arms.py` fails when
 the structure drifts from `agent.TOOLS`.
 
 The structure is the platform schema, unchanged: same tool names, parameter
-names, types, enums, defaults, `required` lists and item schemas (D16). Only the
+names, types, enums, defaults, `required` lists and item schemas. Only the
 descriptions and the system prompt are Korean, so a run on this arm executes the
-model's arguments as they arrive, with no key or value rewriting (C2-006,
-L5-015). The response-language rule is the same as in the English arm (D13).
+model's arguments as they arrive, with no key or value rewriting, and a
+difference between the two arms is a difference in language and in nothing else.
+The response-language rule is the same as in the English arm.
 
 Source: agent.TOOLS @ platform {commit}
 """

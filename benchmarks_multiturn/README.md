@@ -24,7 +24,7 @@ specs, and `rebuild_log.json` records, per scenario, the entities chosen and why
 | `sub_category`     | Definition                                                                 | Count |
 |--------------------|----------------------------------------------------------------------------|-------|
 | `base`             | All information is given; tools are called in sequence.                     | 14 |
-| `missing_parameter`| A schema-required argument (or an unresolved reference to one) is missing, so the agent has to ask back before it can continue (D19). | 14 |
+| `missing_parameter`| A schema-required argument (or an unresolved reference to one) is missing, so the agent has to ask back before it can continue. | 14 |
 | `long_context`     | A value from an earlier turn's `tool_result` has to be carried into a later call. | 22 |
 
 Turns per scenario: **4** in 32 scenarios, **5** in 17, **6** in 1 — 219 turns in
@@ -78,7 +78,7 @@ bulk transactions) 5.
   array means no tool call is the correct behaviour: either a clarification turn
   (`expect_clarification`) or a turn where the analysis does not support a report.
   There are no alternative gold calls: every question has exactly one gold tool
-  (D11).
+ .
 - **`arguments`** — platform parameter names in both language files (Contract 1).
   For `query_transactions` the checks are `sql_conditions` (a list of
   `{column, op, value}` predicates the model's SQL must restrict on) and
@@ -102,7 +102,8 @@ package's `README.md`. Per turn: h, r, p, a, f1_tools, `context_hit`,
 
 ```bash
 PYTHONPATH=. python -m _experiments.scripts.benchmark_multiturn \
-  --models <MODEL> --output _experiments/results_mt/
+  --config <CONFIG_ID> --tools-lang kr --setting oracle \
+  --out _experiments/runs/mt_oracle/<CONFIG_ID>
 python -m _experiments.scripts.scoring.gold_selftest --benchmark benchmarks_multiturn
 ```
 

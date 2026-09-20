@@ -6,8 +6,8 @@ package. The data files carry no hand edits, so every value in them can be trace
 HOFINET, to the platform tool schema or to the platform catalog, and the composition the
 paper reports can be re-derived instead of taken on trust.
 
-The name of the directory is historical; what lives here is the benchmark's build and
-validation tooling, not a set of one-off edits.
+The directory name is older than what it holds: this is the build and validation tooling
+for the benchmark data, not a collection of one-off scripts.
 
 ## The tools
 

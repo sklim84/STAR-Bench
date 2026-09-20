@@ -1,21 +1,19 @@
-"""End-to-end tool error and empty-result rates, attributed by cause (L3-001).
+"""End-to-end tool error and empty-result rates, attributed by cause.
 
     python -m _experiments.scripts.e2e_error_rates
     python -m _experiments.scripts.e2e_error_rates --results _experiments/runs
     python -m _experiments.scripts.e2e_error_rates --out _experiments/results_RQ3 --list-unmatched
 
-The appendix caption said "5,550 calls, 30 errors (0.5%)" and read the E2E drop
-as errors propagating from the model. Both numbers came from a reader that
-looked for an error object at the top level while the tool layer returns its
-result as a JSON *string*, so an error inside that string was invisible. Read
-properly, 1,324 of the same 5,550 pre-audit calls carried an error (23.9%) and
-most of them were the platform's own defects, not the model's: NaN conversions
-in `get_account_profile`, a missing `predict_prob` key, a Memgraph host that was
-not running. This step recomputes the caption over the scored rerun.
+The tool layer returns its result as a JSON *string*, so an error inside that
+string is invisible to a reader that only looks for an error object at the top
+level. This step parses the string, which is what makes the error rate the real
+one: most errors are the platform's own defects rather than the model's, such as
+NaN conversions in `get_account_profile`, a missing `predict_prob` key, or a
+Memgraph host that is not running.
 
-The distinction is what the caption needs. A call is attributed to exactly one
-cause, by the first rule that matches its message, and the rules are grouped
-into two families:
+Separating the two is what the caption needs, because a platform defect says
+nothing about the model. A call is attributed to exactly one cause, by the first
+rule that matches its message, and the rules are grouped into two families:
 
   platform / environment   a defect or a missing dependency on our side. These
                            disappear when the platform is fixed and say nothing
@@ -26,15 +24,15 @@ into two families:
                            object, a tool or a glossary term that does not exist.
 
 Empty results are counted separately and are not errors: a query that runs and
-returns no row is a property of the data plus the model's filter, and 'No data
-found' was 21.2% of the 2026 calls.
+returns no row is a property of the data plus the model's filter, and the report
+gives its share of the calls.
 
-Ported to the scored rerun (see `analysis/PORTING.md`). The input is
-`load.calls("e2e")` and nothing else: one row per tool call with `result` and
-`result_error`, read from the Contract 2 records the runner wrote. `--results`
-now names the run root that holds `mt_e2e/`, not a directory of eval files.
+The input is `load.calls("e2e")` and nothing else: one row per tool call with
+`result` and `result_error`, read from the Contract 2 records the runner wrote.
+`--results` names the run root that holds `mt_e2e/`, not a directory of eval
+files.
 
-Two things the new records carry that the old reader did not know about:
+Two fields of those records need saying:
 
   - `result_truncated` on an executed call is a delivery note, not an error. The
     result is there and is classified like any other; the count is reported as
@@ -47,8 +45,8 @@ Only the end-to-end setting has executed results. The oracle setting injects the
 gold tool result instead of calling the tool, so there is nothing there to count
 and this step does not read it.
 
-The output carries `n_configs` and the configurations that are not scored
-(PORTING rule 4): 15 of the 28 have an end-to-end run today.
+The output carries `n_configs` and the configurations that are not scored, so a
+caption cannot claim the whole cohort while the count covers part of it.
 """
 
 from __future__ import annotations
@@ -70,10 +68,10 @@ from _experiments.scripts.analysis import load  # noqa: E402
 #
 # `platform_key_error` matches the tool layer's generic wrapper text, which is
 # what most of the specific platform defects are wrapped in, so it has to come
-# after every rule that names one of them: with it above, the 142 'predict_prob'
-# and 4 __round__ messages were counted as generic and platform_model_artifact
-# saw only `feature_names mismatch` (V-09). The family is `platform` either way,
-# so the 863 / 281 / 180 split does not move; the cause table does.
+# after every rule that names one of them: above them it swallows the
+# 'predict_prob' and __round__ messages, and platform_model_artifact is left with
+# `feature_names mismatch` alone. The family is `platform` either way, so the
+# platform/model split does not move; the cause table does.
 RULES: tuple[tuple[str, str, str], ...] = (
     ("graph_backend_absent", "platform", r"memgraph|bolt://|neo4j"),
     ("database_lock", "platform", r"could not set lock|database is locked"),
@@ -106,7 +104,7 @@ TRUNCATION = "result_truncated"
 
 
 def _as_object(result):
-    """The tool layer returns a JSON string; the old reader never looked inside it."""
+    """The tool layer returns a JSON string, so an error is inside it, not beside it."""
     if isinstance(result, str):
         try:
             return json.loads(result)

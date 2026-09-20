@@ -1,14 +1,14 @@
-{#- Phi-4-mini tool template, repaired (C2-018, D21).
-    Changes against _experiments/scripts/tool_chat_template_phi4_mini.jinja:
-      * the tool-result branch tested role "tools"; the API sends "tool", so no
-        tool result ever reached the model through that branch. Both are accepted.
-      * previous assistant calls were rendered as a bare {"name": ..., "arguments": ...}
-        object while the system text demands the functools[...] list; they are now
-        rendered in the format the model is asked to produce.
+{#- Phi-4-mini tool template.
+    Differences from _experiments/scripts/tool_chat_template_phi4_mini.jinja:
+      * the tool-result branch tested role "tools"; the API sends "tool", so a
+        tool result reaches the model through that branch either way.
+      * previous assistant calls are rendered as the functools[...] list the
+        system text asks the model to produce, not as a bare
+        {"name": ..., "arguments": ...} object, so history and instruction agree.
       * arguments arrive as a JSON string from the API and as an object from a
-        replay; both are emitted as JSON instead of a Python repr.
-      * an assistant message that carries text as well as calls keeps its text
-        (C2-010). #}
+        replay; both are emitted as JSON, because a Python repr is not JSON.
+      * an assistant message that carries text as well as calls keeps its text,
+        so the model still sees what it itself said. #}
 {%- if messages and messages[0]['role'] == 'system' %}
     {%- set system_message = messages[0]['content']|trim %}
     {%- set messages = messages[1:] %}

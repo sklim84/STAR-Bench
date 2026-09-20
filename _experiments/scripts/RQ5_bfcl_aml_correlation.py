@@ -1,42 +1,45 @@
 #!/usr/bin/env python3
-"""RQ5: BFCL v4 vs AML-Bench Spearman/Kendall correlation (21 BFCL × 29 AML).
+"""General function-calling rank against tool hit on this benchmark.
 
-BFCL 21 모델 직접 실행 결과 (data_overall.csv) + AML-Bench KR results_kr/eval/.
-모델 이름 매칭 후 Spearman ρ, Kendall τ 산출.
+BFCL scores come from running the models on BFCL ourselves
+(`_experiments/bfcl_results/score/data_overall.csv`); tool hit comes from the
+scored runs. The two measure different quantities, so only the ranks compare.
 
-산출:
-  - results_RQ5/bfcl_aml_paired.json (n쌍 + 통계)
+Writes:
+  - results_RQ5/bfcl_aml_paired.json (the pairs and the statistics)
   - results_RQ5/bfcl_aml_paired.csv
-  - figures/fig_bfcl_vs_aml.{pdf,png} (갱신)
+  - figures/fig_bfcl_vs_aml.{pdf,png}
 """
 import csv, json, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from _plot_style import (plt, FS_TICK, FS_LABEL, FS_LEGEND, style_axes)
+from _experiments.scripts.analysis import load
 
 BFCL_CSV = Path('_experiments/bfcl_results/score/data_overall.csv')
-AML_DIR = Path('_experiments/results_kr/eval')
 OUT_DIR = Path('_experiments/results_RQ5')
 FIG_DIR = Path('_experiments/figures')
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# BFCL display_name → AML model_id 매핑
-# (think 변형 모델은 nothink로 매칭, AML key 우선순위 nothink > think)
-BFCL_TO_AML = {
-    'A.X-4.0 (Prompt)': 'skt/A.X-4.0',
-    'A.X-4.0-Light (Prompt)': 'skt/A.X-4.0-Light',
-    'EXAONE-4.0-1.2B (Prompt)': 'LGAI-EXAONE/EXAONE-4.0-1.2B',
-    'EXAONE-4.0-32B (Prompt)': 'LGAI-EXAONE/EXAONE-4.0-32B',
-    'Hermes-3-Llama-3.1-8B (Prompt)': 'NousResearch/Hermes-3-Llama-3.1-8B',
-    'Llama-3.2-3B-Instruct (FC)': 'meta-llama/Llama-3.2-3B-Instruct',
-    'Llama-3.3-70B-Instruct (FC)': 'meta-llama/Llama-3.3-70B-Instruct',
-    'Ministral-3-3B-Instruct-2512 (Prompt)': 'mistralai/Ministral-3-3B-Instruct-2512',
-    'Mistral-Small-3.2-24B (Prompt)': 'mistralai/Mistral-Small-3.2-24B-Instruct-2506',
-    'Phi-4-mini-instruct (Prompt)': 'microsoft/Phi-4-mini-instruct',
-    'Qwen3.5-27B (Prompt)': 'Qwen/Qwen3.5-27B__nothink',
-    'Qwen3.5-4B (Prompt)': 'Qwen/Qwen3.5-4B__nothink',
-    'xLAM-2-3b-fc-r (FC)': 'Salesforce/xLAM-2-3b-fc-r',
-    'xLAM-2-70b-fc-r (FC)': 'Salesforce/Llama-xLAM-2-70b-fc-r',
+# BFCL's display name for a model against the serving configuration that model is
+# served in here. BFCL prompts without a reasoning toggle, so a model with two
+# arms pairs with its non-thinking one.
+BFCL_TO_CONFIG = {
+    'A.X-4.0 (Prompt)': 'ax-4.0',
+    'A.X-4.0-Light (Prompt)': 'ax-light',
+    'EXAONE-4.0-1.2B (Prompt)': 'exaone-1.2b',
+    'EXAONE-4.0-32B (Prompt)': 'exaone-32b',
+    'Hermes-3-Llama-3.1-8B (Prompt)': 'hermes-3-8b',
+    'Llama-3.2-3B-Instruct (FC)': 'llama-3.2-3b',
+    'Llama-3.3-70B-Instruct (FC)': 'llama-3.3-70b',
+    'Ministral-3-3B-Instruct-2512 (Prompt)': 'ministral-3b',
+    'Mistral-Small-3.2-24B (Prompt)': 'mistral-small',
+    'Phi-4-mini-instruct (Prompt)': 'phi-4-mini',
+    'Qwen3.5-27B (Prompt)': 'qwen35-27b-nt',
+    'Qwen3.5-4B (Prompt)': 'qwen35-4b-nt',
+    'xLAM-2-3b-fc-r (FC)': 'xlam-3b',
+    'xLAM-2-70b-fc-r (FC)': 'xlam-70b',
 }
 
 
@@ -58,22 +61,14 @@ def load_bfcl():
 
 
 def load_aml():
-    # canonicalize: latest eval은 sanitized model name 사용
-    targets = set(BFCL_TO_AML.values())
-    safe_to_canonical = {m.replace('/', '_').replace('.', '_'): m for m in targets}
-    out = {}
-    for f in sorted(AML_DIR.glob('eval_*.json')):
-        d = json.load(f.open())
-        m = d.get('model')
-        if m:
-            m = safe_to_canonical.get(m, m)
-            out[m] = (d.get('overall', {}).get('primary_tool_hit_rate'))
-    return out
+    """Tool hit per serving configuration, from the scored runs."""
+    cases = load.single()
+    return {k: float(v) for k, v in cases.groupby('config_id')['h'].mean().items()}
 
 
-def short_name(aml_id):
-    s = aml_id.split('/')[-1]
-    return s.replace('__nothink', '').replace('__think', '')
+def short_name(config_id):
+    labels = load.configs()
+    return labels.loc[config_id, 'label'] if config_id in labels.index else config_id
 
 
 def main():
@@ -82,7 +77,7 @@ def main():
     print(f'BFCL: {len(bfcl)} models, AML: {len(aml)} models')
 
     pairs = []
-    for bf_name, aml_id in BFCL_TO_AML.items():
+    for bf_name, aml_id in BFCL_TO_CONFIG.items():
         bf = bfcl.get(bf_name)
         am = aml.get(aml_id)
         if bf is None or am is None:

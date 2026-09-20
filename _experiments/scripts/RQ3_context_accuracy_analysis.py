@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 """RQ3: context-accuracy vs scenario-completion partial correlation.
 
-Ported to the scored rerun; the inputs are `analysis/load.py` and nothing else
-(see `analysis/PORTING.md`). Three design choices decide what the number means:
+The inputs are `analysis/load.py` and nothing else. Three design choices decide
+what the number means:
 
-1. COHORT. The cohort is the serving registry, not a list in this file. The
-   pinned 28-model `COHORT` literal is gone (PORTING rule 3): a row is any
-   configuration scored in BOTH the oracle multi-turn setting and the
+1. COHORT. The cohort is the serving registry, not a list in this file: a row is
+   any configuration scored in BOTH the oracle multi-turn setting and the
    single-turn Korean arm, and `load.missing()` names the ones that are not in
    yet. The output carries `n_configs` and those ids, because a correlation over
-   part of the cohort is not the correlation the caption claims (rule 4).
+   part of the cohort is not the correlation the caption claims.
 
 2. CONTROL VARIABLE. The control is single-turn h, `aggregate["h"]["mean"]` of
    the single-turn arm, which is the h column of tab:overall. The multi-turn
@@ -18,9 +17,9 @@ Ported to the scored rerun; the inputs are `analysis/load.py` and nothing else
 3. PARTIAL METHOD. Proper rank-based partial Spearman: rank all three variables,
    then take the first-order partial Pearson on the ranks. Significance is the
    standard partial-correlation t-test, t = r*sqrt((n-3)/(1-r^2)), df = n-3,
-   two-sided. Unchanged from the pre-audit version (PORTING: keep the statistics).
+   two-sided.
 
-Every aggregate is the one the scorer wrote, and each carries its n (rule 2):
+Every aggregate is the one the scorer wrote, and each carries its n:
 context accuracy over turns where context was expected, completion over
 scenarios, single-turn h over cases, multi-turn h-bar over turns.
 

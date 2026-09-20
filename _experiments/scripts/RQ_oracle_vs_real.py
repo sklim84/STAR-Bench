@@ -8,25 +8,21 @@ backend and feeds the real results forward, so a mistake carries. The gap
 between the two says how much of a model's multi-turn score depends on never
 seeing its own output.
 
-The setting is called `e2e` everywhere now; the old name was `real`. The
-`--real` flag is `--e2e`, and each flag names an eval root that holds that
-setting's directory (`mt_oracle/`, `mt_e2e/`), so the two can come from
-different rerun trees. The file names stay `oracle_vs_real.{json,csv}` because
-a manuscript object reads them by name.
+`--oracle` and `--e2e` each name an eval root holding that setting's directory
+(`mt_oracle/`, `mt_e2e/`), so the two settings can come from different trees.
+The output is `oracle_vs_real.{json,csv}` because a manuscript object reads those
+names.
 
-Ported to the scored rerun; the input is `analysis/load.py` and nothing else
-(see `analysis/PORTING.md`):
+The input is `analysis/load.py` and nothing else:
 
-  - metrics are the fixed ones: `h_mean`, `a_mean`, `context_accuracy` and `c`
-    per scenario, averaged over the scenarios that carry them, with the n next
-    to each number (rule 2). These are the columns tab:e2e-subset and
-    app:e2e_full are built from.
-  - the cohort is the serving registry, not the `EXCLUDE` list that used to sit
-    in this file (rule 3).
+  - the metrics are `h_mean`, `a_mean`, `context_accuracy` and `c` per scenario,
+    averaged over the scenarios that carry them, with the n next to each number.
+    These are the columns tab:e2e-subset and app:e2e_full are built from.
+  - the cohort is the serving registry rather than a list in this file.
   - a configuration with an oracle run and no end-to-end run is a row that says
-    so and why, not a row that disappears (rule 4). Three of them have no
-    end-to-end column because the end-to-end setting serves a longer context
-    than the model's own window.
+    so and why, not a row that disappears. A configuration has no end-to-end
+    column when the end-to-end setting serves a longer context than the model's
+    own window.
   - the JSON is an object, not a bare list, so it can carry `n_configs` and the
     ids that are missing; the rows are under `rows`.
 

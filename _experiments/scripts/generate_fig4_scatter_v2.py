@@ -8,31 +8,21 @@ Why that pair. Both arms serve the Korean tool schema, so the only thing that
 differs between a point's x and its y is the language of the question, which is
 what the figure claims to measure. `load.single()` is also the arm tab:overall
 reports, so a point's x is the h the main table prints for that configuration.
-The old version read `results_kr` against `results_en`. Those two held the
-English platform schema on both axes (see the cell map in
-`RQ4_query_tool_language_ablation.py`), so the x axis was not the main table's h,
-and the eval files there recorded no `tools_lang` or `query_lang` at all, which
-left the directory name as the only record of which schema had been served. The
-rerun names each arm for what varies, so the pairing is checkable rather than
+Each arm is named for what varies in it, so the pairing is checkable rather than
 remembered: `load.COLUMNS["krtools_enq"]` is ("kr", "en") against
 `load.COLUMNS["single"]` ("kr", "kr").
 
-What else changed. The `EXCLUDE` set of nine sanitised model names and the
-`LABELS` table of five substring keyed annotation offsets are gone, and with them
-the `_norm` that existed only to make those substring matches land on eval files
-that spelled the same model two ways. The cohort is the serving registry, so
-there is nothing to exclude, and every point is labelled from its registry
-`label` rather than a chosen few: six configurations have both arms scored today,
-which is few enough to name them all and removes the offset table that had to be
-retuned whenever a point moved. Label offsets alternate by rank so two adjacent
-points do not collide, and each label keeps its leader line.
+The cohort is the serving registry, so there is nothing to exclude, and every
+point is labelled from its registry `label` rather than a chosen few. Label
+offsets alternate by rank so two adjacent points do not collide, and each label
+keeps its leader line, which is what lets every point carry a name without an
+offset table that has to be retuned whenever a point moves.
 
-Only six of 28 configurations have both arms scored, so the figure states that
-count next to the axes and lists the configurations it could not draw
-(PORTING.md rule 4). Nothing about the marker sizes, colour scale, diagonal or
-figure size changed.
+The English-question arm covers fewer configurations than the Korean one, so the
+figure states next to the axes how many it draws and lists the configurations it
+could not.
 
-Output: _experiments/figures/fig4_kr_en_scatter.png (via _figure_out, R2C-007)
+Output: _experiments/figures/fig4_kr_en_scatter.png (via _figure_out)
 """
 from __future__ import annotations
 
@@ -52,7 +42,7 @@ if str(_ROOT) not in sys.path:
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 # Figures are written inside this repository only; the manuscript copy is one
-# explicit step (_figure_out, R2C-007).
+# explicit step (_figure_out).
 from _figure_out import install as _install_figure_out  # noqa: E402
 
 from _experiments.scripts.analysis import load  # noqa: E402
@@ -94,12 +84,11 @@ LABEL_GAP_PT = 8.5      # a little over one line of LABEL_FONT
 def _label_points(fig, ax, rows, kr_v, en_v, lo, hi) -> None:
     """Names every point, pushing labels apart instead of consulting a name table.
 
-    The old version carried an offset per interesting model and left the rest
-    unlabelled, which is why it needed a substring keyed table that had to be
-    retuned whenever a point moved. Here a label goes inward, away from the axis
-    edge and the colour bar, and the labels are spread vertically until they
-    clear each other by one line. The spacing is read off the axes as they will
-    be drawn, so `tight_layout` has to have run already.
+    A label goes inward, away from the axis edge and the colour bar, and the
+    labels are spread vertically until they clear each other by one line. That is
+    what lets every point carry a name without a table of per-model offsets that
+    has to be retuned whenever a point moves. The spacing is read off the axes as
+    they will be drawn, so `tight_layout` has to have run already.
     """
     dpi = fig.dpi
     pixels = ax.transData.transform(np.column_stack([kr_v, en_v]))
