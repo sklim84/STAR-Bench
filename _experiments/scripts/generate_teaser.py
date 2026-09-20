@@ -35,7 +35,7 @@ GROUP_COLOR = {"General-Purpose": "#4E79A7", "Korean-Specialized": "#E15759",
 # One label only. At 2.1 inches three model names of this length cannot sit near
 # their points without covering others, and the band and the arrow already carry
 # the claim. The one worth naming is the configuration that completes the most
-# workflows while sitting in the bottom third on single-turn tool hit.
+# workflows while sitting in the lower half on single-turn tool hit (17th of 28).
 LABELLED = "mistral-small"
 
 
@@ -56,7 +56,7 @@ def main() -> int:
     missing = load.missing()
     absent = missing.loc[~missing["single"], "config_id"].tolist()
 
-    fig, ax = plt.subplots(figsize=(2.1, 2.0))
+    fig, ax = plt.subplots(figsize=(2.5, 2.0))
     ax.axvspan(BAND_LOW, BAND_HIGH, color="#BBBBBB", alpha=0.22, linewidth=0, zorder=1)
     for config_id, h, c, label, group in rows:
         ax.scatter(h, c, s=22, zorder=3, linewidths=0.4, edgecolors="white",
@@ -64,7 +64,7 @@ def main() -> int:
     for config_id, h, c, label, group in rows:
         if config_id != LABELLED:
             continue
-        ax.annotate(f"{label}\nbest workflow,\nbottom third on $h$", (h, c),
+        ax.annotate(f"{label}\nbest workflow,\n17th of {len(rows)} on $h$", (h, c),
                     textcoords="offset points", xytext=(4, 16), ha="left", va="bottom",
                     fontsize=5.0, color="#333333", linespacing=1.25,
                     arrowprops=dict(arrowstyle="-", color="#999999", linewidth=0.5,

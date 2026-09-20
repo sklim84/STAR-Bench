@@ -92,10 +92,12 @@ def main():
 
     # 부록 전폭(5.5in)에 1:1로 들어가도록 그린다. tight bbox 후 폭이 약 5.5in이므로
     # LaTeX에서 확대·축소 없이 눈금·범례 글자가 설정한 크기(6~8pt)로 찍힌다.
-    fig, ax = plt.subplots(figsize=(5.6, 2.4))
-    ax.vlines(x, reg, ana, color="#BBBBBB", lw=0.9, zorder=1)
-    ax.scatter(x, ana, s=16, color=C_ANA, zorder=3, label="Analysis tools")
-    ax.scatter(x, reg, s=16, color=C_REG, marker="s", zorder=3, label="Regulatory tools")
+    # 세로로 길게 그린다: 이 그림이 보여주려는 것은 한 설정 안에서 analysis와
+    # regulatory가 벌어진 거리인데, 납작하게 그리면 그 거리가 눈에 들어오지 않는다.
+    fig, ax = plt.subplots(figsize=(5.6, 3.4))
+    ax.vlines(x, reg, ana, color="#BBBBBB", lw=1.0, zorder=1)
+    ax.scatter(x, ana, s=18, color=C_ANA, zorder=3, label="Analysis tools")
+    ax.scatter(x, reg, s=18, color=C_REG, marker="s", zorder=3, label="Regulatory tools")
 
     ax.set_xticks(x)
     ax.set_xticklabels(labels, rotation=90, ha="center", fontsize=6.5)

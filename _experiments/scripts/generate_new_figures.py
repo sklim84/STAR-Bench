@@ -109,7 +109,7 @@ def apply_style(ax, title=None, xlabel=None, ylabel=None):
 # Fig 2: Per-turn Hit Rate Line Chart
 # ═══════════════════════════════════════════════════════════════════
 def fig_turnwise_line():
-    """Cohort-level per-turn tool hit rate, column width.
+    """Cohort-level per-turn tool hit rate, half-column width.
 
     Mean tool hit per turn with a +/-1 SD band across the scored configurations,
     from the oracle setting. Turn 6 is left out: one scenario reaches it, so the
@@ -125,13 +125,15 @@ def fig_turnwise_line():
     mean = np.array([np.mean([m[tn] for m in per_model if tn in m]) for tn in turns])
     std = np.array([np.std([m[tn] for m in per_model if tn in m]) for tn in turns])
 
-    # 부록 전폭(5.5in)에 1:1로 들어가도록 가로로 넓고 낮게 그린다.
-    fig, ax = plt.subplots(figsize=(5.5, 1.9))
+    # Drawn 1:1 for a 0.45\\textwidth wrapfigure, so nothing is scaled at use.
+    # The y axis stays pinned to 0-100%, so the taller aspect changes the shape
+    # of the drop on the page but not what it is worth.
+    fig, ax = plt.subplots(figsize=(2.45, 1.85))
     ax.fill_between(turns, np.clip(mean - std, 0, 100), np.clip(mean + std, 0, 100),
                     color=_VIR_SD(0.92), alpha=0.30, linewidth=0,
                     label=r"$\pm$1 SD")
     ax.plot(turns, mean, color="#2A7F79", marker="o", markersize=4.5,
-            linewidth=1.8, label="Mean")
+            linewidth=1.2, label="Mean")
     # per-turn value labels (1 decimal): rising turns above, drop turns below the marker
     for i, tn in enumerate(turns):
         above = i < 3
@@ -140,27 +142,28 @@ def fig_turnwise_line():
         ax.annotate(f"{mean[i]:.1f}%", (tn, mean[i]),
                     textcoords="offset points", xytext=(xoff, 7 if above else -8),
                     ha=ha, va="bottom" if above else "top",
-                    fontsize=6, color="#2A7F79")
+                    fontsize=4.8, color="#2A7F79")
     # annotate the drop into the synthesis/validation turn in percentage points
     ax.annotate("", xy=(4, mean[3]), xytext=(3, mean[2]),
                 arrowprops=dict(arrowstyle="->", color="#555555", lw=1.2))
     ax.text(3.58, (mean[2] + mean[3]) / 2 + 3,
-            f"$-${mean[2] - mean[3]:.1f} pp", fontsize=6.5, color="#555555",
+            f"$-${mean[2] - mean[3]:.1f} pp", fontsize=5.2, color="#555555",
             ha="left", va="center", fontstyle="italic")
 
     ax.set_xticks(turns)
-    ax.set_xticklabels([f"T{t}" for t in turns], fontsize=7.5)
+    ax.set_xticklabels([f"T{t}" for t in turns], fontsize=5.4)
     ax.set_ylim(0, 100)
     ax.yaxis.set_major_formatter(mticker.PercentFormatter())
-    ax.tick_params(axis="y", labelsize=7.5)
-    ax.set_xlabel("Turn", fontsize=8.5)
-    ax.set_ylabel("Tool hit ($h$)", fontsize=8.5)
+    ax.tick_params(axis="y", labelsize=5.4, pad=1.5)
+    ax.set_xlabel("Turn", fontsize=5.8, labelpad=2)
+    ax.set_ylabel("Tool hit ($h$)", fontsize=5.8, labelpad=2)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
-    ax.legend(fontsize=6.5, loc="lower left", frameon=True, framealpha=0.9,
-              handlelength=1.6, handletextpad=0.4, borderpad=0.3, labelspacing=0.3)
+    ax.legend(fontsize=4.8, loc="lower left", frameon=True, framealpha=0.9,
+              handlelength=1.2, handletextpad=0.3, borderpad=0.25, labelspacing=0.25)
     plt.tight_layout()
     plt.savefig(FIGURES_DIR / "fig_turnwise_line.png", dpi=300, bbox_inches="tight")
+    plt.savefig(FIGURES_DIR / "fig_turnwise_line.pdf", bbox_inches="tight")
     plt.close()
     print("  Saved: fig_turnwise_line.png (cohort mean +/-1SD)")
 
