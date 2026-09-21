@@ -263,7 +263,7 @@ def e2e_tables(out: Path, subset_rows: int = 5) -> str:
     (out / "tab-e2e-full.tex").write_text(
         _table(full, spec="lccccc", header=header_full, label="tab:e2e_full",
                caption=(f"Oracle versus end-to-end (E2E) evaluation over the {scenarios} "
-                        f"STR-writing scenarios, sorted by oracle $\\bar{{h}}$.{reason}"),
+                        f"multi-turn STR scenarios, sorted by oracle $\\bar{{h}}$.{reason}"),
                note=_cohort_note(sorted(o_h))), encoding="utf-8")
 
     top = both[:subset_rows]
