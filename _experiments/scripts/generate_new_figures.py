@@ -132,7 +132,7 @@ def fig_turnwise_line():
     ax.fill_between(turns, np.clip(mean - std, 0, 100), np.clip(mean + std, 0, 100),
                     color=_VIR_SD(0.92), alpha=0.30, linewidth=0,
                     label=r"$\pm$1 SD")
-    ax.plot(turns, mean, color="#2A7F79", marker="o", markersize=4.5,
+    ax.plot(turns, mean, color=_VIR_SD(0.55), marker="o", markersize=4.5,
             linewidth=1.2, label="Mean")
     # per-turn value labels (1 decimal): rising turns above, drop turns below the marker
     for i, tn in enumerate(turns):
@@ -142,7 +142,7 @@ def fig_turnwise_line():
         ax.annotate(f"{mean[i]:.1f}%", (tn, mean[i]),
                     textcoords="offset points", xytext=(xoff, 7 if above else -8),
                     ha=ha, va="bottom" if above else "top",
-                    fontsize=4.8, color="#2A7F79")
+                    fontsize=4.8, color=_VIR_SD(0.55))
     # annotate the drop into the synthesis/validation turn in percentage points
     ax.annotate("", xy=(4, mean[3]), xytext=(3, mean[2]),
                 arrowprops=dict(arrowstyle="->", color="#555555", lw=1.2))

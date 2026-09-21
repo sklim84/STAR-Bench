@@ -35,7 +35,11 @@ SHORT = {"Transaction Inquiry & Statistics": "Inquiry",
          "Suspicious Activity Detection": "Detection",
          "Money Flow & Network Analysis": "Network",
          "Regulatory Reporting": "Reporting"}
-BASE_COLOUR, FINE_COLOUR = "#A9C0D6", "#2A6099"
+import matplotlib as _mpl  # noqa: E402
+_VIR = _mpl.colormaps["viridis"]
+# fig:reg_vs_anal 과 같은 두 계열 쌍(0.72 / 0.25). base 를 밝은 쪽에 두어
+# 쌍 안에서 어느 쪽이 파생 모델인지 명도로 읽히게 한다.
+BASE_COLOUR, FINE_COLOUR = _VIR(0.72), _VIR(0.25)
 
 
 def main() -> int:

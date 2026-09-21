@@ -30,8 +30,12 @@ from _experiments.scripts.analysis import load  # noqa: E402
 
 FIG = _install_figure_out()
 BAND_LOW, BAND_HIGH = 0.90, 0.97
-GROUP_COLOR = {"General-Purpose": "#4E79A7", "Korean-Specialized": "#E15759",
-               "Finance-Specialized": "#59A14F"}
+import matplotlib as _mpl  # 그림 전체가 viridis 한 계열에서 색을 뽑는다
+_VIR = _mpl.colormaps["viridis"]
+# 세 그룹을 viridis 위에서 충분히 떨어뜨려 뽑는다. 흑백 인쇄에서도 명도 순서가
+# 유지되도록 어두운 쪽부터 General, Korean, Finance 순으로 둔다.
+GROUP_COLOR = {"General-Purpose": _VIR(0.15), "Korean-Specialized": _VIR(0.50),
+               "Finance-Specialized": _VIR(0.80)}
 # One label only. At 2.1 inches three model names of this length cannot sit near
 # their points without covering others, and the band and the arrow already carry
 # the claim. The one worth naming is the configuration that completes the most
