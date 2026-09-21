@@ -47,6 +47,11 @@ CITE = {
     "ministral-3b": "liu2026ministral3", "mistral-small": "mistral2025small",
     "phi-4-mini": "microsoft2025phi4mini",
     "xlam-3b": "prabhakar2025apigenmt", "xlam-70b": "prabhakar2025apigenmt",
+    # Four Qwen configurations are evaluated and ref.bib carries all three cards;
+    # without these keys they were the only served family the paper never cited.
+    "qwen35-4b-nt": "qwen3.5", "qwen35-4b-t": "qwen3.5",
+    "qwen35-27b-nt": "qwen3.5", "qwen35-27b-t": "qwen3.5",
+    "qwen36-27b": "qwen3.6-27b", "qwen36-35b-a3b": "qwen36_35b_a3b",
 }
 
 
