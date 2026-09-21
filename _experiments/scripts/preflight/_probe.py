@@ -25,7 +25,7 @@ def main() -> int:
         from _experiments.scripts.runner import provenance
         out.update(provenance.star_bench_commit())
         out["star_bench_status"] = provenance.working_tree_status()
-        out["hofinet_columns_expected"] = list(provenance.HOFINET_COLUMNS)
+        out["table_columns_expected"] = list(provenance.HOFINET_COLUMNS)
     except Exception as exc:
         out["star_bench_error"] = f"{type(exc).__name__}: {exc}"
 
@@ -39,7 +39,7 @@ def main() -> int:
         out["platform"] = get_provenance()
         from src.data import db
         described = db.get_connection().execute("SELECT * FROM hofinet LIMIT 0").description
-        out["hofinet_columns"] = [row[0] for row in described]
+        out["table_columns"] = [row[0] for row in described]
         out["hofinet_rows"] = db.get_connection().execute(
             "SELECT COUNT(*) FROM hofinet").fetchone()[0]
     except Exception as exc:

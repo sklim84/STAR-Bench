@@ -185,7 +185,7 @@ def main() -> int:
     from _experiments.scripts._platform import ensure_platform_on_path  # noqa: PLC0415
 
     root = ensure_platform_on_path()
-    db = Path(root) / "_datasets" / "HOFINET.duckdb"
+    db = Path(root) / "_datasets" / "transactions.duckdb"
     from src.data.db import query  # noqa: PLC0415
 
     stats = query(STATS_SQL).sort_values("acc").reset_index(drop=True)

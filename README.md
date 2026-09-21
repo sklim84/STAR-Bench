@@ -90,8 +90,8 @@ and the stop reason, so the scoring can be repeated without serving a model agai
 > the cases, the evaluator and the runners, and calls into that one rather than
 > keeping a second copy of the tool layer. See *Installation* below.
 >
-> The benchmark transaction environment (HOFINET) is **synthetic** and is released
-> with the platform (`_datasets/HOFINET.parquet`). What is not released is the real
+> The benchmark transaction environment is **synthetic** and is released
+> with the platform (`_datasets/transactions.parquet`). What is not released is the real
 > transaction data that synthesis was derived from.
 
 ### Case format
@@ -102,7 +102,7 @@ and the stop reason, so the scoring can be repeated without serving a model agai
 
 ## Installation
 
-Running the benchmark executes real AML tools against the HOFINET environment, and
+Running the benchmark executes real AML tools against the transaction environment, and
 both live in the companion platform repository. Clone the two side by side:
 
 ```bash
@@ -287,19 +287,8 @@ penalized setting, a scenario without an STR scores zero on every quality axis.
 
 ## Citation
 
-<!-- The anonymous mirror ships without this block. -->
-
-```bibtex
-@misc{lim2026starbench,
-  title  = {STAR-Bench: Evaluating Anti-Money Laundering Agents for Regulatory Reporting Workflows},
-  author = {Lim, Seonkyu and Hong, Gwangui and Tae, Inwoo and Hwang, Inje and
-            Baek, Jonghyuk and Kim, Jingu and Choi, Jeongwhan and Lee, Jaehoon and
-            Yoo, Hangyeol and Cheong, Jaeyoung and Lee, Yongjae and Kim, Min-Soo and
-            Lim, KyungTae},
-  year   = {2026},
-  note   = {Preprint}
-}
-```
+A citation block is added at camera-ready. It is withheld here because the
+review copy of this repository is anonymous.
 
 ## License
 

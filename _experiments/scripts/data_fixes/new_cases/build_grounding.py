@@ -170,7 +170,7 @@ def monitoring_accounts(execute) -> dict:
 
 
 def funnel_accounts(query) -> dict:
-    """The accounts the funnel scan finds at the tool defaults (HOFINET.MD section 7)."""
+    """The accounts the funnel scan finds at the tool defaults (DATASET.md section 7)."""
     rows = query("""
         WITH sent AS (SELECT sender_acc AS acc, COUNT(DISTINCT receiver_acc) AS out_cp FROM hofinet GROUP BY 1),
              recv AS (SELECT receiver_acc AS acc, COUNT(DISTINCT sender_acc) AS in_cp FROM hofinet GROUP BY 1)
@@ -201,7 +201,7 @@ def main() -> int:
     """)
 
     payload = {
-        "source": {"platform": str(root), "database": str(Path(root) / "_datasets" / "HOFINET.duckdb")},
+        "source": {"platform": str(root), "database": str(Path(root) / "_datasets" / "transactions.duckdb")},
         "note": "Facts the 2026-09 expansion cases are written against. Rebuild with build_grounding.py.",
         "accounts": pick_accounts(stats, used),
         "monitoring_accounts": monitoring_accounts(_execute_tool),

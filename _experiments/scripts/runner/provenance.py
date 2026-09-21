@@ -204,7 +204,7 @@ def _platform_provenance() -> dict:
         return {"error": f"{type(exc).__name__}: {exc}"}
 
 
-def hofinet_columns() -> list[str] | None:
+def table_columns() -> list[str] | None:
     try:
         from _experiments.scripts._platform import ensure_platform_on_path
         ensure_platform_on_path()
@@ -248,7 +248,7 @@ def collect(*, arm, config: dict, check_columns: bool = True,
         record["database_error"] = database_error
     record.update(benchmark_digest(cases_dir))
     if check_columns:
-        record["hofinet_columns"] = hofinet_columns()
+        record["table_columns"] = table_columns()
     for key in ("chat_template_sha256", "model_revision"):
         if config.get(key) is not None:
             record.setdefault(key, config[key])
@@ -273,7 +273,7 @@ def check_pin(record: dict, pin: dict | None, *, strict: bool = True) -> list[st
     problems: list[str] = []
     if record.get("platform_error"):
         problems.append(f"platform tool layer did not load: {record['platform_error']}")
-    columns = record.get("hofinet_columns")
+    columns = record.get("table_columns")
     if columns is not None and tuple(columns) != HOFINET_COLUMNS:
         problems.append(f"hofinet columns are {columns}, expected {list(HOFINET_COLUMNS)}")
     if record.get("streamlit_stubbed") is False:

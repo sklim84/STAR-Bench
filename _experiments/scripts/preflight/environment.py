@@ -136,14 +136,14 @@ def _provenance_checks(info: dict, command: str) -> list[Check]:
         if not missing else f"no hash for {', '.join(missing)}",
         command, hashes))
 
-    columns = info.get("hofinet_columns")
-    expected = info.get("hofinet_columns_expected")
+    columns = info.get("table_columns")
+    expected = info.get("table_columns_expected")
     checks.append(Check(
         "hofinet columns are the released English ones",
         columns is not None and columns == expected,
         f"{len(columns or [])} columns, {info.get('hofinet_rows')} rows"
         if columns == expected else f"columns are {columns}, expected {expected}",
-        command, {"hofinet_columns": columns}))
+        command, {"table_columns": columns}))
 
     stubbed = platform.get("streamlit_stubbed")
     checks.append(Check(

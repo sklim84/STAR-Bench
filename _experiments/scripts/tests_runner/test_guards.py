@@ -33,13 +33,13 @@ def test_a_pinned_value_that_moved_stops_the_run():
 
 
 def test_a_korean_column_database_is_refused():
-    record = {"hofinet_columns": ["거래일자", "거래금액"], "streamlit_stubbed": True}
+    record = {"table_columns": ["거래일자", "거래금액"], "streamlit_stubbed": True}
     with pytest.raises(provenance.EnvironmentMismatch, match="hofinet columns"):
         provenance.check_pin(record, None, strict=True)
 
 
 def test_a_live_streamlit_cache_is_refused():
-    record = {"hofinet_columns": list(provenance.HOFINET_COLUMNS), "streamlit_stubbed": False}
+    record = {"table_columns": list(provenance.HOFINET_COLUMNS), "streamlit_stubbed": False}
     with pytest.raises(provenance.EnvironmentMismatch, match="Streamlit cache"):
         provenance.check_pin(record, None, strict=True)
 
@@ -70,7 +70,7 @@ def test_the_environment_check_is_recorded_even_when_it_is_not_fatal(
     benchmark.main(base_argv(server, out) + ["--cases-dir", str(single_benchmark)],
                    executor=fake_tools)
     manifest = json.loads(next(out.glob("*.manifest.json")).read_text(encoding="utf-8"))
-    assert "hofinet_columns" in manifest["provenance"]
+    assert "table_columns" in manifest["provenance"]
     assert "streamlit_stubbed" in manifest["provenance"]
 
 
@@ -92,7 +92,7 @@ def test_the_record_says_which_database_object_answered():
 
 
 def test_a_run_whose_database_never_opened_is_refused():
-    record = {"hofinet_columns": list(provenance.HOFINET_COLUMNS), "streamlit_stubbed": True,
+    record = {"table_columns": list(provenance.HOFINET_COLUMNS), "streamlit_stubbed": True,
               "database": {"origin": None, "build_info": None}}
     with pytest.raises(provenance.EnvironmentMismatch, match="which database object answered"):
         provenance.check_pin(record, None, strict=True)

@@ -120,7 +120,7 @@ FRAUD_TYPE_EN = {
 }
 
 # HOFINET type -> the STR form §VI classification `generate_str` accepts
-# (_datasets/HOFINET.MD §4.2). Types 2 and 7 map to the form's catch-all.
+# (_datasets/DATASET.md §4.2). Types 2 and 7 map to the form's catch-all.
 STR_SECTION_VI = {
     1: "갑작스러운 거래패턴의 변화",
     2: "기타(자유기술)",
