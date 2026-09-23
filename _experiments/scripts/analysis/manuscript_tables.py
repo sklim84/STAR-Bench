@@ -195,6 +195,9 @@ def main_table(out: Path) -> str:
     return f"tab-exp-oveall.tex: {len(present)} rows scored, {len(registry.CONFIGS)} in the cohort"
 
 
+_WORDS = dict(enumerate("zero one two three four five six seven eight nine ten".split()))
+
+
 def ablation_table(out: Path) -> str:
     cells = {name: load.single(column=name) for name in load.COLUMNS}
     labels = {c.config_id: c.label for c in registry.CONFIGS}
@@ -216,17 +219,21 @@ def ablation_table(out: Path) -> str:
             # English queries reach ... within 0.6 points" is columns one and two.
             cells_text = [_fmt(means[name].get(config_id))
                           for name in ("single", "krtools_enq", "entools_krq", "entools_enq")]
-            lines.append(f"{_label(config_id, labels)} & " + " & ".join(cells_text) + " \\\\")
+            lines.append(f"{_label(config_id, labels, cite=False)} & " + " & ".join(cells_text) + " \\\\")
         if group != GROUP_ORDER[-1]:
             lines.append("\\midrule")
 
     header = ["\\multicolumn{1}{c}{\\textbf{Model}} & \\textbf{KR-KR} & \\textbf{EN-KR} & "
               "\\textbf{KR-EN} & \\textbf{EN-EN} \\\\"]
+    # A wraptable beside Section 5.3, which reads it: the controlled language ablation
+    # is one of the benchmark's distinguishing features, so it sits in the body. The
+    # model names carry no citation here, since Table 2 cites every one of them, and
+    # (T)/(NT) are defined in Table 2's caption.
     text = _table(lines, spec="lcccc", header=header, label="tab:2x2_ablation",
-                  caption=("Tool hit $h$ across query language $\\times$ tool definition language "
-                           "(KR/EN), for the configurations run on all four cells; within each "
-                           "group rows are sorted by the KR-KR baseline. (T)/(NT) denote thinking "
-                           "mode on/off."),
+                  wrap="0.5\\textwidth", size="scriptsize",
+                  caption=(f"Tool hit $h$ by query language $\\times$ tool definition language "
+                           f"(KR/EN) for the {_WORDS.get(len(complete), len(complete))} configurations run on all four cells, "
+                           f"sorted by KR-KR within each group."),
                   note=f"{len(complete)} configurations have all four cells: {', '.join(complete)}")
     (out / "tab-2x2-ablation.tex").write_text(text, encoding="utf-8")
     return f"tab-2x2-ablation.tex: {len(complete)} configurations with all four cells"
