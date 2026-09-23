@@ -96,6 +96,10 @@ def main() -> int:
                 for case in cases}
     is_str = [str_turn.get(s) == t for s, t in zip(turns["scenario_id"], turns["turn"])]
     by_kind = turns.assign(is_str=is_str).groupby("is_str")["h"].mean()
+    # The STR turn sits late in each scenario, so compare it with the other turns
+    # at the same position: position, and the context length that grows with it,
+    # cannot then account for the gap.
+    by_position = turns.assign(is_str=is_str).groupby(["turn", "is_str"])["h"].mean()
     out["sec4_4"] = {
         "spearman_single_h_vs_completion": {"rho": round(float(rho_single.statistic), 4),
                                             "p": round(float(rho_single.pvalue), 4),
@@ -106,6 +110,11 @@ def main() -> int:
         "scenarios_with_str_at_turn_4": sum(1 for v in str_turn.values() if v == 4),
         "n_scenarios": len(cases),
         "str_turn_gap_points": round(100 * float(by_kind[False] - by_kind[True]), 1),
+        "hit_at_same_position": {
+            int(t): {"str": round(float(by_position[(t, True)]), 3),
+                     "other": round(float(by_position[(t, False)]), 3)}
+            for t in sorted({t for t, _ in by_position.index})
+            if (t, True) in by_position.index and (t, False) in by_position.index},
     }
 
     # Appendix A: what the single-turn cases are and how each kind is answered,
