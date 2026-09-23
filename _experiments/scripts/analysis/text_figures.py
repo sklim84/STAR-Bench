@@ -140,6 +140,28 @@ def _same_turn_context(turns, is_str, cases, turn: int) -> dict:
             "hit_change_per_1k_prompt_tokens": round(float(coef[1]), 3)}
 
 
+def _calls_written_as_text(config_id: str) -> dict:
+    """Single-turn records where no call was parsed but the reply spells one out.
+
+    A reply counts when the interface returned no tool call and the final text
+    carries a JSON object with both a "name" and an "arguments" key, the shape of
+    a function call written out as text rather than emitted as one.
+    """
+    import re
+    shape = re.compile(r'"name"\s*:.*?"arguments"\s*:', re.S)
+    path = dict(load._record_files(load.DEFAULT_RUN_ROOT / load.RECORD_DIRS["single"]))[config_id]
+    total = written = 0
+    with open(path, encoding="utf-8") as handle:
+        for line in handle:
+            record = json.loads(line)
+            total += 1
+            parsed = any(r.get("tool_calls") for r in record.get("rounds") or ())
+            if not parsed and shape.search(record.get("final_text") or ""):
+                written += 1
+    return {"config": config_id, "n_cases": total, "calls_written_as_text": written,
+            "pct": round(100 * written / total, 1)}
+
+
 def main() -> int:
     single = load.single("single")
     groups = json.loads(GAP.read_text(encoding="utf-8"))
@@ -310,6 +332,11 @@ def main() -> int:
         "e2e_h_range": [round(min(e2e_hit.values()), 3), round(max(e2e_hit.values()), 3)],
         "mean_delta_h": round(sum(delta.values()) / len(delta), 3),
     }
+
+    # Appendix H: why one model's rank falls so far from BFCL. Its BFCL score was
+    # taken in prompt mode, which parses a call written as text; here it is served
+    # through its native tool-calling interface, which does not.
+    out["appendix_h_text_calls"] = _calls_written_as_text("phi-4-mini")
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
