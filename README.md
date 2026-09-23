@@ -24,7 +24,7 @@ single-turn tool calling.
   evaluated with native function calling. Each configuration is served alone from a
   pinned registry entry that fixes the model revision, chat template, tool-call
   parser, reasoning mode, context window and output budget. 18 are vLLM on local NVIDIA
-  L40S 48 GB and 80 GB hosts; 10 are served through a commercial gateway in every
+  L40S 48 GB and H100 80 GB hosts; 10 are served through a commercial gateway in every
   setting, where the provider serves its own copy of the weights, so the registry fixes
   the request but not the revision. The run records say which.
 - **Deterministic decoding** (temperature 0); case-level bootstrap (10,000 resamples)
