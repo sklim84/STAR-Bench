@@ -23,9 +23,10 @@ single-turn tool calling.
 - **24 open-weight models (28 thinking/non-thinking configurations)** across families,
   evaluated with native function calling. Each configuration is served alone from a
   pinned registry entry that fixes the model revision, chat template, tool-call
-  parser, reasoning mode, context window and output budget. Most are vLLM on NVIDIA
-  L40S 48 GB and 80 GB hosts; a few are served through a commercial gateway, and the
-  run records say which.
+  parser, reasoning mode, context window and output budget. 18 are vLLM on local NVIDIA
+  L40S 48 GB and 80 GB hosts; 10 are served through a commercial gateway in every
+  setting, where the provider serves its own copy of the weights, so the registry fixes
+  the request but not the revision. The run records say which.
 - **Deterministic decoding** (temperature 0); case-level bootstrap (10,000 resamples)
   confirms stable rankings (Kendall τ = 0.962, 95% CI [0.935, 0.985]).
 
@@ -67,7 +68,7 @@ _experiments/
     preflight/            — Six gates that must pass before a run
     data_fixes/           — Benchmark linters and the regulatory terminology table
     benchmark.py, benchmark_multiturn.py, run_master.sh — the runners
-    regenerate_analysis.py — rebuilds every table and figure from the scored runs
+    regenerate_analysis.py — rebuilds every table, figure and in-text figure from the scored runs
   runs/
     single/ mt_oracle/ mt_e2e/        — run records, one JSON line per case or turn
     single_entools_krq/ single_krtools_enq/ single_entools_enq/ — the 2x2 arms
@@ -75,12 +76,15 @@ _experiments/
     eval/                             — scores, one directory per column and configuration
   results_RQ1 … results_RQ5/ — Per-research-question analysis outputs and figures
   paper_tables/       — The paper's data tables, generated
+  human_eval/round2/  — Blind STR drafts, the code-to-model key and the two raters' scores (Appendix F)
   bfcl_results/             — BFCL scores for the general-vs-domain comparison
   figures/                  — Generated figures
 ```
 
 Every number in the paper is rebuilt from `runs/` by
-`python -m _experiments.scripts.regenerate_analysis --all`. The run records are the
+`python -m _experiments.scripts.regenerate_analysis --all`: the tables into
+`paper_tables/`, the figures stated in prose into `results_RQ1/text_figures.json`, and the
+expert agreement from the released ratings in `human_eval/round2/`. The run records are the
 primary artefact: each holds the raw response per round, the parsed calls with their
 arguments and whether the server or the text fallback produced them, the tool output,
 and the stop reason, so the scoring can be repeated without serving a model again.
@@ -231,16 +235,17 @@ end-to-end, 7 for the language 2x2 and 10 for the BFCL comparison; the per-resea
 - **Reporting fails in a shape of its own, not at a higher rate.** Averaged over the
   cohort the four Regulatory Reporting tools sit within a point and a half of the
   analysis tools, and 13 of 28 configurations are worse on reporting. What differs is
-  the failure: across analysis tools 57% of failures are wrong-tool substitutions,
-  while STR-field validation fails by never calling the tool 90% of the time and the
-  AML glossary 96%. CTR-candidate detection falls back to a generic transaction query
-  in 49% of its failures. FIU reference lookup is selected correctly 87.6% of the time
+  the failure: across analysis tools 44% of failures are wrong-tool substitutions and
+  23% are no-calls, while STR-field validation fails by never calling the tool in 75% of
+  its failures and the AML glossary in 66%. CTR-candidate detection falls back to a
+  generic transaction query in 40% of its failures. FIU reference lookup is selected correctly 87.6% of the time
   and grounded correctly 53.0%, the widest such gap in the suite: the model reaches the
   right tool and cannot convert Korean regulatory terminology into its argument.
 
 - **End-to-end execution costs parameter grounding, not tool selection.** Feeding the
-  agent its own tool outputs lowers mean turn-level hit by 4.1 points and completion by
-  2.2, while parameter accuracy falls by 9.7. Tool executions returned an error for
+  agent its own tool outputs lowers mean turn-level hit by 4.2 points and completion by
+  2.2, while parameter accuracy falls by 8.9, over the 25 configurations run in both
+  settings. Tool executions returned an error for
   2.3% of calls, and every attributed one was caused by the model rather than by the
   platform or the data.
 
@@ -252,7 +257,7 @@ end-to-end, 7 for the language 2x2 and 10 for the BFCL comparison; the per-resea
 
 - **General function-calling rank does not predict AML tool use.** Over the ten
   configurations that overlap with BFCL and whose BFCL runs elicited tool calls at
-  all, the rank correlation is weak and not significant (Spearman ρ = 0.47,
+  all, the rank correlation is moderate and not significant (Spearman ρ = 0.47,
   p = 0.17). xLAM-2-70B is second under BFCL and seventh here; EXAONE-4.0-32B moves
   the other way, ninth to fourth.
 
@@ -265,8 +270,8 @@ end-to-end, 7 for the language 2x2 and 10 for the BFCL comparison; the per-resea
 
 **Single-turn.** Tool hit `h` (every gold tool is among the calls; the primary
 metric), required-tool recall `r`, precision `p`, parameter accuracy `a` (key-value
-constraints on correctly selected tools) and order score `o` (LCS-based call-order
-consistency for multi-tool cases). `p`, `a` and `o` are undefined rather than perfect
+constraints on correctly selected tools) and order score `o` (1 when the tools the gold
+orders first appear in that order, for multi-tool cases). `p`, `a` and `o` are undefined rather than perfect
 where they do not apply: `p` for a case with no calls, `a` for a case with no
 parameter check, `o` for a case whose order is unconstrained. Every aggregate carries
 the count it was taken over. Parser failures score zero; a correct abstention on an
@@ -281,9 +286,12 @@ diagnostic.
 **STR generation quality.** Over scenarios whose ground truth includes a `generate_STR`
 turn, we report the production rate (fraction that actually invoke `generate_STR`) and,
 for produced drafts, a deterministic evidence check over required-field completeness,
-evidence grounding (factual slots supported by prior tool outputs), regulatory
-terminology use, and unsupported-fact rate, combined into an overall score. Under the
-penalized setting, a scenario without an STR scores zero on every quality axis.
+evidence grounding (factual slots supported by prior tool outputs) and regulatory
+terminology use, with their mean as the overall score. Under the penalized setting, a
+scenario without an STR scores zero on every axis, and a report that states no figure
+scores zero on grounding. Workflow completion `c` counts tool selection only; arguments
+and the report are scored separately, so a completed workflow can still end in a weak
+report.
 
 ## Citation
 
