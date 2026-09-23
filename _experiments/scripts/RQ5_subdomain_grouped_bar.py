@@ -40,6 +40,7 @@ _VIR = _mpl.colormaps["viridis"]
 # fig:reg_vs_anal 과 같은 두 계열 쌍(0.72 / 0.25). base 를 밝은 쪽에 두어
 # 쌍 안에서 어느 쪽이 파생 모델인지 명도로 읽히게 한다.
 BASE_COLOUR, FINE_COLOUR = _VIR(0.72), _VIR(0.25)
+FIG_H = 1.92
 
 
 def main() -> int:
@@ -54,8 +55,9 @@ def main() -> int:
     subdomains = list(spec["sub_domains"])
     declines = set(base["subdomains_where_every_pair_declines"])
 
-    # Drawn 1:1 for a 0.42\\textwidth wrapfigure, so nothing is scaled at use.
-    fig, ax = plt.subplots(figsize=(2.35, 1.58))
+    # Drawn 1:1 beside fig_turnwise_line in one row, at the same outer size and
+    # font sizes, so the two read as a pair and nothing is scaled at use.
+    fig, ax = plt.subplots(figsize=(2.40, FIG_H))
     x = np.arange(len(subdomains))
     width = 0.20
     for slot, (fine_id, pair) in enumerate(pairs.items()):
@@ -73,21 +75,21 @@ def main() -> int:
 
     ax.set_xticks(x)
     ax.set_xticklabels([SHORT.get(sd, sd) for sd in subdomains], fontsize=5.2)
-    ax.set_ylabel("Tool hit $h$", fontsize=5.6)
+    ax.set_ylabel("Tool hit ($h$)", fontsize=5.8, labelpad=2)
     ax.set_ylim(0, 1.12)
     ax.tick_params(axis="y", labelsize=5, pad=1.5)
     ax.tick_params(axis="x", length=0, pad=2)
     # Four entries as two pairs: each row is one base-and-fine-tune pair, which is
     # the comparison the bars make, and it costs half the vertical space.
-    ax.legend(fontsize=4.2, ncol=2, frameon=False, loc="lower left",
+    ax.legend(fontsize=4.8, ncol=2, frameon=False, loc="lower left",
               bbox_to_anchor=(-0.02, -0.28), handlelength=0.9,
               labelspacing=0.18, columnspacing=0.6, borderpad=0.1)
     ax.text(0.99, 0.99, "shaded: both pairs decline", transform=ax.transAxes,
-            ha="right", va="top", fontsize=4.2, color="#A0554F")
+            ha="right", va="top", fontsize=4.8, color="#A0554F")
     style_axes(ax)
     # style_axes sets a shared tick size; this figure is drawn small, so it keeps its own.
-    ax.tick_params(axis="y", labelsize=5, pad=1.5)
-    ax.tick_params(axis="x", labelsize=5.2, length=0, pad=2)
+    ax.tick_params(axis="y", labelsize=5.4, pad=1.5)
+    ax.tick_params(axis="x", labelsize=5.4, length=0, pad=2)
     fig.tight_layout()
     for suffix in ("pdf", "png"):
         fig.savefig(OUT_DIR / f"fig_subdomain_grouped_bar.{suffix}", dpi=300, bbox_inches="tight")
