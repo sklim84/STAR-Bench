@@ -541,7 +541,7 @@ SUBDOMAIN_MAP = {
     "validate_str_fields": "Regulatory\nReporting",
     "get_aml_glossary": "Regulatory\nReporting",
     "generate_str": "Regulatory\nReporting",
-    "multi_tool": "Multi-tool",  # includes generate_STR (no separate cases_generate_str.json)
+    "multi_tool": "Multi-tool",  # includes generate_str (no separate cases_generate_str.json)
     "missing_parameters": "Missing-\nparam",
 }
 

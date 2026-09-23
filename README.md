@@ -39,7 +39,7 @@ single-turn tool calling.
 | Money Flow & Network Analysis | 7 | Network analysis, AML pattern (ring/layering/funnel) detection, smurfing, dormant reactivation, cross-institution flow, trend, channel risk |
 | Regulatory Reporting | 5 | CTR-candidate detection, FIU reference lookup, STR field validation, AML glossary, STR generation† |
 
-† `generate_STR` is evaluated only in the multi-turn STR workflow (no single-turn cases).
+† `generate_str` is evaluated only in the multi-turn STR workflow (no single-turn cases).
 
 ### Case composition (single-turn, 1,258 cases)
 
@@ -287,8 +287,8 @@ turns), and scenario completion rate `c` (fraction of scenarios in which every t
 achieves `h = 1`). Context carry-over accuracy is reported as a state-tracking
 diagnostic.
 
-**STR generation quality.** Over scenarios whose ground truth includes a `generate_STR`
-turn, we report the production rate (fraction that actually invoke `generate_STR`) and,
+**STR generation quality.** Over scenarios whose ground truth includes a `generate_str`
+turn, we report the production rate (fraction that actually invoke `generate_str`) and,
 for produced drafts, a deterministic evidence check over required-field completeness,
 evidence grounding (factual slots supported by prior tool outputs) and regulatory
 terminology use, with their mean as the overall score. Under the penalized setting, a
