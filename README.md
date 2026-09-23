@@ -45,8 +45,8 @@ single-turn tool calling.
 
 | Difficulty | Call type | Category |
 |---|---|---|
-| Easy: 737 | Tool-required: 1,024 | Single-tool: 1,089 |
-| Medium: 283 | Abstain (irrelevant or underspecified): 234 | Multi-tool: 125 |
+| Easy: 737 | Tool-required: 1,099 | Single-tool: 1,089 |
+| Medium: 283 | No gold tool: 159 (out of scope 119, missing argument 40) | Multi-tool: 125 |
 | Hard: 238 | | Missing-parameter: 44 |
 
 Difficulty reflects two independent factors: semantic ambiguity between
@@ -278,8 +278,8 @@ the count it was taken over. Parser failures score zero; a correct abstention on
 irrelevant or underspecified query counts as a successful refusal, and requires an
 answer rather than merely the absence of a call.
 
-**Multi-turn STR.** Per-turn tool hit `h̄` and parameter accuracy `ā` (scenario-level
-means), and scenario completion rate `c` (fraction of scenarios in which every turn
+**Multi-turn STR.** Per-turn tool hit `h̄` and parameter accuracy `ā` (means over
+turns), and scenario completion rate `c` (fraction of scenarios in which every turn
 achieves `h = 1`). Context carry-over accuracy is reported as a state-tracking
 diagnostic.
 

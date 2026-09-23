@@ -10,8 +10,13 @@ number in the prose has an artefact behind it like a number in a table.
 
 Conventions follow the paper. A case is correct when h == 1. Multi-turn h-bar is
 the mean over turns. "Failures" are the cases with h == 0, split by the scorer's
-error type. A case has no gold tool when its scored gold-tool set is empty; the
-scorer counts a case whose gold is given only as an alternative as having one.
+error type. A case's kind comes from the case file, never from a scored record:
+its gold tools are primary_tool together with tools_must_include, it asks for a
+missing argument when expect_clarification is set, and it accepts an alternative
+when alternatives is non-empty. The scored gold-tool set cannot serve, because
+for a case whose only accepted call is an alternative the scorer records the
+alternative when a model makes that call and nothing when it does not, so the set
+differs from one configuration to the next.
 
 Usage:  PYTHONPATH=. python -m _experiments.scripts.analysis.text_figures
 Output: _experiments/results_RQ1/text_figures.json
@@ -41,15 +46,6 @@ MULTI = ROOT / "benchmarks_multiturn" / "cases_str_workflow.json"
 BENCH = ROOT / "benchmarks"
 
 
-def _gold_count(value) -> int:
-    if isinstance(value, str):
-        try:
-            value = json.loads(value)
-        except (json.JSONDecodeError, ValueError):
-            value = [value] if value else []
-    return len(set(value or []))
-
-
 def _share(frame, column: str) -> dict:
     counts = frame[column].value_counts()
     total = int(counts.sum())
@@ -63,7 +59,6 @@ def _pct(series) -> float:
 
 def main() -> int:
     single = load.single("single")
-    single = single.assign(n_gold=single["gold_tools"].map(_gold_count))
     groups = json.loads(GAP.read_text(encoding="utf-8"))
     analysis_tools = set(groups["analysis_categories"])
     reporting_tools = set(groups["regulatory_categories"])
@@ -113,30 +108,43 @@ def main() -> int:
         "str_turn_gap_points": round(100 * float(by_kind[False] - by_kind[True]), 1),
     }
 
-    # Appendix A: what the single-turn cases are and how each kind is answered.
-    one = single[single["config_id"] == single["config_id"].iloc[0]]
-    no_gold = single[single["n_gold"] == 0]
-    asks = no_gold[no_gold["clarification_ok"].notna()]
-    declines = no_gold[no_gold["clarification_ok"].isna()]
-    alternatives = 0
+    # Appendix A: what the single-turn cases are and how each kind is answered,
+    # with every case's kind fixed from the case file.
+    kind = {}
     for path in sorted(BENCH.glob("cases_*.json")):
         for case in json.loads(path.read_text(encoding="utf-8")):
-            if (case.get("expected") or {}).get("alternatives"):
-                alternatives += 1
-    one_no_gold = one[one["n_gold"] == 0]
+            expected = case.get("expected") or {}
+            gold = set(expected.get("tools_must_include") or [])
+            if expected.get("primary_tool"):
+                gold.add(expected["primary_tool"])
+            kind[case["id"]] = {"n_gold": len(gold),
+                                "asks": bool(expected.get("expect_clarification")),
+                                "alternative": bool(expected.get("alternatives")),
+                                "difficulty": case.get("difficulty")}
+    no_gold = [k for k, v in kind.items() if v["n_gold"] == 0]
+    asks = [k for k in no_gold if kind[k]["asks"]]
+    out_of_scope = [k for k in no_gold if not kind[k]["asks"]]
+    with_gold = [k for k, v in kind.items() if v["n_gold"] > 0]
+    def correct(ids) -> float:
+        return _pct(single[single["case_id"].isin(set(ids))]["h"])
     out["appendix_a"] = {
         "gold_tool_count": {int(k): int(v) for k, v in
-                            sorted(collections.Counter(one["n_gold"]).items())},
-        "no_gold_out_of_scope": int(one_no_gold["clarification_ok"].isna().sum()),
-        "no_gold_asks_for_argument": int(one_no_gold["clarification_ok"].notna().sum()),
-        "cases_accepting_an_alternative": alternatives,
-        "difficulty": {k: int(v) for k, v in one["difficulty"].value_counts().items()},
+                            sorted(collections.Counter(v["n_gold"] for v in kind.values()).items())},
+        "no_gold_out_of_scope": len(out_of_scope),
+        "no_gold_asks_for_argument": len(asks),
+        "accepts_alternative": {
+            "out_of_scope": sum(kind[k]["alternative"] for k in out_of_scope),
+            "with_gold": sum(kind[k]["alternative"] for k in with_gold),
+            "asks_for_argument": sum(kind[k]["alternative"] for k in asks)},
+        "difficulty": dict(collections.Counter(v["difficulty"] for v in kind.values())),
+        "no_gold_difficulty": dict(collections.Counter(kind[k]["difficulty"] for k in no_gold)),
         "correct_pct": {
-            "out_of_scope": _pct(declines["h"]),
-            "asks_for_argument": _pct(asks["h"]),
-            "no_gold_pooled": _pct(no_gold["h"]),
-            **{f"{d}_with_gold": _pct(single[(single["n_gold"] > 0)
-                                             & (single["difficulty"] == d)]["h"])
+            "out_of_scope": correct(out_of_scope),
+            "out_of_scope_without_alternative": correct(
+                [k for k in out_of_scope if not kind[k]["alternative"]]),
+            "asks_for_argument": correct(asks),
+            "no_gold_pooled": correct(no_gold),
+            **{f"{d}_with_gold": correct([k for k in with_gold if kind[k]["difficulty"] == d])
                for d in ("easy", "medium", "hard")},
         },
         "multi_turn_lengths": {int(k): int(v) for k, v in sorted(
