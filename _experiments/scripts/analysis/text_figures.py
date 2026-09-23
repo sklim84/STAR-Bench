@@ -89,6 +89,57 @@ def _same_turn_by_scenario(turns, is_str, cases, turn: int) -> dict:
             "by_scenario_type": by_kind}
 
 
+def _same_turn_context(turns, is_str, cases, turn: int) -> dict:
+    """What else differs between STR and other turns at one position.
+
+    Prompt and completion tokens come from the oracle run records the scorer
+    read (the latest record file per configuration, as load does). The gap is
+    re-estimated with prompt length held fixed inside each configuration: both
+    the hit and the prompt length are centred per configuration, and the hit is
+    regressed on the STR indicator and the prompt length in thousands of tokens.
+    """
+    import numpy as np
+    import pandas as pd
+    usage = []
+    for config_id, path in load._record_files(load.DEFAULT_RUN_ROOT / load.RECORD_DIRS["oracle"]):
+        with open(path, encoding="utf-8") as handle:
+            for line in handle:
+                record = json.loads(line)
+                if record.get("turn") != turn:
+                    continue
+                rounds = record.get("rounds") or []
+                first = (rounds[0].get("usage") or {}) if rounds else {}
+                usage.append({"config_id": config_id, "scenario_id": record.get("case_id"),
+                              "prompt": first.get("prompt_tokens"),
+                              "completion": sum((r.get("usage") or {}).get("completion_tokens") or 0
+                                                for r in rounds)})
+    at = turns.assign(is_str=is_str)
+    at = at[at["turn"] == turn][["config_id", "scenario_id", "h", "is_str"]]
+    at = at.merge(pd.DataFrame(usage), on=["config_id", "scenario_id"], how="inner").dropna()
+    arguments = {case["id"]: sum(len(call.get("arguments") or {})
+                                 for t in case["turns"] if t["turn"] == turn
+                                 for call in (t.get("tool_calls") or ()))
+                 for case in cases}
+    per = at.groupby(["scenario_id", "is_str"]).agg(prompt=("prompt", "median"),
+                                                     completion=("completion", "median")).reset_index()
+    per["arguments"] = per["scenario_id"].map(arguments)
+    x, y = [], []
+    for _, group in at.groupby("config_id"):
+        x.append(np.c_[group["is_str"].astype(float) - group["is_str"].mean(),
+                       (group["prompt"] - group["prompt"].mean()) / 1000])
+        y.append(group["h"] - group["h"].mean())
+    coef = np.linalg.lstsq(np.vstack(x), np.concatenate(y), rcond=None)[0]
+    def median(column, flag):
+        return float(per[per["is_str"] == flag][column].median())
+    return {"n_turn_records": int(len(at)),
+            "median_prompt_tokens": {"str": median("prompt", True), "other": median("prompt", False)},
+            "median_gold_arguments": {"str": median("arguments", True), "other": median("arguments", False)},
+            "median_completion_tokens": {"str": median("completion", True),
+                                         "other": median("completion", False)},
+            "gap_points_holding_prompt_length": round(-100 * float(coef[0]), 1),
+            "hit_change_per_1k_prompt_tokens": round(float(coef[1]), 3)}
+
+
 def main() -> int:
     single = load.single("single")
     groups = json.loads(GAP.read_text(encoding="utf-8"))
@@ -143,6 +194,7 @@ def main() -> int:
         "n_scenarios": len(cases),
         "str_turn_gap_points": round(100 * float(by_kind[False] - by_kind[True]), 1),
         "str_turn_4_by_scenario": _same_turn_by_scenario(turns, is_str, cases, turn=4),
+        "str_turn_4_context": _same_turn_context(turns, is_str, cases, turn=4),
         "hit_at_same_position": {
             int(t): {"str": round(float(by_position[(t, True)]), 3),
                      "other": round(float(by_position[(t, False)]), 3)}
