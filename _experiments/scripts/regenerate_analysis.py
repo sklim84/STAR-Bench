@@ -163,9 +163,11 @@ STEPS: tuple[Step, ...] = (
     # The paper's own tables, written from the results above. They come last because
     # they read what the RQ steps wrote.
     Step("text_figures", "analysis.text_figures",
-         "the figures Sections 4.2 to 4.4 and Appendix A state in prose",
+         "the figures the paper states in prose, Sections 4.2 to 4.4 and Appendices A, C, F, H and I",
          inputs=("_experiments/runs/eval/single", "_experiments/runs/eval/mt_oracle",
-                 "_experiments/results_RQ2/regulatory_vs_analysis_gap.json"),
+                 "_experiments/runs/eval/mt_e2e", "_experiments/human_eval/round2",
+                 "_experiments/results_RQ2/regulatory_vs_analysis_gap.json",
+                 "_experiments/results_RQ3/str_generation_quality.json"),
          outputs=("_experiments/results_RQ1/text_figures.json",)),
     Step("completion_gap_ci", "analysis.completion_gap_ci",
          "Section 4.4, the paired bootstrap interval and McNemar test on the completion spread",
