@@ -5,7 +5,7 @@ does not predict workflow completion.
 
 One point per scored configuration. The shaded band marks the configurations
 within seven points of one another on single-turn tool hit, whose completion
-rates still span thirty points; that band is the claim, so it is drawn rather
+rates still span more than thirty points; that band is the claim, so it is drawn rather
 than described.
 
     python -m _experiments.scripts.generate_teaser
@@ -29,11 +29,14 @@ from _figure_out import install as _install_figure_out  # noqa: E402
 from _experiments.scripts.analysis import load  # noqa: E402
 
 FIG = _install_figure_out()
-BAND_LOW, BAND_HIGH = 0.90, 0.97
+# The band holds every configuration within seven points of the highest single-turn
+# hit, the same rule text_figures applies for Section 4.4, so the figure and the
+# prose name the same set.
+BAND_WIDTH = 0.07
 import matplotlib as _mpl  # 그림 전체가 viridis 한 계열에서 색을 뽑는다
 _VIR = _mpl.colormaps["viridis"]
 # Colour carries the two claims, so the figure needs no legend. The configurations
-# in the band are drawn dark blue and the 30-point arrow and its label share that
+# in the band are drawn dark blue and the spread arrow and its label share that
 # colour; the configuration that completes the most workflows is green, and so is
 # its label; everything else is grey context. The green is viridis(0.62) darkened
 # to 5.1:1 contrast on white so its label stays legible at 6.5 pt; the blue is
@@ -65,11 +68,13 @@ def main() -> int:
 
     # Drawn 1:1 for the 0.45\\textwidth wrapfigure (about 179 pt), so the type sizes
     # above are the sizes on the page.
+    top = max(r[1] for r in rows)
+    band_low, band_high = top - BAND_WIDTH, top
     fig, ax = plt.subplots(figsize=(2.37, 1.9))
-    ax.axvspan(BAND_LOW, BAND_HIGH, color="#E4E4EA", linewidth=0, zorder=1)
+    ax.axvspan(band_low, band_high, color="#E4E4EA", linewidth=0, zorder=1)
     ranked = sorted(rows, key=lambda r: -r[1])
     for config_id, h, c, label, group in rows:
-        inside = BAND_LOW <= h <= BAND_HIGH
+        inside = h >= band_low
         colour = LEADER_COLOUR if config_id == LABELLED else BAND_COLOUR if inside else OTHER_COLOUR
         ax.scatter(h, c, s=20, zorder=4 if colour != OTHER_COLOUR else 3, linewidths=0.5,
                    edgecolors="white", color=colour)
@@ -81,10 +86,10 @@ def main() -> int:
                     textcoords="offset points", xytext=(-5, 0), ha="right", va="center",
                     fontsize=6.5, color=LEADER_COLOUR, linespacing=1.15)
 
-    band = [r for r in rows if BAND_LOW <= r[1] <= BAND_HIGH]
+    band = [r for r in rows if r[1] >= band_low]
     if band:
         low, high = min(r[2] for r in band), max(r[2] for r in band)
-        x = BAND_HIGH + 0.018
+        x = band_high + 0.022
         ax.annotate("", xy=(x, low), xytext=(x, high),
                     arrowprops=dict(arrowstyle="<->", color=BAND_COLOUR, linewidth=0.8,
                                     shrinkA=0, shrinkB=0))
@@ -108,7 +113,7 @@ def main() -> int:
     plt.close(fig)
 
     print(f"Saved fig_teaser_single_vs_workflow.{{pdf,png}} -> {FIG}")
-    print(f"  {len(rows)} configurations; band {BAND_LOW}-{BAND_HIGH} holds {len(band)}, "
+    print(f"  {len(rows)} configurations; band {band_low:.3f}-{band_high:.3f} holds {len(band)}, "
           f"completion {min(r[2] for r in band):.2f} to {max(r[2] for r in band):.2f}")
     if absent:
         print(f"  not scored ({len(absent)}): {', '.join(absent)}")

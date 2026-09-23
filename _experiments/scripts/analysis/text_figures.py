@@ -44,6 +44,7 @@ HUMAN = ROOT / "_experiments" / "human_eval" / "round2"
 GAP = ROOT / "_experiments" / "results_RQ2" / "regulatory_vs_analysis_gap.json"
 MULTI = ROOT / "benchmarks_multiturn" / "cases_str_workflow.json"
 BENCH = ROOT / "benchmarks"
+BAND_WIDTH = 0.07  # "within seven points of one another on single-turn tool hit"
 
 
 def _share(frame, column: str) -> dict:
@@ -205,6 +206,19 @@ def main() -> int:
     # at the same turn position. This holds position fixed only: the length of
     # the earlier tool outputs, and so the context, still differs between them.
     by_position = turns.assign(is_str=is_str).groupby(["turn", "is_str"])["h"].mean()
+    # The band Figure 1 draws and Section 4.4 states: every configuration within
+    # seven points of the highest single-turn hit, so all of them are within seven
+    # points of one another. The window is fixed; the membership follows from it.
+    top = float(by_config.max())
+    band = [k for k in completion.index if by_config[k] >= top - BAND_WIDTH]
+    band_c = completion[band]
+    out["sec4_4_band"] = {
+        "width": BAND_WIDTH, "n": len(band),
+        "h_range": [round(float(by_config[band].min()), 3), round(top, 3)],
+        "c_range": [round(float(band_c.min()), 2), round(float(band_c.max()), 2)],
+        "c_spread_points": round(100 * float(band_c.max() - band_c.min())),
+        "configs": sorted(band),
+    }
     out["sec4_4"] = {
         "spearman_single_h_vs_completion": {"rho": round(float(rho_single.statistic), 4),
                                             "p": round(float(rho_single.pvalue), 4),
