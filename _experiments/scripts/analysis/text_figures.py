@@ -129,8 +129,8 @@ def main() -> int:
     is_str = [str_turn.get(s) == t for s, t in zip(turns["scenario_id"], turns["turn"])]
     by_kind = turns.assign(is_str=is_str).groupby("is_str")["h"].mean()
     # The STR turn sits late in each scenario, so compare it with the other turns
-    # at the same position: position, and the context length that grows with it,
-    # cannot then account for the gap.
+    # at the same turn position. This holds position fixed only: the length of
+    # the earlier tool outputs, and so the context, still differs between them.
     by_position = turns.assign(is_str=is_str).groupby(["turn", "is_str"])["h"].mean()
     out["sec4_4"] = {
         "spearman_single_h_vs_completion": {"rho": round(float(rho_single.statistic), 4),
