@@ -17,9 +17,11 @@ but as the range of noisy estimates it is biased upward and the paper quotes the
 pairwise numbers instead.
 
 Usage:  PYTHONPATH=. python _experiments/scripts/analysis/completion_gap_ci.py
+Output: _experiments/results_RQ3/completion_gap_ci.json
 """
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -32,6 +34,7 @@ if str(ROOT) not in sys.path:
 
 from _experiments.scripts.analysis import load  # noqa: E402
 
+OUT = ROOT / "_experiments" / "results_RQ3" / "completion_gap_ci.json"
 BAND = 9          # the configurations Section 4.4 calls the band, by single-turn rank
 SEED = 20260923
 DRAWS = 10_000
@@ -72,10 +75,24 @@ def main() -> int:
     worse = completion.idxmin()
     print("\npaired comparisons against the band's lowest completion"
           f" ({worse}, {completion[worse]:.2f}):")
+    comparisons = []
     for better in (completion.idxmax(), piv.mean().idxmax()):
         mean, low, high, b, c, p = paired(piv, index, better, worse)
         print(f"  {better:<20} {mean:+.2f}  95% CI [{low:+.2f}, {high:+.2f}]"
               f"  McNemar b={b} c={c} p={p:.4f}")
+        comparisons.append({"better": better, "worse": worse, "difference": round(float(mean), 4),
+                            "ci95": [round(float(low), 4), round(float(high), 4)],
+                            "mcnemar_b": b, "mcnemar_c": c, "mcnemar_p": float(p)})
+
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(json.dumps({
+        "band": [{"label": label, "h": round(float(hit[label]), 4),
+                  "completion": round(float(completion[label]), 4)} for label in band],
+        "n_scenarios": n, "draws": DRAWS, "seed": SEED,
+        "paired": comparisons,
+        "note": "paired over scenarios; the band's max-minus-min spread is biased upward and not quoted",
+    }, indent=2), encoding="utf-8")
+    print(f"\n-> {OUT}")
     return 0
 
 
