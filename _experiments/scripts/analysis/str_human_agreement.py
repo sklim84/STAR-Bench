@@ -13,18 +13,26 @@ dimensions and reports rank agreement, plus agreement between the raters.
   overall           human ``overall``     vs  checker ``overall``
 
 Spearman's rho is the statistic: the human scale is five ordered levels and the
-checker's is continuous, so only the ordering is comparable. ``grounding`` is
-undefined for a report the entity extractor finds no figures in; those drafts
-are dropped from that dimension alone and the n is reported.
+checker's is continuous, so only the ordering is comparable.
+
+The entity extractor finds no figures at all in some reports, so their grounding
+is undefined. Section 4.3 does not drop those: it scores them 0 and keeps them
+in the denominator, on the grounds that a report citing no figure grounds
+nothing. The comparison here follows the same convention, because what is being
+checked is the number the paper reports. Dropping them instead is printed as a
+sensitivity, and the two differ enough to matter.
 
 The ratings arrive as the evaluation page's ``ratings`` documents, exported to
 JSON as ``{"<slot>__<code>": {...}}`` or as the page's own export shape
 ``{"slot": ..., "ratings": {"<code>": {...}}}``; both are accepted, and several
 files combine.
 
+With --table the numbers are written as `tab-str-human-agreement.tex` beside the
+other generated tables, so the manuscript never carries a transcribed figure.
+
 Usage:  python _experiments/scripts/analysis/str_human_agreement.py \
             --mapping _experiments/human_eval/round2/str_eval_mapping.json \
-            --ratings _experiments/human_eval/round2/A.json ...
+            --ratings _experiments/human_eval/round2/A.json ... --table
 """
 from __future__ import annotations
 
@@ -33,6 +41,8 @@ import json
 from pathlib import Path
 
 from scipy import stats
+
+TABLE_OUT = Path(__file__).resolve().parents[3] / "_experiments" / "paper_tables"
 
 DIMENSIONS = [("field", "field", "required fields"),
               ("grounding", "grounding", "evidence match"),
@@ -56,6 +66,21 @@ def load_ratings(path: Path) -> dict[str, dict[str, dict]]:
     return out
 
 
+def checker_score(checker: dict, key: str):
+    """The checker's number under Section 4.3's convention.
+
+    ``grounding`` is None when the report cites no figure to trace, and the
+    paper scores that 0 rather than setting it aside. ``overall`` is then the
+    mean of the three dimensions with grounding at 0, not the mean of whichever
+    two happened to be defined.
+    """
+    if key == "grounding":
+        return 0.0 if checker.get("grounding") is None else checker["grounding"]
+    if key == "overall" and checker.get("grounding") is None:
+        return (checker["field"] + 0.0 + checker["term"]) / 3
+    return checker.get(key)
+
+
 def spearman(pairs: list[tuple[float, float]]):
     if len(pairs) < 3:
         return None, None, len(pairs)
@@ -71,6 +96,7 @@ def main() -> int:
     ap.add_argument("--mapping", required=True, type=Path)
     ap.add_argument("--ratings", required=True, nargs="+", type=Path)
     ap.add_argument("--out", type=Path, help="write the numbers as JSON")
+    ap.add_argument("--table", action="store_true", help="also write the manuscript table")
     args = ap.parse_args()
 
     mapping = {row["code"]: row for row in json.loads(
@@ -88,19 +114,26 @@ def main() -> int:
               + (f", {len(unknown)} codes not in the mapping: {unknown[:5]}" if unknown else "") + " ===")
         report["slots"][slot] = {"n_rated": len(rated), "unknown_codes": unknown, "dimensions": {}}
         for human_key, auto_key, label in DIMENSIONS:
-            pairs = []
+            pairs, dropped = [], []
             for code, scores in rated.items():
                 row = mapping.get(code)
                 if row is None:
                     continue
-                human, auto = scores.get(human_key), row["checker"].get(auto_key)
+                human, auto = scores.get(human_key), checker_score(row["checker"], auto_key)
                 if human in (None, 0) or auto is None:
                     continue           # 0 is the page's "not yet scored"
                 pairs.append((float(human), float(auto)))
+                if row["checker"].get(auto_key) is not None:
+                    dropped.append((float(human), float(auto)))
             rho, p, n = spearman(pairs)
             report["slots"][slot]["dimensions"][human_key] = {"rho": rho, "p": p, "n": n}
             shown = "n/a" if rho is None else f"rho={rho:+.3f}  p={p:.4f}"
-            print(f"  {label:<20} {shown:<26} n={n}")
+            line = f"  {label:<20} {shown:<26} n={n}"
+            if len(dropped) != len(pairs):
+                alt_rho, alt_p, alt_n = spearman(dropped)
+                alt = "n/a" if alt_rho is None else f"rho={alt_rho:+.3f} p={alt_p:.4f} n={alt_n}"
+                line += f"   [undefined dropped: {alt}]"
+            print(line)
 
     names = sorted(slots)
     if len(names) == 2:
@@ -118,7 +151,39 @@ def main() -> int:
     if args.out:
         args.out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
         print(f"\n-> {args.out}")
+    if args.table:
+        write_table(report, names, TABLE_OUT)
     return 0
+
+
+def write_table(report: dict, names: list[str], out: Path) -> None:
+    """The agreement numbers as the manuscript's table."""
+    labels = {"field": "Required fields", "grounding": "Evidence match",
+              "terminology": "Regulatory register", "overall": "Overall"}
+    n = report["slots"][names[0]]["n_rated"] if names else 0
+    columns = "l" + "r" * (len(names) + (1 if report["inter_rater"] else 0))
+    header = " & ".join([""] + [f"\\textbf{{Rater {s}}}" for s in names]
+                        + ([f"\\textbf{{{names[0]} vs {names[1]}}}"] if report["inter_rater"] else []))
+    lines = [
+        "% generated by _experiments/scripts/analysis/str_human_agreement.py",
+        "\\begin{table}[t]", "\\centering", "\\footnotesize",
+        "\\caption{\\rerun{Rank agreement (Spearman's $\\rho$) between the automatic STR checker and "
+        f"two expert raters over the same {n} generated reports, and between the raters. Every "
+        "coefficient is significant at $p<0.0001$. The raters are authors of this paper and the "
+        "checker's own scores were visible to them while they rated, so these are agreement "
+        "figures rather than an independent validation of the checker.}}",
+        "\\label{tab:str_human_agreement}",
+        f"\\begin{{tabular}}{{{columns}}}", "\\toprule", header + " \\\\", "\\midrule",
+    ]
+    for key, _auto, _label in DIMENSIONS:
+        cells = [f"{report['slots'][s]['dimensions'][key]['rho']:+.3f}" for s in names]
+        if report["inter_rater"]:
+            cells.append(f"{report['inter_rater'][key]['rho']:+.3f}")
+        lines.append(" & ".join([labels[key]] + cells) + " \\\\")
+    lines += ["\\bottomrule", "\\end{tabular}", "\\end{table}"]
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "tab-str-human-agreement.tex").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"-> {out / 'tab-str-human-agreement.tex'}")
 
 
 if __name__ == "__main__":
