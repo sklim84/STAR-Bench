@@ -49,6 +49,10 @@ single-turn tool calling.
 | Medium: 283 | No gold tool: 159 (out of scope 119, missing argument 40) | Multi-tool: 125 |
 | Hard: 238 | | Missing-parameter: 44 |
 
+Call type is read from each case's own gold. The 40 cases that omit a required argument
+are 39 of the 44 missing-parameter cases plus one elsewhere; the other five missing-parameter
+cases omit nothing the tool requires and expect the call.
+
 Difficulty reflects two independent factors: semantic ambiguity between
 similar-function tools, and information completeness of the query (missing-parameter
 follow-ups and abstention on irrelevant queries).
