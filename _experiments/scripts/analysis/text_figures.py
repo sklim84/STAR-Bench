@@ -57,6 +57,38 @@ def _pct(series) -> float:
     return round(100 * float(series.astype(float).mean()), 1)
 
 
+def _same_turn_by_scenario(turns, is_str, cases, turn: int) -> dict:
+    """STR turns against the other turns at one position, with the scenario as the unit.
+
+    Every configuration runs the same scenarios, so pooling turns over
+    configurations does not add independent scenarios. Each scenario's hit is
+    averaged over configurations first; the interval resamples scenarios.
+    """
+    import numpy as np
+    kind = {case["id"]: case["sub_category"] for case in cases}
+    at = turns.assign(is_str=is_str)
+    at = at[at["turn"] == turn]
+    per = at.groupby(["scenario_id", "is_str"])["h"].mean().reset_index()
+    report, other = per[per["is_str"]]["h"].to_numpy(), per[~per["is_str"]]["h"].to_numpy()
+    rng = np.random.default_rng(0)
+    gaps = [rng.choice(other, len(other)).mean() - rng.choice(report, len(report)).mean()
+            for _ in range(10_000)]
+    low, high = np.percentile(gaps, [2.5, 97.5])
+    by_kind = {}
+    for name in sorted(set(kind.values())):
+        rows = per[per["scenario_id"].map(kind) == name]
+        r, o = rows[rows["is_str"]]["h"], rows[~rows["is_str"]]["h"]
+        if len(r) and len(o):
+            by_kind[name] = {"n_str": int(len(r)), "n_other": int(len(o)),
+                             "str": round(float(r.mean()), 3), "other": round(float(o.mean()), 3)}
+    return {"n_str_scenarios": int(len(report)), "n_other_scenarios": int(len(other)),
+            "str": round(float(report.mean()), 3), "other": round(float(other.mean()), 3),
+            "gap_points": round(100 * float(other.mean() - report.mean()), 1),
+            "gap_ci95_points": [round(100 * float(low), 1), round(100 * float(high), 1)],
+            "mann_whitney_p": float(stats.mannwhitneyu(report, other).pvalue),
+            "by_scenario_type": by_kind}
+
+
 def main() -> int:
     single = load.single("single")
     groups = json.loads(GAP.read_text(encoding="utf-8"))
@@ -110,6 +142,7 @@ def main() -> int:
         "scenarios_with_str_at_turn_4": sum(1 for v in str_turn.values() if v == 4),
         "n_scenarios": len(cases),
         "str_turn_gap_points": round(100 * float(by_kind[False] - by_kind[True]), 1),
+        "str_turn_4_by_scenario": _same_turn_by_scenario(turns, is_str, cases, turn=4),
         "hit_at_same_position": {
             int(t): {"str": round(float(by_position[(t, True)]), 3),
                      "other": round(float(by_position[(t, False)]), 3)}

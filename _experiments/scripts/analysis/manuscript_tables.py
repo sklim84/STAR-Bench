@@ -296,7 +296,7 @@ def str_quality_table(out: Path) -> str:
     """tab:str-quality, from the step that scores the generated reports.
 
     The table shows a few configurations rather than all of them, chosen for what
-    each one demonstrates: the best report quality, the best workflow completion,
+    each one demonstrates: the best report score, the best workflow completion,
     both finance-specialised models, and the two highest single-turn models, which
     are there because reaching the writing step at all is most of the difficulty.
     """
@@ -318,7 +318,7 @@ def str_quality_table(out: Path) -> str:
     def take(config_id, reason):
         if config_id in rows and config_id not in why:
             picked.append(config_id); why[config_id] = reason
-    take(max(rows, key=lambda k: number(rows[k], "str_overall") or -1), "best report quality")
+    take(max(rows, key=lambda k: number(rows[k], "str_overall") or -1), "best report score")
     take(max(oracle, key=lambda k: oracle[k]["c"]["mean"]), "best workflow completion")
     for config_id in ("dragon-llama-fin", "dragon-qwen-fin"):
         take(config_id, "finance-specialised")
@@ -341,7 +341,7 @@ def str_quality_table(out: Path) -> str:
     # so the body spends a float on it without spending a third of a page.
     text = _table(lines, spec="lccccc", header=header, label="tab:str-quality",
                   wrap="0.55\\textwidth", size="scriptsize",
-                  caption=(f"STR generation quality over the {turns} scenarios whose gold ends in "
+                  caption=(f"STR checker scores over the {turns} scenarios whose gold ends in "
                            f"report writing. Rate is the production rate; Field, Ground.\\ and Term are "
                            f"required-field completeness, evidence grounding and terminology use, and "
                            f"Overall is their mean. Each is penalised so that a scenario without a "
