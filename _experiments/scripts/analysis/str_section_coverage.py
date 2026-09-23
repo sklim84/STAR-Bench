@@ -76,10 +76,10 @@ def main() -> int:
         f"% {len(summaries)} gold STR summaries of {n_scenarios} scenarios",
         "\\begin{table}[t]", "\\centering", "\\footnotesize",
         "\\setlength{\\tabcolsep}{5pt}",
-        "\\caption{\\rerun{Narrative section coverage of the ground-truth STR draft summaries "
+        "\\caption{Narrative section coverage of the ground-truth STR draft summaries "
         f"($n{{=}}{len(summaries)}$ scenarios whose gold ends in an STR). Coverage is the share of "
         "summaries that satisfy the section's keywords; the overall-assessment row scores the six "
-        "5W1H items and so takes fractional values.}}",
+        "5W1H items and so takes fractional values.}",
         "\\label{tab:str_section_coverage}",
         "\\begin{tabular}{lrr}", "\\toprule",
         "\\textbf{Section} & \\textbf{Coverage (\\%)} & \\textbf{Mean score} \\\\",
