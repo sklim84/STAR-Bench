@@ -3,12 +3,12 @@
 
 For every model the registry serves twice, once reasoning and once not, this
 step reports the single-turn delta in h and the oracle multi-turn delta in the
-per-scenario mean tool hit, so the manuscript can cite both:
+turn-level mean tool hit, so the manuscript can cite both:
 - single Delta h and multi Delta h_bar per pair
 - the non-monotone effect of the thinking mode (it differs by family)
 
 Metrics. **A case is correct when `h == 1`**, so single-turn h is the mean of the
-per-case `h` and the multi-turn h_bar is the mean of the per-scenario `h_mean`.
+per-case `h` and the multi-turn h_bar is the mean of `h` over the oracle turns.
 Every number carries its n.
 
 Pairing. In the serving registry the two arms are separate `config_id`s, so the
@@ -82,19 +82,20 @@ def single_hits() -> dict:
 
 
 def multiturn_hits() -> dict:
-    """config_id -> {h_bar, n} over the oracle scenarios.
+    """config_id -> {h_bar, n} over the oracle turns.
 
-    `h_bar` is the mean of the per-scenario `h_mean`, the scorer's own
-    per-scenario mean turn-level hit.
+    `h_bar` is the scorer's own aggregate: mean tool hit over the turns, as
+    Section 3 defines it and as the manuscript tables print it. A mean of
+    per-scenario means would weight a four-turn scenario like a six-turn one.
     """
     try:
-        scenarios, _ = load.multiturn(SETTING)
+        aggregates = load.aggregates(SETTING)
     except FileNotFoundError:
         return {}
     out = {}
-    for cid, g in scenarios.groupby('config_id'):
-        h = g['h_mean'].dropna()
-        out[cid] = {'h_bar': float(h.mean()) if len(h) else None, 'n': int(len(h))}
+    for cid, aggregate in aggregates.items():
+        cell = aggregate.get('h') or {}
+        out[cid] = {'h_bar': cell.get('mean'), 'n': int(cell.get('n') or 0)}
     return out
 
 
@@ -185,8 +186,8 @@ def main():
         'mean_delta_multi': mean_multi,
         'n_pairs_delta_multi': n_multi,
         'note': ('Delta h = h(T) - h(NT) over the single-turn cases; '
-                 'Delta h_bar = h_bar(T) - h_bar(NT) over the oracle scenarios, where '
-                 'h_bar is the mean per-scenario h_mean. '
+                 'Delta h_bar = h_bar(T) - h_bar(NT) over the oracle turns, where '
+                 'h_bar is the scorer\'s mean turn-level hit. '
                  'No pair is excluded from the means: every pair with both arms scored '
                  'is in them. ' + cohort_note),
     }

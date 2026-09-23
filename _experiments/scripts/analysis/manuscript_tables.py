@@ -330,23 +330,22 @@ def str_quality_table(out: Path) -> str:
     for config_id in picked:
         row = rows[config_id]
         cells = [_fmt(number(row, k)) for k in ("str_production_rate", "field_coverage",
-                                                "grounding", "terminology", "hallucination",
-                                                "str_overall")]
+                                                "grounding", "terminology", "str_overall")]
             # A body table: read for the numbers, and every model it names is cited
             # in the appendix tables that repeat it.
         lines.append(f"{_label(config_id, labels, cite=False)} & " + " & ".join(cells) + " \\\\")
     header = ["\\multicolumn{1}{c}{\\textbf{Model}} & \\textbf{Rate} & \\textbf{Field} & "
-              "\\textbf{Ground.} & \\textbf{Term} & \\textbf{Halluc.} & \\textbf{Overall} \\\\"]
+              "\\textbf{Ground.} & \\textbf{Term} & \\textbf{Overall} \\\\"]
     turns = rows[picked[0]].get("n_str_turn", "45")
-    # Six rows and seven narrow columns: a wraptable beside the prose that reads it,
+    # Six rows and six narrow columns: a wraptable beside the prose that reads it,
     # so the body spends a float on it without spending a third of a page.
-    text = _table(lines, spec="lcccccc", header=header, label="tab:str-quality",
+    text = _table(lines, spec="lccccc", header=header, label="tab:str-quality",
                   wrap="0.55\\textwidth", size="scriptsize",
                   caption=(f"STR generation quality over the {turns} scenarios whose gold ends in "
-                           f"report writing. Rate is the production rate; Field, Ground., Term and "
-                           f"Halluc.\\ are required-field completeness, evidence grounding, "
-                           f"terminology use and the unsupported-fact rate. The quality columns are "
-                           f"penalised so that a scenario without a report scores zero."),
+                           f"report writing. Rate is the production rate; Field, Ground.\\ and Term are "
+                           f"required-field completeness, evidence grounding and terminology use, and "
+                           f"Overall is their mean. Each is penalised so that a scenario without a "
+                           f"report scores zero."),
                   note="; ".join(f"{labels.get(k, k)}: {why[k]}" for k in picked))
     (out / "tab-str-quality.tex").write_text(text, encoding="utf-8")
     return f"tab-str-quality.tex: {len(picked)} representative rows of {len(rows)}"

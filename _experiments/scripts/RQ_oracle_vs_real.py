@@ -15,9 +15,13 @@ names.
 
 The input is `analysis/load.py` and nothing else:
 
-  - the metrics are `h_mean`, `a_mean`, `context_accuracy` and `c` per scenario,
-    averaged over the scenarios that carry them, with the n next to each number.
-    These are the columns tab:e2e-subset and app:e2e_full are built from.
+  - the metrics are `h_mean`, `a_mean`, `context_accuracy` and `c`, taken from
+    the scorer's own aggregate per configuration: h and a are means over turns,
+    as Section 3 defines h-bar and a-bar, and c is a fraction of scenarios. The
+    manuscript tables read the same aggregate, so a paired mean here and the
+    Avg. row of app:e2e_full are one number. (Averaging per-scenario means
+    instead weights a four-turn scenario like a six-turn one, and moves a-bar's
+    end-to-end drop by most of a point.)
   - the cohort is the serving registry rather than a list in this file.
   - a configuration with an oracle run and no end-to-end run is a row that says
     so and why, not a row that disappears. A configuration has no end-to-end
@@ -49,10 +53,12 @@ from _experiments.scripts.runner import registry  # noqa: E402
 
 OUT_DIR = ROOT / "_experiments" / "results_RQ3"
 
-# The scenario-level metrics, in the order the tables print them. h_mean and c
-# are the two the manuscript tables carry; a_mean and context_accuracy are the
-# diagnostic pair that say where the end-to-end run loses them.
+# The metrics, in the order the tables print them, and the scorer-aggregate key
+# each is read from. h_mean and c are the two the manuscript tables carry;
+# a_mean and context_accuracy are the diagnostic pair that say where the
+# end-to-end run loses them.
 METRICS = ("h_mean", "a_mean", "context_accuracy", "c")
+AGGREGATE_KEY = {"h_mean": "h", "a_mean": "a", "context_accuracy": "context_accuracy", "c": "c"}
 
 
 def cohort(*settings: str) -> tuple[list[str], list[str], int]:
@@ -63,15 +69,16 @@ def cohort(*settings: str) -> tuple[list[str], list[str], int]:
             todo.loc[~have, "config_id"].tolist(), len(todo))
 
 
-def per_config(scenarios) -> dict[str, dict]:
-    """config_id -> the scenario means and the n each one covers."""
+def per_config(setting: str, eval_root: Path) -> dict[str, dict]:
+    """config_id -> the scorer's aggregate for each metric and the n it covers."""
     out = {}
-    for config_id, frame in scenarios.groupby("config_id", sort=True):
-        row = {"n_scenarios": int(len(frame))}
+    for config_id, aggregate in sorted(load.aggregates(setting, eval_root=eval_root).items()):
+        row = {"n_scenarios": int(aggregate.get("n_scenarios") or 0)}
         for metric in METRICS:
-            values = frame[metric].dropna()
-            row[metric] = round(float(values.mean()), 4) if len(values) else None
-            row[f"n_{metric}"] = int(len(values))
+            cell = aggregate.get(AGGREGATE_KEY[metric]) or {}
+            value = cell.get("mean") if isinstance(cell, dict) else cell
+            row[metric] = None if value is None else round(float(value), 4)
+            row[f"n_{metric}"] = int(cell.get("n") or 0) if isinstance(cell, dict) else 0
         out[config_id] = row
     return out
 
@@ -102,10 +109,10 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     oracle_scenarios, _ = load.multiturn("oracle", eval_root=_from_root(args.oracle))
-    oracle = per_config(oracle_scenarios)
+    oracle = per_config("oracle", _from_root(args.oracle))
     try:
-        e2e_scenarios, _ = load.multiturn("e2e", eval_root=_from_root(args.e2e))
-        e2e = per_config(e2e_scenarios)
+        load.multiturn("e2e", eval_root=_from_root(args.e2e))
+        e2e = per_config("e2e", _from_root(args.e2e))
     except FileNotFoundError as error:
         print(f"no end-to-end results: {error}")
         print("Run: PYTHONPATH=. python -m _experiments.scripts.runner.cli "
@@ -155,7 +162,7 @@ def main(argv: list[str] | None = None) -> int:
         "paired_means": {
             f"{prefix}_{metric}": avg(both, f"{prefix}_{metric}")
             for metric in METRICS for prefix in ("oracle", "e2e", "drop")},
-        "note": ("means are over the scenarios that carry the metric, per configuration; "
+        "note": ("h and a are means over turns and c over scenarios, from the scorer's aggregate; "
                  "paired_means average those over the configurations that have both settings "
                  f"(n={len(both)}). drop = oracle - e2e."),
         "rows": rows,

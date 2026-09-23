@@ -233,9 +233,12 @@ def main() -> int:
                 "n_str_turn": n_with_str_turn, "n_produced": n_produced,
                 "n_empty_summary": n_empty_summary, "n_entity_scored": len(ground_list)}
         if n_produced == 0:
-            rows.append(base | {"str_production_rate": 0.0, "field_coverage": None,
-                                "grounding": None, "terminology": None,
-                                "hallucination": None, "str_overall": None,
+            # Penalized scoring gives a scenario without a report zero, so a
+            # configuration that wrote none scores zero rather than nothing.
+            # Hallucination stays None: a report never written states no fact.
+            rows.append(base | {"str_production_rate": 0.0, "field_coverage": 0.0,
+                                "grounding": 0.0, "terminology": 0.0,
+                                "hallucination": None, "str_overall": 0.0,
                                 "field_cond": None, "grounding_cond": None,
                                 "terminology_cond": None, "hallucination_cond": None})
             continue
@@ -251,15 +254,14 @@ def main() -> int:
         field_cov = pen(d1_list)
         grounding = pen(ground_list)
         term = pen(term_list)
-        # Penalized hallucination = 1 - penalized fidelity, where fidelity sums per-STR
-        # (1 - halluc) over produced and divides by all STR-expected scenarios. A scenario
-        # with no STR contributes 0 fidelity -> it raises the hallucination figure.
-        fidelity = pen([1 - h for h in halluc_list])  # produced fidelity, penalized
-        halluc = round(1 - fidelity, 4) if fidelity is not None else None
+        # Hallucination is NOT penalized. It is the share of stated figures that the
+        # prior tool outputs do not contain, over the reports that state any, so a
+        # scenario without a report adds nothing to it: an unwritten report states no
+        # fact. Penalizing it made it exactly 1 - grounding, counting every missing
+        # report as fully invented. It is a diagnostic and the manuscript does not
+        # print it.
+        halluc = round(sum(halluc_list) / len(halluc_list), 4) if halluc_list else None
         # Overall = mean of Field, Ground., Term (all penalized, higher=better).
-        # Fidelity is deliberately NOT averaged in: hallucination is defined as the
-        # complement of grounding, so fidelity == grounding and including both would
-        # weight grounding twice. Hallucination stays in the row as a diagnostic column.
         comps = [c for c in (field_cov, grounding, term) if c is not None]
         str_overall = round(sum(comps) / len(comps), 4) if comps else None
 
@@ -299,7 +301,8 @@ def main() -> int:
         "note": ("field_coverage, grounding and terminology are penalized: summed over the "
                  "STRs the model produced and divided by every scenario whose gold case has a "
                  "generate_str turn (n_str_turn). *_cond are the produced-only means over "
-                 "n_produced. hallucination = 1 - penalized fidelity."),
+                 "n_produced. hallucination is not penalized: the unsupported share of the "
+                 "figures stated, over the reports that state any."),
         "rows": rows,
     }
 
