@@ -169,8 +169,7 @@ def write_table(report: dict, names: list[str], out: Path) -> None:
         "\\begin{table}[t]", "\\centering", "\\footnotesize",
         "\\caption{\\rerun{Rank agreement (Spearman's $\\rho$) between the automatic STR checker and "
         f"two expert raters over the same {n} generated reports, and between the raters. Every "
-        "coefficient is significant at $p<0.0001$. The raters worked without the checker's "
-        "scores.}}",
+        "coefficient is significant at $p<0.0001$.}}",
         "\\label{tab:str_human_agreement}",
         f"\\begin{{tabular}}{{{columns}}}", "\\toprule", header + " \\\\", "\\midrule",
     ]
