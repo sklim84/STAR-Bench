@@ -304,7 +304,7 @@ def str_quality_table(out: Path) -> str:
 
     The table shows a few configurations rather than all of them, chosen for what
     each one demonstrates: the best report score, the best workflow completion,
-    both finance-specialised models, and the two highest single-turn models, which
+    both finance-specialized models, and the two highest single-turn models, which
     are there because reaching the writing step at all is most of the difficulty.
     """
     import csv
@@ -328,7 +328,7 @@ def str_quality_table(out: Path) -> str:
     take(max(rows, key=lambda k: number(rows[k], "str_overall") or -1), "best report score")
     take(max(oracle, key=lambda k: oracle[k]["c"]["mean"]), "best workflow completion")
     for config_id in ("dragon-llama-fin", "dragon-qwen-fin"):
-        take(config_id, "finance-specialised")
+        take(config_id, "finance-specialized")
     for config_id in sorted(single.index, key=lambda k: -single[k])[:2]:
         take(config_id, "highest single-turn tool hit")
 
@@ -351,7 +351,7 @@ def str_quality_table(out: Path) -> str:
                   caption=(f"STR checker scores over the {turns} scenarios whose gold ends in "
                            f"report writing. Rate is the production rate; Field, Ground.\\ and Term are "
                            f"required-field completeness, evidence grounding and terminology use, and "
-                           f"Overall is their mean. Each is penalised so that a scenario without a "
+                           f"Overall is their mean. Each is penalized so that a scenario without a "
                            f"report scores zero."),
                   note="; ".join(f"{labels.get(k, k)}: {why[k]}" for k in picked))
     (out / "tab-str-quality.tex").write_text(text, encoding="utf-8")
