@@ -79,7 +79,6 @@ _experiments/
     baselines/                        — the two un-specialised bases, outside the cohort
     eval/                             — scores, one directory per column and configuration
   results_RQ1 … results_RQ5/ — Per-research-question analysis outputs and figures
-  paper_tables/       — The paper's data tables, generated
   human_eval/round2/  — Blind STR drafts, the code-to-model key and the two raters' scores (Appendix F)
   bfcl_results/             — BFCL scores for the general-vs-domain comparison
   figures/                  — Generated figures
@@ -87,7 +86,7 @@ _experiments/
 
 Every number in the paper is rebuilt from `runs/` by
 `python -m _experiments.scripts.regenerate_analysis --all`: the tables into
-`paper_tables/`, the figures stated in prose into `results_RQ1/text_figures.json`, and the
+`paper_tables/` (created on the run, not tracked), the figures stated in prose into `results_RQ1/text_figures.json`, and the
 expert agreement from the released ratings in `human_eval/round2/`. The run records are the
 primary artefact: each holds the raw response per round, the parsed calls with their
 arguments and whether the server or the text fallback produced them, the tool output,
